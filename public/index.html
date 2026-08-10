@@ -4,73 +4,282 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     <title>Passagem de Ônibus: Compre Online | Viaje Guanabara</title>
-    <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Guanabara_Logo.png/180px-Guanabara_Logo.png">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Seu CSS original aqui -->
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background: #f5f5f5; color: #333; line-height: 1.6; overflow-x: hidden; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f5f5; color: #333; line-height: 1.6; overflow-x: hidden; }
         .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        img { max-width: 100%; height: auto; display: block; }
 
         header { background: #fff; border-bottom: 1px solid #e0e0e0; padding: 15px 0; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
         header .container { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 15px; }
-        header .logo img { height: 40px; width: auto; }
+        header .logo img { height: 33px; width: auto; transition: transform 0.2s; }
+        header .logo a:hover img { transform: scale(1.02); }
+
+        header nav { display: flex; gap: 6px; font-size: 14px; flex-wrap: wrap; }
+        header nav a { text-decoration: none; color: #333; padding: 6px 10px; border-radius: 6px; transition: background 0.2s, color 0.2s; font-weight: 500; }
+        header nav a:hover { background: #f0f4ff; color: #436ec9; }
+
+        .menu-toggle { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 8px 6px; border-radius: 8px; transition: background 0.2s; order: 3; margin-left: auto; }
+        .menu-toggle:hover { background: #f0f4ff; }
+        .menu-toggle span { display: block; width: 26px; height: 3px; background: #333; border-radius: 4px; transition: 0.3s; }
+        .menu-toggle.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 6px); }
+        .menu-toggle.active span:nth-child(2) { opacity: 0; }
+        .menu-toggle.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -6px); }
+
+        .user-area-desktop { display: flex; align-items: center; gap: 10px; }
+        .user-area-desktop a { text-decoration: none; font-weight: 600; font-size: 14px; }
+        .user-area-desktop a:first-child { color: #436ec9; }
+        .user-area-desktop a:last-child { color: #999; font-weight: normal; }
+
+        .viva-fidelidade-desktop { display: flex; align-items: center; gap: 8px; background: #fff; border: 1px solid #ccc; border-radius: 8px; padding: 6px 12px; text-decoration: none; color: #333; transition: box-shadow 0.2s, border-color 0.2s; }
+        .viva-fidelidade-desktop:hover { border-color: #436ec9; box-shadow: 0 2px 8px rgba(67,110,201,0.1); }
+        .viva-fidelidade-desktop img { height: 22px; width: auto; }
+        .viva-fidelidade-desktop .title { font-weight: bold; color: #e91e8c; font-size: 13px; }
+        .viva-fidelidade-desktop .sub { font-size: 12px; color: #666; }
+
+        .mobile-menu-extras { display: none; flex-direction: column; width: 100%; padding: 12px 0 8px; border-top: 1px solid #e8e8e8; margin-top: 8px; gap: 4px; }
+        .mobile-menu-extras a { text-decoration: none; padding: 12px 16px; border-radius: 8px; font-size: 15px; transition: background 0.2s; display: flex; align-items: center; gap: 12px; font-weight: 500; }
+        .mobile-menu-extras a:hover { background: #f0f4ff; }
+        .mobile-menu-extras .viva-link { color: #e91e8c; font-weight: 600; border-bottom: 1px solid #f0f0f0; padding-bottom: 14px; margin-bottom: 4px; }
+        .mobile-menu-extras .viva-link img { height: 24px; width: auto; }
+        .mobile-menu-extras .account-link { color: #436ec9; font-weight: 600; font-size: 16px; }
+        .mobile-menu-extras .register-link { color: #888; font-weight: 400; font-size: 14px; padding-left: 16px; border-left: 3px solid #436ec9; margin-left: 8px; }
+        .mobile-menu-extras .divider { height: 1px; background: #e8e8e8; margin: 4px 0 8px 0; }
 
         .banner { background: linear-gradient(135deg, #f1efef 0%, #f9f8f8 50%, #e7e5e5 100%); min-height: 160px; display: flex; align-items: center; justify-content: center; padding: 20px; }
         .banner img { max-width: 100%; height: auto; border-radius: 12px; object-fit: cover; max-height: 280px; width: 100%; box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
 
         .search-section { position: relative; margin-top: -30px; padding: 0 20px; }
-        .search-box { background: #fff; border-radius: 16px; box-shadow: 0 8px 30px rgba(0,0,0,0.08); padding: 24px; max-width: 1100px; margin: 0 auto; }
+        .search-box { background: #fff; border-radius: 16px; box-shadow: 0 8px 30px rgba(0,0,0,0.08); padding: 24px; max-width: 1100px; margin: 0 auto; transition: box-shadow 0.3s; }
+        .search-box:hover { box-shadow: 0 12px 40px rgba(0,0,0,0.12); }
         .search-box form { display: flex; flex-wrap: wrap; gap: 15px; align-items: flex-end; }
         .search-box .field { flex: 1 1 140px; min-width: 130px; }
         .search-box .field label { display: block; font-size: 13px; color: #666; margin-bottom: 4px; font-weight: 500; }
-        .search-box .field input, .search-box .field select { width: 100%; padding: 10px 12px; border: 2px solid transparent; background: #ececfa; border-radius: 10px; font-size: 14px; outline: none; }
-        .search-box .field input:focus, .search-box .field select:focus { border-color: #436ec9; background: #fff; }
-        .search-box .btn-submit { background: #436ec9; color: #fff; border: none; padding: 12px 28px; border-radius: 12px; font-weight: bold; cursor: pointer; height: 44px; font-size: 14px; }
-        .search-box .switch-btn { background: #436ec9; border: none; border-radius: 8px; padding: 8px 12px; cursor: pointer; color: #fff; font-size: 18px; height: 44px; display: flex; align-items: center; }
+        .search-box .field input, .search-box .field select { width: 100%; padding: 10px 12px; border: 2px solid transparent; background: #ececfa; border-radius: 10px; font-size: 14px; outline: none; transition: border 0.2s, background 0.2s, box-shadow 0.2s; font-family: inherit; }
+        .search-box .field input:focus, .search-box .field select:focus { border-color: #436ec9; background: #fff; box-shadow: 0 0 0 4px rgba(67,110,201,0.1); }
+        .search-box .btn-submit { background: #436ec9; color: #fff; border: none; padding: 12px 28px; border-radius: 12px; font-weight: bold; cursor: pointer; transition: background 0.25s, transform 0.15s, box-shadow 0.25s; height: 44px; white-space: nowrap; font-size: 14px; letter-spacing: 0.3px; font-family: inherit; }
+        .search-box .btn-submit:hover { background: #3659b0; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(67,110,201,0.25); }
+        .search-box .btn-submit:active { transform: translateY(0); }
+        .search-box .switch-btn { background: #436ec9; border: none; border-radius: 8px; padding: 8px 12px; cursor: pointer; color: #fff; font-size: 18px; height: 44px; display: flex; align-items: center; transition: background 0.2s, transform 0.2s; }
+        .search-box .switch-btn:hover { background: #3659b0; transform: rotate(180deg); }
+        .search-box .last-searches { margin-top: 14px; font-size: 13px; color: #666; }
+        .search-box .last-searches span { font-weight: bold; color: #436ec9; }
+        .bus-image { position: absolute; right: 20px; top: -20px; pointer-events: none; opacity: 0.6; max-width: 180px; transition: opacity 0.3s; }
+        @media (max-width: 768px) { .bus-image { display: none; } }
+
+        section { margin: 40px 0; padding: 0 20px; }
+        section h2, section h3 { font-size: 24px; color: #1a2b4a; margin-bottom: 6px; font-weight: 700; }
+        section .subtitle { font-size: 16px; color: #666; margin-bottom: 20px; }
+        section .subtitle strong { color: #1a2b4a; }
+
+        .cards { display: flex; gap: 20px; overflow-x: auto; padding: 8px 2px 20px; scrollbar-width: none; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
+        .cards::-webkit-scrollbar { display: none; }
+        .card { min-width: 220px; max-width: 260px; flex: 0 0 auto; border-radius: 20px; overflow: hidden; background: #fff; box-shadow: 0 4px 14px rgba(0,0,0,0.04); transition: transform 0.25s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.3s; position: relative; scroll-snap-align: start; border: 1px solid rgba(0,0,0,0.02); cursor: pointer; }
+        .card:hover { transform: scale(1.02) translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.08); }
+        .card img { width: 100%; height: 170px; object-fit: cover; display: block; transition: transform 0.4s; }
+        .card:hover img { transform: scale(1.03); }
+        .card .gradient { position: absolute; bottom: 0; left: 0; right: 0; height: 60%; background: linear-gradient(to top, rgba(0,0,0,0.55), transparent); pointer-events: none; }
+        .card .card-overlay { position: absolute; bottom: 16px; left: 16px; color: #fff; z-index: 2; text-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+        .card .card-overlay .route { font-size: 12px; opacity: 0.95; }
+        .card .card-overlay .route strong { display: block; font-size: 20px; font-weight: 800; }
+        .card .card-overlay .price { font-size: 14px; }
+        .card .card-overlay .price strong { font-size: 24px; color: #f5a623; }
+
+        .destination-card { min-width: 220px; max-width: 260px; flex: 0 0 auto; background: #fff; border-radius: 16px; overflow: hidden; border: 1px solid #e1e3f0; transition: transform 0.25s, box-shadow 0.3s; scroll-snap-align: start; }
+        .destination-card:hover { transform: translateY(-4px); box-shadow: 0 12px 28px rgba(0,0,0,0.06); }
+        .destination-card .dest-header { height: 152px; background: #e7e5e5; position: relative; overflow: hidden; }
+        .destination-card .dest-header img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s; }
+        .destination-card:hover .dest-header img { transform: scale(1.04); }
+        .destination-card .dest-header .dest-name { position: absolute; bottom: 8px; left: 16px; color: #fff; font-weight: 900; font-size: 20px; z-index: 2; text-shadow: 0 2px 12px rgba(0,0,0,0.5); }
+        .destination-card .dest-header .gradient { position: absolute; bottom: 0; left: 0; right: 0; height: 60%; background: linear-gradient(to top, rgba(0,0,0,0.7), transparent); }
+        .destination-card .dest-body { padding: 16px; }
+        .destination-card .dest-body .label { font-size: 14px; font-weight: bold; color: #333; border-bottom: 1px solid #e1e3f0; padding-bottom: 12px; margin-bottom: 12px; }
+        .destination-card .dest-body .origin-item { display: flex; justify-content: space-between; align-items: center; font-size: 14px; padding: 4px 0; }
+        .destination-card .dest-body .origin-item a { color: #436ec9; font-weight: bold; text-decoration: none; transition: color 0.2s; }
+        .destination-card .dest-body .origin-item a:hover { color: #1f3d7a; text-decoration: underline; }
+        .destination-card .dest-body .see-more { text-align: center; margin-top: 12px; padding-top: 12px; border-top: 1px solid #e1e3f0; }
+        .destination-card .dest-body .see-more a { color: #436ec9; font-size: 12px; font-weight: bold; text-decoration: none; transition: color 0.2s; }
+        .destination-card .dest-body .see-more a:hover { color: #1f3d7a; }
+
+        .partner-banner { background: #ea0f6b; border-radius: 24px; padding: 30px 40px; color: #fff; display: flex; align-items: center; gap: 30px; overflow: hidden; position: relative; transition: box-shadow 0.3s; }
+        .partner-banner:hover { box-shadow: 0 8px 30px rgba(234,15,107,0.25); }
+        .partner-banner .partner-img { flex-shrink: 0; }
+        .partner-banner .partner-img img { height: 190px; width: auto; object-fit: contain; transition: transform 0.3s; }
+        .partner-banner:hover .partner-img img { transform: scale(1.02); }
+        .partner-banner .partner-content { flex: 1; }
+        .partner-banner .partner-content h2 { color: #fff; font-size: 24px; margin-bottom: 8px; }
+        .partner-banner .partner-content p { font-size: 16px; opacity: 0.9; margin-bottom: 16px; }
+        .partner-banner .partner-content .btn { background: transparent; border: 2px solid #fff; color: #fff; padding: 10px 30px; border-radius: 12px; font-weight: bold; text-decoration: none; display: inline-block; transition: background 0.25s, color 0.25s, transform 0.2s; font-family: inherit; }
+        .partner-banner .partner-content .btn:hover { background: #fff; color: #ea0f6b; transform: translateY(-2px); }
+        .partner-banner .partner-logo { position: absolute; right: 40px; bottom: 20px; opacity: 0.5; }
+        .partner-banner .partner-logo img { height: 40px; width: auto; }
+
+        .faq-list { max-width: 900px; margin: 0 auto; }
+        .faq-item { border: 1px solid #ebebeb; background: #fff; padding: 16px 20px; margin-top: -1px; transition: background 0.2s; }
+        .faq-item:hover { background: #fafaff; }
+        .faq-item:first-child { border-radius: 12px 12px 0 0; }
+        .faq-item:last-child { border-radius: 0 0 12px 12px; }
+        .faq-item button { width: 100%; background: none; border: none; text-align: left; font-size: 16px; font-weight: bold; color: #1a2b4a; cursor: pointer; display: flex; justify-content: space-between; align-items: center; padding: 4px 0; transition: color 0.2s; font-family: inherit; }
+        .faq-item button:hover { color: #436ec9; }
+        .faq-item .faq-answer { padding-top: 12px; color: #555; font-size: 15px; line-height: 1.7; }
 
         footer { background: #1a1a2e; color: #fff; padding: 40px 0 20px; margin-top: 40px; }
-        .footer-bottom { text-align: center; padding-top: 20px; font-size: 14px; color: #888; line-height: 1.8; }
+        footer .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; padding-bottom: 30px; border-bottom: 1px solid #444; }
+        footer .footer-grid h4 { font-size: 16px; text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.5px; color: #ddd; }
+        footer .footer-grid ul { list-style: none; padding: 0; }
+        footer .footer-grid ul li { margin-bottom: 8px; }
+        footer .footer-grid ul li a { color: #aaa; text-decoration: none; font-size: 14px; transition: color 0.2s, padding-left 0.2s; display: inline-block; }
+        footer .footer-grid ul li a:hover { color: #fff; padding-left: 4px; }
+        footer .footer-grid .social-icons { display: flex; gap: 12px; flex-wrap: wrap; }
+        footer .footer-grid .social-icons a { display: inline-block; width: 50px; height: 50px; background: #333; border-radius: 12px; overflow: hidden; transition: background 0.2s, transform 0.2s; }
+        footer .footer-grid .social-icons a:hover { background: #436ec9; transform: translateY(-2px); }
+        footer .footer-grid .social-icons a img { width: 100%; height: 100%; object-fit: contain; padding: 8px; }
+        footer .footer-bottom { text-align: center; padding-top: 20px; font-size: 14px; color: #888; line-height: 1.8; }
 
+        @media (max-width: 992px) { .partner-banner { flex-direction: column; text-align: center; padding: 28px 20px; } .partner-banner .partner-logo { position: static; opacity: 0.7; margin-top: 12px; } .partner-banner .partner-img img { height: 150px; } }
         @media (max-width: 820px) {
-            .search-box { padding: 18px; }
+            .menu-toggle { display: flex; }
+            .viva-fidelidade-desktop, .user-area-desktop { display: none !important; }
+            header nav { display: none; flex-direction: column; width: 100%; background: #fff; padding: 12px 0 8px; border-top: 1px solid #e0e0e0; margin-top: 8px; gap: 2px; border-radius: 0 0 12px 12px; box-shadow: 0 12px 30px rgba(0,0,0,0.06); }
+            header nav.open { display: flex; }
+            header nav a { padding: 12px 16px; font-size: 15px; border-radius: 8px; text-align: left; font-weight: 500; }
+            header nav a:hover { background: #f0f4ff; }
+            .mobile-menu-extras { display: none; flex-direction: column; width: 100%; padding: 8px 0 4px; border-top: 1px solid #e8e8e8; margin-top: 4px; gap: 4px; }
+            .mobile-menu-extras.open { display: flex; }
+            .mobile-menu-extras a { padding: 12px 16px; border-radius: 8px; font-size: 15px; text-decoration: none; transition: background 0.2s; display: flex; align-items: center; gap: 12px; font-weight: 500; }
+            .mobile-menu-extras a:hover { background: #f0f4ff; }
+            .mobile-menu-extras .viva-link { color: #e91e8c; font-weight: 600; border-bottom: 1px solid #f0f0f0; padding-bottom: 14px; margin-bottom: 4px; }
+            .mobile-menu-extras .viva-link img { height: 24px; width: auto; }
+            .mobile-menu-extras .account-link { color: #436ec9; font-weight: 600; font-size: 16px; }
+            .mobile-menu-extras .register-link { color: #888; font-weight: 400; font-size: 14px; padding-left: 16px; border-left: 3px solid #436ec9; margin-left: 8px; }
+            .mobile-menu-extras .divider { height: 1px; background: #e8e8e8; margin: 4px 0 8px 0; }
+            header .container { position: relative; flex-wrap: wrap; }
+            header .logo { flex: 1; }
+            header .logo img { height: 30px; }
+            .search-box { padding: 18px; border-radius: 14px; }
             .search-box form { flex-direction: column; gap: 12px; }
-            .search-box .field { min-width: 100%; }
-            .search-box .btn-submit { width: 100%; height: 48px; }
+            .search-box .field { min-width: 100%; flex: 1 1 auto; }
+            .search-box .switch-btn { align-self: center; margin-top: 0; height: 40px; width: 44px; justify-content: center; }
+            .search-box .btn-submit { width: 100%; justify-content: center; height: 48px; font-size: 15px; }
+            .banner { min-height: 120px; padding: 12px; }
+            .banner img { max-height: 180px; border-radius: 8px; }
+            .card { min-width: 180px; max-width: 220px; }
+            .card img { height: 140px; }
+            .destination-card { min-width: 180px; max-width: 220px; }
+            .destination-card .dest-header { height: 130px; }
+            section h2, section h3 { font-size: 20px; }
+            section .subtitle { font-size: 14px; }
+            .partner-banner .partner-content h2 { font-size: 20px; }
+            .partner-banner .partner-content p { font-size: 14px; }
+            .partner-banner .partner-content .btn { padding: 8px 24px; font-size: 14px; }
+            footer .footer-grid { grid-template-columns: 1fr 1fr; gap: 20px; }
+        }
+        @media (max-width: 480px) {
+            header .logo { flex: 0 0 auto; }
+            header .logo img { height: 28px; }
+            .menu-toggle span { width: 22px; height: 2.5px; }
+            .card { min-width: 160px; max-width: 190px; }
+            .card img { height: 120px; }
+            .card .card-overlay .route strong { font-size: 16px; }
+            .card .card-overlay .price strong { font-size: 20px; }
+            .destination-card { min-width: 160px; max-width: 190px; }
+            .destination-card .dest-header { height: 110px; }
+            .destination-card .dest-header .dest-name { font-size: 16px; }
+            .destination-card .dest-body .origin-item { font-size: 12px; }
+            .partner-banner { padding: 20px 16px; border-radius: 16px; }
+            .partner-banner .partner-img img { height: 120px; }
+            .faq-item button { font-size: 14px; }
+            .faq-item .faq-answer { font-size: 13px; }
+            footer .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+            footer .footer-bottom { font-size: 12px; }
+        }
+        @media (min-width: 1400px) {
+            .container { max-width: 1300px; }
+            .card { min-width: 260px; max-width: 300px; }
+            .destination-card { min-width: 260px; max-width: 300px; }
         }
     </style>
 </head>
 <body>
+
+    <!-- HEADER -->
     <header>
         <div class="container">
             <div class="logo">
-                <a href="/"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Guanabara_Logo.png/180px-Guanabara_Logo.png" alt="Guanabara"></a>
+                <a href="/"><img src="img/logo.webp" alt="Guanabara"></a>
             </div>
-            <div>
-                <a href="/admin" style="text-decoration:none; color:#999; font-size:12px;">Área do Colaborador</a>
+
+            <!-- Navegação Principal -->
+            <nav id="mainNav">
+                <a href="#">Destinos</a>
+                <a href="#">Ofertas</a>
+                <a href="#">Serviços</a>
+                <a href="#">Bilhetes</a>
+                <a href="#">Ajuda</a>
+
+                <!-- Links extras no menu mobile (Viva e conta) -->
+                <div class="mobile-menu-extras" id="mobileExtras">
+                    <div class="divider"></div>
+                    <a href="#" class="viva-link">
+                        <img src="img/viva-fidelidade.svg" alt="Viva Fidelidade">
+                        Viva Fidelidade
+                        <span style="font-size:12px;color:#999;font-weight:400;margin-left:auto;">Acumule pontos</span>
+                    </a>
+                    <a href="#" class="account-link">🔑 Acesse sua conta</a>
+                    <a href="#" class="register-link">ou cadastre-se</a>
+                </div>
+            </nav>
+
+            <!-- Menu Hamburguer (mobile) -->
+            <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <!-- Área do usuário - Desktop -->
+            <div style="display:flex;align-items:center;gap:15px;flex-wrap:wrap;">
+                <a href="#" class="viva-fidelidade-desktop">
+                    <img src="img/viva-fidelidade.svg" alt="Viva Fidelidade">
+                    <div>
+                        <div class="title">Viva Fidelidade</div>
+                        <div class="sub">Acumule pontos</div>
+                    </div>
+                </a>
+                <div class="user-area-desktop">
+                    <a href="#">Acesse sua conta</a>
+                    <a href="#">ou cadastre-se</a>
+                </div>
             </div>
         </div>
     </header>
 
+    <!-- BANNER -->
     <section class="banner">
-        <img src="https://viajeguanabara.com.br/static/img/banner-2023.jpg" alt="Banner Guanabara">
+        <img src="img/download.webp" alt="Banner promocional Viaje Guanabara">
     </section>
 
+    <!-- BUSCA (CORRIGIDA) -->
     <section class="search-section">
         <div class="search-box">
             <form action="/tickets" method="GET">
                 <div class="field">
                     <label for="origin">Saindo de</label>
-                    <input type="text" id="origin" name="origin" placeholder="Ex: Rio de Janeiro" required>
+                    <input type="text" id="origin" name="origin" placeholder="Selecione aqui" required>
                 </div>
-                <button type="button" class="switch-btn" onclick="trocarDestino()">⇄</button>
+                <button type="button" class="switch-btn" aria-label="Trocar origem e destino">⇄</button>
                 <div class="field">
                     <label for="destination">Indo para</label>
-                    <input type="text" id="destination" name="destination" placeholder="Ex: São Paulo" required>
+                    <input type="text" id="destination" name="destination" placeholder="Selecione aqui" required>
                 </div>
                 <div class="field">
                     <label for="departureDate">Ida</label>
                     <input type="date" id="departureDate" name="date" required>
+                </div>
+                <div class="field">
+                    <label for="returnDate">Volta (Opcional)</label>
+                    <input type="date" id="returnDate" name="return_date">
                 </div>
                 <div class="field">
                     <label for="passengers">Passageiros</label>
@@ -78,6 +287,44 @@
                 </div>
                 <button type="submit" class="btn-submit">BUSCAR VIAGEM</button>
             </form>
+            <div class="last-searches"></div>
+        </div>
+        <img src="img/onibus.webp" alt="Ônibus" class="bus-image" loading="lazy">
+    </section>
+
+    <!-- OFERTAS CAMPEÃS -->
+    <section>
+        <h3>Ofertas campeãs 💚</h3>
+        <p class="subtitle">Selecionamos as <strong>viagens mais buscadas</strong> por quem está viajando agora.</p>
+        <div class="cards">
+            <div class="card">
+                <img src="mgsaopaulo.img" alt="Oferta">
+                <div class="gradient"></div>
+                <div class="card-overlay">
+                    <div class="route">Saindo de BELO HORIZONTE <strong>RIO DE JANEIRO</strong></div>
+                    <div class="price">A partir de: <strong>R$ 69,90</strong></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ROTAS POPULARES -->
+    <section>
+        <h3>Rotas populares ⭐</h3>
+        <p class="subtitle">Tem gente no <strong>Brasil inteiro</strong> viajando.</p>
+        <div class="cards">
+            <div class="destination-card">
+                <div class="dest-header">
+                    <img src="mgsaopaulo.img" alt="BRASILIA">
+                    <div class="gradient"></div>
+                    <div class="dest-name">BRASILIA (DF)</div>
+                </div>
+                <div class="dest-body">
+                    <div class="label">Saindo de</div>
+                    <div class="origin-item"><span>CORRENTE (PI)</span> <a href="#">Confira!</a></div>
+                    <div class="see-more"><a href="#">Ver mais viagens</a></div>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -90,13 +337,29 @@
     </footer>
 
     <script>
-        function trocarDestino() {
-            const origin = document.getElementById('origin');
-            const destination = document.getElementById('destination');
-            const temp = origin.value;
-            origin.value = destination.value;
-            destination.value = temp;
-        }
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggle = document.getElementById('menuToggle');
+            const nav = document.getElementById('mainNav');
+            const extras = document.getElementById('mobileExtras');
+
+            toggle.addEventListener('click', function() {
+                nav.classList.toggle('open');
+                toggle.classList.toggle('active');
+                if (nav.classList.contains('open')) {
+                    extras.classList.add('open');
+                } else {
+                    extras.classList.remove('open');
+                }
+            });
+
+            nav.querySelectorAll('a').forEach(function(link) {
+                link.addEventListener('click', function() {
+                    nav.classList.remove('open');
+                    toggle.classList.remove('active');
+                    extras.classList.remove('open');
+                });
+            });
+        });
     </script>
 </body>
 </html>
