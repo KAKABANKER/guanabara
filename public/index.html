@@ -4,10 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     <title>Passagem de Ônibus: Compre Online | Viaje Guanabara</title>
-    <!-- Seu CSS original aqui -->
+    <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Guanabara_Logo.png/180px-Guanabara_Logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f5f5; color: #333; line-height: 1.6; overflow-x: hidden; }
+        body { font-family: 'Inter', sans-serif; background: #f5f5f5; color: #333; line-height: 1.6; overflow-x: hidden; }
         .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
         img { max-width: 100%; height: auto; display: block; }
 
@@ -115,26 +117,7 @@
         .partner-banner .partner-logo { position: absolute; right: 40px; bottom: 20px; opacity: 0.5; }
         .partner-banner .partner-logo img { height: 40px; width: auto; }
 
-        .faq-list { max-width: 900px; margin: 0 auto; }
-        .faq-item { border: 1px solid #ebebeb; background: #fff; padding: 16px 20px; margin-top: -1px; transition: background 0.2s; }
-        .faq-item:hover { background: #fafaff; }
-        .faq-item:first-child { border-radius: 12px 12px 0 0; }
-        .faq-item:last-child { border-radius: 0 0 12px 12px; }
-        .faq-item button { width: 100%; background: none; border: none; text-align: left; font-size: 16px; font-weight: bold; color: #1a2b4a; cursor: pointer; display: flex; justify-content: space-between; align-items: center; padding: 4px 0; transition: color 0.2s; font-family: inherit; }
-        .faq-item button:hover { color: #436ec9; }
-        .faq-item .faq-answer { padding-top: 12px; color: #555; font-size: 15px; line-height: 1.7; }
-
         footer { background: #1a1a2e; color: #fff; padding: 40px 0 20px; margin-top: 40px; }
-        footer .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; padding-bottom: 30px; border-bottom: 1px solid #444; }
-        footer .footer-grid h4 { font-size: 16px; text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.5px; color: #ddd; }
-        footer .footer-grid ul { list-style: none; padding: 0; }
-        footer .footer-grid ul li { margin-bottom: 8px; }
-        footer .footer-grid ul li a { color: #aaa; text-decoration: none; font-size: 14px; transition: color 0.2s, padding-left 0.2s; display: inline-block; }
-        footer .footer-grid ul li a:hover { color: #fff; padding-left: 4px; }
-        footer .footer-grid .social-icons { display: flex; gap: 12px; flex-wrap: wrap; }
-        footer .footer-grid .social-icons a { display: inline-block; width: 50px; height: 50px; background: #333; border-radius: 12px; overflow: hidden; transition: background 0.2s, transform 0.2s; }
-        footer .footer-grid .social-icons a:hover { background: #436ec9; transform: translateY(-2px); }
-        footer .footer-grid .social-icons a img { width: 100%; height: 100%; object-fit: contain; padding: 8px; }
         footer .footer-bottom { text-align: center; padding-top: 20px; font-size: 14px; color: #888; line-height: 1.8; }
 
         @media (max-width: 992px) { .partner-banner { flex-direction: column; text-align: center; padding: 28px 20px; } .partner-banner .partner-logo { position: static; opacity: 0.7; margin-top: 12px; } .partner-banner .partner-img img { height: 150px; } }
@@ -189,36 +172,22 @@
             .destination-card .dest-body .origin-item { font-size: 12px; }
             .partner-banner { padding: 20px 16px; border-radius: 16px; }
             .partner-banner .partner-img img { height: 120px; }
-            .faq-item button { font-size: 14px; }
-            .faq-item .faq-answer { font-size: 13px; }
-            footer .footer-grid { grid-template-columns: 1fr; gap: 24px; }
-            footer .footer-bottom { font-size: 12px; }
-        }
-        @media (min-width: 1400px) {
-            .container { max-width: 1300px; }
-            .card { min-width: 260px; max-width: 300px; }
-            .destination-card { min-width: 260px; max-width: 300px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- HEADER -->
     <header>
         <div class="container">
             <div class="logo">
                 <a href="/"><img src="img/logo.webp" alt="Guanabara"></a>
             </div>
-
-            <!-- Navegação Principal -->
             <nav id="mainNav">
                 <a href="#">Destinos</a>
                 <a href="#">Ofertas</a>
                 <a href="#">Serviços</a>
                 <a href="#">Bilhetes</a>
                 <a href="#">Ajuda</a>
-
-                <!-- Links extras no menu mobile (Viva e conta) -->
                 <div class="mobile-menu-extras" id="mobileExtras">
                     <div class="divider"></div>
                     <a href="#" class="viva-link">
@@ -230,22 +199,13 @@
                     <a href="#" class="register-link">ou cadastre-se</a>
                 </div>
             </nav>
-
-            <!-- Menu Hamburguer (mobile) -->
             <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">
-                <span></span>
-                <span></span>
-                <span></span>
+                <span></span><span></span><span></span>
             </button>
-
-            <!-- Área do usuário - Desktop -->
             <div style="display:flex;align-items:center;gap:15px;flex-wrap:wrap;">
                 <a href="#" class="viva-fidelidade-desktop">
                     <img src="img/viva-fidelidade.svg" alt="Viva Fidelidade">
-                    <div>
-                        <div class="title">Viva Fidelidade</div>
-                        <div class="sub">Acumule pontos</div>
-                    </div>
+                    <div><div class="title">Viva Fidelidade</div><div class="sub">Acumule pontos</div></div>
                 </a>
                 <div class="user-area-desktop">
                     <a href="#">Acesse sua conta</a>
@@ -255,12 +215,10 @@
         </div>
     </header>
 
-    <!-- BANNER -->
     <section class="banner">
         <img src="img/download.webp" alt="Banner promocional Viaje Guanabara">
     </section>
 
-    <!-- BUSCA (CORRIGIDA) -->
     <section class="search-section">
         <div class="search-box">
             <form action="/tickets" method="GET">
@@ -268,7 +226,7 @@
                     <label for="origin">Saindo de</label>
                     <input type="text" id="origin" name="origin" placeholder="Selecione aqui" required>
                 </div>
-                <button type="button" class="switch-btn" aria-label="Trocar origem e destino">⇄</button>
+                <button type="button" class="switch-btn" onclick="trocarDestino()">⇄</button>
                 <div class="field">
                     <label for="destination">Indo para</label>
                     <input type="text" id="destination" name="destination" placeholder="Selecione aqui" required>
@@ -276,10 +234,6 @@
                 <div class="field">
                     <label for="departureDate">Ida</label>
                     <input type="date" id="departureDate" name="date" required>
-                </div>
-                <div class="field">
-                    <label for="returnDate">Volta (Opcional)</label>
-                    <input type="date" id="returnDate" name="return_date">
                 </div>
                 <div class="field">
                     <label for="passengers">Passageiros</label>
@@ -292,38 +246,24 @@
         <img src="img/onibus.webp" alt="Ônibus" class="bus-image" loading="lazy">
     </section>
 
-    <!-- OFERTAS CAMPEÃS -->
-    <section>
+    <!-- OFERTAS CAMPEÃS (CARREGADO DO BANCO) -->
+    <section id="ofertasSection">
         <h3>Ofertas campeãs 💚</h3>
         <p class="subtitle">Selecionamos as <strong>viagens mais buscadas</strong> por quem está viajando agora.</p>
-        <div class="cards">
-            <div class="card">
-                <img src="mgsaopaulo.img" alt="Oferta">
-                <div class="gradient"></div>
-                <div class="card-overlay">
-                    <div class="route">Saindo de BELO HORIZONTE <strong>RIO DE JANEIRO</strong></div>
-                    <div class="price">A partir de: <strong>R$ 69,90</strong></div>
-                </div>
+        <div class="cards" id="ofertasCards">
+            <div style="width:100%; text-align:center; color:#999; padding:40px;">
+                <i class="fas fa-spinner fa-spin" style="font-size:24px;"></i> Carregando ofertas...
             </div>
         </div>
     </section>
 
-    <!-- ROTAS POPULARES -->
-    <section>
+    <!-- ROTAS POPULARES (CARREGADO DO BANCO) -->
+    <section id="rotasSection">
         <h3>Rotas populares ⭐</h3>
         <p class="subtitle">Tem gente no <strong>Brasil inteiro</strong> viajando.</p>
-        <div class="cards">
-            <div class="destination-card">
-                <div class="dest-header">
-                    <img src="mgsaopaulo.img" alt="BRASILIA">
-                    <div class="gradient"></div>
-                    <div class="dest-name">BRASILIA (DF)</div>
-                </div>
-                <div class="dest-body">
-                    <div class="label">Saindo de</div>
-                    <div class="origin-item"><span>CORRENTE (PI)</span> <a href="#">Confira!</a></div>
-                    <div class="see-more"><a href="#">Ver mais viagens</a></div>
-                </div>
+        <div class="cards" id="rotasCards">
+            <div style="width:100%; text-align:center; color:#999; padding:40px;">
+                <i class="fas fa-spinner fa-spin" style="font-size:24px;"></i> Carregando rotas...
             </div>
         </div>
     </section>
@@ -337,6 +277,14 @@
     </footer>
 
     <script>
+        function trocarDestino() {
+            const origin = document.getElementById('origin');
+            const destination = document.getElementById('destination');
+            const temp = origin.value;
+            origin.value = destination.value;
+            destination.value = temp;
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             const toggle = document.getElementById('menuToggle');
             const nav = document.getElementById('mainNav');
@@ -360,6 +308,73 @@
                 });
             });
         });
+
+        // ============================================================
+        // CARREGAR OFERTAS E ROTAS DO BANCO DE DADOS
+        // ============================================================
+        async function carregarConteudo() {
+            try {
+                const response = await fetch('/api/produtos');
+                const data = await response.json();
+                
+                if (data.success && data.produtos.length > 0) {
+                    // Separa Ofertas (primeiras 5) e Rotas (restante)
+                    const ofertas = data.produtos.slice(0, 5);
+                    const rotas = data.produtos.slice(5, 12);
+
+                    // Renderizar Ofertas
+                    const ofertasContainer = document.getElementById('ofertasCards');
+                    if (ofertas.length > 0) {
+                        ofertasContainer.innerHTML = ofertas.map(p => `
+                            <div class="card" onclick="comprarPassagem('${p.nome}', ${p.preco_promocional || p.preco})">
+                                <img src="mgsaopaulo.img" alt="${p.nome}">
+                                <div class="gradient"></div>
+                                <div class="card-overlay">
+                                    <div class="route">Oferta Especial <strong>${p.nome}</strong></div>
+                                    <div class="price">A partir de: <strong>R$ ${(p.preco_promocional || p.preco).toFixed(2)}</strong></div>
+                                </div>
+                            </div>
+                        `).join('');
+                    } else {
+                        ofertasContainer.innerHTML = '<div style="width:100%; text-align:center; color:#999; padding:20px;">Nenhuma oferta disponível no momento.</div>';
+                    }
+
+                    // Renderizar Rotas
+                    const rotasContainer = document.getElementById('rotasCards');
+                    if (rotas.length > 0) {
+                        rotasContainer.innerHTML = rotas.map(p => `
+                            <div class="destination-card" onclick="comprarPassagem('${p.nome}', ${p.preco_promocional || p.preco})">
+                                <div class="dest-header">
+                                    <img src="mgsaopaulo.img" alt="${p.nome}">
+                                    <div class="gradient"></div>
+                                    <div class="dest-name">${p.nome}</div>
+                                </div>
+                                <div class="dest-body">
+                                    <div class="label">Rota Popular</div>
+                                    <div class="origin-item"><span>${p.descricao || 'Viagem direta'}</span></div>
+                                    <div class="see-more"><a href="#" onclick="comprarPassagem('${p.nome}', ${p.preco_promocional || p.preco})">Comprar passagem</a></div>
+                                </div>
+                            </div>
+                        `).join('');
+                    } else {
+                        rotasContainer.innerHTML = '<div style="width:100%; text-align:center; color:#999; padding:20px;">Nenhuma rota popular cadastrada.</div>';
+                    }
+                }
+            } catch (error) {
+                console.error('Erro ao carregar produtos:', error);
+                document.getElementById('ofertasCards').innerHTML = '<div style="width:100%; text-align:center; color:#ef4444; padding:40px;">Erro ao carregar ofertas.</div>';
+                document.getElementById('rotasCards').innerHTML = '<div style="width:100%; text-align:center; color:#ef4444; padding:40px;">Erro ao carregar rotas.</div>';
+            }
+        }
+
+        function comprarPassagem(nome, preco) {
+            localStorage.setItem('produto_nome', nome);
+            localStorage.setItem('produto_preco', preco);
+            window.location.href = '/passageiros';
+        }
+
+        // Carrega assim que a página abrir
+        carregarConteudo();
     </script>
 </body>
 </html>
