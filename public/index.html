@@ -1056,7 +1056,7 @@ const cidades = [
 
             suggestions.innerHTML = filtered.slice(0, 10).map(c => `
                 <div class="item" onclick="selecionarSugestao('${inputId}', '${suggestionsId}', '${c.replace(/'/g, "\\'")}')">
-                    <span class="icon">📍</span> ${c}
+                    <span class="icon"></span> ${c}
                 </div>
             `).join('');
             suggestions.classList.add('active');
