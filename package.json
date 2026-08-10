@@ -1,7 +1,6 @@
 {
   "name": "viaje-guanabara",
   "version": "1.0.0",
-  "description": "Sistema de Passagens Viaje Guanabara",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
