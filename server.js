@@ -880,7 +880,6 @@ app.put('/api/admin/configuracoes', authenticate, async (req, res) => {
 // ============================================================
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
 app.get('/tickets', (req, res) => res.sendFile(path.join(__dirname, 'public', 'tickets.html')));
-app.get('/passageiros', (req, res) => res.sendFile(path.join(__dirname, 'public', 'passageiros.html')));
 app.get('/checkout', (req, res) => res.sendFile(path.join(__dirname, 'public', 'checkout.html')));
 app.get('/comprovante', (req, res) => res.sendFile(path.join(__dirname, 'public', 'comprovante.html')));
 app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, 'admin', 'index.html')));
