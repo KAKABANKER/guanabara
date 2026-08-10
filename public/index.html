@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>Passagem de Ônibus: Compre Online | Viaje Guanabara</title>
+    <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Guanabara_Logo.png/180px-Guanabara_Logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #f5f5f5; color: #333; line-height: 1.6; overflow-x: hidden; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+        header { background: #fff; border-bottom: 1px solid #e0e0e0; padding: 15px 0; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+        header .container { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 15px; }
+        header .logo img { height: 40px; width: auto; }
+
+        .banner { background: linear-gradient(135deg, #f1efef 0%, #f9f8f8 50%, #e7e5e5 100%); min-height: 160px; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .banner img { max-width: 100%; height: auto; border-radius: 12px; object-fit: cover; max-height: 280px; width: 100%; box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+
+        .search-section { position: relative; margin-top: -30px; padding: 0 20px; }
+        .search-box { background: #fff; border-radius: 16px; box-shadow: 0 8px 30px rgba(0,0,0,0.08); padding: 24px; max-width: 1100px; margin: 0 auto; }
+        .search-box form { display: flex; flex-wrap: wrap; gap: 15px; align-items: flex-end; }
+        .search-box .field { flex: 1 1 140px; min-width: 130px; }
+        .search-box .field label { display: block; font-size: 13px; color: #666; margin-bottom: 4px; font-weight: 500; }
+        .search-box .field input, .search-box .field select { width: 100%; padding: 10px 12px; border: 2px solid transparent; background: #ececfa; border-radius: 10px; font-size: 14px; outline: none; }
+        .search-box .field input:focus, .search-box .field select:focus { border-color: #436ec9; background: #fff; }
+        .search-box .btn-submit { background: #436ec9; color: #fff; border: none; padding: 12px 28px; border-radius: 12px; font-weight: bold; cursor: pointer; height: 44px; font-size: 14px; }
+        .search-box .switch-btn { background: #436ec9; border: none; border-radius: 8px; padding: 8px 12px; cursor: pointer; color: #fff; font-size: 18px; height: 44px; display: flex; align-items: center; }
+
+        footer { background: #1a1a2e; color: #fff; padding: 40px 0 20px; margin-top: 40px; }
+        .footer-bottom { text-align: center; padding-top: 20px; font-size: 14px; color: #888; line-height: 1.8; }
+
+        @media (max-width: 820px) {
+            .search-box { padding: 18px; }
+            .search-box form { flex-direction: column; gap: 12px; }
+            .search-box .field { min-width: 100%; }
+            .search-box .btn-submit { width: 100%; height: 48px; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="/"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Guanabara_Logo.png/180px-Guanabara_Logo.png" alt="Guanabara"></a>
+            </div>
+            <div>
+                <a href="/admin" style="text-decoration:none; color:#999; font-size:12px;">Área do Colaborador</a>
+            </div>
+        </div>
+    </header>
+
+    <section class="banner">
+        <img src="https://viajeguanabara.com.br/static/img/banner-2023.jpg" alt="Banner Guanabara">
+    </section>
+
+    <section class="search-section">
+        <div class="search-box">
+            <form action="/tickets" method="GET">
+                <div class="field">
+                    <label for="origin">Saindo de</label>
+                    <input type="text" id="origin" name="origin" placeholder="Ex: Rio de Janeiro" required>
+                </div>
+                <button type="button" class="switch-btn" onclick="trocarDestino()">⇄</button>
+                <div class="field">
+                    <label for="destination">Indo para</label>
+                    <input type="text" id="destination" name="destination" placeholder="Ex: São Paulo" required>
+                </div>
+                <div class="field">
+                    <label for="departureDate">Ida</label>
+                    <input type="date" id="departureDate" name="date" required>
+                </div>
+                <div class="field">
+                    <label for="passengers">Passageiros</label>
+                    <input type="number" id="passengers" name="passengers" value="1" min="1">
+                </div>
+                <button type="submit" class="btn-submit">BUSCAR VIAGEM</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-bottom">
+                <p>EXPRESSO GUANABARA LTDA. CNPJ: 41.550.112/0001-01 - © Copyright 2025.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function trocarDestino() {
+            const origin = document.getElementById('origin');
+            const destination = document.getElementById('destination');
+            const temp = origin.value;
+            origin.value = destination.value;
+            destination.value = temp;
+        }
+    </script>
+</body>
+</html>

