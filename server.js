@@ -16,7 +16,7 @@ app.use(express.static('public'));
 app.use('/admin', express.static('admin'));
 
 const pool = new Pool({
-    connectionString: 'postgresql://nuitbanker_db_user:Gbnwn5eEqlrKkx4xjduxGis0DchI1aXy@dpg-d8h40ccvikkc73erecng-a.oregon-postgres.render.com/nuitbanker_db',
+    connectionString: 'postgresql://guanabara_user:JTL5QHG4acDPmzHRo4FYZBmTOtlFDBZW@dpg-d9shhuv10e5c739tl52g-a.oregon-postgres.render.com/guanabara',
     ssl: { rejectUnauthorized: false },
     max: 20,
     idleTimeoutMillis: 30000,
