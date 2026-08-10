@@ -7,20 +7,93 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
+        /* ===== RESET ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Inter', sans-serif;
             background: #0a0a0f;
             color: #e0e0e0;
             line-height: 1.6;
+            transition: background 0.3s, color 0.3s;
         }
         a { text-decoration: none; color: inherit; }
 
-        /* ===== SCROLLBAR DARK ===== */
+        /* ===== TEMA CLARO ===== */
+        body.light {
+            background: #f0f2f5;
+            color: #1a1a2e;
+        }
+        body.light .sidebar {
+            background: #ffffff;
+            border-right: 1px solid #e0e0e0;
+        }
+        body.light .sidebar .brand { border-bottom: 1px solid #e8e8e8; }
+        body.light .sidebar .brand h2 { color: #1a1a2e; }
+        body.light .sidebar .brand small { color: #999; }
+        body.light .sidebar .nav li a { color: #666; }
+        body.light .sidebar .nav li a:hover,
+        body.light .sidebar .nav li a.active { background: #f0f4ff; color: #1a1a2e; }
+        body.light .sidebar .nav li a.active { background: rgba(67,110,201,0.1); border-left: 3px solid #436ec9; }
+        body.light .sidebar .nav-label { color: #999; }
+        body.light .sidebar .nav-divider { background: #e8e8e8; }
+
+        body.light .topbar,
+        body.light .card,
+        body.light .stat-card,
+        body.light .modal {
+            background: #ffffff;
+            border: 1px solid #e8e8e8;
+        }
+        body.light .topbar .left h3 { color: #1a1a2e; }
+        body.light .topbar .left .date { color: #888; }
+        body.light .topbar .right .user { background: #f0f2f5; border: 1px solid #e0e0e0; }
+        body.light .topbar .right .user .name { color: #1a1a2e; }
+        body.light .topbar .right .user .role { color: #888; }
+        body.light .stat-card .value { color: #1a1a2e; }
+        body.light .stat-card .label { color: #888; }
+
+        body.light .card .card-header h4 { color: #1a1a2e; }
+        body.light .card .card-header .actions input,
+        body.light .card .card-header .actions select,
+        body.light .modal .form-group input,
+        body.light .modal .form-group select {
+            background: #f5f5f5;
+            border: 1px solid #e0e0e0;
+            color: #1a1a2e;
+        }
+        body.light table th {
+            background: #f5f5f5;
+            color: #555;
+            border-bottom: 2px solid #e8e8e8;
+        }
+        body.light table td { border-bottom: 1px solid #f0f0f0; }
+        body.light table tr:hover td { background: #f8f9fc; }
+        body.light .main-content { background: #f0f2f5; }
+        body.light .login-page { background: #f0f2f5; }
+        body.light .login-box { background: #ffffff; border: 1px solid #e0e0e0; }
+        body.light .login-box h2 { color: #1a1a2e; }
+        body.light .login-box p { color: #666; }
+        body.light .login-box .form-group label { color: #333; }
+        body.light .login-box .form-group input { background: #f5f5f5; border: 1px solid #e0e0e0; color: #1a1a2e; }
+        body.light .toast { background: #ffffff; border: 1px solid #e0e0e0; color: #1a1a2e; }
+
+        body.light .modal-overlay { background: rgba(0,0,0,0.4); }
+        body.light .modal .modal-header { border-bottom: 1px solid #e8e8e8; }
+        body.light .modal .modal-header h3 { color: #1a1a2e; }
+        body.light .modal .modal-close { color: #666; }
+        body.light .modal .modal-close:hover { color: #1a1a2e; }
+
+        body.light .menu-toggle { border: 1px solid #e0e0e0; color: #1a1a2e; background: #ffffff; }
+        body.light .menu-toggle:hover { background: #f5f5f5; }
+
+        /* ===== SCROLLBAR ===== */
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: #1a1a2e; }
         ::-webkit-scrollbar-thumb { background: #2a2a4e; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #3a3a6e; }
+        body.light ::-webkit-scrollbar-track { background: #e8e8e8; }
+        body.light ::-webkit-scrollbar-thumb { background: #c0c0c0; }
+        body.light ::-webkit-scrollbar-thumb:hover { background: #a0a0a0; }
 
         /* ===== SIDEBAR ===== */
         .sidebar {
@@ -132,7 +205,7 @@
         .login-box .error-msg { color: #c62828; font-size: 13px; text-align: center; margin-top: 12px; display: none; }
 
         /* ===== MAIN ===== */
-        .main-content { margin-left: 260px; padding: 30px; min-height: 100vh; background: #0a0a0f; }
+        .main-content { margin-left: 260px; padding: 30px; min-height: 100vh; background: #0a0a0f; transition: background 0.3s; }
 
         /* ===== TOPBAR ===== */
         .topbar {
@@ -146,11 +219,26 @@
             margin-bottom: 30px;
             flex-wrap: wrap;
             gap: 15px;
+            transition: all 0.3s;
         }
         .topbar .left { display: flex; align-items: center; gap: 16px; }
         .topbar .left h3 { font-size: 20px; font-weight: 600; color: #fff; }
         .topbar .left .date { font-size: 13px; color: #666; }
-        .topbar .right { display: flex; align-items: center; gap: 16px; }
+        .topbar .right { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+        .topbar .right .theme-toggle {
+            background: none;
+            border: 1px solid #1a1a2e;
+            border-radius: 30px;
+            padding: 6px 14px;
+            color: #e0e0e0;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .topbar .right .theme-toggle:hover { background: #1a1a2e; }
         .topbar .right .online-indicator { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #4CAF50; }
         .topbar .right .online-indicator .dot { width: 10px; height: 10px; border-radius: 50%; background: #4CAF50; animation: pulse 2s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.8); } }
@@ -201,6 +289,7 @@
             padding: 24px;
             border: 1px solid #1a1a2e;
             margin-bottom: 24px;
+            transition: all 0.3s;
         }
         .card .card-header {
             display: flex;
@@ -244,6 +333,7 @@
         .card .card-header .actions .btn-danger:hover { background: #b71c1c; }
         .card .card-header .actions .btn-warning { background: #e65100; color: #fff; }
         .card .card-header .actions .btn-warning:hover { background: #bf360c; }
+        .card .card-header .actions .btn-sm { padding: 4px 12px; font-size: 12px; }
 
         /* ===== TABLES ===== */
         .table-responsive { overflow-x: auto; }
@@ -272,6 +362,8 @@
         table .status.inactive { background: #1a1a2e; color: #888; }
         table .status.admin { background: #4a148c; color: #ce93d8; }
         table .status.user { background: #1a237e; color: #7986cb; }
+        table .status.confirmado { background: #1b5e20; color: #81c784; }
+        table .status.cancelado { background: #b71c1c; color: #ef9a9a; }
 
         .pagination {
             display: flex;
@@ -322,19 +414,20 @@
             border-bottom: 1px solid #1a1a2e;
             padding-bottom: 16px;
         }
-        .modal .modal-header h3 { color: #fff; }
+        .modal .modal-header h3 { color: #fff; font-size: 20px; }
         .modal .modal-close {
             background: none;
             border: none;
             color: #666;
-            font-size: 24px;
+            font-size: 28px;
             cursor: pointer;
         }
         .modal .modal-close:hover { color: #fff; }
         .modal .form-group { margin-bottom: 16px; }
         .modal .form-group label { display: block; font-weight: 600; font-size: 14px; color: #aaa; margin-bottom: 6px; }
         .modal .form-group input,
-        .modal .form-group select {
+        .modal .form-group select,
+        .modal .form-group textarea {
             width: 100%;
             padding: 10px 14px;
             background: #0a0a0f;
@@ -345,7 +438,8 @@
             font-family: inherit;
         }
         .modal .form-group input:focus,
-        .modal .form-group select:focus { border-color: #436ec9; outline: none; }
+        .modal .form-group select:focus,
+        .modal .form-group textarea:focus { border-color: #436ec9; outline: none; }
         .modal .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
         .modal .btn-submit {
             width: 100%;
@@ -388,6 +482,7 @@
             display: flex;
             align-items: center;
             gap: 12px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.5);
         }
         .toast.show { transform: translateX(0); }
         .toast .toast-close {
@@ -403,6 +498,17 @@
         .toast.error { border-color: #c62828; }
         .toast.warning { border-color: #e65100; }
         .toast.info { border-color: #436ec9; }
+
+        /* ===== CHARTS ===== */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        @media (max-width: 800px) { .charts-grid { grid-template-columns: 1fr; } }
+        .chart-container { height: 250px; position: relative; }
+        .chart-container canvas { width: 100% !important; height: 100% !important; }
 
         /* ===== RESPONSIVE ===== */
         @media (max-width: 992px) {
@@ -462,15 +568,16 @@
         }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        .charts-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        @media (max-width: 800px) { .charts-grid { grid-template-columns: 1fr; } }
-        .chart-container { height: 250px; position: relative; }
-        .chart-container canvas { width: 100% !important; height: 100% !important; }
+        /* ===== LOGIN PAGE DARK ===== */
+        body.light .login-page { background: #f0f2f5; }
+        body.light .login-box { background: #ffffff; border: 1px solid #e0e0e0; }
+        body.light .login-box h2 { color: #1a1a2e; }
+        body.light .login-box p { color: #666; }
+        body.light .login-box .form-group label { color: #333; }
+        body.light .login-box .form-group input { background: #f5f5f5; border: 1px solid #e0e0e0; color: #1a1a2e; }
+
+        /* ===== TOAST LIGHT ===== */
+        body.light .toast { background: #ffffff; border: 1px solid #e0e0e0; color: #1a1a2e; }
     </style>
 </head>
 <body>
@@ -547,6 +654,7 @@
                 </div>
             </div>
             <div class="right">
+                <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">🌙 Dark</button>
                 <span class="online-indicator"><span class="dot"></span> Online</span>
                 <div class="user">
                     <img src="https://ui-avatars.com/api/?name=Admin+Guanabara&background=436ec9&color=fff&size=40" alt="Admin">
@@ -711,6 +819,25 @@
         let statusChart = null;
         let currentUser = null;
         let editingId = null;
+        let currentTheme = localStorage.getItem('adminTheme') || 'dark';
+
+        // ===== THEME =====
+        function toggleTheme() {
+            currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.body.classList.toggle('light', currentTheme === 'light');
+            document.getElementById('themeToggle').textContent = currentTheme === 'dark' ? '🌙 Dark' : '☀️ Light';
+            localStorage.setItem('adminTheme', currentTheme);
+        }
+
+        function applyTheme() {
+            if (currentTheme === 'light') {
+                document.body.classList.add('light');
+                document.getElementById('themeToggle').textContent = '☀️ Light';
+            } else {
+                document.body.classList.remove('light');
+                document.getElementById('themeToggle').textContent = '🌙 Dark';
+            }
+        }
 
         // ===== TOAST =====
         function showToast(message, type = 'info') {
@@ -751,6 +878,7 @@
                     document.getElementById('adminName').textContent = result.user.nome;
                     document.getElementById('adminRole').textContent = result.user.role === 'admin' ? 'Super Admin' : 'Usuario';
                     errorDiv.style.display = 'none';
+                    applyTheme();
                     showToast('Login realizado com sucesso', 'success');
                     navigateTo('dashboard');
                 }
@@ -832,12 +960,15 @@
                     tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#666;">Nenhuma atividade registrada</td></tr>';
                 }
 
-                // Gráficos
+                // GRAFICOS
                 const ctx1 = document.getElementById('salesChart').getContext('2d');
                 const ctx2 = document.getElementById('statusChart').getContext('2d');
-
                 if (salesChart) salesChart.destroy();
                 if (statusChart) statusChart.destroy();
+
+                const isLight = currentTheme === 'light';
+                const textColor = isLight ? '#1a1a2e' : '#e0e0e0';
+                const gridColor = isLight ? '#e0e0e0' : '#1a1a2e';
 
                 salesChart = new Chart(ctx1, {
                     type: 'line',
@@ -852,7 +983,12 @@
                             tension: 0.4
                         }]
                     },
-                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#e0e0e0' } } }, scales: { x: { ticks: { color: '#888' }, grid: { color: '#1a1a2e' } }, y: { ticks: { color: '#888' }, grid: { color: '#1a1a2e' } } } }
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { labels: { color: textColor } } },
+                        scales: { x: { ticks: { color: '#888' }, grid: { color: gridColor } }, y: { ticks: { color: '#888' }, grid: { color: gridColor } } }
+                    }
                 });
 
                 statusChart = new Chart(ctx2, {
@@ -862,11 +998,15 @@
                         datasets: [{
                             data: [65, 25, 10],
                             backgroundColor: ['#2e7d32', '#e65100', '#c62828'],
-                            borderColor: '#0a0a0f',
+                            borderColor: isLight ? '#ffffff' : '#0a0a0f',
                             borderWidth: 2
                         }]
                     },
-                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#e0e0e0' } } } }
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { labels: { color: textColor } } }
+                    }
                 });
             } catch (error) {
                 console.error('Erro ao carregar dashboard:', error);
@@ -890,8 +1030,8 @@
                         <td><span class="status admin">Admin</span></td>
                         <td><span class="status ${u.status || 'offline'}">${u.status || 'offline'}</span></td>
                         <td>
-                            <button class="btn btn-warning" style="padding:4px 12px;font-size:12px;" onclick="editAdmin(${u.id})">Editar</button>
-                            ${u.id != 1 ? `<button class="btn btn-danger" style="padding:4px 12px;font-size:12px;" onclick="deleteAdmin(${u.id})">Deletar</button>` : ''}
+                            <button class="btn btn-warning btn-sm" onclick="editAdmin(${u.id})">Editar</button>
+                            ${u.id != 1 ? `<button class="btn btn-danger btn-sm" onclick="deleteAdmin(${u.id})">Deletar</button>` : ''}
                         </td>
                     </tr>
                 `).join('');
@@ -907,7 +1047,6 @@
             try {
                 usersData = await apiCall('/admin/users');
                 const filtered = usersData.filter(u => 
-                    (u.role === 'user' || u.role === 'admin') &&
                     (u.nome.toLowerCase().includes(filter.toLowerCase()) ||
                     u.email.toLowerCase().includes(filter.toLowerCase()) ||
                     (u.cpf || '').includes(filter))
@@ -933,8 +1072,8 @@
                     <td><span class="status ${u.status || 'offline'}">${u.status || 'offline'}</span></td>
                     <td><span class="status ${u.role === 'admin' ? 'admin' : 'user'}">${u.role || 'user'}</span></td>
                     <td>
-                        <button class="btn btn-warning" style="padding:4px 12px;font-size:12px;" onclick="editUser(${u.id})">Editar</button>
-                        ${u.id != 1 ? `<button class="btn btn-danger" style="padding:4px 12px;font-size:12px;" onclick="deleteUser(${u.id})">Deletar</button>` : ''}
+                        <button class="btn btn-warning btn-sm" onclick="editUser(${u.id})">Editar</button>
+                        ${u.id != 1 ? `<button class="btn btn-danger btn-sm" onclick="deleteUser(${u.id})">Deletar</button>` : ''}
                     </td>
                 </tr>
             `).join('');
@@ -979,7 +1118,6 @@
             const end = start + ticketsPerPage;
             const pageData = filtered.slice(start, end);
 
-            const statusColors = { confirmado: 'active', pendente: 'pending', cancelado: 'inactive' };
             const tbody = document.getElementById('ticketsTable');
             tbody.innerHTML = pageData.map(t => `
                 <tr>
@@ -989,11 +1127,11 @@
                     <td>${t.passageiro || '-'}</td>
                     <td>${t.data || '-'}</td>
                     <td><strong style="color:#f5a623;">R$ ${(t.valor || 0).toFixed(2)}</strong></td>
-                    <td><span class="status ${statusColors[t.status] || 'pending'}">${t.status || 'pendente'}</span></td>
+                    <td><span class="status ${t.status || 'pending'}">${t.status || 'pendente'}</span></td>
                     <td><span style="background:#0d47a1;padding:2px 12px;border-radius:12px;font-size:12px;color:#64b5f6;">${t.metodo_pagamento || 'PIX'}</span></td>
                     <td>
-                        <button class="btn btn-warning" style="padding:4px 12px;font-size:12px;" onclick="editTicket(${t.id})">Editar</button>
-                        <button class="btn btn-danger" style="padding:4px 12px;font-size:12px;" onclick="deleteTicket(${t.id})">Deletar</button>
+                        <button class="btn btn-warning btn-sm" onclick="editTicket(${t.id})">Editar</button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteTicket(${t.id})">Deletar</button>
                     </td>
                 </tr>
             `).join('');
@@ -1074,7 +1212,7 @@
             editingId = null;
         }
 
-        // ===== SAVE FUNCTIONS =====
+        // ===== SAVE FUNCTIONS (TUDO FUNCIONAL) =====
         async function saveUser(type) {
             const data = {
                 nome: document.getElementById('modalNome').value,
@@ -1083,14 +1221,16 @@
                 cpf: document.getElementById('modalCpf').value,
                 status: document.getElementById('modalStatus').value,
                 role: document.getElementById('modalRole').value,
-                senha: document.getElementById('modalSenha').value || undefined
             };
+            const senha = document.getElementById('modalSenha').value;
+            if (senha) data.senha = senha;
+
             try {
                 if (editingId) {
                     await apiCall('/admin/users/' + editingId, 'PUT', data);
                     showToast('Atualizado com sucesso', 'success');
                 } else {
-                    data.senha = data.senha || '123456';
+                    data.senha = senha || '123456';
                     await apiCall('/register', 'POST', data);
                     showToast('Criado com sucesso', 'success');
                 }
@@ -1141,7 +1281,7 @@
                 const ticket = tickets.find(t => t.id === id);
                 if (ticket) {
                     const newStatus = prompt('Novo status (confirmado/pendente/cancelado):', ticket.status);
-                    if (newStatus) {
+                    if (newStatus && ['confirmado','pendente','cancelado'].includes(newStatus)) {
                         await apiCall('/admin/tickets/' + id, 'PUT', { ...ticket, status: newStatus });
                         showToast('Status atualizado', 'success');
                         loadTickets();
@@ -1159,23 +1299,67 @@
             } catch (error) { showToast('Erro: ' + error.message, 'error'); }
         }
 
+        // ===== DESTINOS CRUD FUNCIONAL =====
         async function saveDestino() {
-            // Placeholder - implementar com API real
-            showToast('Destino salvo (implementar API)', 'success');
-            closeModal();
-            loadDestinos();
+            const data = {
+                cidade: document.getElementById('modalCidade').value,
+                estado: document.getElementById('modalEstado').value,
+                status: document.getElementById('modalStatus').value
+            };
+            try {
+                if (editingId) {
+                    await apiCall('/admin/destinos/' + editingId, 'PUT', data);
+                    showToast('Destino atualizado com sucesso', 'success');
+                } else {
+                    await apiCall('/admin/destinos', 'POST', data);
+                    showToast('Destino criado com sucesso', 'success');
+                }
+                closeModal();
+                loadDestinos();
+            } catch (error) { showToast('Erro: ' + error.message, 'error'); }
         }
 
+        // ===== OFERTAS CRUD FUNCIONAL =====
         async function saveOferta() {
-            showToast('Oferta salva (implementar API)', 'success');
-            closeModal();
-            loadOfertas();
+            const data = {
+                origem: document.getElementById('modalOrigem').value,
+                destino: document.getElementById('modalDestino').value,
+                preco: parseFloat(document.getElementById('modalPreco').value),
+                desconto: parseInt(document.getElementById('modalDesconto').value) || 0,
+                validade: document.getElementById('modalValidade').value,
+                status: document.getElementById('modalStatus').value
+            };
+            try {
+                if (editingId) {
+                    await apiCall('/admin/ofertas/' + editingId, 'PUT', data);
+                    showToast('Oferta atualizada com sucesso', 'success');
+                } else {
+                    await apiCall('/admin/ofertas', 'POST', data);
+                    showToast('Oferta criada com sucesso', 'success');
+                }
+                closeModal();
+                loadOfertas();
+            } catch (error) { showToast('Erro: ' + error.message, 'error'); }
         }
 
+        // ===== SERVICOS CRUD FUNCIONAL =====
         async function saveServico() {
-            showToast('Servico salvo (implementar API)', 'success');
-            closeModal();
-            loadServicos();
+            const data = {
+                nome: document.getElementById('modalNome').value,
+                descricao: document.getElementById('modalDescricao').value,
+                status: document.getElementById('modalStatus').value
+            };
+            try {
+                if (editingId) {
+                    await apiCall('/admin/servicos/' + editingId, 'PUT', data);
+                    showToast('Servico atualizado com sucesso', 'success');
+                } else {
+                    await apiCall('/admin/servicos', 'POST', data);
+                    showToast('Servico criado com sucesso', 'success');
+                }
+                closeModal();
+                loadServicos();
+            } catch (error) { showToast('Erro: ' + error.message, 'error'); }
         }
 
         // ===== LOAD OTHER TABLES =====
@@ -1191,12 +1375,29 @@
                         <td>${d.vendas || 0}</td>
                         <td><span class="status ${d.status === 'ativo' ? 'active' : 'inactive'}">${d.status}</span></td>
                         <td>
-                            <button class="btn btn-warning" style="padding:4px 12px;font-size:12px;" onclick="openModal('destino', ${JSON.stringify(d).replace(/"/g, '&quot;')})">Editar</button>
-                            <button class="btn btn-danger" style="padding:4px 12px;font-size:12px;">Deletar</button>
+                            <button class="btn btn-warning btn-sm" onclick="editDestino(${d.id})">Editar</button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteDestino(${d.id})">Deletar</button>
                         </td>
                     </tr>
                 `).join('');
             } catch (error) { console.error('Erro ao carregar destinos:', error); }
+        }
+
+        async function editDestino(id) {
+            try {
+                const destinos = await apiCall('/admin/destinos');
+                const destino = destinos.find(d => d.id === id);
+                if (destino) openModal('destino', destino);
+            } catch (error) { showToast('Erro ao carregar dados', 'error'); }
+        }
+
+        async function deleteDestino(id) {
+            if (!confirm('Tem certeza que deseja deletar este destino?')) return;
+            try {
+                await apiCall('/admin/destinos/' + id, 'DELETE');
+                showToast('Deletado com sucesso', 'success');
+                loadDestinos();
+            } catch (error) { showToast('Erro: ' + error.message, 'error'); }
         }
 
         async function loadOfertas() {
@@ -1213,12 +1414,29 @@
                         <td>${o.validade || '-'}</td>
                         <td><span class="status ${o.status === 'ativo' ? 'active' : 'inactive'}">${o.status}</span></td>
                         <td>
-                            <button class="btn btn-warning" style="padding:4px 12px;font-size:12px;" onclick="openModal('oferta', ${JSON.stringify(o).replace(/"/g, '&quot;')})">Editar</button>
-                            <button class="btn btn-danger" style="padding:4px 12px;font-size:12px;">Deletar</button>
+                            <button class="btn btn-warning btn-sm" onclick="editOferta(${o.id})">Editar</button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteOferta(${o.id})">Deletar</button>
                         </td>
                     </tr>
                 `).join('');
             } catch (error) { console.error('Erro ao carregar ofertas:', error); }
+        }
+
+        async function editOferta(id) {
+            try {
+                const ofertas = await apiCall('/admin/ofertas');
+                const oferta = ofertas.find(o => o.id === id);
+                if (oferta) openModal('oferta', oferta);
+            } catch (error) { showToast('Erro ao carregar dados', 'error'); }
+        }
+
+        async function deleteOferta(id) {
+            if (!confirm('Tem certeza que deseja deletar esta oferta?')) return;
+            try {
+                await apiCall('/admin/ofertas/' + id, 'DELETE');
+                showToast('Deletado com sucesso', 'success');
+                loadOfertas();
+            } catch (error) { showToast('Erro: ' + error.message, 'error'); }
         }
 
         async function loadServicos() {
@@ -1232,12 +1450,29 @@
                         <td>${s.descricao || '-'}</td>
                         <td><span class="status ${s.status === 'ativo' ? 'active' : 'inactive'}">${s.status}</span></td>
                         <td>
-                            <button class="btn btn-warning" style="padding:4px 12px;font-size:12px;" onclick="openModal('servico', ${JSON.stringify(s).replace(/"/g, '&quot;')})">Editar</button>
-                            <button class="btn btn-danger" style="padding:4px 12px;font-size:12px;">Deletar</button>
+                            <button class="btn btn-warning btn-sm" onclick="editServico(${s.id})">Editar</button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteServico(${s.id})">Deletar</button>
                         </td>
                     </tr>
                 `).join('');
             } catch (error) { console.error('Erro ao carregar servicos:', error); }
+        }
+
+        async function editServico(id) {
+            try {
+                const servicos = await apiCall('/admin/servicos');
+                const servico = servicos.find(s => s.id === id);
+                if (servico) openModal('servico', servico);
+            } catch (error) { showToast('Erro ao carregar dados', 'error'); }
+        }
+
+        async function deleteServico(id) {
+            if (!confirm('Tem certeza que deseja deletar este servico?')) return;
+            try {
+                await apiCall('/admin/servicos/' + id, 'DELETE');
+                showToast('Deletado com sucesso', 'success');
+                loadServicos();
+            } catch (error) { showToast('Erro: ' + error.message, 'error'); }
         }
 
         async function loadClientes() {
@@ -1375,8 +1610,7 @@
                     logs_ativos: document.getElementById('configLogsAtivos').value === 'true'
                 };
                 await apiCall('/admin/configuracoes', 'PUT', data);
-                showToast('Configuracoes salvas', 'success');
-                if (data.manutencao) showToast('Modo manutencao ativado', 'warning');
+                showToast('Configuracoes salvas com sucesso', 'success');
             } catch (error) { showToast('Erro ao salvar config: ' + error.message, 'error'); }
         }
 
@@ -1399,6 +1633,7 @@
             document.getElementById('loginPage').style.display = 'none';
             document.getElementById('sidebar').style.display = 'block';
             document.getElementById('mainContent').style.display = 'block';
+            applyTheme();
             navigateTo('dashboard');
         } else {
             document.getElementById('loginPage').style.display = 'flex';
