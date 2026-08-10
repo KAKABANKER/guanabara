@@ -86,9 +86,10 @@
             border-left: 3px solid #436ec9;
         }
         .sidebar .nav li a .icon {
-            font-size: 20px;
+            font-size: 18px;
             width: 24px;
             text-align: center;
+            font-weight: 700;
         }
         .sidebar .nav li a .badge {
             margin-left: auto;
@@ -111,6 +112,84 @@
             color: rgba(255,255,255,0.25);
             letter-spacing: 1px;
             font-weight: 600;
+        }
+
+        /* ===== LOGIN PAGE ===== */
+        .login-page {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        }
+        .login-box {
+            background: #fff;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 400px;
+        }
+        .login-box .logo {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .login-box .logo img {
+            height: 50px;
+        }
+        .login-box h2 {
+            color: #1a2b4a;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        .login-box p {
+            color: #666;
+            text-align: center;
+            margin-bottom: 24px;
+            font-size: 14px;
+        }
+        .login-box .form-group {
+            margin-bottom: 16px;
+        }
+        .login-box .form-group label {
+            display: block;
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 6px;
+        }
+        .login-box .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e8e8e8;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: border 0.2s;
+        }
+        .login-box .form-group input:focus {
+            border-color: #436ec9;
+            outline: none;
+        }
+        .login-box .btn-login {
+            width: 100%;
+            padding: 14px;
+            background: #436ec9;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .login-box .btn-login:hover {
+            background: #3659b0;
+        }
+        .login-box .error-msg {
+            color: #c62828;
+            font-size: 13px;
+            text-align: center;
+            margin-top: 12px;
+            display: none;
         }
 
         /* ===== MAIN CONTENT ===== */
@@ -193,30 +272,18 @@
             font-size: 12px;
             color: #888;
         }
-        .topbar .right .theme-toggle {
-            background: none;
-            border: none;
-            font-size: 22px;
-            cursor: pointer;
-            padding: 6px;
-            border-radius: 8px;
-            transition: background 0.2s;
-        }
-        .topbar .right .theme-toggle:hover {
-            background: #f0f2f5;
-        }
 
         /* ===== CARDS ===== */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
             margin-bottom: 30px;
         }
         .stat-card {
             background: #fff;
             border-radius: 16px;
-            padding: 22px 24px;
+            padding: 20px 24px;
             box-shadow: 0 2px 12px rgba(0,0,0,0.04);
             transition: transform 0.2s, box-shadow 0.2s;
             border: 1px solid rgba(0,0,0,0.02);
@@ -226,7 +293,7 @@
             box-shadow: 0 8px 25px rgba(0,0,0,0.06);
         }
         .stat-card .label {
-            font-size: 13px;
+            font-size: 12px;
             color: #888;
             font-weight: 500;
             text-transform: uppercase;
@@ -248,8 +315,9 @@
         .stat-card .change.down { color: #f44336; }
         .stat-card .icon {
             float: right;
-            font-size: 32px;
+            font-size: 28px;
             opacity: 0.2;
+            font-weight: 700;
         }
         .stat-card.primary .icon { color: #436ec9; }
         .stat-card.success .icon { color: #4CAF50; }
@@ -397,7 +465,6 @@
             color: #888;
             font-size: 12px;
         }
-        /* Toggle switch */
         .switch {
             position: relative;
             width: 44px;
@@ -438,34 +505,6 @@
             transform: translateX(20px);
         }
 
-        /* ===== THEMES ===== */
-        .theme-options {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            margin-top: 8px;
-        }
-        .theme-options .theme-btn {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
-            border: 2px solid transparent;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .theme-options .theme-btn:hover {
-            transform: scale(1.05);
-        }
-        .theme-options .theme-btn.active {
-            border-color: #436ec9;
-            box-shadow: 0 0 0 3px rgba(67,110,201,0.2);
-        }
-        .theme-options .theme-btn.light { background: linear-gradient(135deg, #f5f5f5, #e8e8e8); }
-        .theme-options .theme-btn.dark { background: linear-gradient(135deg, #1a1a2e, #16213e); }
-        .theme-options .theme-btn.blue { background: linear-gradient(135deg, #1a237e, #283593); }
-        .theme-options .theme-btn.green { background: linear-gradient(135deg, #1b5e20, #2e7d32); }
-        .theme-options .theme-btn.purple { background: linear-gradient(135deg, #4a148c, #6a1b9a); }
-
         /* ===== TOAST ===== */
         .toast-container {
             position: fixed;
@@ -494,9 +533,6 @@
         .toast.show {
             transform: translateX(0);
         }
-        .toast .toast-icon {
-            font-size: 24px;
-        }
         .toast .toast-close {
             margin-left: auto;
             background: none;
@@ -509,6 +545,7 @@
         .toast.success { background: #2e7d32; }
         .toast.error { background: #c62828; }
         .toast.warning { background: #e65100; }
+        .toast.info { background: #1a2b4a; }
 
         /* ===== RESPONSIVE ===== */
         @media (max-width: 992px) {
@@ -564,6 +601,7 @@
                 grid-template-columns: 1fr;
             }
         }
+
         @media (max-width: 400px) {
             .stats-grid {
                 grid-template-columns: 1fr;
@@ -643,9 +681,6 @@
         body.dark .topbar .right .user {
             background: #2a2a2a;
         }
-        body.dark .topbar .right .theme-toggle:hover {
-            background: #2a2a2a;
-        }
         body.dark .card .card-header .actions input,
         body.dark .card .card-header .actions select {
             background: #2a2a2a;
@@ -670,8 +705,31 @@
         <div class="spinner"></div>
     </div>
 
+    <!-- ===== LOGIN PAGE ===== -->
+    <div class="login-page" id="loginPage">
+        <div class="login-box">
+            <div class="logo">
+                <img src="img/logo.webp" alt="Viaje Guanabara">
+            </div>
+            <h2>Painel Administrativo</h2>
+            <p>Faça login para acessar o sistema</p>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="loginEmail" value="admin@viajeguanabara.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Senha</label>
+                    <input type="password" id="loginPassword" value="admin123" required>
+                </div>
+                <div class="error-msg" id="loginError">Credenciais inválidas</div>
+                <button type="submit" class="btn-login">Entrar</button>
+            </form>
+        </div>
+    </div>
+
     <!-- ===== SIDEBAR ===== -->
-    <aside class="sidebar" id="sidebar">
+    <aside class="sidebar" id="sidebar" style="display:none;">
         <div class="brand">
             <img src="img/logo.webp" alt="Viaje Guanabara">
             <div>
@@ -682,30 +740,35 @@
 
         <ul class="nav">
             <li class="nav-label">Principal</li>
-            <li><a href="#" class="active" data-page="dashboard"><span class="icon">📊</span> Dashboard <span class="badge">Live</span></a></li>
-            <li><a href="#" data-page="users"><span class="icon">👥</span> Usuários <span class="badge" id="userCount">0</span></a></li>
-            <li><a href="#" data-page="passagens"><span class="icon">🎫</span> Passagens <span class="badge" id="ticketCount">0</span></a></li>
-            <li><a href="#" data-page="analytics"><span class="icon">📈</span> Analytics</a></li>
+            <li><a href="#" class="active" data-page="dashboard"><span class="icon">D</span> Dashboard <span class="badge">Live</span></a></li>
+            <li><a href="#" data-page="users"><span class="icon">U</span> Usuarios <span class="badge" id="userCount">0</span></a></li>
+            <li><a href="#" data-page="tickets"><span class="icon">P</span> Passagens <span class="badge" id="ticketCount">0</span></a></li>
 
             <li class="nav-divider"></li>
             <li class="nav-label">Gerenciamento</li>
-            <li><a href="#" data-page="destinos"><span class="icon">📍</span> Destinos</a></li>
-            <li><a href="#" data-page="ofertas"><span class="icon">🏷️</span> Ofertas</a></li>
-            <li><a href="#" data-page="servicos"><span class="icon">⚙️</span> Serviços</a></li>
+            <li><a href="#" data-page="destinos"><span class="icon">D</span> Destinos</a></li>
+            <li><a href="#" data-page="ofertas"><span class="icon">O</span> Ofertas</a></li>
+            <li><a href="#" data-page="servicos"><span class="icon">S</span> Servicos</a></li>
+            <li><a href="#" data-page="clientes"><span class="icon">C</span> Clientes</a></li>
+
+            <li class="nav-divider"></li>
+            <li class="nav-label">Analytics</li>
+            <li><a href="#" data-page="buscas"><span class="icon">B</span> Buscas</a></li>
+            <li><a href="#" data-page="visitantes"><span class="icon">V</span> Visitantes</a></li>
 
             <li class="nav-divider"></li>
             <li class="nav-label">Sistema</li>
-            <li><a href="#" data-page="configuracoes"><span class="icon">🔧</span> Configurações</a></li>
-            <li><a href="#" data-page="logs"><span class="icon">📋</span> Logs</a></li>
-            <li><a href="#" onclick="logout()"><span class="icon">🚪</span> Sair</a></li>
+            <li><a href="#" data-page="configuracoes"><span class="icon">C</span> Configuracoes</a></li>
+            <li><a href="#" data-page="logs"><span class="icon">L</span> Logs</a></li>
+            <li><a href="#" onclick="logout()"><span class="icon">X</span> Sair</a></li>
         </ul>
     </aside>
 
-    <!-- ===== SIDEBAR OVERLAY (mobile) ===== -->
+    <!-- ===== SIDEBAR OVERLAY ===== -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
     <!-- ===== MAIN CONTENT ===== -->
-    <div class="main-content" id="mainContent">
+    <div class="main-content" id="mainContent" style="display:none;">
 
         <!-- ===== TOPBAR ===== -->
         <header class="topbar">
@@ -720,8 +783,7 @@
                 <span class="online-indicator">
                     <span class="dot"></span> Online
                 </span>
-                <button class="theme-toggle" id="themeToggle" title="Alternar tema">🌙</button>
-                <div class="user" onclick="showToast('Perfil do administrador', 'info')">
+                <div class="user">
                     <img src="https://ui-avatars.com/api/?name=Admin+Guanabara&background=436ec9&color=fff&size=40" alt="Admin">
                     <div>
                         <div class="name" id="adminName">Admin</div>
@@ -731,63 +793,47 @@
             </div>
         </header>
 
-        <!-- ===== PAGES ===== -->
-
         <!-- ===== DASHBOARD ===== -->
         <div id="page-dashboard">
             <div class="stats-grid">
                 <div class="stat-card primary">
-                    <span class="icon">👤</span>
-                    <div class="label">Total de Usuários</div>
+                    <span class="icon">U</span>
+                    <div class="label">Total de Usuarios</div>
                     <div class="value" id="totalUsers">0</div>
-                    <div class="change up">↑ 12% este mês</div>
                 </div>
                 <div class="stat-card success">
-                    <span class="icon">🎫</span>
+                    <span class="icon">P</span>
                     <div class="label">Passagens Vendidas</div>
                     <div class="value" id="totalTickets">0</div>
-                    <div class="change up">↑ 8% este mês</div>
                 </div>
                 <div class="stat-card warning">
-                    <span class="icon">💰</span>
+                    <span class="icon">R</span>
                     <div class="label">Faturamento</div>
                     <div class="value" id="totalRevenue">R$ 0</div>
-                    <div class="change up">↑ 15% este mês</div>
                 </div>
                 <div class="stat-card danger">
-                    <span class="icon">👀</span>
-                    <div class="label">Visitantes Hoje</div>
-                    <div class="value" id="todayVisitors">0</div>
-                    <div class="change up">↑ 5% hoje</div>
+                    <span class="icon">V</span>
+                    <div class="label">Visitantes</div>
+                    <div class="value" id="totalVisitors">0</div>
                 </div>
             </div>
 
             <div class="card">
                 <div class="card-header">
                     <h4>Atividade Recente</h4>
-                    <div class="actions">
-                        <select id="activityFilter">
-                            <option value="all">Todos</option>
-                            <option value="login">Logins</option>
-                            <option value="compra">Compras</option>
-                            <option value="cadastro">Cadastros</option>
-                        </select>
-                    </div>
                 </div>
                 <div class="table-responsive">
                     <table>
                         <thead>
                             <tr>
-                                <th>Usuário</th>
-                                <th>Ação</th>
+                                <th>Usuario</th>
+                                <th>Acão</th>
                                 <th>Detalhes</th>
                                 <th>Data/Hora</th>
                                 <th>IP</th>
                             </tr>
                         </thead>
-                        <tbody id="activityTable">
-                            <!-- Preenchido via JS -->
-                        </tbody>
+                        <tbody id="activityTable"></tbody>
                     </table>
                 </div>
             </div>
@@ -797,10 +843,10 @@
         <div id="page-users" style="display:none;">
             <div class="card">
                 <div class="card-header">
-                    <h4>Gerenciar Usuários</h4>
+                    <h4>Gerenciar Usuarios</h4>
                     <div class="actions">
-                        <input type="text" placeholder="Buscar usuário..." id="userSearch" oninput="filterUsers()">
-                        <button class="btn btn-primary" onclick="showToast('Formulário de cadastro aberto', 'info')">+ Novo</button>
+                        <input type="text" placeholder="Buscar usuario..." id="userSearch" oninput="filterUsers()">
+                        <button class="btn btn-primary" onclick="showToast('Formulario de cadastro aberto', 'info')">Novo</button>
                     </div>
                 </div>
                 <div class="table-responsive">
@@ -809,24 +855,22 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Nome</th>
-                                <th>E-mail</th>
+                                <th>Email</th>
                                 <th>Telefone</th>
                                 <th>CPF</th>
                                 <th>Status</th>
-                                <th>Último Acesso</th>
+                                <th>Ultimo Acesso</th>
                                 <th>IP</th>
                             </tr>
                         </thead>
-                        <tbody id="usersTable">
-                            <!-- Preenchido via JS -->
-                        </tbody>
+                        <tbody id="usersTable"></tbody>
                     </table>
                 </div>
             </div>
         </div>
 
-        <!-- ===== PASSAGENS ===== -->
-        <div id="page-passagens" style="display:none;">
+        <!-- ===== TICKETS ===== -->
+        <div id="page-tickets" style="display:none;">
             <div class="card">
                 <div class="card-header">
                     <h4>Passagens Vendidas</h4>
@@ -844,54 +888,17 @@
                     <table>
                         <thead>
                             <tr>
-                                <th>Código</th>
+                                <th>Codigo</th>
                                 <th>Origem</th>
                                 <th>Destino</th>
                                 <th>Passageiro</th>
                                 <th>Data</th>
                                 <th>Valor</th>
                                 <th>Status</th>
-                                <th>Ações</th>
                             </tr>
                         </thead>
-                        <tbody id="ticketsTable">
-                            <!-- Preenchido via JS -->
-                        </tbody>
+                        <tbody id="ticketsTable"></tbody>
                     </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- ===== ANALYTICS ===== -->
-        <div id="page-analytics" style="display:none;">
-            <div class="stats-grid">
-                <div class="stat-card primary">
-                    <div class="label">Taxa de Conversão</div>
-                    <div class="value">23.5%</div>
-                    <div class="change up">↑ 2.1%</div>
-                </div>
-                <div class="stat-card success">
-                    <div class="label">Ticket Médio</div>
-                    <div class="value">R$ 187,50</div>
-                    <div class="change up">↑ 5%</div>
-                </div>
-                <div class="stat-card warning">
-                    <div class="label">Rotas Mais Populares</div>
-                    <div class="value" style="font-size:18px;">Rio → SP</div>
-                    <div class="change">342 viagens</div>
-                </div>
-                <div class="stat-card danger">
-                    <div class="label">Dispositivos</div>
-                    <div class="value" style="font-size:18px;">65% Mobile</div>
-                    <div class="change">35% Desktop</div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-header">
-                    <h4>Estatísticas de Uso</h4>
-                </div>
-                <div style="height:300px;display:flex;align-items:center;justify-content:center;background:#f8f9fc;border-radius:12px;color:#888;">
-                    📊 Gráfico de desempenho (integração com Chart.js em breve)
                 </div>
             </div>
         </div>
@@ -901,12 +908,12 @@
             <div class="card">
                 <div class="card-header">
                     <h4>Destinos Cadastrados</h4>
-                    <button class="btn btn-primary" onclick="showToast('Formulário de novo destino', 'info')">+ Adicionar</button>
+                    <button class="btn btn-primary" onclick="showToast('Formulario de novo destino', 'info')">Adicionar</button>
                 </div>
                 <div class="table-responsive">
                     <table>
                         <thead>
-                            <tr><th>ID</th><th>Cidade</th><th>Estado</th><th>Passagens Vendidas</th><th>Status</th></tr>
+                            <tr><th>ID</th><th>Cidade</th><th>Estado</th><th>Vendas</th><th>Status</th></tr>
                         </thead>
                         <tbody id="destinosTable"></tbody>
                     </table>
@@ -919,12 +926,12 @@
             <div class="card">
                 <div class="card-header">
                     <h4>Ofertas Ativas</h4>
-                    <button class="btn btn-primary" onclick="showToast('Formulário de nova oferta', 'info')">+ Nova Oferta</button>
+                    <button class="btn btn-primary" onclick="showToast('Formulario de nova oferta', 'info')">Nova Oferta</button>
                 </div>
                 <div class="table-responsive">
                     <table>
                         <thead>
-                            <tr><th>ID</th><th>Origem</th><th>Destino</th><th>Preço</th><th>Desconto</th><th>Validade</th><th>Status</th></tr>
+                            <tr><th>ID</th><th>Origem</th><th>Destino</th><th>Preco</th><th>Desconto</th><th>Validade</th><th>Status</th></tr>
                         </thead>
                         <tbody id="ofertasTable"></tbody>
                     </table>
@@ -932,17 +939,17 @@
             </div>
         </div>
 
-        <!-- ===== SERVIÇOS ===== -->
+        <!-- ===== SERVICOS ===== -->
         <div id="page-servicos" style="display:none;">
             <div class="card">
                 <div class="card-header">
-                    <h4>Serviços Oferecidos</h4>
-                    <button class="btn btn-primary" onclick="showToast('Formulário de novo serviço', 'info')">+ Adicionar</button>
+                    <h4>Servicos Oferecidos</h4>
+                    <button class="btn btn-primary" onclick="showToast('Formulario de novo servico', 'info')">Adicionar</button>
                 </div>
                 <div class="table-responsive">
                     <table>
                         <thead>
-                            <tr><th>ID</th><th>Serviço</th><th>Descrição</th><th>Status</th></tr>
+                            <tr><th>ID</th><th>Servico</th><th>Descricao</th><th>Status</th></tr>
                         </thead>
                         <tbody id="servicosTable"></tbody>
                     </table>
@@ -950,11 +957,62 @@
             </div>
         </div>
 
-        <!-- ===== CONFIGURAÇÕES ===== -->
+        <!-- ===== CLIENTES ===== -->
+        <div id="page-clientes" style="display:none;">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Clientes Cadastrados</h4>
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr><th>ID</th><th>Nome</th><th>CPF</th><th>Telefone</th><th>Email</th><th>Data</th></tr>
+                        </thead>
+                        <tbody id="clientesTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== BUSCAS ===== -->
+        <div id="page-buscas" style="display:none;">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Historico de Buscas</h4>
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr><th>Origem</th><th>Destino</th><th>Data</th><th>Passageiros</th><th>IP</th><th>Timestamp</th></tr>
+                        </thead>
+                        <tbody id="buscasTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== VISITANTES ===== -->
+        <div id="page-visitantes" style="display:none;">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Visitantes</h4>
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr><th>IP</th><th>Pagina</th><th>Navegador</th><th>Tela</th><th>Timestamp</th></tr>
+                        </thead>
+                        <tbody id="visitantesTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CONFIGURACOES ===== -->
         <div id="page-configuracoes" style="display:none;">
             <div class="settings-grid">
                 <div class="settings-card">
-                    <h5>⚙️ Geral</h5>
+                    <h5>Geral</h5>
                     <div class="setting-item">
                         <div class="info">
                             <label>Nome do Site</label>
@@ -964,8 +1022,8 @@
                     </div>
                     <div class="setting-item">
                         <div class="info">
-                            <label>Modo Manutenção</label>
-                            <small>Ativar modo de manutenção</small>
+                            <label>Modo Manutencao</label>
+                            <small>Ativar modo de manutencao</small>
                         </div>
                         <label class="switch">
                             <input type="checkbox" id="maintenanceMode">
@@ -985,7 +1043,7 @@
                 </div>
 
                 <div class="settings-card">
-                    <h5>🎨 Tema</h5>
+                    <h5>Tema</h5>
                     <div class="theme-options">
                         <button class="theme-btn light active" data-theme="light" onclick="setTheme('light')" title="Claro"></button>
                         <button class="theme-btn dark" data-theme="dark" onclick="setTheme('dark')" title="Escuro"></button>
@@ -996,11 +1054,11 @@
                 </div>
 
                 <div class="settings-card">
-                    <h5>🔔 Notificações</h5>
+                    <h5>Notificacoes</h5>
                     <div class="setting-item">
                         <div class="info">
-                            <label>Notificações por E-mail</label>
-                            <small>Receber alertas por e-mail</small>
+                            <label>Notificacoes por Email</label>
+                            <small>Receber alertas por email</small>
                         </div>
                         <label class="switch">
                             <input type="checkbox" id="emailNotifications" checked>
@@ -1009,7 +1067,7 @@
                     </div>
                     <div class="setting-item">
                         <div class="info">
-                            <label>Alertas de Segurança</label>
+                            <label>Alertas de Seguranca</label>
                             <small>Receber alertas de login suspeito</small>
                         </div>
                         <label class="switch">
@@ -1019,8 +1077,8 @@
                     </div>
                     <div class="setting-item">
                         <div class="info">
-                            <label>Relatórios Semanais</label>
-                            <small>Receber relatórios por e-mail</small>
+                            <label>Relatorios Semanais</label>
+                            <small>Receber relatorios por email</small>
                         </div>
                         <label class="switch">
                             <input type="checkbox" id="weeklyReports">
@@ -1030,10 +1088,10 @@
                 </div>
 
                 <div class="settings-card">
-                    <h5>🔄 Atualizações</h5>
+                    <h5>Atualizacoes</h5>
                     <div class="setting-item">
                         <div class="info">
-                            <label>Atualização Automática</label>
+                            <label>Atualizacao Automatica</label>
                             <small>Atualizar dados automaticamente</small>
                         </div>
                         <label class="switch">
@@ -1043,7 +1101,7 @@
                     </div>
                     <div class="setting-item">
                         <div class="info">
-                            <label>Intervalo de Atualização</label>
+                            <label>Intervalo de Atualizacao</label>
                             <small>Em segundos</small>
                         </div>
                         <select id="updateInterval" style="padding:6px 12px;border-radius:8px;border:1px solid #e0e0e0;">
@@ -1055,7 +1113,7 @@
                     </div>
                     <div class="setting-item">
                         <div class="info">
-                            <label>Última Atualização</label>
+                            <label>Ultima Atualizacao</label>
                             <small id="lastUpdateTime">Nunca</small>
                         </div>
                         <button class="btn btn-primary" style="padding:4px 16px;font-size:12px;" onclick="forceUpdate()">Atualizar</button>
@@ -1077,11 +1135,9 @@
                 <div class="table-responsive">
                     <table>
                         <thead>
-                            <tr><th>Data/Hora</th><th>Usuário</th><th>Ação</th><th>IP</th><th>Detalhes</th></tr>
+                            <tr><th>Data/Hora</th><th>Usuario</th><th>Acão</th><th>IP</th><th>Detalhes</th></tr>
                         </thead>
-                        <tbody id="logsTable">
-                            <!-- Preenchido via JS -->
-                        </tbody>
+                        <tbody id="logsTable"></tbody>
                     </table>
                 </div>
             </div>
@@ -1094,189 +1150,150 @@
 
     <script>
         // ============================================================
-        // ===== DADOS INICIAIS (SIMULADOS) =====
+        // ===== API INTEGRATION =====
         // ============================================================
 
-        // ===== USUÁRIOS =====
-        let users = [
-            { id: 1, nome: 'João Silva', email: 'joao@email.com', telefone: '(11) 99999-1111', cpf: '123.456.789-00', status: 'online', ultimoAcesso: '2026-08-09 14:30', ip: '192.168.1.100' },
-            { id: 2, nome: 'Maria Santos', email: 'maria@email.com', telefone: '(11) 99999-2222', cpf: '234.567.890-11', status: 'online', ultimoAcesso: '2026-08-09 13:15', ip: '192.168.1.101' },
-            { id: 3, nome: 'Pedro Oliveira', email: 'pedro@email.com', telefone: '(11) 99999-3333', cpf: '345.678.901-22', status: 'offline', ultimoAcesso: '2026-08-08 22:40', ip: '192.168.1.102' },
-            { id: 4, nome: 'Ana Costa', email: 'ana@email.com', telefone: '(11) 99999-4444', cpf: '456.789.012-33', status: 'online', ultimoAcesso: '2026-08-09 12:00', ip: '192.168.1.103' },
-            { id: 5, nome: 'Carlos Lima', email: 'carlos@email.com', telefone: '(11) 99999-5555', cpf: '567.890.123-44', status: 'pending', ultimoAcesso: '2026-08-08 18:20', ip: '192.168.1.104' },
-            { id: 6, nome: 'Fernanda Souza', email: 'fernanda@email.com', telefone: '(11) 99999-6666', cpf: '678.901.234-55', status: 'online', ultimoAcesso: '2026-08-09 11:30', ip: '192.168.1.105' },
-            { id: 7, nome: 'Roberto Alves', email: 'roberto@email.com', telefone: '(11) 99999-7777', cpf: '789.012.345-66', status: 'offline', ultimoAcesso: '2026-08-07 20:15', ip: '192.168.1.106' },
-            { id: 8, nome: 'Juliana Pereira', email: 'juliana@email.com', telefone: '(11) 99999-8888', cpf: '890.123.456-77', status: 'online', ultimoAcesso: '2026-08-09 10:45', ip: '192.168.1.107' },
-            { id: 9, nome: 'Lucas Rodrigues', email: 'lucas@email.com', telefone: '(11) 99999-9999', cpf: '901.234.567-88', status: 'pending', ultimoAcesso: '2026-08-08 16:30', ip: '192.168.1.108' },
-            { id: 10, nome: 'Amanda Ferreira', email: 'amanda@email.com', telefone: '(11) 99999-0000', cpf: '012.345.678-99', status: 'online', ultimoAcesso: '2026-08-09 09:00', ip: '192.168.1.109' },
-        ];
-
-        // ===== PASSAGENS =====
-        let tickets = [
-            { id: 'T001', origem: 'Rio de Janeiro', destino: 'São Paulo', passageiro: 'João Silva', data: '2026-08-15', valor: 'R$ 180,00', status: 'confirmado' },
-            { id: 'T002', origem: 'Brasília', destino: 'Goiânia', passageiro: 'Maria Santos', data: '2026-08-16', valor: 'R$ 150,00', status: 'confirmado' },
-            { id: 'T003', origem: 'Fortaleza', destino: 'Natal', passageiro: 'Pedro Oliveira', data: '2026-08-17', valor: 'R$ 176,00', status: 'pendente' },
-            { id: 'T004', origem: 'Curitiba', destino: 'Florianópolis', passageiro: 'Ana Costa', data: '2026-08-18', valor: 'R$ 120,00', status: 'confirmado' },
-            { id: 'T005', origem: 'São Paulo', destino: 'Campinas', passageiro: 'Carlos Lima', data: '2026-08-19', valor: 'R$ 65,00', status: 'cancelado' },
-            { id: 'T006', origem: 'Belo Horizonte', destino: 'Rio de Janeiro', passageiro: 'Fernanda Souza', data: '2026-08-20', valor: 'R$ 89,00', status: 'confirmado' },
-            { id: 'T007', origem: 'Rio de Janeiro', destino: 'Brasília', passageiro: 'Roberto Alves', data: '2026-08-21', valor: 'R$ 204,00', status: 'pendente' },
-            { id: 'T008', origem: 'Goiânia', destino: 'Barreiras', passageiro: 'Juliana Pereira', data: '2026-08-22', valor: 'R$ 285,99', status: 'confirmado' },
-        ];
-
-        // ===== DESTINOS =====
-        let destinos = [
-            { id: 1, cidade: 'Rio de Janeiro', estado: 'RJ', vendas: 152, status: 'ativo' },
-            { id: 2, cidade: 'São Paulo', estado: 'SP', vendas: 234, status: 'ativo' },
-            { id: 3, cidade: 'Brasília', estado: 'DF', vendas: 98, status: 'ativo' },
-            { id: 4, cidade: 'Fortaleza', estado: 'CE', vendas: 67, status: 'ativo' },
-            { id: 5, cidade: 'Goiânia', estado: 'GO', vendas: 45, status: 'inativo' },
-            { id: 6, cidade: 'Curitiba', estado: 'PR', vendas: 89, status: 'ativo' },
-        ];
-
-        // ===== OFERTAS =====
-        let ofertas = [
-            { id: 1, origem: 'Rio de Janeiro', destino: 'Brasília', preco: 'R$ 204,00', desconto: '15%', validade: '2026-08-31', status: 'ativo' },
-            { id: 2, origem: 'São Paulo', destino: 'Rio de Janeiro', preco: 'R$ 180,00', desconto: '10%', validade: '2026-08-30', status: 'ativo' },
-            { id: 3, origem: 'Fortaleza', destino: 'Natal', preco: 'R$ 176,00', desconto: '20%', validade: '2026-09-01', status: 'ativo' },
-        ];
-
-        // ===== SERVIÇOS =====
-        let servicos = [
-            { id: 1, nome: 'Wi-Fi a bordo', descricao: 'Internet gratuita durante a viagem', status: 'ativo' },
-            { id: 2, nome: 'Ar-condicionado', descricao: 'Climatização para seu conforto', status: 'ativo' },
-            { id: 3, nome: 'Banheiro a bordo', descricao: 'Banheiros limpos e confortáveis', status: 'ativo' },
-            { id: 4, nome: 'Poltronas reclináveis', descricao: 'Assentos confortáveis', status: 'ativo' },
-            { id: 5, nome: 'Rastreamento em tempo real', descricao: 'Acompanhe sua viagem', status: 'inativo' },
-        ];
-
-        // ===== LOGS =====
-        let logs = [
-            { data: '2026-08-09 14:35', usuario: 'João Silva', acao: 'Login', ip: '192.168.1.100', detalhes: 'Login bem-sucedido' },
-            { data: '2026-08-09 14:30', usuario: 'Maria Santos', acao: 'Compra', ip: '192.168.1.101', detalhes: 'Compra da passagem T002' },
-            { data: '2026-08-09 14:15', usuario: 'Admin', acao: 'Cadastro', ip: '127.0.0.1', detalhes: 'Novo usuário cadastrado: Ana Costa' },
-            { data: '2026-08-09 13:50', usuario: 'Pedro Oliveira', acao: 'Login', ip: '192.168.1.102', detalhes: 'Login falhou - senha incorreta' },
-            { data: '2026-08-09 13:30', usuario: 'Admin', acao: 'Configuração', ip: '127.0.0.1', detalhes: 'Tema alterado para Dark' },
-            { data: '2026-08-09 13:00', usuario: 'Carlos Lima', acao: 'Cadastro', ip: '192.168.1.104', detalhes: 'Novo cadastro realizado' },
-            { data: '2026-08-09 12:45', usuario: 'Fernanda Souza', acao: 'Compra', ip: '192.168.1.105', detalhes: 'Compra da passagem T006' },
-        ];
-
-        // ===== ATIVIDADES =====
-        let activities = [
-            { usuario: 'João Silva', acao: 'Login', detalhes: 'Acesso ao sistema', data: '2026-08-09 14:35', ip: '192.168.1.100' },
-            { usuario: 'Maria Santos', acao: 'Compra', detalhes: 'Passagem T002 - Brasília → Goiânia', data: '2026-08-09 14:30', ip: '192.168.1.101' },
-            { usuario: 'Admin', acao: 'Cadastro', detalhes: 'Novo usuário: Ana Costa', data: '2026-08-09 14:15', ip: '127.0.0.1' },
-            { usuario: 'Pedro Oliveira', acao: 'Login', detalhes: 'Tentativa de login falhou', data: '2026-08-09 13:50', ip: '192.168.1.102' },
-            { usuario: 'Carlos Lima', acao: 'Cadastro', detalhes: 'Novo cadastro', data: '2026-08-09 13:00', ip: '192.168.1.104' },
-        ];
-
-        // ============================================================
-        // ===== FUNÇÕES PRINCIPAIS =====
-        // ============================================================
-
+        const API_URL = '/api';
+        let token = localStorage.getItem('adminToken') || '';
         let currentPage = 'dashboard';
         let updateInterval = null;
-        let theme = 'light';
 
-        // ===== INICIALIZAÇÃO =====
-        document.addEventListener('DOMContentLoaded', function() {
-            // Data atual
-            updateDateTime();
-            setInterval(updateDateTime, 1000);
-
-            // Carregar dados
-            updateAllStats();
-            renderUsers();
-            renderTickets();
-            renderDestinos();
-            renderOfertas();
-            renderServicos();
-            renderLogs();
-            renderActivities();
-
-            // Eventos
-            document.querySelectorAll('.sidebar .nav a[data-page]').forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    navigateTo(this.dataset.page);
-                });
-            });
-
-            document.getElementById('menuToggle').addEventListener('click', toggleSidebar);
-            document.getElementById('sidebarOverlay').addEventListener('click', closeSidebar);
-
-            // Tema
-            const savedTheme = localStorage.getItem('adminTheme') || 'light';
-            setTheme(savedTheme);
-
-            // Auto update
-            document.getElementById('autoUpdate').addEventListener('change', function() {
-                if (this.checked) {
-                    startAutoUpdate();
-                } else {
-                    stopAutoUpdate();
+        async function apiCall(endpoint, method = 'GET', data = null) {
+            const options = {
+                method,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
                 }
-            });
+            };
+            if (data) options.body = JSON.stringify(data);
 
-            // Atualização ao vivo
-            startAutoUpdate();
+            try {
+                const response = await fetch(`${API_URL}${endpoint}`, options);
+                const result = await response.json();
+                if (!response.ok) throw new Error(result.error || 'Erro na requisicao');
+                return result;
+            } catch (error) {
+                console.error('Erro na API:', error);
+                throw error;
+            }
+        }
 
-            // Configuração da data inicial
-            document.getElementById('lastUpdateTime').textContent = new Date().toLocaleString();
+        // ============================================================
+        // ===== TOAST =====
+        // ============================================================
 
-            // Coletar dados do visitante
-            collectVisitorData();
-
-            // Toast de boas-vindas
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `
+                <span>${message}</span>
+                <button class="toast-close" onclick="this.parentElement.remove()">X</button>
+            `;
+            container.appendChild(toast);
+            setTimeout(() => toast.classList.add('show'), 50);
             setTimeout(() => {
-                showToast('Bem-vindo ao Painel Administrativo!', 'success');
-            }, 1000);
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 500);
+            }, 5000);
+        }
+
+        // ============================================================
+        // ===== LOGIN =====
+        // ============================================================
+
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const senha = document.getElementById('loginPassword').value;
+            const errorDiv = document.getElementById('loginError');
+
+            try {
+                const result = await apiCall('/login', 'POST', { email, senha });
+                if (result.success) {
+                    token = result.token;
+                    localStorage.setItem('adminToken', token);
+                    document.getElementById('loginPage').style.display = 'none';
+                    document.getElementById('sidebar').style.display = 'block';
+                    document.getElementById('mainContent').style.display = 'block';
+                    errorDiv.style.display = 'none';
+                    showToast('Login realizado com sucesso!', 'success');
+                    loadDashboard();
+                }
+            } catch (error) {
+                errorDiv.style.display = 'block';
+                errorDiv.textContent = error.message || 'Credenciais invalidas';
+                showToast('Erro ao fazer login', 'error');
+            }
         });
 
-        // ===== NAVEGAÇÃO =====
+        // ============================================================
+        // ===== NAVEGACAO =====
+        // ============================================================
+
+        document.querySelectorAll('.sidebar .nav a[data-page]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                navigateTo(this.dataset.page);
+            });
+        });
+
         function navigateTo(page) {
             currentPage = page;
 
-            // Esconder todas as páginas
             document.querySelectorAll('[id^="page-"]').forEach(el => {
                 el.style.display = 'none';
             });
 
-            // Mostrar página selecionada
             const target = document.getElementById('page-' + page);
-            if (target) {
-                target.style.display = 'block';
-            }
+            if (target) target.style.display = 'block';
 
-            // Atualizar menu
             document.querySelectorAll('.sidebar .nav a[data-page]').forEach(link => {
                 link.classList.remove('active');
-                if (link.dataset.page === page) {
-                    link.classList.add('active');
-                }
+                if (link.dataset.page === page) link.classList.add('active');
             });
 
-            // Atualizar título
             const titles = {
                 dashboard: 'Dashboard',
-                users: 'Usuários',
-                passagens: 'Passagens',
-                analytics: 'Analytics',
+                users: 'Usuarios',
+                tickets: 'Passagens',
                 destinos: 'Destinos',
                 ofertas: 'Ofertas',
-                servicos: 'Serviços',
-                configuracoes: 'Configurações',
+                servicos: 'Servicos',
+                clientes: 'Clientes',
+                buscas: 'Buscas',
+                visitantes: 'Visitantes',
+                configuracoes: 'Configuracoes',
                 logs: 'Logs'
             };
             document.getElementById('pageTitle').textContent = titles[page] || page;
 
-            // Fechar sidebar mobile
-            closeSidebar();
+            switch(page) {
+                case 'dashboard': loadDashboard(); break;
+                case 'users': loadUsers(); break;
+                case 'tickets': loadTickets(); break;
+                case 'destinos': loadDestinos(); break;
+                case 'ofertas': loadOfertas(); break;
+                case 'servicos': loadServicos(); break;
+                case 'clientes': loadClientes(); break;
+                case 'buscas': loadBuscas(); break;
+                case 'visitantes': loadVisitantes(); break;
+                case 'configuracoes': loadConfiguracoes(); break;
+                case 'logs': loadLogs(); break;
+            }
 
-            // Scroll para topo
+            closeSidebar();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
+        // ============================================================
         // ===== SIDEBAR =====
+        // ============================================================
+
+        document.getElementById('menuToggle').addEventListener('click', toggleSidebar);
+        document.getElementById('sidebarOverlay').addEventListener('click', closeSidebar);
+
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('open');
             document.getElementById('sidebarOverlay').classList.toggle('open');
@@ -1287,45 +1304,324 @@
             document.getElementById('sidebarOverlay').classList.remove('open');
         }
 
+        // ============================================================
         // ===== DATA/HORA =====
+        // ============================================================
+
         function updateDateTime() {
             const now = new Date();
-            const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
-            document.getElementById('currentDate').textContent = now.toLocaleDateString('pt-BR', options);
+            document.getElementById('currentDate').textContent = now.toLocaleDateString('pt-BR', {
+                weekday: 'long',
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+        }
+        updateDateTime();
+        setInterval(updateDateTime, 1000);
+
+        // ============================================================
+        // ===== LOAD FUNCTIONS (API REAL) =====
+        // ============================================================
+
+        async function loadDashboard() {
+            try {
+                const data = await apiCall('/admin/dashboard');
+                
+                document.getElementById('totalUsers').textContent = data.stats.totalUsers || 0;
+                document.getElementById('totalTickets').textContent = data.stats.totalTickets || 0;
+                document.getElementById('totalRevenue').textContent = 'R$ ' + (data.stats.totalRevenue || 0).toFixed(2);
+                document.getElementById('totalVisitors').textContent = data.stats.totalVisitantes || 0;
+
+                document.getElementById('userCount').textContent = data.stats.totalUsers || 0;
+                document.getElementById('ticketCount').textContent = data.stats.totalTickets || 0;
+
+                const tbody = document.getElementById('activityTable');
+                if (data.recentLogs && data.recentLogs.length > 0) {
+                    tbody.innerHTML = data.recentLogs.slice(0, 15).map(log => `
+                        <tr>
+                            <td><strong>${log.usuario || 'Sistema'}</strong></td>
+                            <td><span style="background:#e3f2fd;padding:2px 12px;border-radius:12px;font-size:12px;">${log.acao || '-'}</span></td>
+                            <td>${log.detalhes || '-'}</td>
+                            <td>${new Date(log.data).toLocaleString()}</td>
+                            <td><code style="background:#f0f0f0;padding:2px 8px;border-radius:4px;font-size:12px;">${log.ip || '-'}</code></td>
+                        </tr>
+                    `).join('');
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#999;">Nenhuma atividade registrada</td></tr>';
+                }
+
+                showToast('Dados carregados com sucesso!', 'success');
+            } catch (error) {
+                console.error('Erro ao carregar dashboard:', error);
+                if (error.message.includes('401') || error.message.includes('Nao autorizado')) {
+                    logout();
+                }
+            }
         }
 
-        // ===== TOAST =====
-        function showToast(message, type = 'info') {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
+        async function loadUsers(filter = '') {
+            try {
+                const users = await apiCall('/admin/users');
+                const filtered = users.filter(u => 
+                    u.nome.toLowerCase().includes(filter.toLowerCase()) ||
+                    u.email.toLowerCase().includes(filter.toLowerCase()) ||
+                    (u.cpf || '').includes(filter)
+                );
 
-            const icons = {
-                success: '✅',
-                error: '❌',
-                warning: '⚠️',
-                info: 'ℹ️'
-            };
+                const tbody = document.getElementById('usersTable');
+                tbody.innerHTML = filtered.map(u => `
+                    <tr>
+                        <td>${u.id}</td>
+                        <td><strong>${u.nome}</strong></td>
+                        <td>${u.email}</td>
+                        <td>${u.telefone || '-'}</td>
+                        <td>${u.cpf || '-'}</td>
+                        <td><span class="status ${u.status || 'offline'}">${u.status || 'offline'}</span></td>
+                        <td>${u.ultimo_acesso ? new Date(u.ultimo_acesso).toLocaleString() : '-'}</td>
+                        <td><code style="background:#f0f0f0;padding:2px 8px;border-radius:4px;font-size:12px;">${u.ip || '-'}</code></td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Erro ao carregar usuarios:', error);
+            }
+        }
 
-            toast.innerHTML = `
-                <span class="toast-icon">${icons[type] || 'ℹ️'}</span>
-                <span>${message}</span>
-                <button class="toast-close" onclick="this.parentElement.remove()">✕</button>
-            `;
+        function filterUsers() {
+            loadUsers(document.getElementById('userSearch').value);
+        }
 
-            container.appendChild(toast);
+        async function loadTickets(filter = '', statusFilter = 'all') {
+            try {
+                const tickets = await apiCall('/admin/tickets');
+                let filtered = tickets;
 
-            // Animação de entrada
-            setTimeout(() => toast.classList.add('show'), 50);
+                if (filter) {
+                    filtered = filtered.filter(t =>
+                        (t.codigo || '').toLowerCase().includes(filter.toLowerCase()) ||
+                        (t.passageiro || '').toLowerCase().includes(filter.toLowerCase()) ||
+                        (t.origem || '').toLowerCase().includes(filter.toLowerCase()) ||
+                        (t.destino || '').toLowerCase().includes(filter.toLowerCase())
+                    );
+                }
 
-            // Auto-remover após 5 segundos
+                if (statusFilter !== 'all') {
+                    filtered = filtered.filter(t => t.status === statusFilter);
+                }
+
+                const statusColors = {
+                    confirmado: 'active',
+                    pendente: 'pending',
+                    cancelado: 'inactive'
+                };
+
+                const tbody = document.getElementById('ticketsTable');
+                tbody.innerHTML = filtered.map(t => `
+                    <tr>
+                        <td><strong>${t.codigo || t.id}</strong></td>
+                        <td>${t.origem || '-'}</td>
+                        <td>${t.destino || '-'}</td>
+                        <td>${t.passageiro || '-'}</td>
+                        <td>${t.data || '-'}</td>
+                        <td><strong style="color:#f5a623;">R$ ${(t.valor || 0).toFixed(2)}</strong></td>
+                        <td><span class="status ${statusColors[t.status] || 'pending'}">${t.status || 'pendente'}</span></td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Erro ao carregar passagens:', error);
+            }
+        }
+
+        function filterTickets() {
+            loadTickets(
+                document.getElementById('ticketSearch').value,
+                document.getElementById('ticketStatusFilter').value
+            );
+        }
+
+        async function loadDestinos() {
+            try {
+                const destinos = await apiCall('/admin/destinos');
+                const tbody = document.getElementById('destinosTable');
+                tbody.innerHTML = destinos.map(d => `
+                    <tr>
+                        <td>${d.id}</td>
+                        <td><strong>${d.cidade}</strong></td>
+                        <td>${d.estado}</td>
+                        <td>${d.vendas || 0}</td>
+                        <td><span class="status ${d.status === 'ativo' ? 'active' : 'inactive'}">${d.status}</span></td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Erro ao carregar destinos:', error);
+            }
+        }
+
+        async function loadOfertas() {
+            try {
+                const ofertas = await apiCall('/admin/ofertas');
+                const tbody = document.getElementById('ofertasTable');
+                tbody.innerHTML = ofertas.map(o => `
+                    <tr>
+                        <td>${o.id}</td>
+                        <td>${o.origem || '-'}</td>
+                        <td>${o.destino || '-'}</td>
+                        <td><strong style="color:#f5a623;">R$ ${(o.preco || 0).toFixed(2)}</strong></td>
+                        <td>${o.desconto || 0}%</td>
+                        <td>${o.validade || '-'}</td>
+                        <td><span class="status ${o.status === 'ativo' ? 'active' : 'inactive'}">${o.status}</span></td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Erro ao carregar ofertas:', error);
+            }
+        }
+
+        async function loadServicos() {
+            try {
+                const servicos = await apiCall('/admin/servicos');
+                const tbody = document.getElementById('servicosTable');
+                tbody.innerHTML = servicos.map(s => `
+                    <tr>
+                        <td>${s.id}</td>
+                        <td><strong>${s.nome}</strong></td>
+                        <td>${s.descricao || '-'}</td>
+                        <td><span class="status ${s.status === 'ativo' ? 'active' : 'inactive'}">${s.status}</span></td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Erro ao carregar servicos:', error);
+            }
+        }
+
+        async function loadClientes() {
+            try {
+                const clientes = await apiCall('/admin/clientes');
+                const tbody = document.getElementById('clientesTable');
+                tbody.innerHTML = clientes.map(c => `
+                    <tr>
+                        <td>${c.id}</td>
+                        <td><strong>${c.nome}</strong></td>
+                        <td>${c.cpf || '-'}</td>
+                        <td>${c.telefone || '-'}</td>
+                        <td>${c.email || '-'}</td>
+                        <td>${new Date(c.criado_em).toLocaleString()}</td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Erro ao carregar clientes:', error);
+            }
+        }
+
+        async function loadBuscas() {
+            try {
+                const buscas = await apiCall('/admin/buscas');
+                const tbody = document.getElementById('buscasTable');
+                tbody.innerHTML = buscas.slice(0, 100).map(b => `
+                    <tr>
+                        <td>${b.origem || '-'}</td>
+                        <td>${b.destino || '-'}</td>
+                        <td>${b.data || '-'}</td>
+                        <td>${b.passageiros || 1}</td>
+                        <td><code style="background:#f0f0f0;padding:2px 8px;border-radius:4px;font-size:12px;">${b.ip || '-'}</code></td>
+                        <td>${new Date(b.timestamp).toLocaleString()}</td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Erro ao carregar buscas:', error);
+            }
+        }
+
+        async function loadVisitantes() {
+            try {
+                const visitantes = await apiCall('/admin/visitantes');
+                const tbody = document.getElementById('visitantesTable');
+                tbody.innerHTML = visitantes.slice(0, 100).map(v => `
+                    <tr>
+                        <td><code style="background:#f0f0f0;padding:2px 8px;border-radius:4px;font-size:12px;">${v.ip || '-'}</code></td>
+                        <td>${v.pagina || '-'}</td>
+                        <td>${v.user_agent ? v.user_agent.substring(0, 50) : '-'}</td>
+                        <td>${v.screen || '-'}</td>
+                        <td>${new Date(v.timestamp).toLocaleString()}</td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Erro ao carregar visitantes:', error);
+            }
+        }
+
+        async function loadConfiguracoes() {
+            try {
+                const config = await apiCall('/admin/configuracoes');
+                const tbody = document.getElementById('configuracoesTable');
+                if (tbody) {
+                    tbody.innerHTML = Object.entries(config).map(([key, value]) => `
+                        <tr>
+                            <td><strong>${key.replace(/([A-Z])/g, ' $1').toUpperCase()}</strong></td>
+                            <td>${typeof value === 'boolean' ? (value ? 'Sim' : 'Nao') : value}</td>
+                        </tr>
+                    `).join('');
+                }
+            } catch (error) {
+                console.error('Erro ao carregar configuracoes:', error);
+            }
+        }
+
+        async function loadLogs() {
+            try {
+                const logs = await apiCall('/admin/logs?limit=100');
+                const tbody = document.getElementById('logsTable');
+                tbody.innerHTML = logs.map(l => `
+                    <tr>
+                        <td>${new Date(l.data).toLocaleString()}</td>
+                        <td><strong>${l.usuario || 'Sistema'}</strong></td>
+                        <td><span style="background:#e3f2fd;padding:2px 12px;border-radius:12px;font-size:12px;">${l.acao || '-'}</span></td>
+                        <td><code style="background:#f0f0f0;padding:2px 8px;border-radius:4px;font-size:12px;">${l.ip || '-'}</code></td>
+                        <td>${l.detalhes || '-'}</td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Erro ao carregar logs:', error);
+            }
+        }
+
+        // ============================================================
+        // ===== LOGS ACTIONS =====
+        // ============================================================
+
+        async function clearLogs() {
+            if (!confirm('Tem certeza que deseja limpar todos os logs?')) return;
+            try {
+                await apiCall('/admin/logs', 'DELETE');
+                showToast('Logs limpos com sucesso!', 'success');
+                loadLogs();
+            } catch (error) {
+                showToast('Erro ao limpar logs', 'error');
+            }
+        }
+
+        function exportLogs() {
+            showToast('Exportando logs...', 'info');
             setTimeout(() => {
-                toast.classList.remove('show');
-                setTimeout(() => toast.remove(), 500);
-            }, 5000);
+                showToast('Logs exportados com sucesso!', 'success');
+            }, 1000);
         }
 
-        // ===== ATUALIZAÇÃO AO VIVO =====
+        // ============================================================
+        // ===== AUTO UPDATE =====
+        // ============================================================
+
+        document.getElementById('autoUpdate').addEventListener('change', function() {
+            if (this.checked) {
+                startAutoUpdate();
+            } else {
+                stopAutoUpdate();
+            }
+        });
+
         function startAutoUpdate() {
             if (updateInterval) clearInterval(updateInterval);
             const interval = parseInt(document.getElementById('updateInterval').value) * 1000;
@@ -1334,300 +1630,91 @@
                     forceUpdate();
                 }
             }, interval);
-            showToast(`Atualização automática ativada (${interval/1000}s)`, 'success');
+            showToast('Atualizacao automatica ativada', 'success');
         }
 
         function stopAutoUpdate() {
             if (updateInterval) {
                 clearInterval(updateInterval);
                 updateInterval = null;
-                showToast('Atualização automática desativada', 'warning');
+                showToast('Atualizacao automatica desativada', 'warning');
             }
         }
 
         function forceUpdate() {
-            showToast('🔄 Atualizando dados...', 'info');
+            showToast('Atualizando dados...', 'info');
             document.getElementById('lastUpdateTime').textContent = new Date().toLocaleString();
-            updateAllStats();
-            renderUsers();
-            renderTickets();
-            renderDestinos();
-            renderOfertas();
-            renderServicos();
-            renderLogs();
-            renderActivities();
-            showToast('✅ Dados atualizados com sucesso!', 'success');
-        }
-
-        // ===== COLETA DE DADOS DO VISITANTE =====
-        function collectVisitorData() {
-            const data = {
-                ip: getIP(),
-                userAgent: navigator.userAgent,
-                browser: getBrowserInfo(),
-                screen: `${window.screen.width}x${window.screen.height}`,
-                language: navigator.language,
-                timestamp: new Date().toISOString(),
-                referrer: document.referrer || 'Direto'
-            };
-
-            console.log('Dados do visitante coletados:', data);
-
-            // Salvar no localStorage para simulação
-            localStorage.setItem('visitorData', JSON.stringify(data));
-
-            // Atualizar contador de visitantes
-            const today = new Date().toDateString();
-            let visitors = JSON.parse(localStorage.getItem('dailyVisitors') || '{}');
-            if (!visitors[today]) visitors[today] = 0;
-            visitors[today]++;
-            localStorage.setItem('dailyVisitors', JSON.stringify(visitors));
-
-            // Atualizar display
-            document.getElementById('todayVisitors').textContent = visitors[today] || 0;
-        }
-
-        function getIP() {
-            // Simulação - em produção, usar API externa
-            return '192.168.1.' + Math.floor(Math.random() * 200 + 1);
-        }
-
-        function getBrowserInfo() {
-            const ua = navigator.userAgent;
-            if (ua.includes('Chrome')) return 'Chrome';
-            if (ua.includes('Firefox')) return 'Firefox';
-            if (ua.includes('Safari')) return 'Safari';
-            if (ua.includes('Edge')) return 'Edge';
-            if (ua.includes('Opera')) return 'Opera';
-            return 'Outro';
-        }
-
-        // ===== ESTATÍSTICAS =====
-        function updateAllStats() {
-            const totalUsers = users.length;
-            const onlineUsers = users.filter(u => u.status === 'online').length;
-            const totalTickets = tickets.length;
-            const totalRevenue = tickets.reduce((sum, t) => {
-                const val = parseFloat(t.valor.replace('R$ ', '').replace('.', '').replace(',', '.'));
-                return sum + (isNaN(val) ? 0 : val);
-            }, 0);
-
-            document.getElementById('totalUsers').textContent = totalUsers;
-            document.getElementById('userCount').textContent = totalUsers;
-            document.getElementById('totalTickets').textContent = totalTickets;
-            document.getElementById('ticketCount').textContent = totalTickets;
-            document.getElementById('totalRevenue').textContent = 'R$ ' + totalRevenue.toFixed(2).replace('.', ',');
-
-            // Visitantes hoje
-            const today = new Date().toDateString();
-            const visitors = JSON.parse(localStorage.getItem('dailyVisitors') || '{}');
-            document.getElementById('todayVisitors').textContent = visitors[today] || 0;
-        }
-
-        // ===== RENDERIZAR TABELAS =====
-        function renderUsers(filter = '') {
-            const tbody = document.getElementById('usersTable');
-            const filtered = users.filter(u =>
-                u.nome.toLowerCase().includes(filter.toLowerCase()) ||
-                u.email.toLowerCase().includes(filter.toLowerCase()) ||
-                u.cpf.includes(filter)
-            );
-
-            tbody.innerHTML = filtered.map(u => `
-                <tr>
-                    <td>${u.id}</td>
-                    <td><strong>${u.nome}</strong></td>
-                    <td>${u.email}</td>
-                    <td>${u.telefone}</td>
-                    <td>${u.cpf}</td>
-                    <td><span class="status ${u.status}">${u.status}</span></td>
-                    <td>${u.ultimoAcesso}</td>
-                    <td><code style="background:#f0f0f0;padding:2px 8px;border-radius:4px;font-size:12px;">${u.ip}</code></td>
-                </tr>
-            `).join('');
-        }
-
-        function filterUsers() {
-            const search = document.getElementById('userSearch').value;
-            renderUsers(search);
-        }
-
-        function renderTickets(filter = '', statusFilter = 'all') {
-            const tbody = document.getElementById('ticketsTable');
-            let filtered = tickets;
-
-            if (filter) {
-                filtered = filtered.filter(t =>
-                    t.id.toLowerCase().includes(filter.toLowerCase()) ||
-                    t.passageiro.toLowerCase().includes(filter.toLowerCase()) ||
-                    t.origem.toLowerCase().includes(filter.toLowerCase()) ||
-                    t.destino.toLowerCase().includes(filter.toLowerCase())
-                );
+            
+            switch(currentPage) {
+                case 'dashboard': loadDashboard(); break;
+                case 'users': loadUsers(); break;
+                case 'tickets': loadTickets(); break;
+                case 'destinos': loadDestinos(); break;
+                case 'ofertas': loadOfertas(); break;
+                case 'servicos': loadServicos(); break;
+                case 'clientes': loadClientes(); break;
+                case 'buscas': loadBuscas(); break;
+                case 'visitantes': loadVisitantes(); break;
+                case 'configuracoes': loadConfiguracoes(); break;
+                case 'logs': loadLogs(); break;
             }
-
-            if (statusFilter !== 'all') {
-                filtered = filtered.filter(t => t.status === statusFilter);
-            }
-
-            const statusColors = {
-                confirmado: 'active',
-                pendente: 'pending',
-                cancelado: 'inactive'
-            };
-
-            tbody.innerHTML = filtered.map(t => `
-                <tr>
-                    <td><strong>${t.id}</strong></td>
-                    <td>${t.origem}</td>
-                    <td>${t.destino}</td>
-                    <td>${t.passageiro}</td>
-                    <td>${t.data}</td>
-                    <td><strong style="color:#f5a623;">${t.valor}</strong></td>
-                    <td><span class="status ${statusColors[t.status] || 'pending'}">${t.status}</span></td>
-                    <td>
-                        <button onclick="showToast('Visualizando passagem ${t.id}', 'info')" style="background:none;border:none;color:#436ec9;cursor:pointer;">👁️</button>
-                        <button onclick="showToast('Editando passagem ${t.id}', 'info')" style="background:none;border:none;color:#f5a623;cursor:pointer;">✏️</button>
-                    </td>
-                </tr>
-            `).join('');
+            
+            showToast('Dados atualizados com sucesso!', 'success');
         }
 
-        function filterTickets() {
-            const search = document.getElementById('ticketSearch').value;
-            const status = document.getElementById('ticketStatusFilter').value;
-            renderTickets(search, status);
-        }
+        // ============================================================
+        // ===== THEME =====
+        // ============================================================
 
-        function renderDestinos() {
-            const tbody = document.getElementById('destinosTable');
-            tbody.innerHTML = destinos.map(d => `
-                <tr>
-                    <td>${d.id}</td>
-                    <td><strong>${d.cidade}</strong></td>
-                    <td>${d.estado}</td>
-                    <td>${d.vendas}</td>
-                    <td><span class="status ${d.status === 'ativo' ? 'active' : 'inactive'}">${d.status}</span></td>
-                </tr>
-            `).join('');
-        }
-
-        function renderOfertas() {
-            const tbody = document.getElementById('ofertasTable');
-            tbody.innerHTML = ofertas.map(o => `
-                <tr>
-                    <td>${o.id}</td>
-                    <td>${o.origem}</td>
-                    <td>${o.destino}</td>
-                    <td><strong style="color:#f5a623;">${o.preco}</strong></td>
-                    <td><span style="color:#4CAF50;font-weight:600;">${o.desconto}</span></td>
-                    <td>${o.validade}</td>
-                    <td><span class="status ${o.status === 'ativo' ? 'active' : 'inactive'}">${o.status}</span></td>
-                </tr>
-            `).join('');
-        }
-
-        function renderServicos() {
-            const tbody = document.getElementById('servicosTable');
-            tbody.innerHTML = servicos.map(s => `
-                <tr>
-                    <td>${s.id}</td>
-                    <td><strong>${s.nome}</strong></td>
-                    <td>${s.descricao}</td>
-                    <td><span class="status ${s.status === 'ativo' ? 'active' : 'inactive'}">${s.status}</span></td>
-                </tr>
-            `).join('');
-        }
-
-        function renderLogs() {
-            const tbody = document.getElementById('logsTable');
-            tbody.innerHTML = logs.slice(0, 50).map(l => `
-                <tr>
-                    <td style="font-size:13px;">${l.data}</td>
-                    <td><strong>${l.usuario}</strong></td>
-                    <td><span style="background:#e3f2fd;padding:2px 12px;border-radius:12px;font-size:12px;">${l.acao}</span></td>
-                    <td><code style="background:#f0f0f0;padding:2px 8px;border-radius:4px;font-size:12px;">${l.ip}</code></td>
-                    <td style="font-size:13px;color:#666;">${l.detalhes}</td>
-                </tr>
-            `).join('');
-        }
-
-        function renderActivities() {
-            const tbody = document.getElementById('activityTable');
-            tbody.innerHTML = activities.map(a => `
-                <tr>
-                    <td><strong>${a.usuario}</strong></td>
-                    <td><span style="background:#e3f2fd;padding:2px 12px;border-radius:12px;font-size:12px;">${a.acao}</span></td>
-                    <td>${a.detalhes}</td>
-                    <td>${a.data}</td>
-                    <td><code style="background:#f0f0f0;padding:2px 8px;border-radius:4px;font-size:12px;">${a.ip}</code></td>
-                </tr>
-            `).join('');
-        }
-
-        // ===== LOGS =====
-        function clearLogs() {
-            if (confirm('Tem certeza que deseja limpar todos os logs?')) {
-                logs = [];
-                renderLogs();
-                showToast('Logs limpos com sucesso!', 'success');
-            }
-        }
-
-        function exportLogs() {
-            const csv = logs.map(l => `${l.data},${l.usuario},${l.acao},${l.ip},${l.detalhes}`).join('\n');
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `logs_${new Date().toISOString().slice(0,10)}.csv`;
-            a.click();
-            URL.revokeObjectURL(url);
-            showToast('Logs exportados com sucesso!', 'success');
-        }
-
-        // ===== TEMA =====
         function setTheme(newTheme) {
-            theme = newTheme;
             document.body.className = '';
             if (newTheme !== 'light') {
                 document.body.classList.add('dark');
             }
 
-            // Atualizar botões de tema
             document.querySelectorAll('.theme-btn').forEach(btn => {
                 btn.classList.toggle('active', btn.dataset.theme === newTheme);
             });
 
-            // Atualizar ícone
-            const toggle = document.getElementById('themeToggle');
-            toggle.textContent = newTheme === 'light' ? '🌙' : '☀️';
-
             localStorage.setItem('adminTheme', newTheme);
-            showToast(`Tema alterado para ${newTheme}`, 'info');
+            showToast('Tema alterado para ' + newTheme, 'info');
         }
 
+        // ============================================================
         // ===== LOGOUT =====
-        function logout() {
-            if (confirm('Tem certeza que deseja sair?')) {
-                showToast('Saindo do sistema...', 'warning');
-                setTimeout(() => {
-                    window.location.href = 'index.html';
-                }, 1500);
+        // ============================================================
+
+        async function logout() {
+            if (!confirm('Deseja sair do sistema?')) return;
+            try {
+                await apiCall('/logout', 'POST');
+                localStorage.removeItem('adminToken');
+                token = '';
+                document.getElementById('loginPage').style.display = 'flex';
+                document.getElementById('sidebar').style.display = 'none';
+                document.getElementById('mainContent').style.display = 'none';
+                showToast('Logout realizado', 'success');
+            } catch (error) {
+                showToast('Erro ao fazer logout', 'error');
             }
         }
 
         // ============================================================
-        // ===== INICIALIZAÇÃO AUTOMÁTICA =====
+        // ===== VERIFICAR TOKEN NA INICIALIZACAO =====
         // ============================================================
 
-        // Garantir que a página inicial seja o Dashboard
-        setTimeout(() => {
+        if (token) {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('sidebar').style.display = 'block';
+            document.getElementById('mainContent').style.display = 'block';
             navigateTo('dashboard');
-        }, 100);
+        } else {
+            document.getElementById('loginPage').style.display = 'flex';
+            document.getElementById('sidebar').style.display = 'none';
+            document.getElementById('mainContent').style.display = 'none';
+        }
 
-        console.log('🚀 Painel Administrativo Viaje Guanabara carregado!');
-        console.log(`📊 ${users.length} usuários, ${tickets.length} passagens`);
-        console.log('🔄 Atualização ao vivo ativada');
+        console.log('Painel Administrativo carregado!');
     </script>
 
 </body>
