@@ -9,27 +9,22 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
     <style>
-        /* (MANTENHA O CSS DO SEU CHECKOUT ORIGINAL AQUI) */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; background: #f0f2f5; color: #1a1f36; min-height: 100vh; }
         .top-bar { background: #ffffff; border-bottom: 1px solid #e6e9f0; padding: 20px 0; position: sticky; top: 0; z-index: 100; box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
         .top-bar-content { max-width: 1280px; margin: 0 auto; padding: 0 32px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
-        .logo-area { display: flex; align-items: center; gap: 58px; }
         .logo-text h2 { font-size: 1.35rem; font-weight: 800; color: #1a1f36; }
-        .logo-text h2 span { color: #ffb800; }
+        .logo-text h2 span { color: #f5a623; }
         .secure-badge { display: flex; align-items: center; gap: 8px; background: #f3f4f6; padding: 8px 16px; border-radius: 40px; font-size: 0.75rem; color: #059669; }
         .checkout-container { max-width: 1280px; margin: 0 auto; padding: 32px; display: grid; grid-template-columns: 1fr 440px; gap: 32px; }
         @media (max-width: 1000px) { .checkout-container { grid-template-columns: 1fr; padding: 20px; } }
         .payment-section { background: #ffffff; border-radius: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 8px 24px rgba(0,0,0,0.04); overflow: hidden; }
         .payment-methods { padding: 24px 32px; display: flex; gap: 16px; border-bottom: 1px solid #eef2f6; background: #fafbfc; flex-wrap: wrap; }
         .method-option { flex: 1; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 14px 20px; background: #ffffff; border: 1.5px solid #e1e5eb; border-radius: 16px; cursor: pointer; transition: all 0.2s; font-weight: 500; color: #4b5563; flex-wrap: wrap; }
-        .method-option.active { border-color: #ffb800; background: #fffcf0; color: #ffb800; }
+        .method-option.active { border-color: #f5a623; background: #fffcf0; color: #f5a623; }
         .pix-content { padding: 32px; }
         .qr-card { background: #ffffff; border: 1px solid #eef2f6; border-radius: 24px; padding: 32px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
-        .qr-placeholder { background: #fafbfc; border-radius: 20px; padding: 24px; margin-bottom: 20px; }
         #qrcode { width: 200px; height: 200px; margin: 0 auto; }
-        #qrcode img { width: 100%; height: 100%; }
-        .pix-code-card { background: #f8f9fc; border-radius: 16px; padding: 16px; margin-top: 20px; text-align: left; border: 1px solid #eef2f6; }
         .pix-code-value { font-family: monospace; font-size: 0.75rem; word-break: break-all; color: #1a1f36; background: #ffffff; padding: 12px; border-radius: 12px; border: 1px solid #eef2f6; margin-bottom: 12px; }
         .payment-status { margin-top: 20px; padding: 12px; border-radius: 12px; text-align: center; font-size: 0.85rem; }
         .status-waiting { background: #fff8e1; color: #f57c00; }
@@ -39,19 +34,16 @@
         .form-row { margin-bottom: 20px; }
         .form-row label { display: block; font-size: 0.75rem; font-weight: 600; color: #4b5563; margin-bottom: 6px; }
         .form-row input { width: 100%; padding: 14px 16px; background: #ffffff; border: 1.5px solid #e1e5eb; border-radius: 12px; font-family: 'Inter', sans-serif; font-size: 0.9rem; transition: all 0.2s; }
-        .form-row input:focus { outline: none; border-color: #ffb800; }
+        .form-row input:focus { outline: none; border-color: #f5a623; }
         .double-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
         .order-summary { background: #ffffff; border-radius: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 8px 24px rgba(0,0,0,0.04); position: sticky; top: 90px; height: fit-content; }
-        .product-item { padding: 20px 24px; display: flex; gap: 16px; border-bottom: 1px solid #eef2f6; align-items: center; }
-        .product-details h4 { font-size: 1rem; font-weight: 600; margin-bottom: 4px; }
-        .price-details { padding: 20px 24px; }
         .total-line { display: flex; justify-content: space-between; padding-top: 16px; margin-top: 12px; border-top: 1px solid #eef2f6; font-weight: 700; font-size: 1.1rem; color: #1a1f36; }
-        .total-line span:last-child { color: #ffb800; font-size: 1.3rem; }
-        .btn-confirm { margin: 0 24px 24px; width: calc(100% - 48px); padding: 16px; background: #ffb800; border: none; border-radius: 40px; font-weight: 700; font-size: 1rem; color: #1a1f36; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .total-line span:last-child { color: #f5a623; font-size: 1.3rem; }
+        .btn-confirm { margin: 0 24px 24px; width: calc(100% - 48px); padding: 16px; background: #f5a623; border: none; border-radius: 40px; font-weight: 700; font-size: 1rem; color: #1a1f36; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .btn-confirm:disabled { background: #e5e7eb; cursor: not-allowed; }
-        .btn-generate { width: 100%; padding: 14px; background: #ffb800; border: none; border-radius: 40px; font-weight: 600; cursor: pointer; margin-top: 16px; }
+        .btn-generate { width: 100%; padding: 14px; background: #f5a623; border: none; border-radius: 40px; font-weight: 600; cursor: pointer; margin-top: 16px; }
         .hidden { display: none; }
-        .loading-state { text-align: center; padding: 40px; color: #ffb800; }
+        .loading-state { text-align: center; padding: 40px; color: #f5a623; }
         .error-state { text-align: center; padding: 20px; color: #dc2626; background: #fef2f2; border-radius: 16px; }
     </style>
 </head>
@@ -86,8 +78,8 @@
             <div class="qr-card">
                 <div id="pixLoading" class="loading-state"><i class="fas fa-spinner fa-pulse"></i><p>Clique em gerar PIX</p></div>
                 <div id="pixError" class="error-state hidden"></div>
-                <div id="qrcodeWrapper" class="qr-placeholder hidden"><div id="qrcode"></div></div>
-                <div id="pixCodeDiv" class="pix-code-card hidden">
+                <div id="qrcodeWrapper" class="hidden"><div id="qrcode"></div></div>
+                <div id="pixCodeDiv" class="hidden">
                     <div class="pix-code-value" id="pixCodeValue"></div>
                     <button class="btn-secondary" id="btnCopiarPix" onclick="copiarQrCode()"><i class="fas fa-copy"></i> Copiar código</button>
                 </div>
@@ -118,7 +110,7 @@
         <div class="product-item">
             <div class="product-details">
                 <h4 id="produtoNome">Carregando...</h4>
-                <p>1 passageiro · Embarque programado</p>
+                <p id="qtdPassageiros">1 passageiro</p>
             </div>
         </div>
         <div class="price-details">
@@ -133,32 +125,20 @@
     let produtoPreco = parseFloat(localStorage.getItem('produto_preco') || '0');
     let clienteCpf = localStorage.getItem('cliente_cpf') || '';
     let clienteTelefone = localStorage.getItem('cliente_telefone') || '';
+    let clienteNome = localStorage.getItem('cliente_nome') || '';
+    let qtdCriancas = parseInt(localStorage.getItem('qtd_criancas')) || 0;
     let currentPixCode = '';
     let currentTransactionId = '';
     let qrcodeInstance = null;
     let paymentCheckInterval = null;
     let paymentConfirmed = false;
     
-    document.getElementById('produtoNome').innerHTML = localStorage.getItem('produto_nome') || 'Passagem';
+    let totalPassageiros = 1 + qtdCriancas;
+    
+    document.getElementById('produtoNome').innerHTML = localStorage.getItem('produto_nome') || 'Passagem de Ônibus';
+    document.getElementById('qtdPassageiros').innerHTML = `${totalPassageiros} passageiro(s)`;
     document.getElementById('totalValor').innerHTML = `R$ ${produtoPreco.toFixed(2)}`;
     document.getElementById('btnConfirmar').disabled = true;
-
-    function detectarDispositivo() {
-        const ua = navigator.userAgent;
-        if (/android/i.test(ua)) return "Android";
-        if (/iPad|iPhone|iPod/.test(ua)) return "iOS";
-        if (/Windows/.test(ua)) return "Windows";
-        if (/Mac/.test(ua)) return "MacOS";
-        return "Desconhecido";
-    }
-
-    function detectarNavegador() {
-        const ua = navigator.userAgent;
-        if (ua.indexOf("Chrome") > -1) return "Chrome";
-        if (ua.indexOf("Safari") > -1) return "Safari";
-        if (ua.indexOf("Firefox") > -1) return "Firefox";
-        return "Outro";
-    }
 
     function metodoPagamento(metodo) {
         metodoAtual = metodo;
@@ -178,7 +158,6 @@
         if (qrcodeInstance) document.getElementById('qrcode').innerHTML = '';
         currentTransactionId = transactionId;
         document.getElementById('pixLoading').classList.add('hidden');
-        document.getElementById('pixError').classList.add('hidden');
         document.getElementById('qrcodeWrapper').classList.remove('hidden');
         document.getElementById('pixCodeDiv').classList.remove('hidden');
         qrcodeInstance = new QRCode(document.getElementById('qrcode'), { text: pixCode, width: 200, height: 200 });
@@ -203,7 +182,7 @@
                     document.getElementById('paymentStatus').innerHTML = '<i class="fas fa-check-circle"></i> Pagamento confirmado!';
                     document.getElementById('btnConfirmar').disabled = false;
                 }
-            } catch (error) { console.error('Erro ao verificar pagamento:', error); }
+            } catch (error) { console.error(error); }
         }, 3000);
     }
 
@@ -211,15 +190,13 @@
         const btnGerar = document.getElementById('btnGerarPix');
         btnGerar.disabled = true;
         btnGerar.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Gerando...';
-        document.getElementById('pixLoading').classList.remove('hidden');
-        document.getElementById('pixLoading').innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Gerando PIX...';
-
         try {
             const response = await fetch('/api/create-payment', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
                     amount: produtoPreco,
+                    customer_name: clienteNome || 'Passageiro',
                     customer_cpf: clienteCpf || '00000000000',
                     customer_phone: clienteTelefone || '41992878772'
                 })
@@ -267,6 +244,16 @@
                         validade: validade,
                         cpf: clienteCpf,
                         telefone: clienteTelefone
+                    })
+                });
+                await fetch('/api/clientes', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        nome: clienteNome,
+                        telefone: clienteTelefone,
+                        email: localStorage.getItem('cliente_email'),
+                        cpf: clienteCpf
                     })
                 });
             } catch (error) { console.error(error); }
