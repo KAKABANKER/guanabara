@@ -107,9 +107,10 @@
     <script>
         function showLoading() {
             document.getElementById('loadingOverlay').classList.add('active');
-            setTimeout(() => {
-                document.getElementById('loadingOverlay').classList.remove('active');
-            }, 800);
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingOverlay').classList.remove('active');
         }
 
         function randomHour() {
@@ -123,15 +124,9 @@
         }
 
         function comprarPassagem(origem, destino, preco, data, hora) {
-            localStorage.setItem('produto_nome', origem + ' → ' + destino);
-            localStorage.setItem('produto_preco', preco);
-            localStorage.setItem('produto_origem', origem);
-            localStorage.setItem('produto_destino', destino);
-            localStorage.setItem('produto_data', data);
-            localStorage.setItem('produto_hora', hora);
             showLoading();
             setTimeout(() => {
-                window.location.href = '/';
+                window.location.href = '/?comprar=1&origem=' + encodeURIComponent(origem) + '&destino=' + encodeURIComponent(destino) + '&preco=' + preco + '&data=' + encodeURIComponent(data) + '&hora=' + encodeURIComponent(hora);
             }, 400);
         }
 
@@ -180,6 +175,7 @@
                 `;
             }
             document.getElementById('ticketList').innerHTML = html;
+            hideLoading();
 
             // Registrar busca no backend
             fetch('/api/busca', {
