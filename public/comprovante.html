@@ -2,120 +2,198 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Guanabara | Comprovante Oficial</title>
-    <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Guanabara_Logo.png/180px-Guanabara_Logo.png">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprovante - Viaje Guanabara</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background: #f5f7fa; color: #1a1f36; padding: 32px 0 48px; }
-        .container { max-width: 1000px; margin: 0 auto; padding: 0 24px; }
-        .main-header { background: #ffffff; border-radius: 16px; margin-bottom: 28px; padding: 16px 24px; border: 1px solid #e9ecef; }
-        .logo { display: flex; align-items: center; gap: 14px; }
-        .logo-text h1 { font-size: 18px; font-weight: 700; color: #1a1f36; }
-        .logo-text h1 span { color: #f5a623; }
-        .comprovante-wrapper { background: #ffffff; border-radius: 20px; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05); overflow: hidden; margin-bottom: 28px; border: 1px solid #e9ecef; }
-        .comprovante-header { background: linear-gradient(135deg, #008c44 0%, #00a650 100%); padding: 28px 32px; text-align: center; }
-        .comprovante-header h2 { font-size: 24px; font-weight: 600; color: white; margin-bottom: 6px; }
-        .protocolo-badge { background: rgba(255, 255, 255, 0.15); display: inline-block; padding: 5px 14px; border-radius: 20px; font-size: 11px; font-weight: 500; margin-top: 12px; color: #ffffff; }
-        .comprovante-body { padding: 32px; }
-        .info-section { background: #f8f9fc; border-radius: 16px; padding: 20px 24px; margin-bottom: 20px; border-left: 3px solid #f5a623; }
-        .info-section h3 { font-size: 15px; font-weight: 600; margin-bottom: 16px; color: #1a1f36; }
-        .info-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 16px; }
-        .info-item { display: flex; flex-direction: column; gap: 4px; }
-        .info-label { font-size: 11px; font-weight: 600; text-transform: uppercase; color: #6c7a91; }
-        .info-value { font-size: 14px; font-weight: 500; color: #1a1f36; }
-        .produtos-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-        .produtos-table th { text-align: left; padding: 12px 0; border-bottom: 1px solid #e9ecef; font-weight: 600; color: #4a5a72; font-size: 12px; }
-        .produtos-table td { padding: 12px 0; border-bottom: 1px solid #f0f2f5; font-weight: 500; color: #2d3a4b; }
-        .total-row td { font-size: 15px; font-weight: 700; color: #f5a623; border-bottom: none; padding: 14px 0; }
-        .footer-note { text-align: center; margin-top: 20px; padding-top: 18px; border-top: 1px solid #e9ecef; font-size: 10px; color: #6c7a91; }
-        .acoes { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; margin: 20px 0 16px; }
-        .btn { padding: 10px 24px; border-radius: 8px; font-weight: 600; font-size: 12px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; text-decoration: none; border: none; background: white; border: 1px solid #dce1e8; }
-        .btn-primary { background: #f5a623; color: white; border: none; }
-        .btn-pdf { background: transparent; border: 1px solid #dce1e8; color: #c2410c; }
-        @media print { .acoes, .main-header, .btn { display: none !important; } .comprovante-wrapper { box-shadow: none; margin: 0; border: none; } }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f0f2f5;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background: #fff;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+            padding: 40px;
+        }
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #f0f2f5;
+            padding-bottom: 24px;
+            margin-bottom: 24px;
+        }
+        .header img {
+            height: 50px;
+            margin-bottom: 12px;
+        }
+        .header h1 {
+            font-size: 24px;
+            color: #1a2b4a;
+        }
+        .header .sub {
+            color: #4CAF50;
+            font-weight: 600;
+            font-size: 16px;
+        }
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: #e8f5e9;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 40px;
+            color: #4CAF50;
+        }
+        .ticket-info {
+            background: #f8f9fc;
+            border-radius: 16px;
+            padding: 24px;
+            margin: 20px 0;
+        }
+        .ticket-info .row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #e8e8e8;
+        }
+        .ticket-info .row:last-child {
+            border-bottom: none;
+        }
+        .ticket-info .label {
+            color: #666;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        .ticket-info .value {
+            font-weight: 600;
+            color: #1a2b4a;
+            font-size: 15px;
+        }
+        .ticket-info .value.price {
+            color: #f5a623;
+            font-size: 20px;
+        }
+        .ticket-info .value.code {
+            font-family: monospace;
+            background: #fff;
+            padding: 4px 12px;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+        }
+        .btn-download {
+            width: 100%;
+            padding: 14px;
+            background: #436ec9;
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 16px;
+        }
+        .btn-download:hover {
+            background: #3659b0;
+        }
+        .btn-home {
+            width: 100%;
+            padding: 14px;
+            background: #e8e8e8;
+            color: #333;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 10px;
+        }
+        .btn-home:hover {
+            background: #d5d5d5;
+        }
+        @media (max-width: 480px) {
+            .container { padding: 20px; }
+            .ticket-info .row { flex-direction: column; gap: 4px; }
+        }
     </style>
 </head>
 <body>
-<div class="main-header">
-    <div class="container header-flex">
-        <div class="logo">
-            <div class="logo-text"><h1>Guanabara <span>Viação</span></h1></div>
+    <div class="container">
+        <div class="header">
+            <img src="img/logo.webp" alt="Guanabara">
+            <div class="success-icon">✓</div>
+            <h1>Pagamento Confirmado!</h1>
+            <p class="sub">Sua passagem foi emitida com sucesso</p>
         </div>
-    </div>
-</div>
 
-<div class="container">
-    <div class="comprovante-wrapper" id="comprovanteParaPDF">
-        <div class="comprovante-header">
-            <h2>COMPROVANTE OFICIAL</h2>
-            <p>Passagem confirmada</p>
-            <div class="protocolo-badge" id="protocoloDisplay">GB-2026-****</div>
-        </div>
-        <div class="comprovante-body" id="comprovanteBody">
-            <div style="text-align: center; padding: 40px; color: #6c7a91;">
-                <i class="fas fa-spinner fa-pulse"></i> Carregando informações da passagem...
+        <div class="ticket-info" id="ticketInfo">
+            <div class="row">
+                <span class="label">Código da Passagem</span>
+                <span class="value code" id="codigoPassagem">GV20260815001</span>
+            </div>
+            <div class="row">
+                <span class="label">Origem</span>
+                <span class="value" id="origemViagem">Rio de Janeiro</span>
+            </div>
+            <div class="row">
+                <span class="label">Destino</span>
+                <span class="value" id="destinoViagem">São Paulo</span>
+            </div>
+            <div class="row">
+                <span class="label">Passageiro</span>
+                <span class="value" id="nomePassageiro">João Silva</span>
+            </div>
+            <div class="row">
+                <span class="label">Data</span>
+                <span class="value" id="dataViagem">15/08/2026</span>
+            </div>
+            <div class="row">
+                <span class="label">Horário</span>
+                <span class="value" id="horaViagem">08:00</span>
+            </div>
+            <div class="row">
+                <span class="label">Valor Pago</span>
+                <span class="value price" id="valorPago">R$ 180,00</span>
+            </div>
+            <div class="row">
+                <span class="label">Forma de Pagamento</span>
+                <span class="value" id="metodoPagamento">PIX</span>
             </div>
         </div>
+
+        <button class="btn-download" onclick="imprimirComprovante()">🖨️ Imprimir Comprovante</button>
+        <button class="btn-home" onclick="window.location.href='/'">🏠 Voltar para o Início</button>
     </div>
-</div>
 
-<div class="container">
-    <div class="acoes">
-        <button class="btn btn-primary" id="btnImprimir"><i class="fas fa-print"></i> Imprimir</button>
-        <button class="btn btn-pdf" id="btnBaixarPDF"><i class="fas fa-file-pdf"></i> Baixar PDF</button>
-        <button class="btn" id="btnVoltar"><i class="fas fa-arrow-left"></i> Voltar</button>
-    </div>
-</div>
+    <script>
+        // Carregar dados do localStorage
+        document.addEventListener('DOMContentLoaded', function() {
+            const codigo = localStorage.getItem('ticket_codigo') || 'GV' + new Date().toISOString().slice(0,10).replace(/-/g,'') + String(Math.floor(Math.random() * 1000)).padStart(3,'0');
+            document.getElementById('codigoPassagem').textContent = codigo;
+            document.getElementById('origemViagem').textContent = localStorage.getItem('produto_origem') || 'Rio de Janeiro';
+            document.getElementById('destinoViagem').textContent = localStorage.getItem('produto_destino') || 'São Paulo';
+            document.getElementById('nomePassageiro').textContent = localStorage.getItem('cliente_nome') || 'Passageiro';
+            document.getElementById('dataViagem').textContent = localStorage.getItem('produto_data') || '15/08/2026';
+            document.getElementById('horaViagem').textContent = localStorage.getItem('produto_hora') || '08:00';
+            document.getElementById('valorPago').textContent = 'R$ ' + (parseFloat(localStorage.getItem('produto_preco')) || 180).toFixed(2);
+            document.getElementById('metodoPagamento').textContent = localStorage.getItem('metodo_pagamento') || 'PIX';
+        });
 
-<script>
-    function getFromStorage(key) { return localStorage.getItem(key) || ''; }
-    function carregarComprovante() {
-        const produtoNome = getFromStorage('produto_nome') || 'Passagem de Ônibus';
-        const valorTotal = parseFloat(getFromStorage('produto_preco') || '0');
-        const clienteNome = getFromStorage('cliente_nome') || 'Não informado';
-        const clienteCpf = getFromStorage('cliente_cpf') || 'Não informado';
-        const clienteTelefone = getFromStorage('cliente_telefone') || 'Não informado';
-        const qtdCriancas = parseInt(getFromStorage('qtd_criancas')) || 0;
-
-        document.getElementById('comprovanteBody').innerHTML = `
-            <div class="info-section">
-                <h3><i class="fas fa-user"></i> Dados do passageiro</h3>
-                <div class="info-grid">
-                    <div class="info-item"><span class="info-label">Nome</span><span class="info-value">${clienteNome}</span></div>
-                    <div class="info-item"><span class="info-label">CPF</span><span class="info-value">${clienteCpf}</span></div>
-                    <div class="info-item"><span class="info-label">Telefone</span><span class="info-value">${clienteTelefone}</span></div>
-                </div>
-            </div>
-            <div class="info-section">
-                <h3><i class="fas fa-bus"></i> Detalhes da passagem</h3>
-                <table class="produtos-table">
-                    <thead><tr><th>Descrição</th><th>Quantidade</th><th>Subtotal</th></tr></thead>
-                    <tbody>
-                        <tr><td>${produtoNome}</td><td>1</td><td>${valorTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td></tr>
-                        ${qtdCriancas > 0 ? `<tr><td>Criança(s)</td><td>${qtdCriancas}</td><td>Grátis</td></tr>` : ''}
-                        <tr class="total-row"><td colspan="2" style="text-align: right; font-weight: 600;">VALOR TOTAL</td><td>${valorTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td></tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="footer-note">
-                <p>Viação Guanabara | Emissão: ${new Date().toLocaleString('pt-BR')}</p>
-            </div>
-        `;
-    }
-
-    function baixarPDF() {
-        const element = document.getElementById('comprovanteParaPDF');
-        const opt = { margin: [0.5, 0.5, 0.5, 0.5], filename: `comprovante_guanabara.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' } };
-        html2pdf().set(opt).from(element).save();
-    }
-
-    document.getElementById('btnImprimir')?.addEventListener('click', () => window.print());
-    document.getElementById('btnBaixarPDF')?.addEventListener('click', baixarPDF);
-    document.getElementById('btnVoltar')?.addEventListener('click', () => window.location.href = '/');
-    carregarComprovante();
-</script>
+        function imprimirComprovante() {
+            window.print();
+        }
+    </script>
 </body>
 </html>
