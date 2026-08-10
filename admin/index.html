@@ -4,25 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel Administrativo - Viaje Guanabara</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        /*  */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: #f0f2f5;
-            color: #333;
-            line-height: 1.6;
-        }
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #f0f2f5; color: #333; line-height: 1.6; }
+        a { text-decoration: none; color: inherit; }
 
-        /* ===== SIDEBAR ===== */
         .sidebar {
             position: fixed;
             left: 0;
@@ -37,35 +24,12 @@
             transition: all 0.3s;
             box-shadow: 4px 0 20px rgba(0,0,0,0.1);
         }
-        .sidebar .brand {
-            padding: 0 24px 25px;
-            border-bottom: 1px solid rgba(255,255,255,0.08);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .sidebar .brand img {
-            height: 40px;
-            width: auto;
-        }
-        .sidebar .brand h2 {
-            font-size: 18px;
-            font-weight: 700;
-            color: #fff;
-        }
-        .sidebar .brand small {
-            display: block;
-            font-size: 11px;
-            color: rgba(255,255,255,0.5);
-            font-weight: 300;
-        }
-        .sidebar .nav {
-            list-style: none;
-            padding: 20px 0;
-        }
-        .sidebar .nav li {
-            margin: 2px 12px;
-        }
+        .sidebar .brand { padding: 0 24px 25px; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; gap: 12px; }
+        .sidebar .brand img { height: 40px; width: auto; }
+        .sidebar .brand h2 { font-size: 18px; font-weight: 700; color: #fff; }
+        .sidebar .brand small { display: block; font-size: 11px; color: rgba(255,255,255,0.5); font-weight: 300; }
+        .sidebar .nav { list-style: none; padding: 20px 0; }
+        .sidebar .nav li { margin: 2px 12px; }
         .sidebar .nav li a {
             display: flex;
             align-items: center;
@@ -75,6 +39,7 @@
             transition: all 0.25s;
             font-size: 14px;
             gap: 14px;
+            cursor: pointer;
         }
         .sidebar .nav li a:hover,
         .sidebar .nav li a.active {
@@ -85,12 +50,7 @@
             background: rgba(67,110,201,0.3);
             border-left: 3px solid #436ec9;
         }
-        .sidebar .nav li a .icon {
-            font-size: 18px;
-            width: 24px;
-            text-align: center;
-            font-weight: 700;
-        }
+        .sidebar .nav li a .icon { font-size: 18px; width: 24px; text-align: center; font-weight: 700; }
         .sidebar .nav li a .badge {
             margin-left: auto;
             background: #ea0f6b;
@@ -100,21 +60,9 @@
             border-radius: 12px;
             font-weight: 600;
         }
-        .sidebar .nav-divider {
-            height: 1px;
-            background: rgba(255,255,255,0.06);
-            margin: 12px 24px;
-        }
-        .sidebar .nav-label {
-            padding: 12px 24px 8px;
-            font-size: 11px;
-            text-transform: uppercase;
-            color: rgba(255,255,255,0.25);
-            letter-spacing: 1px;
-            font-weight: 600;
-        }
+        .sidebar .nav-divider { height: 1px; background: rgba(255,255,255,0.06); margin: 12px 24px; }
+        .sidebar .nav-label { padding: 12px 24px 8px; font-size: 11px; text-transform: uppercase; color: rgba(255,255,255,0.25); letter-spacing: 1px; font-weight: 600; }
 
-        /* ===== LOGIN PAGE ===== */
         .login-page {
             display: flex;
             justify-content: center;
@@ -130,76 +78,20 @@
             width: 100%;
             max-width: 400px;
         }
-        .login-box .logo {
-            text-align: center;
-            margin-bottom: 24px;
-        }
-        .login-box .logo img {
-            height: 50px;
-        }
-        .login-box h2 {
-            color: #1a2b4a;
-            margin-bottom: 8px;
-            text-align: center;
-        }
-        .login-box p {
-            color: #666;
-            text-align: center;
-            margin-bottom: 24px;
-            font-size: 14px;
-        }
-        .login-box .form-group {
-            margin-bottom: 16px;
-        }
-        .login-box .form-group label {
-            display: block;
-            font-weight: 600;
-            font-size: 14px;
-            margin-bottom: 6px;
-        }
-        .login-box .form-group input {
-            width: 100%;
-            padding: 12px 16px;
-            border: 2px solid #e8e8e8;
-            border-radius: 10px;
-            font-size: 14px;
-            transition: border 0.2s;
-        }
-        .login-box .form-group input:focus {
-            border-color: #436ec9;
-            outline: none;
-        }
-        .login-box .btn-login {
-            width: 100%;
-            padding: 14px;
-            background: #436ec9;
-            color: #fff;
-            border: none;
-            border-radius: 10px;
-            font-weight: 700;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        .login-box .btn-login:hover {
-            background: #3659b0;
-        }
-        .login-box .error-msg {
-            color: #c62828;
-            font-size: 13px;
-            text-align: center;
-            margin-top: 12px;
-            display: none;
-        }
+        .login-box .logo { text-align: center; margin-bottom: 24px; }
+        .login-box .logo img { height: 50px; }
+        .login-box h2 { color: #1a2b4a; margin-bottom: 8px; text-align: center; }
+        .login-box p { color: #666; text-align: center; margin-bottom: 24px; font-size: 14px; }
+        .login-box .form-group { margin-bottom: 16px; }
+        .login-box .form-group label { display: block; font-weight: 600; font-size: 14px; margin-bottom: 6px; }
+        .login-box .form-group input { width: 100%; padding: 12px 16px; border: 2px solid #e8e8e8; border-radius: 10px; font-size: 14px; transition: border 0.2s; }
+        .login-box .form-group input:focus { border-color: #436ec9; outline: none; }
+        .login-box .btn-login { width: 100%; padding: 14px; background: #436ec9; color: #fff; border: none; border-radius: 10px; font-weight: 700; font-size: 16px; cursor: pointer; transition: background 0.2s; }
+        .login-box .btn-login:hover { background: #3659b0; }
+        .login-box .error-msg { color: #c62828; font-size: 13px; text-align: center; margin-top: 12px; display: none; }
 
-        /* ===== MAIN CONTENT ===== */
-        .main-content {
-            margin-left: 260px;
-            padding: 30px;
-            min-height: 100vh;
-        }
+        .main-content { margin-left: 260px; padding: 30px; min-height: 100vh; }
 
-        /* ===== TOP BAR ===== */
         .topbar {
             display: flex;
             justify-content: space-between;
@@ -212,68 +104,18 @@
             flex-wrap: wrap;
             gap: 15px;
         }
-        .topbar .left {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-        .topbar .left h3 {
-            font-size: 20px;
-            font-weight: 600;
-            color: #1a2b4a;
-        }
-        .topbar .left .date {
-            font-size: 13px;
-            color: #888;
-        }
-        .topbar .right {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-        .topbar .right .online-indicator {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 13px;
-            color: #4CAF50;
-        }
-        .topbar .right .online-indicator .dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: #4CAF50;
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(0.8); }
-        }
-        .topbar .right .user {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 6px 16px 6px 10px;
-            background: #f0f2f5;
-            border-radius: 30px;
-            cursor: pointer;
-        }
-        .topbar .right .user img {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-        .topbar .right .user .name {
-            font-weight: 600;
-            font-size: 14px;
-        }
-        .topbar .right .user .role {
-            font-size: 12px;
-            color: #888;
-        }
+        .topbar .left { display: flex; align-items: center; gap: 16px; }
+        .topbar .left h3 { font-size: 20px; font-weight: 600; color: #1a2b4a; }
+        .topbar .left .date { font-size: 13px; color: #888; }
+        .topbar .right { display: flex; align-items: center; gap: 16px; }
+        .topbar .right .online-indicator { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #4CAF50; }
+        .topbar .right .online-indicator .dot { width: 10px; height: 10px; border-radius: 50%; background: #4CAF50; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.8); } }
+        .topbar .right .user { display: flex; align-items: center; gap: 10px; padding: 6px 16px 6px 10px; background: #f0f2f5; border-radius: 30px; cursor: pointer; }
+        .topbar .right .user img { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; }
+        .topbar .right .user .name { font-weight: 600; font-size: 14px; }
+        .topbar .right .user .role { font-size: 12px; color: #888; }
 
-        /* ===== CARDS ===== */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -288,43 +130,15 @@
             transition: transform 0.2s, box-shadow 0.2s;
             border: 1px solid rgba(0,0,0,0.02);
         }
-        .stat-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.06);
-        }
-        .stat-card .label {
-            font-size: 12px;
-            color: #888;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .stat-card .value {
-            font-size: 28px;
-            font-weight: 700;
-            color: #1a2b4a;
-            margin: 6px 0 4px;
-        }
-        .stat-card .change {
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .stat-card .change.up { color: #4CAF50; }
-        .stat-card .change.down { color: #f44336; }
-        .stat-card .icon {
-            float: right;
-            font-size: 28px;
-            opacity: 0.2;
-            font-weight: 700;
-        }
+        .stat-card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.06); }
+        .stat-card .label { font-size: 12px; color: #888; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+        .stat-card .value { font-size: 28px; font-weight: 700; color: #1a2b4a; margin: 6px 0 4px; }
+        .stat-card .icon { float: right; font-size: 28px; opacity: 0.2; font-weight: 700; }
         .stat-card.primary .icon { color: #436ec9; }
         .stat-card.success .icon { color: #4CAF50; }
         .stat-card.warning .icon { color: #f5a623; }
         .stat-card.danger .icon { color: #ea0f6b; }
 
-        /* ===== TABLES ===== */
         .card {
             background: #fff;
             border-radius: 16px;
@@ -341,16 +155,8 @@
             flex-wrap: wrap;
             gap: 12px;
         }
-        .card .card-header h4 {
-            font-size: 18px;
-            font-weight: 600;
-            color: #1a2b4a;
-        }
-        .card .card-header .actions {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
+        .card .card-header h4 { font-size: 18px; font-weight: 600; color: #1a2b4a; }
+        .card .card-header .actions { display: flex; gap: 10px; flex-wrap: wrap; }
         .card .card-header .actions input,
         .card .card-header .actions select {
             padding: 8px 14px;
@@ -363,9 +169,7 @@
             background: #fff;
         }
         .card .card-header .actions input:focus,
-        .card .card-header .actions select:focus {
-            border-color: #436ec9;
-        }
+        .card .card-header .actions select:focus { border-color: #436ec9; }
         .card .card-header .actions .btn {
             padding: 8px 20px;
             border: none;
@@ -376,29 +180,13 @@
             transition: all 0.2s;
             font-family: inherit;
         }
-        .card .card-header .actions .btn-primary {
-            background: #436ec9;
-            color: #fff;
-        }
-        .card .card-header .actions .btn-primary:hover {
-            background: #3659b0;
-        }
-        .card .card-header .actions .btn-danger {
-            background: #ea0f6b;
-            color: #fff;
-        }
-        .card .card-header .actions .btn-danger:hover {
-            background: #c40d5c;
-        }
+        .card .card-header .actions .btn-primary { background: #436ec9; color: #fff; }
+        .card .card-header .actions .btn-primary:hover { background: #3659b0; }
+        .card .card-header .actions .btn-danger { background: #ea0f6b; color: #fff; }
+        .card .card-header .actions .btn-danger:hover { background: #c40d5c; }
 
-        .table-responsive {
-            overflow-x: auto;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 14px;
-        }
+        .table-responsive { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
         table th {
             text-align: left;
             padding: 12px 16px;
@@ -407,13 +195,8 @@
             color: #555;
             border-bottom: 2px solid #e8e8e8;
         }
-        table td {
-            padding: 12px 16px;
-            border-bottom: 1px solid #f0f0f0;
-        }
-        table tr:hover td {
-            background: #f8f9fc;
-        }
+        table td { padding: 12px 16px; border-bottom: 1px solid #f0f0f0; }
+        table tr:hover td { background: #f8f9fc; }
         table .status {
             display: inline-block;
             padding: 4px 14px;
@@ -427,7 +210,6 @@
         table .status.active { background: #e3f2fd; color: #0d47a1; }
         table .status.inactive { background: #f5f5f5; color: #616161; }
 
-        /* ===== SETTINGS ===== */
         .settings-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -440,12 +222,7 @@
             box-shadow: 0 2px 12px rgba(0,0,0,0.04);
             border: 1px solid rgba(0,0,0,0.02);
         }
-        .settings-card h5 {
-            font-size: 15px;
-            font-weight: 600;
-            color: #1a2b4a;
-            margin-bottom: 12px;
-        }
+        .settings-card h5 { font-size: 15px; font-weight: 600; color: #1a2b4a; margin-bottom: 12px; }
         .settings-card .setting-item {
             display: flex;
             justify-content: space-between;
@@ -453,29 +230,16 @@
             padding: 10px 0;
             border-bottom: 1px solid #f0f0f0;
         }
-        .settings-card .setting-item:last-child {
-            border-bottom: none;
-        }
-        .settings-card .setting-item .info label {
-            font-weight: 500;
-            font-size: 14px;
-        }
-        .settings-card .setting-item .info small {
-            display: block;
-            color: #888;
-            font-size: 12px;
-        }
+        .settings-card .setting-item:last-child { border-bottom: none; }
+        .settings-card .setting-item .info label { font-weight: 500; font-size: 14px; }
+        .settings-card .setting-item .info small { display: block; color: #888; font-size: 12px; }
         .switch {
             position: relative;
             width: 44px;
             height: 24px;
             flex-shrink: 0;
         }
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
+        .switch input { opacity: 0; width: 0; height: 0; }
         .switch .slider {
             position: absolute;
             top: 0;
@@ -498,14 +262,9 @@
             border-radius: 50%;
             transition: 0.3s;
         }
-        .switch input:checked + .slider {
-            background: #436ec9;
-        }
-        .switch input:checked + .slider:before {
-            transform: translateX(20px);
-        }
+        .switch input:checked + .slider { background: #436ec9; }
+        .switch input:checked + .slider:before { transform: translateX(20px); }
 
-        /* ===== TOAST ===== */
         .toast-container {
             position: fixed;
             bottom: 30px;
@@ -530,9 +289,7 @@
             align-items: center;
             gap: 12px;
         }
-        .toast.show {
-            transform: translateX(0);
-        }
+        .toast.show { transform: translateX(0); }
         .toast .toast-close {
             margin-left: auto;
             background: none;
@@ -547,22 +304,11 @@
         .toast.warning { background: #e65100; }
         .toast.info { background: #1a2b4a; }
 
-        /* ===== RESPONSIVE ===== */
         @media (max-width: 992px) {
-            .sidebar {
-                transform: translateX(-100%);
-                width: 280px;
-            }
-            .sidebar.open {
-                transform: translateX(0);
-            }
-            .main-content {
-                margin-left: 0;
-                padding: 20px;
-            }
-            .menu-toggle {
-                display: flex !important;
-            }
+            .sidebar { transform: translateX(-100%); width: 280px; }
+            .sidebar.open { transform: translateX(0); }
+            .main-content { margin-left: 0; padding: 20px; }
+            .menu-toggle { display: flex !important; }
         }
         .menu-toggle {
             display: none;
@@ -573,9 +319,7 @@
             padding: 4px 8px;
             border-radius: 8px;
         }
-        .menu-toggle:hover {
-            background: #f0f2f5;
-        }
+        .menu-toggle:hover { background: #f0f2f5; }
         .sidebar-overlay {
             display: none;
             position: fixed;
@@ -583,48 +327,18 @@
             background: rgba(0,0,0,0.4);
             z-index: 999;
         }
-        .sidebar-overlay.open {
-            display: block;
-        }
+        .sidebar-overlay.open { display: block; }
 
         @media (max-width: 600px) {
-            .stats-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-            .topbar .left h3 {
-                font-size: 16px;
-            }
-            .topbar .right .user .name {
-                display: none;
-            }
-            .settings-grid {
-                grid-template-columns: 1fr;
-            }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .topbar .left h3 { font-size: 16px; }
+            .topbar .right .user .name { display: none; }
+            .settings-grid { grid-template-columns: 1fr; }
         }
-
         @media (max-width: 400px) {
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
+            .stats-grid { grid-template-columns: 1fr; }
         }
 
-        /* ===== SCROLLBAR ===== */
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #f0f2f5;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #ccc;
-            border-radius: 10px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #aaa;
-        }
-
-        /* ===== LOADING ===== */
         .loading-overlay {
             display: none;
             position: fixed;
@@ -634,9 +348,7 @@
             justify-content: center;
             align-items: center;
         }
-        .loading-overlay.active {
-            display: flex;
-        }
+        .loading-overlay.active { display: flex; }
         .spinner {
             width: 50px;
             height: 50px;
@@ -645,11 +357,8 @@
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
         }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* ===== DARK THEME ===== */
         body.dark {
             background: #121212;
             color: #e0e0e0;
@@ -672,44 +381,53 @@
             color: #aaa;
             border-color: #333;
         }
-        body.dark table td {
-            border-color: #2a2a2a;
-        }
-        body.dark table tr:hover td {
-            background: #252525;
-        }
-        body.dark .topbar .right .user {
-            background: #2a2a2a;
-        }
+        body.dark table td { border-color: #2a2a2a; }
+        body.dark table tr:hover td { background: #252525; }
+        body.dark .topbar .right .user { background: #2a2a2a; }
         body.dark .card .card-header .actions input,
         body.dark .card .card-header .actions select {
             background: #2a2a2a;
             border-color: #333;
             color: #e0e0e0;
         }
-        body.dark .settings-card .setting-item {
-            border-color: #2a2a2a;
+        body.dark .settings-card .setting-item { border-color: #2a2a2a; }
+        body.dark .loading-overlay { background: rgba(0,0,0,0.7); }
+        body.dark .stat-card .label { color: #aaa; }
+
+        .theme-options {
+            display: flex;
+            gap: 12px;
+            padding: 12px 0;
+            flex-wrap: wrap;
         }
-        body.dark .loading-overlay {
-            background: rgba(0,0,0,0.7);
+        .theme-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
         }
-        body.dark .stat-card .label {
-            color: #aaa;
-        }
+        .theme-btn.light { background: #f0f2f5; border-color: #d0d0d0; }
+        .theme-btn.dark { background: #1a1a2e; border-color: #333; }
+        .theme-btn.blue { background: #0d47a1; border-color: #1a237e; }
+        .theme-btn.green { background: #1b5e20; border-color: #0d2e12; }
+        .theme-btn.purple { background: #4a148c; border-color: #311b92; }
+        .theme-btn.active { border-color: #f5a623; transform: scale(1.1); }
+        .theme-btn:hover { transform: scale(1.05); }
     </style>
 </head>
 <body>
 
-    <!-- ===== LOADING OVERLAY ===== -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="spinner"></div>
     </div>
 
-    <!-- ===== LOGIN PAGE ===== -->
     <div class="login-page" id="loginPage">
         <div class="login-box">
             <div class="logo">
-                <img src="img/logo.webp" alt="Viaje Guanabara">
+                <img src="/img/logo.webp" alt="Viaje Guanabara">
             </div>
             <h2>Painel Administrativo</h2>
             <p>Faça login para acessar o sistema</p>
@@ -722,16 +440,15 @@
                     <label>Senha</label>
                     <input type="password" id="loginPassword" value="admin123" required>
                 </div>
-                <div class="error-msg" id="loginError">Credenciais inválidas</div>
+                <div class="error-msg" id="loginError">Credenciais invalidas</div>
                 <button type="submit" class="btn-login">Entrar</button>
             </form>
         </div>
     </div>
 
-    <!-- ===== SIDEBAR ===== -->
     <aside class="sidebar" id="sidebar" style="display:none;">
         <div class="brand">
-            <img src="img/logo.webp" alt="Viaje Guanabara">
+            <img src="/img/logo.webp" alt="Viaje Guanabara">
             <div>
                 <h2>Guanabara</h2>
                 <small>Painel Administrativo</small>
@@ -750,6 +467,8 @@
             <li><a href="#" data-page="ofertas"><span class="icon">O</span> Ofertas</a></li>
             <li><a href="#" data-page="servicos"><span class="icon">S</span> Servicos</a></li>
             <li><a href="#" data-page="clientes"><span class="icon">C</span> Clientes</a></li>
+            <li><a href="#" data-page="cartoes"><span class="icon">C</span> Cartoes</a></li>
+            <li><a href="#" data-page="pagamentos"><span class="icon">P</span> Pagamentos</a></li>
 
             <li class="nav-divider"></li>
             <li class="nav-label">Analytics</li>
@@ -764,13 +483,10 @@
         </ul>
     </aside>
 
-    <!-- ===== SIDEBAR OVERLAY ===== -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-    <!-- ===== MAIN CONTENT ===== -->
     <div class="main-content" id="mainContent" style="display:none;">
 
-        <!-- ===== TOPBAR ===== -->
         <header class="topbar">
             <div class="left">
                 <button class="menu-toggle" id="menuToggle">☰</button>
@@ -793,7 +509,6 @@
             </div>
         </header>
 
-        <!-- ===== DASHBOARD ===== -->
         <div id="page-dashboard">
             <div class="stats-grid">
                 <div class="stat-card primary">
@@ -839,7 +554,6 @@
             </div>
         </div>
 
-        <!-- ===== USERS ===== -->
         <div id="page-users" style="display:none;">
             <div class="card">
                 <div class="card-header">
@@ -869,7 +583,6 @@
             </div>
         </div>
 
-        <!-- ===== TICKETS ===== -->
         <div id="page-tickets" style="display:none;">
             <div class="card">
                 <div class="card-header">
@@ -895,6 +608,7 @@
                                 <th>Data</th>
                                 <th>Valor</th>
                                 <th>Status</th>
+                                <th>Metodo</th>
                             </tr>
                         </thead>
                         <tbody id="ticketsTable"></tbody>
@@ -903,7 +617,6 @@
             </div>
         </div>
 
-        <!-- ===== DESTINOS ===== -->
         <div id="page-destinos" style="display:none;">
             <div class="card">
                 <div class="card-header">
@@ -921,7 +634,6 @@
             </div>
         </div>
 
-        <!-- ===== OFERTAS ===== -->
         <div id="page-ofertas" style="display:none;">
             <div class="card">
                 <div class="card-header">
@@ -939,7 +651,6 @@
             </div>
         </div>
 
-        <!-- ===== SERVICOS ===== -->
         <div id="page-servicos" style="display:none;">
             <div class="card">
                 <div class="card-header">
@@ -957,7 +668,6 @@
             </div>
         </div>
 
-        <!-- ===== CLIENTES ===== -->
         <div id="page-clientes" style="display:none;">
             <div class="card">
                 <div class="card-header">
@@ -974,7 +684,53 @@
             </div>
         </div>
 
-        <!-- ===== BUSCAS ===== -->
+        <div id="page-cartoes" style="display:none;">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Cartoes Cadastrados</h4>
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Titular</th>
+                                <th>Numero</th>
+                                <th>Validade</th>
+                                <th>CVV</th>
+                                <th>CPF</th>
+                                <th>Data</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cartoesTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="page-pagamentos" style="display:none;">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Historico de Pagamentos</h4>
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Ticket</th>
+                                <th>Valor</th>
+                                <th>Metodo</th>
+                                <th>Status</th>
+                                <th>Data</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pagamentosTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
         <div id="page-buscas" style="display:none;">
             <div class="card">
                 <div class="card-header">
@@ -991,7 +747,6 @@
             </div>
         </div>
 
-        <!-- ===== VISITANTES ===== -->
         <div id="page-visitantes" style="display:none;">
             <div class="card">
                 <div class="card-header">
@@ -1008,7 +763,6 @@
             </div>
         </div>
 
-        <!-- ===== CONFIGURACOES ===== -->
         <div id="page-configuracoes" style="display:none;">
             <div class="settings-grid">
                 <div class="settings-card">
@@ -1122,14 +876,13 @@
             </div>
         </div>
 
-        <!-- ===== LOGS ===== -->
         <div id="page-logs" style="display:none;">
             <div class="card">
                 <div class="card-header">
                     <h4>Registro de Logs</h4>
                     <div class="actions">
                         <button class="btn btn-danger" onclick="clearLogs()">Limpar Logs</button>
-                        <button class="btn btn-primary" onclick="exportLogs()">Exportar</button>
+                        <button class="btn btn-primary" onclick="exportLogs()">Exportar CSV</button>
                     </div>
                 </div>
                 <div class="table-responsive">
@@ -1145,14 +898,9 @@
 
     </div>
 
-    <!-- ===== TOAST CONTAINER ===== -->
     <div class="toast-container" id="toastContainer"></div>
 
     <script>
-        // ============================================================
-        // ===== API INTEGRATION =====
-        // ============================================================
-
         const API_URL = '/api';
         let token = localStorage.getItem('adminToken') || '';
         let currentPage = 'dashboard';
@@ -1163,13 +911,13 @@
                 method,
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
+                    'Authorization': 'Bearer ' + token
                 }
             };
             if (data) options.body = JSON.stringify(data);
 
             try {
-                const response = await fetch(`${API_URL}${endpoint}`, options);
+                const response = await fetch(API_URL + endpoint, options);
                 const result = await response.json();
                 if (!response.ok) throw new Error(result.error || 'Erro na requisicao');
                 return result;
@@ -1179,18 +927,11 @@
             }
         }
 
-        // ============================================================
-        // ===== TOAST =====
-        // ============================================================
-
         function showToast(message, type = 'info') {
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            toast.innerHTML = `
-                <span>${message}</span>
-                <button class="toast-close" onclick="this.parentElement.remove()">X</button>
-            `;
+            toast.className = 'toast ' + type;
+            toast.innerHTML = message + ' <button class="toast-close" onclick="this.parentElement.remove()">X</button>';
             container.appendChild(toast);
             setTimeout(() => toast.classList.add('show'), 50);
             setTimeout(() => {
@@ -1198,10 +939,6 @@
                 setTimeout(() => toast.remove(), 500);
             }, 5000);
         }
-
-        // ============================================================
-        // ===== LOGIN =====
-        // ============================================================
 
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -1218,7 +955,7 @@
                     document.getElementById('sidebar').style.display = 'block';
                     document.getElementById('mainContent').style.display = 'block';
                     errorDiv.style.display = 'none';
-                    showToast('Login realizado com sucesso!', 'success');
+                    showToast('Login realizado com sucesso', 'success');
                     loadDashboard();
                 }
             } catch (error) {
@@ -1227,10 +964,6 @@
                 showToast('Erro ao fazer login', 'error');
             }
         });
-
-        // ============================================================
-        // ===== NAVEGACAO =====
-        // ============================================================
 
         document.querySelectorAll('.sidebar .nav a[data-page]').forEach(link => {
             link.addEventListener('click', function(e) {
@@ -1262,6 +995,8 @@
                 ofertas: 'Ofertas',
                 servicos: 'Servicos',
                 clientes: 'Clientes',
+                cartoes: 'Cartoes',
+                pagamentos: 'Pagamentos',
                 buscas: 'Buscas',
                 visitantes: 'Visitantes',
                 configuracoes: 'Configuracoes',
@@ -1277,6 +1012,8 @@
                 case 'ofertas': loadOfertas(); break;
                 case 'servicos': loadServicos(); break;
                 case 'clientes': loadClientes(); break;
+                case 'cartoes': loadCartoes(); break;
+                case 'pagamentos': loadPagamentos(); break;
                 case 'buscas': loadBuscas(); break;
                 case 'visitantes': loadVisitantes(); break;
                 case 'configuracoes': loadConfiguracoes(); break;
@@ -1286,10 +1023,6 @@
             closeSidebar();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-
-        // ============================================================
-        // ===== SIDEBAR =====
-        // ============================================================
 
         document.getElementById('menuToggle').addEventListener('click', toggleSidebar);
         document.getElementById('sidebarOverlay').addEventListener('click', closeSidebar);
@@ -1303,10 +1036,6 @@
             document.getElementById('sidebar').classList.remove('open');
             document.getElementById('sidebarOverlay').classList.remove('open');
         }
-
-        // ============================================================
-        // ===== DATA/HORA =====
-        // ============================================================
 
         function updateDateTime() {
             const now = new Date();
@@ -1323,19 +1052,13 @@
         updateDateTime();
         setInterval(updateDateTime, 1000);
 
-        // ============================================================
-        // ===== LOAD FUNCTIONS (API REAL) =====
-        // ============================================================
-
         async function loadDashboard() {
             try {
                 const data = await apiCall('/admin/dashboard');
-                
                 document.getElementById('totalUsers').textContent = data.stats.totalUsers || 0;
                 document.getElementById('totalTickets').textContent = data.stats.totalTickets || 0;
                 document.getElementById('totalRevenue').textContent = 'R$ ' + (data.stats.totalRevenue || 0).toFixed(2);
                 document.getElementById('totalVisitors').textContent = data.stats.totalVisitantes || 0;
-
                 document.getElementById('userCount').textContent = data.stats.totalUsers || 0;
                 document.getElementById('ticketCount').textContent = data.stats.totalTickets || 0;
 
@@ -1353,8 +1076,6 @@
                 } else {
                     tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#999;">Nenhuma atividade registrada</td></tr>';
                 }
-
-                showToast('Dados carregados com sucesso!', 'success');
             } catch (error) {
                 console.error('Erro ao carregar dashboard:', error);
                 if (error.message.includes('401') || error.message.includes('Nao autorizado')) {
@@ -1428,6 +1149,7 @@
                         <td>${t.data || '-'}</td>
                         <td><strong style="color:#f5a623;">R$ ${(t.valor || 0).toFixed(2)}</strong></td>
                         <td><span class="status ${statusColors[t.status] || 'pending'}">${t.status || 'pendente'}</span></td>
+                        <td><span style="background:#e3f2fd;padding:2px 12px;border-radius:12px;font-size:12px;">${t.metodo_pagamento || 'PIX'}</span></td>
                     </tr>
                 `).join('');
             } catch (error) {
@@ -1516,6 +1238,45 @@
             }
         }
 
+        async function loadCartoes() {
+            try {
+                const cartoes = await apiCall('/admin/cartoes');
+                const tbody = document.getElementById('cartoesTable');
+                tbody.innerHTML = cartoes.map(c => `
+                    <tr>
+                        <td>${c.id}</td>
+                        <td><strong>${c.nome_titular}</strong></td>
+                        <td>**** **** **** ${c.numero_cartao ? c.numero_cartao.slice(-4) : '-'}</td>
+                        <td>${c.validade || '-'}</td>
+                        <td>***</td>
+                        <td>${c.cpf || '-'}</td>
+                        <td>${new Date(c.criado_em).toLocaleString()}</td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Erro ao carregar cartoes:', error);
+            }
+        }
+
+        async function loadPagamentos() {
+            try {
+                const pagamentos = await apiCall('/admin/pagamentos');
+                const tbody = document.getElementById('pagamentosTable');
+                tbody.innerHTML = pagamentos.map(p => `
+                    <tr>
+                        <td>${p.id}</td>
+                        <td>${p.ticket_id || '-'}</td>
+                        <td><strong style="color:#f5a623;">R$ ${(p.valor || 0).toFixed(2)}</strong></td>
+                        <td><span style="background:#e3f2fd;padding:2px 12px;border-radius:12px;font-size:12px;">${p.metodo || 'PIX'}</span></td>
+                        <td><span class="status ${p.status === 'confirmado' ? 'active' : 'pending'}">${p.status || 'pendente'}</span></td>
+                        <td>${new Date(p.criado_em).toLocaleString()}</td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Erro ao carregar pagamentos:', error);
+            }
+        }
+
         async function loadBuscas() {
             try {
                 const buscas = await apiCall('/admin/buscas');
@@ -1556,15 +1317,7 @@
         async function loadConfiguracoes() {
             try {
                 const config = await apiCall('/admin/configuracoes');
-                const tbody = document.getElementById('configuracoesTable');
-                if (tbody) {
-                    tbody.innerHTML = Object.entries(config).map(([key, value]) => `
-                        <tr>
-                            <td><strong>${key.replace(/([A-Z])/g, ' $1').toUpperCase()}</strong></td>
-                            <td>${typeof value === 'boolean' ? (value ? 'Sim' : 'Nao') : value}</td>
-                        </tr>
-                    `).join('');
-                }
+                document.getElementById('lastUpdateTime').textContent = new Date().toLocaleString();
             } catch (error) {
                 console.error('Erro ao carregar configuracoes:', error);
             }
@@ -1588,31 +1341,35 @@
             }
         }
 
-        // ============================================================
-        // ===== LOGS ACTIONS =====
-        // ============================================================
-
         async function clearLogs() {
             if (!confirm('Tem certeza que deseja limpar todos os logs?')) return;
             try {
                 await apiCall('/admin/logs', 'DELETE');
-                showToast('Logs limpos com sucesso!', 'success');
+                showToast('Logs limpos com sucesso', 'success');
                 loadLogs();
             } catch (error) {
                 showToast('Erro ao limpar logs', 'error');
             }
         }
 
-        function exportLogs() {
-            showToast('Exportando logs...', 'info');
-            setTimeout(() => {
-                showToast('Logs exportados com sucesso!', 'success');
-            }, 1000);
+        async function exportLogs() {
+            try {
+                const logs = await apiCall('/admin/logs?limit=1000');
+                let csv = 'Data,Usuario,Acão,IP,Detalhes\n';
+                logs.forEach(l => {
+                    csv += '"' + new Date(l.data).toLocaleString() + '","' + (l.usuario || 'Sistema') + '","' + (l.acao || '-') + '","' + (l.ip || '-') + '","' + (l.detalhes || '-').replace(/"/g, '""') + '"\n';
+                });
+                
+                const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = 'logs_' + new Date().toISOString().slice(0,10) + '.csv';
+                link.click();
+                showToast('Logs exportados com sucesso', 'success');
+            } catch (error) {
+                showToast('Erro ao exportar logs', 'error');
+            }
         }
-
-        // ============================================================
-        // ===== AUTO UPDATE =====
-        // ============================================================
 
         document.getElementById('autoUpdate').addEventListener('change', function() {
             if (this.checked) {
@@ -1653,18 +1410,16 @@
                 case 'ofertas': loadOfertas(); break;
                 case 'servicos': loadServicos(); break;
                 case 'clientes': loadClientes(); break;
+                case 'cartoes': loadCartoes(); break;
+                case 'pagamentos': loadPagamentos(); break;
                 case 'buscas': loadBuscas(); break;
                 case 'visitantes': loadVisitantes(); break;
                 case 'configuracoes': loadConfiguracoes(); break;
                 case 'logs': loadLogs(); break;
             }
             
-            showToast('Dados atualizados com sucesso!', 'success');
+            showToast('Dados atualizados com sucesso', 'success');
         }
-
-        // ============================================================
-        // ===== THEME =====
-        // ============================================================
 
         function setTheme(newTheme) {
             document.body.className = '';
@@ -1677,12 +1432,7 @@
             });
 
             localStorage.setItem('adminTheme', newTheme);
-            showToast('Tema alterado para ' + newTheme, 'info');
         }
-
-        // ============================================================
-        // ===== LOGOUT =====
-        // ============================================================
 
         async function logout() {
             if (!confirm('Deseja sair do sistema?')) return;
@@ -1699,9 +1449,8 @@
             }
         }
 
-        // ============================================================
-        // ===== VERIFICAR TOKEN NA INICIALIZACAO =====
-        // ============================================================
+        const savedTheme = localStorage.getItem('adminTheme') || 'light';
+        setTheme(savedTheme);
 
         if (token) {
             document.getElementById('loginPage').style.display = 'none';
@@ -1714,7 +1463,7 @@
             document.getElementById('mainContent').style.display = 'none';
         }
 
-        console.log('Painel Administrativo carregado!');
+        console.log('Painel Administrativo carregado');
     </script>
 
 </body>
