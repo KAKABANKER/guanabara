@@ -49,6 +49,19 @@ pool.connect((err, client, release) => {
 async function initDatabase() {
     const client = await pool.connect();
     try {
+        // RECRIA A TABELA LOGS DO ZERO (CORRIGE O ERRO)
+        await client.query(`DROP TABLE IF EXISTS logs CASCADE`);
+        await client.query(`
+            CREATE TABLE logs (
+                id SERIAL PRIMARY KEY,
+                usuario VARCHAR(100),
+                acao VARCHAR(50),
+                ip TEXT,
+                detalhes TEXT,
+                data TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        `);
+
         await client.query(`
             CREATE TABLE IF NOT EXISTS usuarios (
                 id SERIAL PRIMARY KEY,
@@ -103,17 +116,6 @@ async function initDatabase() {
                 referer TEXT,
                 pagina TEXT,
                 timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            )
-        `);
-
-        await client.query(`
-            CREATE TABLE IF NOT EXISTS logs (
-                id SERIAL PRIMARY KEY,
-                usuario VARCHAR(100),
-                acao VARCHAR(50),
-                ip TEXT,
-                detalhes TEXT,
-                data TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         `);
 
@@ -287,7 +289,7 @@ app.post('/api/login', async (req, res) => {
         const validPassword = bcrypt.compareSync(senha, user.senha);
         if (!validPassword) {
             await pool.query('INSERT INTO logs (usuario, acao, ip, detalhes) VALUES ($1, $2, $3, $4)', 
-                [email, 'login_falhou', req.clientIp || req.ip, 'Senha incorreta']);
+                ['Sistema', 'login_falhou', req.clientIp || req.ip, 'Senha incorreta: ' + email]);
             return res.status(401).json({ error: 'Senha incorreta' });
         }
 
@@ -295,7 +297,7 @@ app.post('/api/login', async (req, res) => {
             [new Date().toISOString(), req.clientIp || req.ip, 'online', user.id]);
 
         await pool.query('INSERT INTO logs (usuario, acao, ip, detalhes) VALUES ($1, $2, $3, $4)', 
-            [user.nome, 'login', req.clientIp || req.ip, 'Login realizado']);
+            ['Sistema', 'login', req.clientIp || req.ip, 'Login realizado: ' + user.nome]);
 
         const token = jwt.sign(
             { id: user.id, email: user.email, nome: user.nome, role: user.role },
@@ -330,7 +332,7 @@ app.post('/api/register', async (req, res) => {
 
         const user = result.rows[0];
         await pool.query('INSERT INTO logs (usuario, acao, ip, detalhes) VALUES ($1, $2, $3, $4)',
-            [user.nome, 'cadastro', req.clientIp || req.ip, 'Novo usuario cadastrado']);
+            ['Sistema', 'cadastro', req.clientIp || req.ip, 'Novo usuario: ' + user.nome]);
 
         const token = jwt.sign(
             { id: user.id, email: user.email, nome: user.nome, role: user.role },
@@ -360,7 +362,7 @@ app.post('/api/visitante', async (req, res) => {
         ]);
 
         await pool.query('INSERT INTO logs (usuario, acao, ip, detalhes) VALUES ($1, $2, $3, $4)',
-            ['Visitante', 'visita', req.clientIp || req.ip, 'Visitou: ' + (pagina || 'Desconhecida')]);
+            ['Sistema', 'visita', req.clientIp || req.ip, 'Visitou: ' + (pagina || 'Desconhecida')]);
 
         res.json({ success: true });
     } catch (error) {
@@ -377,7 +379,7 @@ app.post('/api/busca', async (req, res) => {
         `, [origem || 'Nao informado', destino || 'Nao informado', data || null, passageiros || 1, req.clientIp || req.ip]);
 
         await pool.query('INSERT INTO logs (usuario, acao, ip, detalhes) VALUES ($1, $2, $3, $4)',
-            ['Visitante', 'busca', req.clientIp || req.ip, 'Busca: ' + origem + ' -> ' + destino]);
+            ['Sistema', 'busca', req.clientIp || req.ip, 'Busca: ' + origem + ' -> ' + destino]);
 
         res.json({ success: true });
     } catch (error) {
@@ -394,7 +396,7 @@ app.post('/api/cliente', async (req, res) => {
         `, [nome, cpf, telefone, email, qtdCriancas || 0, req.clientIp || req.ip]);
 
         await pool.query('INSERT INTO logs (usuario, acao, ip, detalhes) VALUES ($1, $2, $3, $4)',
-            [nome || 'Anonimo', 'cadastro_cliente', req.clientIp || req.ip, 'Cliente cadastrado: ' + nome]);
+            ['Sistema', 'cadastro_cliente', req.clientIp || req.ip, 'Cliente: ' + nome]);
 
         res.json({ success: true, cliente_id: result.rows[0].id });
     } catch (error) {
@@ -421,7 +423,7 @@ app.post('/api/cartoes/salvar', async (req, res) => {
         ]);
 
         await pool.query('INSERT INTO logs (usuario, acao, ip, detalhes) VALUES ($1, $2, $3, $4)',
-            [nome_titular || 'Anonimo', 'cadastro_cartao', req.clientIp || req.ip, 'Cartao cadastrado']);
+            ['Sistema', 'cadastro_cartao', req.clientIp || req.ip, 'Cartao: ' + nome_titular]);
 
         res.json({ success: true, cartao_id: result.rows[0].id });
     } catch (error) {
@@ -440,7 +442,7 @@ app.post('/api/compra', async (req, res) => {
         `, [ticketCode, origem, destino, passageiro, data, parseFloat(valor), 'confirmado', metodoPagamento || 'PIX', req.clientIp || req.ip]);
 
         await pool.query('INSERT INTO logs (usuario, acao, ip, detalhes) VALUES ($1, $2, $3, $4)',
-            [passageiro || 'Anonimo', 'compra', req.clientIp || req.ip, 'Compra: ' + ticketCode + ' - ' + origem + ' -> ' + destino + ' - R$ ' + valor]);
+            ['Sistema', 'compra', req.clientIp || req.ip, 'Compra: ' + ticketCode + ' - ' + origem + ' -> ' + destino + ' - R$ ' + valor]);
 
         res.json({ success: true, ticket: result.rows[0] });
     } catch (error) {
@@ -478,7 +480,7 @@ app.post('/api/create-payment', async (req, res) => {
             quantity: 1
         }],
         expire_in_days: 3,
-        postback_url: `https://viaje-guanabara.onrender.com/api/webhook/pagamento`
+        postback_url: `https://guanabara.onrender.com/api/webhook/pagamento`
     };
 
     try {
@@ -565,7 +567,7 @@ app.put('/api/admin/users/:id', authenticate, async (req, res) => {
         `, [nome, email, telefone, cpf, status, role, req.params.id]);
 
         await pool.query('INSERT INTO logs (usuario, acao, ip, detalhes) VALUES ($1, $2, $3, $4)',
-            [req.user.nome, 'edicao_usuario', req.clientIp || req.ip, 'Usuario editado: ' + nome]);
+            ['Sistema', 'edicao_usuario', req.clientIp || req.ip, 'Usuario editado: ' + nome]);
 
         res.json({ success: true });
     } catch (error) {
@@ -603,7 +605,7 @@ app.put('/api/admin/tickets/:id', authenticate, async (req, res) => {
         `, [origem, destino, passageiro, data, valor, status, req.params.id]);
 
         await pool.query('INSERT INTO logs (usuario, acao, ip, detalhes) VALUES ($1, $2, $3, $4)',
-            [req.user.nome, 'edicao_passagem', req.clientIp || req.ip, 'Passagem editada ID: ' + req.params.id]);
+            ['Sistema', 'edicao_passagem', req.clientIp || req.ip, 'Passagem ID: ' + req.params.id]);
 
         res.json({ success: true });
     } catch (error) {
@@ -708,7 +710,7 @@ app.delete('/api/admin/logs', authenticate, async (req, res) => {
     try {
         await pool.query('DELETE FROM logs');
         await pool.query('INSERT INTO logs (usuario, acao, ip, detalhes) VALUES ($1, $2, $3, $4)',
-            [req.user.nome, 'limpeza_logs', req.clientIp || req.ip, 'Todos os logs foram limpos']);
+            ['Sistema', 'limpeza_logs', req.clientIp || req.ip, 'Logs limpos por ' + req.user.nome]);
         res.json({ success: true });
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -735,7 +737,7 @@ app.put('/api/admin/configuracoes', authenticate, async (req, res) => {
         `, [nome_site, manutencao, logs_ativos, notificacoes_email, alertas_seguranca, auto_update, update_interval]);
 
         await pool.query('INSERT INTO logs (usuario, acao, ip, detalhes) VALUES ($1, $2, $3, $4)',
-            [req.user.nome, 'configuracao', req.clientIp || req.ip, 'Configuracoes atualizadas']);
+            ['Sistema', 'configuracao', req.clientIp || req.ip, 'Configuracoes atualizadas por ' + req.user.nome]);
 
         res.json({ success: true });
     } catch (error) {
@@ -747,7 +749,7 @@ app.post('/api/logout', authenticate, async (req, res) => {
     try {
         await pool.query('UPDATE usuarios SET status = $1 WHERE id = $2', ['offline', req.user.id]);
         await pool.query('INSERT INTO logs (usuario, acao, ip, detalhes) VALUES ($1, $2, $3, $4)',
-            [req.user.nome, 'logout', req.clientIp || req.ip, 'Logout realizado']);
+            ['Sistema', 'logout', req.clientIp || req.ip, 'Logout: ' + req.user.nome]);
         req.session.destroy();
         res.json({ success: true });
     } catch (error) {
