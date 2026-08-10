@@ -7,7 +7,6 @@
     <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Guanabara_Logo.png/180px-Guanabara_Logo.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; background: #f5f7fa; color: #1a1f36; padding: 32px 0 48px; }
@@ -15,13 +14,13 @@
         .main-header { background: #ffffff; border-radius: 16px; margin-bottom: 28px; padding: 16px 24px; border: 1px solid #e9ecef; }
         .logo { display: flex; align-items: center; gap: 14px; }
         .logo-text h1 { font-size: 18px; font-weight: 700; color: #1a1f36; }
-        .logo-text h1 span { color: #00a650; }
+        .logo-text h1 span { color: #f5a623; }
         .comprovante-wrapper { background: #ffffff; border-radius: 20px; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05); overflow: hidden; margin-bottom: 28px; border: 1px solid #e9ecef; }
         .comprovante-header { background: linear-gradient(135deg, #008c44 0%, #00a650 100%); padding: 28px 32px; text-align: center; }
         .comprovante-header h2 { font-size: 24px; font-weight: 600; color: white; margin-bottom: 6px; }
         .protocolo-badge { background: rgba(255, 255, 255, 0.15); display: inline-block; padding: 5px 14px; border-radius: 20px; font-size: 11px; font-weight: 500; margin-top: 12px; color: #ffffff; }
         .comprovante-body { padding: 32px; }
-        .info-section { background: #f8f9fc; border-radius: 16px; padding: 20px 24px; margin-bottom: 20px; border-left: 3px solid #00a650; }
+        .info-section { background: #f8f9fc; border-radius: 16px; padding: 20px 24px; margin-bottom: 20px; border-left: 3px solid #f5a623; }
         .info-section h3 { font-size: 15px; font-weight: 600; margin-bottom: 16px; color: #1a1f36; }
         .info-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 16px; }
         .info-item { display: flex; flex-direction: column; gap: 4px; }
@@ -30,12 +29,11 @@
         .produtos-table { width: 100%; border-collapse: collapse; font-size: 13px; }
         .produtos-table th { text-align: left; padding: 12px 0; border-bottom: 1px solid #e9ecef; font-weight: 600; color: #4a5a72; font-size: 12px; }
         .produtos-table td { padding: 12px 0; border-bottom: 1px solid #f0f2f5; font-weight: 500; color: #2d3a4b; }
-        .total-row td { font-size: 15px; font-weight: 700; color: #008c44; border-bottom: none; padding: 14px 0; }
-        .badge-pago { background: #00a650; color: white; padding: 4px 12px; border-radius: 4px; font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; width: fit-content; }
+        .total-row td { font-size: 15px; font-weight: 700; color: #f5a623; border-bottom: none; padding: 14px 0; }
         .footer-note { text-align: center; margin-top: 20px; padding-top: 18px; border-top: 1px solid #e9ecef; font-size: 10px; color: #6c7a91; }
         .acoes { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; margin: 20px 0 16px; }
         .btn { padding: 10px 24px; border-radius: 8px; font-weight: 600; font-size: 12px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; text-decoration: none; border: none; background: white; border: 1px solid #dce1e8; }
-        .btn-primary { background: #00a650; color: white; border: none; }
+        .btn-primary { background: #f5a623; color: white; border: none; }
         .btn-pdf { background: transparent; border: 1px solid #dce1e8; color: #c2410c; }
         @media print { .acoes, .main-header, .btn { display: none !important; } .comprovante-wrapper { box-shadow: none; margin: 0; border: none; } }
     </style>
@@ -77,13 +75,16 @@
     function carregarComprovante() {
         const produtoNome = getFromStorage('produto_nome') || 'Passagem de Ônibus';
         const valorTotal = parseFloat(getFromStorage('produto_preco') || '0');
+        const clienteNome = getFromStorage('cliente_nome') || 'Não informado';
         const clienteCpf = getFromStorage('cliente_cpf') || 'Não informado';
         const clienteTelefone = getFromStorage('cliente_telefone') || 'Não informado';
+        const qtdCriancas = parseInt(getFromStorage('qtd_criancas')) || 0;
 
         document.getElementById('comprovanteBody').innerHTML = `
             <div class="info-section">
                 <h3><i class="fas fa-user"></i> Dados do passageiro</h3>
                 <div class="info-grid">
+                    <div class="info-item"><span class="info-label">Nome</span><span class="info-value">${clienteNome}</span></div>
                     <div class="info-item"><span class="info-label">CPF</span><span class="info-value">${clienteCpf}</span></div>
                     <div class="info-item"><span class="info-label">Telefone</span><span class="info-value">${clienteTelefone}</span></div>
                 </div>
@@ -94,6 +95,7 @@
                     <thead><tr><th>Descrição</th><th>Quantidade</th><th>Subtotal</th></tr></thead>
                     <tbody>
                         <tr><td>${produtoNome}</td><td>1</td><td>${valorTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td></tr>
+                        ${qtdCriancas > 0 ? `<tr><td>Criança(s)</td><td>${qtdCriancas}</td><td>Grátis</td></tr>` : ''}
                         <tr class="total-row"><td colspan="2" style="text-align: right; font-weight: 600;">VALOR TOTAL</td><td>${valorTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td></tr>
                     </tbody>
                 </table>
