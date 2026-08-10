@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+        /* (MANTENHA O CSS DO SITE AQUI - É O MESMO QUE VOCÊ JÁ TEM) */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; background: #f5f5f5; color: #333; line-height: 1.6; overflow-x: hidden; }
         .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
@@ -318,16 +319,16 @@
                 const data = await response.json();
                 
                 if (data.success && data.produtos.length > 0) {
-                    // Separa Ofertas (primeiras 5) e Rotas (restante)
-                    const ofertas = data.produtos.slice(0, 5);
-                    const rotas = data.produtos.slice(5, 12);
+                    // Separa Ofertas (tipo 'oferta') e Rotas (tipo 'rota')
+                    const ofertas = data.produtos.filter(p => p.tipo === 'oferta');
+                    const rotas = data.produtos.filter(p => p.tipo === 'rota');
 
                     // Renderizar Ofertas
                     const ofertasContainer = document.getElementById('ofertasCards');
                     if (ofertas.length > 0) {
                         ofertasContainer.innerHTML = ofertas.map(p => `
                             <div class="card" onclick="comprarPassagem('${p.nome}', ${p.preco_promocional || p.preco})">
-                                <img src="mgsaopaulo.img" alt="${p.nome}">
+                                <img src="${p.imagem || 'mgsaopaulo.img'}" alt="${p.nome}">
                                 <div class="gradient"></div>
                                 <div class="card-overlay">
                                     <div class="route">Oferta Especial <strong>${p.nome}</strong></div>
@@ -345,7 +346,7 @@
                         rotasContainer.innerHTML = rotas.map(p => `
                             <div class="destination-card" onclick="comprarPassagem('${p.nome}', ${p.preco_promocional || p.preco})">
                                 <div class="dest-header">
-                                    <img src="mgsaopaulo.img" alt="${p.nome}">
+                                    <img src="${p.imagem || 'mgsaopaulo.img'}" alt="${p.nome}">
                                     <div class="gradient"></div>
                                     <div class="dest-name">${p.nome}</div>
                                 </div>
