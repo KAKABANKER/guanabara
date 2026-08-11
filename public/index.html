@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     <title>Passagem de Ônibus: Compre Online | Viaje Guanabara</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -156,13 +157,38 @@
         .page-content .trip-info .value { font-weight: 500; color: #1a2b4a; }
         .page-content .trip-info .value.price { color: #f5a623; font-size: 22px; font-weight: 700; }
 
+        /* Calendario */
+        .calendario-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0 30px; }
+        @media (max-width: 768px) { .calendario-wrapper { grid-template-columns: 1fr; } }
+        .calendario-mes { background: #f8f9fc; border-radius: 12px; padding: 16px; border: 1px solid #e8e8e8; }
+        .calendario-mes .mes-titulo { font-weight: 700; font-size: 16px; color: #1a2b4a; text-align: center; margin-bottom: 10px; }
+        .calendario-mes .dias-semana { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; font-size: 11px; font-weight: 600; color: #888; text-align: center; text-transform: uppercase; margin-bottom: 8px; }
+        .calendario-mes .dias { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+        .calendario-mes .dias .dia { padding: 6px 0; text-align: center; font-size: 13px; border-radius: 6px; cursor: pointer; transition: all 0.2s; font-weight: 500; color: #1a2b4a; }
+        .calendario-mes .dias .dia:hover { background: #e8ecf0; }
+        .calendario-mes .dias .dia.vazio { color: #ccc; cursor: default; }
+        .calendario-mes .dias .dia.hoje { background: #436ec9; color: #fff; font-weight: 700; }
+        .calendario-mes .dias .dia.disponivel { background: #e8f5e9; color: #2e7d32; }
+        .calendario-mes .dias .dia.ocupado { background: #ffebee; color: #c62828; text-decoration: line-through; cursor: not-allowed; }
+
+        .filtros-rapidos { display: flex; gap: 10px; flex-wrap: wrap; margin: 16px 0 20px; }
+        .filtros-rapidos button { padding: 6px 18px; border: 1px solid #e0e0e0; border-radius: 20px; background: #fff; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s; font-family: inherit; color: #4a5568; }
+        .filtros-rapidos button:hover { border-color: #436ec9; color: #436ec9; }
+        .filtros-rapidos button.active { background: #436ec9; color: #fff; border-color: #436ec9; }
+
+        .ultima-busca-item { background: #f8f9fc; border-radius: 10px; padding: 12px 16px; border: 1px solid #e0e0e0; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+        .ultima-busca-item .rota { font-weight: 600; color: #1a2b4a; }
+        .ultima-busca-item .info { font-size: 13px; color: #888; }
+        .ultima-busca-item .btn-ver { color: #436ec9; font-weight: 600; font-size: 13px; cursor: pointer; }
+        .ultima-busca-item .btn-ver:hover { text-decoration: underline; }
+
         .assentos-container { display: flex; flex-direction: column; align-items: center; padding: 20px; background: #f8f9fc; border-radius: 12px; border: 1px solid #e8e8e8; }
         .assentos-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; max-width: 400px; margin: 0 auto; }
         .assento { width: 60px; height: 60px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; cursor: pointer; transition: all 0.2s; border: 2px solid #ccc; background: #fff; color: #333; }
         .assento:hover:not(.ocupado) { transform: scale(1.05); border-color: #436ec9; }
         .assento.selecionado { border-color: #f5a623; background: #f5a623; color: #fff; }
         .assento.ocupado { background: #e8e8e8; color: #999; cursor: not-allowed; border-color: #ddd; }
-        .assento.ocupado::after { content: '✕'; font-size: 18px; color: #999; }
+        .assento.ocupado::after { content: 'x'; font-size: 18px; color: #999; }
         .assento.ocupado span { display: none; }
         .assento span { display: block; }
         .assento-legenda { display: flex; gap: 20px; justify-content: center; margin-top: 16px; flex-wrap: wrap; }
@@ -256,6 +282,7 @@
             .partner-banner .partner-logo { position: static; opacity: 0.7; margin-top: 12px; }
             .assentos-grid { grid-template-columns: repeat(4, 1fr); gap: 8px; }
             .assento { width: 50px; height: 50px; font-size: 12px; }
+            .calendario-wrapper { grid-template-columns: 1fr; gap: 20px; }
         }
         @media (max-width: 480px) {
             .card { min-width: 160px; max-width: 190px; }
@@ -265,13 +292,13 @@
             .page-content h2 { font-size: 20px; }
             .assentos-grid { grid-template-columns: repeat(3, 1fr); gap: 6px; }
             .assento { width: 44px; height: 44px; font-size: 11px; }
+            .filtros-rapidos button { padding: 4px 12px; font-size: 12px; }
         }
         @media (min-width: 821px) { .swap-mobile { display: none !important; } }
     </style>
 </head>
 <body>
 
-    <!-- LOADING -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-spinner"></div>
         <div class="loading-text">Carregando...</div>
@@ -311,7 +338,7 @@
 
     <main id="mainContent">
 
-        <!-- ===== HOME ===== -->
+        <!-- HOME -->
         <div id="page-home" class="page-content active">
             <section class="banner" onclick="showPage('ofertas')">
                 <img src="/img/download.webp" alt="Banner Guanabara">
@@ -333,7 +360,7 @@
                         </div>
                         <div class="field">
                             <label for="departureDate">Ida</label>
-                            <input type="date" id="departureDate" value="2026-08-10">
+                            <input type="date" id="departureDate" value="">
                         </div>
                         <div class="field">
                             <label for="passengers">Passageiros</label>
@@ -354,6 +381,27 @@
                 <img src="/img/onibus.webp" alt="Onibus" class="bus-image" loading="lazy">
             </section>
 
+            <!-- Calendario -->
+            <section>
+                <h3>Calendario de viagens</h3>
+                <p class="subtitle">Selecione a data para ver os horarios disponiveis.</p>
+                <div class="filtros-rapidos">
+                    <button onclick="filtrarData('hoje')" class="active">Hoje</button>
+                    <button onclick="filtrarData('amanha')">Amanha</button>
+                    <button onclick="filtrarData('proximo_sabado')">Proximo sabado</button>
+                    <button onclick="filtrarData('limpar')" style="border-color:#ffebee;color:#c62828;">Limpar</button>
+                </div>
+                <div class="calendario-wrapper" id="calendarioContainer"></div>
+            </section>
+
+            <!-- Ultimas Buscas -->
+            <section>
+                <h3>Ultimas buscas</h3>
+                <p class="subtitle">Suas pesquisas recentes para facilitar sua viagem.</p>
+                <div id="ultimasBuscasDetalhadas"></div>
+            </section>
+
+            <!-- Ofertas -->
             <section>
                 <h3>Ofertas campeas</h3>
                 <div class="cards">
@@ -388,6 +436,7 @@
                 </div>
             </section>
 
+            <!-- Partner -->
             <section>
                 <div class="partner-banner" onclick="showPage('viva')">
                     <div class="partner-content">
@@ -398,6 +447,7 @@
                 </div>
             </section>
 
+            <!-- FAQ -->
             <section>
                 <h2>Duvidas Frequentes</h2>
                 <div class="faq-list">
@@ -417,7 +467,7 @@
             </section>
         </div>
 
-        <!-- ===== DESTINOS ===== -->
+        <!-- DESTINOS -->
         <div id="page-destinos" class="page-content">
             <h2>Destinos Guanabara</h2>
             <p style="margin-bottom:20px;color:#666;">Confira todos os destinos disponiveis.</p>
@@ -449,7 +499,7 @@
             </div>
         </div>
 
-        <!-- ===== OFERTAS ===== -->
+        <!-- OFERTAS -->
         <div id="page-ofertas" class="page-content">
             <h2>Ofertas Especiais</h2>
             <p style="margin-bottom:20px;color:#666;">Aproveite nossas promocoes e economize.</p>
@@ -478,7 +528,7 @@
             </div>
         </div>
 
-        <!-- ===== SERVICOS ===== -->
+        <!-- SERVICOS -->
         <div id="page-servicos" class="page-content">
             <h2>Nossos Servicos</h2>
             <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:20px;margin-top:20px;">
@@ -501,7 +551,7 @@
             </div>
         </div>
 
-        <!-- ===== BILHETES ===== -->
+        <!-- BILHETES -->
         <div id="page-bilhetes" class="page-content">
             <h2>Meus Bilhetes</h2>
             <p style="margin-bottom:20px;color:#666;">Consulte e gerencie suas passagens.</p>
@@ -521,7 +571,7 @@
             </div>
         </div>
 
-        <!-- ===== AJUDA ===== -->
+        <!-- AJUDA -->
         <div id="page-ajuda" class="page-content">
             <h2>Central de Ajuda</h2>
             <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:20px;margin-bottom:30px;">
@@ -540,7 +590,7 @@
             </div>
         </div>
 
-        <!-- ===== VIVA FIDELIDADE ===== -->
+        <!-- VIVA FIDELIDADE -->
         <div id="page-viva" class="page-content">
             <h2>Viva Fidelidade</h2>
             <div style="background:#f0f4ff;border-radius:12px;padding:30px;margin:20px 0;">
@@ -564,7 +614,7 @@
             </div>
         </div>
 
-        <!-- ===== LOGIN ===== -->
+        <!-- LOGIN -->
         <div id="page-login" class="page-content">
             <h2>Acesse sua conta</h2>
             <form style="max-width:500px;margin:0 auto;" onsubmit="event.preventDefault(); showLoading();">
@@ -575,7 +625,7 @@
             </form>
         </div>
 
-        <!-- ===== CADASTRO ===== -->
+        <!-- CADASTRO -->
         <div id="page-cadastro" class="page-content">
             <h2>Crie sua conta</h2>
             <form style="max-width:500px;margin:0 auto;" onsubmit="event.preventDefault(); showLoading();">
@@ -590,7 +640,7 @@
             </form>
         </div>
 
-        <!-- ===== SELECAO DE ASSENTOS ===== -->
+        <!-- ASSENTOS -->
         <div id="page-assentos" class="page-content">
             <h2>Selecione seu Assento</h2>
             <div id="assentosInfo" class="trip-info">
@@ -615,7 +665,7 @@
             <div style="margin-top:16px;"><a href="#" onclick="showPage('home')">← Voltar</a></div>
         </div>
 
-        <!-- ===== CHECKOUT ===== -->
+        <!-- CHECKOUT -->
         <div id="page-checkout" class="page-content">
             <h2>Finalizar Compra</h2>
             <div id="checkoutData" class="trip-info">
@@ -708,297 +758,16 @@
 
     <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
     <script>
-        
-const cidades = [
-    // NORTE - AC, AM, AP, PA, RO, RR, TO
-    'RIO BRANCO - AC (RODOVIARIA)', 'MANAUS - AM (RODOVIARIA)', 'MACAPA - AP (RODOVIARIA)',
-    'BELEM - PA (RODOVIARIA)', 'BELEM - PA (TERMINAL RODOVIARIO)', 'ANANINDEUA - PA',
-    'MARABA - PA', 'MARABA - PA (KM 06)', 'PARAGOMINAS - PA', 'CASTANHAL - PA',
-    'SANTA MARIA DO PARA - PA', 'DOM ELISEU - PA', 'MAE DO RIO - PA',
-    'SAO MIGUEL DO GUAMA - PA', 'ULIANOPOLIS - PA', 'CACHOEIRA DO PIRIA - PA',
-    'CONCEICAO DO ARAGUAIA - PA', 'ELDORADO DOS CARAJAS - PA', 'PARAUAPEBAS - PA',
-    'REDENCAO - PA', 'XINGUARA - PA', 'CAPANEMA - PA', 'IPIXUNA DO PARA - PA',
-    'PORTO VELHO - RO (RODOVIARIA)', 'BOA VISTA - RR (RODOVIARIA)',
-    'PALMAS - TO (RODOVIARIA)', 'ARAGUAINA - TO', 'GURUPI - TO', 'PORTO NACIONAL - TO',
-    'PARAISO DO TOCANTINS - TO', 'MIRANORTE - TO', 'COLINAS DO TOCANTINS - TO',
-    'ALVORADA - TO', 'ALIANCA DO TOCANTINS - TO', 'ARRAIAS - TO', 'FATIMA - TO',
-    'DIANOPOLIS - TO', 'OLIVEIRA DE FATIMA - TO', 'DARCINOPOLIS - TO',
-    'FIGUEIROPOLIS - TO', 'AGUIARNOPOLIS - TO', 'AURORA DO TOCANTINS - TO',
-    'TAGUATINGA - TO', 'COMBINADO - TO', 'NOVO ALEGRE - TO',
-    'PONTE ALTA DO BOM JESUS - TO', 'NOVO JARDIM - TO', 'NATIVIDADE - TO',
-    'PALMEIRAS DO TOCANTINS - TO', 'MIRACEMA DO TOCANTINS - TO',
-    
-    // NORDESTE - AL, BA, CE, MA, PB, PE, PI, RN, SE
-    'MACEIO - AL (RODOVIARIA)', 'ARAPIRACA - AL', 'PALMEIRA DOS INDIOS - AL', 'DELMIRO GOUVEIA - AL',
-    'SALVADOR - BA (RODOVIARIA)', 'FEIRA DE SANTANA - BA', 'VITORIA DA CONQUISTA - BA',
-    'JEQUIE - BA', 'ILHEUS - BA', 'ITABUNA - BA', 'BARREIRAS - BA',
-    'LUIS EDUARDO MAGALHAES - BA', 'SEABRA - BA', 'IBOTIRAMA - BA',
-    'CRISTOPOLIS - BA', 'RIACHAO DAS NEVES - BA', 'ITABERABA - BA',
-    'PORTAL DO SOL (ITABERABA) - BA', 'BOM JESUS DA LAPA - BA', 'IBITIARA - BA',
-    'JAVI - BA', 'LAGOA DO DIONISIO - BA', 'LAGOA DO OSCAR - BA',
-    'SAO DESIDERIO (RODA VELHA) - BA', 'ARGOIM - BA', 'PONTE PARAMIRIM - BA',
-    'ZUCA POVOADO - BA', 'SANTA RITA DE CASSIA - BA', 'SANTO ESTEVAO - BA',
-    'IRECE - BA', 'QUEIMADA NOVA - BA', 'PALMEIRAS - BA', 'LENCOIS - BA',
-    'CAPIM GROSSO - BA', 'SAO FELIX DO CORIBE - BA', 'BOQUIRA - BA',
-    'MACAUBAS - BA', 'CAETITE - BA', 'MORRO DO CHAPEU - BA', 'POCOES - BA',
-    'JAGUAQUARA - BA', 'JACOBINA - BA', 'CICERO DANTAS - BA',
-    'RIBEIRA DO POMBAL - BA', 'ANAGE - BA', 'VARZEA NOVA - BA', 'SERRINHA - BA',
-    'MILAGRES - BA', 'JEREMOABO - BA', 'TUCANO - BA', 'PARATINGA - BA',
-    'SENHOR DO BONFIM - BA', 'ARACI - BA', 'PAULO AFONSO - BA',
-    'OLIVEIRA DOS BREJINHOS - BA', 'ENT LENCOIS - BA', 'ENT OLIVEIRA DOS BREJINHOS - BA',
-    'ENT PALMEIRAS - BA', 'POSTO BEIRA RIO - BA', 'SEABRA (AG. POUSADA) - BA',
-    'GARAGEM SEABRA - BA', 'MANSIDAO - BA', 'MUNDO NOVO - BA', 'BAIXA GRANDE - BA',
-    'JABORANDI - BA', 'FAZENDA SENHOR DO BONFIM - BA', 'CORRENTINA - BA',
-    'SANTA MARIA DA VITORIA - BA', 'FORMOSA DO RIO PRETO - BA',
-    'CHURRASCARIA TEMPERO GAUCHO FORMOSA DO RIO PRETO - BA',
-    'CHURRASCARIA DOIS IRMAOS IBOTIRAMA - BA',
-    'LANCHONETE E RESTAURANTE SABOR DA BAHIA - IBOTIRAMA - BA',
-    'HOTEL E CHURRASCARIA PONTO 4 IRECE - BA',
-    
-    'FORTALEZA - CE (RODOVIARIA)', 'FORTALEZA - CE (TERMINAL RODOVIARIO)',
-    'FORTALEZA (TA MESSEJANA) - CE', 'FORTALEZA (TA ANTONIO BEZERRA) - CE',
-    'FORTALEZA (AEROPORTO) - CE', 'FORTALEZA (BEIRA MAR) - CE',
-    'JUAZEIRO DO NORTE - CE', 'SOBRAL - CE', 'TIANGUA - CE', 'CRATO - CE',
-    'BARRO - CE', 'MILAGRES - CE', 'BREJO SANTO - CE',
-    'SAO GONCALO DO AMARANTE (CROATA) - CE', 'IGUATU - CE', 'FRECHEIRINHA - CE',
-    'SAO BENEDITO - CE', 'SAO LUIS DO CURU - CE', 'QUIXADA - CE', 'ITAPAJE - CE',
-    'GUARACIABA DO NORTE - CE', 'QUIXERAMOBIM - CE', 'UMIRIM - CE', 'ACOPIARA - CE',
-    'MOMBACA - CE', 'MISSAO VELHA - CE', 'RUSSAS - CE', 'JAGUARIBE - CE',
-    'BARBALHA - CE', 'ICO - CE', 'IRAUCUBA - CE', 'IPU - CE', 'FORQUILHA - CE',
-    'VARZEA ALEGRE - CE', 'NOVA RUSSAS - CE', 'CRATEUS - CE', 'IPUEIRAS - CE',
-    'TAUA - CE', 'PARAMBU - CE', 'NOVO ORIENTE - CE', 'QUITERIANOPOLIS - CE',
-    'FARIAS BRITO - CE', 'CAMPOS SALES - CE', 'CAMOCIM - CE', 'HORIZONTE - CE',
-    'PACAJUS - CE', 'CRUZ - CE', 'GRANJA - CE', 'JIJOCA DE JERICOACOARA - CE',
-    'ARACATI - CE', 'ITAPIPOCA - CE', 'AMONTADA - CE', 'PRIMAVERA - CE',
-    'JATI - CE', 'CATUANA - CE', 'ARARIPE - CE', 'ACARAU - CE', 'ITAREMA - CE',
-    'MINEIROLANDIA - CE', 'URUQUE (QUIXERAMOBIM) - CE',
-    'LIMOEIRO DO NORTE (TRIANGULO) - CE', 'BOQUEIRAO DO CESARIO - CE',
-    'SOBRAL (PATOS) - CE', 'COREAU (UBAUNA) - CE', 'CATOLE DA PISTA - CE',
-    'UBAJARA - CE', 'TURURU - CE', 'MASSAPE - CE', 'CARNAUBAL - CE', 'VINTE - CE',
-    'CHAVAL - CE', 'CROATA DA SERRA - CE', 'APRAZIVEL - CE', 'LIMOEIRO DO NORTE - CE',
-    'VILA DE JERICOACOARA - CE', 'MARTINOPOLE - CE', 'URUOCA - CE', 'SENADOR SA - CE',
-    'SENADOR POMPEU - CE', 'JUCAS - CE', 'BARROQUINHA - CE', 'ANTONINA DO NORTE - CE',
-    'SABOEIRO - CE', 'BELA CRUZ - CE', 'MARCO - CE', 'MANGABEIRA - CE',
-    'CARIUS - CE', 'VICOSA DO CEARA - CE', 'CEDRO - CE', 'SOLONOPOLE - CE',
-    'UMARITUBA - CE', 'CHURRASCARIA DOIS IRMAOS TRAIRI - CE', 'IRATINGA - CE',
-    'CRISTAIS - CE', 'AURORA - CE', 'PEDRA BRANCA - CE', 'LIMA CAMPOS - CE',
-    'OROS - CE', 'TRIANGULO - CE', 'MAURITI - CE', 'PORTEIRAS - CE', 'PENAFORTE - CE',
-    'JARDIM - CE', 'IPAUMIRIM - CE', 'LAVRAS DA MANGABEIRA - CE', 'PEDRAS - CE',
-    'CAMPANARIO - CE', 'MORAUJO - CE', 'COREAU - CE', 'TABULEIRO DO NORTE - CE',
-    'CAMPOS SALES (CARMELOPOLIS) - CE', 'TRIANGULO DE MARCO - CE', 'CATAVENTO - CE',
-    'MILHA - CE', 'TRIANGULO DO CHOROZINHO - CE', 'GROAIRAS - CE', 'CARIRE - CE',
-    'VARJOTA - CE', 'INHUCU - CE', 'ENCANTADO - CE', 'PACUJA - CE', 'GRACA - CE',
-    'MUCAMBO - CE', 'CACIMBAS - CE', 'BANABUIU - CE', 'ITAPIPOCA (DESERTO) - CE',
-    'RAFAEL ARRUDA - CE', 'SANTANA DO ACARAU - CE', 'MORRINHOS - CE', 'GUASSUSSE - CE',
-    'BAIXIO - CE', 'ACARAU (JURITIANHA) - CE', 'UMARI - CE', 'JAGUARIBARA - CE',
-    'QUATIGUABA - CE', 'NOVA FLORESTA - CE', 'CATARINA - CE', 'PIQUET CARNEIRO - CE',
-    'TRUSSU - CE', 'PIRES FERREIRA - CE', 'SAO JOAO DO JAGUARIBE - CE', 'PREA - CE',
-    'IBARETAMA - CE', 'BETANIA - CE', 'DEPUTADO IRAPUAN PINHEIRO - CE', 'ARANAU - CE',
-    'PIRANJI - CE', 'JAGUARIBARA (SABIA) - CE', 'ENT. OCARA - CE', 'MORADA NOVA - CE',
-    'MORADA NOVA (PATOS) - CE', 'ARUARU - CE', 'SANTA QUITERIA - CE', 'CANINDE - CE',
-    'MADALENA - CE', 'BOA VIAGEM - CE', 'QUIXELO - CE', 'CHARITO - CE',
-    'TAMBORIL (SUCESSO) - CE', 'INDEPENDENCIA - CE', 'SANTA CRUZ DO BANABUIU - CE',
-    'MACAOCA - CE', 'DIVISA CE-RN - CE', 'SACO - CE', 'ALTO SANTO - CE',
-    'IRACEMA - CE', 'LAGOINHA (QUIXERE) - CE', 'PEREIRO - CE', 'QUIXERE - CE',
-    'ERERE - CE', 'JAGUARETAMA - CE', 'ROLDAO - CE', 'MIRAIMA - CE',
-    'SANTANA DO CARIRI - CE', 'NOVA OLINDA - CE', 'CEMOABA - CE', 'ICARAI DE AMONTADA - CE',
-    'CHURRASCARIA DOIS IRMAOS TABULEIRO DO NORTE - CE',
-    'RESTAURANTE BRASEIROS ITAPAJE - CE', 'ARACATIARA - CE',
-    
-    'SAO LUIS - MA (RODOVIARIA)', 'IMPERATRIZ - MA', 'SANTA INES - MA',
-    'ACAILANDIA - MA', 'ZE DOCA - MA', 'PERITORO - MA', 'CAXIAS - MA',
-    'ESTREITO - MA', 'PORTO FRANCO - MA', 'BACABAL - MA', 'CODO (DEZESSETE) - MA',
-    'TIMON - MA', 'PINHEIRO - MA', 'SANTA HELENA - MA', 'SANTA LUZIA - MA',
-    'BOM JARDIM - MA', 'MARACACUME - MA', 'BURITICUPU - MA',
-    'NOVA OLINDA DO MARANHAO - MA', 'GOVERNADOR NUNES FREIRE - MA',
-    'ITAPECURU MIRIM (ENTRONCAMENTO) - MA', 'ALTO ALEGRE DO MARANHAO - MA',
-    'PEDRO DO ROSARIO - MA', 'BOA VISTA DO GURUPI - MA', 'MIRANDA DO NORTE - MA',
-    'BACABEIRA - MA', 'SAO MATEUS DO MARANHAO - MA', 'VITORIA DO MEARIM - MA',
-    'ARARI - MA', 'VARGEM GRANDE - MA', 'MATOES DO NORTE - MA', 'CHAPADINHA - MA',
-    'ANAPURUS - MA', 'SANTA QUITERIA DO MARANHAO - MA', 'SAO BERNARDO - MA',
-    'CAPINZAL DO NORTE - MA', 'DOM PEDRO - MA', 'SANTO ANTONIO DOS LOPES - MA',
-    'PRESIDENTE DUTRA - MA', 'SAO DOMINGOS DO MARANHAO - MA', 'COLINAS - MA',
-    'PARAIBANO - MA', 'OROSIMBO - MA', 'SAO JOAO DOS PATOS - MA',
-    'BARAO DE GRAJAU - MA', 'PINDARE-MIRIM - MA', 'JUNCO DO MARANHAO - MA',
-    'AMAPA DO MARANHAO - MA', 'CARUTAPERA - MA', 'LUIS DOMINGUES - MA',
-    'GODOFREDO VIANA - MA', 'ARAGUANA - MA', 'CANDIDO MENDES - MA',
-    'PRESIDENTE MEDICI - MA', 'IGARAPE DO MEIO - MA', 'ITAPECURU MIRIM - MA',
-    'PLACA DE ARAIOSES - MA', 'AGUA DOCE DO MARANHAO (CANA BRAVA) - MA',
-    'BARREIRINHAS - MA', 'TUTOIA - MA', 'CAXUXA - MA', 'PAULINO NEVES - MA',
-    'MORROS - MA', 'LEITE - MA (ITAPECURU MIRIM - MA)',
-    'PLACAS URBANO SANTOS - MA', 'SAO BENEDITO DO RIO PRETO - MA',
-    'URBANO SANTOS - MA', 'ROSARIO - MA',
-    'CHURRASCARIA DOIS IRMAOS SANTA INES - MA', 'BELAGUA - MA',
-    'HUMBERTO DE CAMPOS - MA', 'HUMBERTO DE CAMPOS (MASSALINA) - MA',
-    'MORROS (LAGOA GRANDE) - MA', 'SAO SIMAO - MA', 'PIO XII (ANDIROBAL) - MA',
-    'SANTO ANTONIO - MA', 'BURITICUPU (ASA BRANCA) - MA',
-    
-    'JOAO PESSOA - PB (RODOVIARIA)', 'CAMPINA GRANDE - PB', 'PATOS - PB',
-    'POMBAL - PB', 'SANTA LUZIA - PB', 'SOLEDADE - PB', 'CAJAZEIRAS - PB',
-    'SOUSA - PB', 'JUAZEIRINHO - PB', 'JUNCO DO SERIDO - PB', 'SAO MAMEDE - PB',
-    'MALTA - PB', 'CONDADO - PB', 'SAO BENTINHO - PB', 'SANTA GERTRUDES - PB',
-    'APARECIDA - PB', 'MARIZOPOLIS - PB', 'CATOLE DO ROCHA - PB',
-    'SAO JOSE DE PIRANHAS - PB', 'MONTE HOREBE - PB', 'BONITO DE SANTA FE - PB',
-    'CATINGUEIRA - PB', 'SANTA TERESINHA - PB', 'PIANCO - PB', 'ITAPORANGA - PB',
-    'BOA VENTURA - PB', 'DIAMANTE - PB', 'IBIARA - PB', 'CONCEICAO - PB',
-    'UIRAUNA - PB', 'SAO JOAO DO RIO DO PEIXE - PB', 'TREVO DE OLHO DAGUA - PB',
-    'BREJO DO CRUZ - PB', 'SAO BENTO - PB', 'PAULISTA - PB', 'MONTEIRO - PB',
-    'SUME - PB', 'JERICO - PB', 'SERRA BRANCA - PB', 'CAJAZEIRINHAS - PB',
-    'COREMAS - PB', 'SAO JOSE DA LAGOA TAPADA - PB', 'SAO JOAO DO CARIRI - PB',
-    'PONTO DE APOIO PATOS - PB',
-    
-    'RECIFE - PE (RODOVIARIA)', 'RECIFE - PE (TERMINAL RODOVIARIO)',
-    'RECIFE (CAXANGA) - PE', 'PETROLINA - PE', 'SALGUEIRO - PE',
-    'SERRA TALHADA - PE', 'VITORIA DE SANTO ANTAO - PE', 'ARCOVERDE - PE',
-    'ARARIPINA - PE', 'CARUARU - PE', 'OURICURI - PE', 'CABROBO - PE',
-    'SANTA MARIA DA BOA VISTA - PE', 'CUSTODIA - PE', 'GRAVATA - PE',
-    'SERTANIA - PE', 'PESQUEIRA - PE', 'SAO JOSE DO EGITO - PE',
-    'GARANHUNS - PE', 'BEZERROS - PE', 'ABREU E LIMA - PE', 'GOIANA - PE',
-    'IBIMIRIM - PE', 'TRINDADE - PE', 'CABO DE SANTO AGOSTINHO - PE',
-    'FLORESTA - PE', 'PETROLANDIA - PE', 'SERTANIA (CRUZ. DO NORDESTE) - PE',
-    'CHURRASCARIA PERNAMBUCANA ENTRONCAMENTO - PE',
-    
-    'TERESINA - PI (RODOVIARIA)', 'TERESINA (LAD. DO URUGUAI) - PI',
-    'CORRENTE - PI', 'PICOS - PI', 'FLORIANO - PI', 'PIRIPIRI - PI',
-    'BOM JESUS - PI', 'CANTO DO BURITI - PI', 'COLONIA DO GURGUEIA - PI',
-    'CRISTINO CASTRO - PI', 'GILBUES - PI', 'REDENCAO DO GURGUEIA - PI',
-    'MONTE ALEGRE DO PIAUI - PI', 'ELISEU MARTINS - PI', 'ITAUEIRA - PI',
-    'CAMPO MAIOR - PI', 'OEIRAS - PI', 'ALTOS - PI', 'CAPITAO DE CAMPOS - PI',
-    'BURITI DOS LOPES - PI', 'PIRACURUCA - PI', 'MARCOLANDIA - PI',
-    'AGUA BRANCA - PI', 'CARAUBAS DO PIAUI (VOLTA DA JUREMA) - PI',
-    'FRONTEIRAS - PI', 'AMARANTE - PI', 'VALENCA DO PIAUI - PI',
-    'BRASILEIRA - PI', 'COCAL DE TELHA - PI', 'LUIS CORREIA - PI',
-    'ANGICAL DO PIAUI - PI', 'REGENERACAO - PI', 'NAZARE DO PIAUI - PI',
-    'COCAL - PI', 'BARRA GRANDE - PI', 'CAMURUPIM - PI', 'CURIMATA - PI',
-    'RIO DOS MATOS - PI', 'BATALHA - PI', 'PARNAGUA - PI', 'BARRAS - PI',
-    'CABECEIRAS DO PIAUI - PI', 'JOSE DE FREITAS - PI', 'ILHA GRANDE - PI',
-    'JULIO BORGES - PI',
-    
-    'NATAL - RN (RODOVIARIA)', 'MOSSORO - RN', 'ASSU - RN', 'LAJES - RN',
-    'CARAUBAS - RN', 'CURRAIS NOVOS - RN', 'SANTA CRUZ - RN', 'CAICO - RN',
-    'TANGARA - RN', 'OLHO-DAGUA DO BORGES - RN', 'PAU DOS FERROS - RN',
-    'DIVISA CE-RN - RN',
-    
-    'ARACAJU - SE (RODOVIARIA)', 'ESTANCIA - SE',
-    'CHURRASCARIA DOIS IRMAOS PROPRIA - SE',
-    
-    // CENTRO-OESTE - DF, GO, MT, MS
-    'BRASILIA - DF (RODOVIARIA)', 'BRASILIA - DF (TERMINAL RODOVIARIO)',
-    'BRASILIA (TA TAGUATINGA) - DF', 'BRASILIA (TA SOBRADINHO) - DF',
-    'BRASILIA (TA PLANALTINA) - DF', 'BRASILIA (TA GAMA) - DF',
-    'BRASILIA (TA RECANTO DAS EMAS) - DF',
-    'BRASILIA (TA RODOVIARIA DO PLANO PILOTO) - DF',
-    'CHURRASCARIA DOIS IRMAOS BRASILIA - DF',
-    
-    'GOIANIA - GO (RODOVIARIA)', 'GOIANIA - GO (TERMINAL RODOVIARIO)',
-    'APARECIDA DE GOIANIA - GO', 'ANAPOLIS - GO', 'ITUMBIARA - GO',
-    'POSSE - GO', 'POSTO JK CATALAO - GO', 'CALDAS NOVAS - GO',
-    'CRISTALINA - GO', 'RIO VERDE - GO', 'URUACU - GO', 'FORMOSA - GO',
-    'JATAI - GO', 'MINEIROS - GO', 'PORANGATU - GO', 'SANTA RITA DO ARAGUAIA - GO',
-    'POSTO ALVORADA - GO', 'PIRES DO RIO - GO', 'VIANOPOLIS - GO',
-    'MONTE ALEGRE DE GOIAS - GO', 'CAMPOS BELOS - GO', 'ALTO PARAISO DE GOIAS - GO',
-    'SAO JOAO D\'ALIANCA - GO', 'TERESINA DE GOIAS - GO', 'JARAGUA - GO',
-    'DIVINOPOLIS DE GOIAS - GO', 'IACIARA - GO', 'SAO DOMINGOS - GO',
-    'ALEXANIA - GO', 'ABADIANIA - GO', 'LUZIANIA - GO', 'MORRINHOS - GO',
-    'CATALAO - GO', 'PIRACANJUBA - GO', 'HIDROLANDIA - GO',
-    'APARECIDA DO RIO DOCE - GO', 'CACU - GO', 'ITARUMA - GO', 'ITAJA - GO',
-    'PLANALTINA - GO', 'BARRO ALTO - GO', 'SAO GABRIEL DE GOIAS - GO',
-    'CERES - GO', 'CAVALCANTE - GO', 'GOIAS - GO', 'INHUMAS - GO',
-    'ITABERAI - GO', 'JUSSARA - GO', 'ARAGARCAS - GO', 'AGUAS LINDAS DE GOIAS - GO',
-    'RIALMA - GO', 'BELA VISTA DE GOIAS - GO', 'VALPARAISO DE GOIAS - GO',
-    'CHURRASCARIA/LANCHONETE MARTINS BEZERRA - GO',
-    
-    'CUIABA - MT (RODOVIARIA)', 'CUIABA (TA COXIPO) - MT', 'JACIARA - MT',
-    'RONDONOPOLIS - MT', 'ALTO ARAGUAIA - MT', 'ALTO GARCAS - MT',
-    'BARRA DO GARCAS - MT', 'ALTA FLORESTA - MT', 'PRIMAVERA DO LESTE - MT',
-    'ROSARIO OESTE - MT', 'SINOP - MT', 'SORRISO - MT',
-    
-    'CAMPO GRANDE - MS (RODOVIARIA)', 'DOURADOS - MS', 'TRES LAGOAS - MS',
-    
-    // SUDESTE - ES, MG, RJ, SP
-    'VITORIA - ES (RODOVIARIA)', 'VILA VELHA - ES', 'SERRA - ES',
-    'CACHOEIRO DE ITAPEMIRIM - ES',
-    
-    'BELO HORIZONTE - MG (RODOVIARIA)', 'BELO HORIZONTE - MG (TERMINAL RODOVIARIO)',
-    'BELO HORIZONTE (TERMINAL JK) - MG', 'BELO HORIZONTE (SAVASSI) - MG',
-    'BETIM - MG (term adicional BH)', 'UBERLANDIA - MG', 'UBERABA - MG',
-    'GRAAL ANTARES UBERABA - MG', 'JUIZ DE FORA - MG',
-    'SHOPPING INDEPENDENCIA - MG (term adicional de JUIZ DE FORA)',
-    'BARBACENA - MG', 'BARBACENA (CABANA) - MG', 'CONSELHEIRO LAFAIETE - MG',
-    'SAO JOAO DEL REI - MG', 'LAVRAS - MG', 'TRES CORACOES - MG',
-    'ALFENAS - MG', 'VARGINHA - MG', 'SAO LOURENCO - MG', 'OURO PRETO - MG',
-    'OURO BRANCO - MG', 'CAMBUQUIRA - MG', 'SANTOS DUMONT - MG', 'BARROSO - MG',
-    'CARANDAI - MG', 'MARIANA - MG', 'SAO JOAO NEPOMUCENO - MG', 'BICAS - MG',
-    'ENTRE RIOS DE MINAS - MG', 'LAGOA DOURADA - MG', 'CARMO DA CACHOEIRA - MG',
-    'ARAPORA - MG', 'LUZ - MG', 'LUZ (POSTO EXCALIBUR) - MG',
-    'SANTA RITA DO SAPUCAI - MG', 'CONTAGEM - MG', 'NAZARENO - MG',
-    'ITUMIRIM - MG', 'ITUTINGA - MG', 'MANHUACU (REALEZA) - MG',
-    'NEPOMUCENO - MG', 'UNAI - MG', 'TEOFILO OTONI - MG', 'ARAXA - MG',
-    'NOVA SERRANA - MG', 'PARA DE MINAS - MG', 'JOAO PINHEIRO - MG',
-    'PARACATU - MG', 'PARACATU - RESTAURANTE E POUSADA - MG',
-    'TRES MARIAS (VALE VERDE RESTAURANTE) - MG', 'FRUTAL - MG',
-    'FRONTEIRA - MG', 'PRATA - MG', 'TUPACIGUARA - MG', 'PIRAUBA - MG',
-    'GUARANI - MG', 'BOM SUCESSO - MG', 'MONTE SIAO - MG', 'OURO FINO - MG',
-    'CAMPO BELO - MG', 'MATIAS BARBOSA - MG', 'CONCEICAO DO RIO VERDE - MG',
-    'ITAOBIM - MG', 'MAR DE ESPANHA - MG', 'GOVERNADOR VALADARES - MG',
-    'GOVERNADOR VALADARES (REST. FRONTEIRAS) - MG', 'CARATINGA - MG',
-    'POUSO ALEGRE - MG', 'CAMPANHA - MG',
-    'CHURRASCARIA MENEGON - ARAGUARI - MG',
-    'ARAGUARI - MG (POSTO MINEIRAO)',
-    'SANTA BARBARA DO TUGURIO - MG', 'MERCES - MG', 'RIO POMBA - MG',
-    'RIO NOVO - MG',
-    
-    'RIO DE JANEIRO - RJ (RODOVIARIA)', 'RIO DE JANEIRO - RJ (TERMINAL RODOVIARIO)',
-    'RIO DE JANEIRO (LARGO DO MACHADO) - RJ',
-    'RIO DE JANEIRO (shopping Rio Sul - Botafogo) - RJ',
-    'RIO DE JANEIRO (RIO2 - Barra Olimpica) - RJ',
-    'RIO DE JANEIRO (Barra da Tijuca - Via Parque) - RJ',
-    'NITEROI - RJ', 'DUQUE DE CAXIAS - RJ', 'NOVA IGUACU - RJ',
-    'CABO FRIO - RJ', 'PETROPOLIS - RJ', 'RESENDE - RJ', 'VOLTA REDONDA - RJ',
-    'BARRA MANSA - RJ', 'VALENCA - RJ', 'ANGRA DOS REIS - RJ',
-    'PATY DO ALFERES - RJ', 'MIGUEL PEREIRA - RJ',
-    'MIGUEL PEREIRA - RJ (TERRA DOS DINOS)', 'PARACAMBI - RJ',
-    'ENGENHEIRO PAULO DE FRONTIN - RJ', 'TRES RIOS - RJ', 'MENDES - RJ',
-    'VASSOURAS - RJ', 'MACAE - RJ', 'RIO DAS OSTRAS - RJ', 'ARCOZELO - RJ',
-    'PIRAI - RJ', 'BARRA DO PIRAI - RJ', 'ITAGUAI - RJ', 'CONSERVATORIA - RJ',
-    'AVELAR - RJ', 'MORRO AZUL - RJ', 'RIO DAS FLORES - RJ', 'PARATY - RJ',
-    'CAMPOS DOS GOYTACAZES - RJ', 'JAPERI - RJ', 'CAMPO GRANDE - RJ',
-    
-    'SAO PAULO - SP (RODOVIARIA TIE)', 'SAO PAULO - SP (TERMINAL RODOVIARIO TIE)',
-    'SAO PAULO - SP (RODOVIARIA BARRA FUNDA)', 'CAMPINAS - SP',
-    'RIBEIRAO PRETO - SP', 'SANTOS - SP', 'SAO JOSE DOS CAMPOS - SP',
-    'SAO JOSE DO RIO PRETO - SP', 'TAUBATE - SP', 'GUARULHOS - SP',
-    'OSASCO - SP', 'SAO BERNARDO DO CAMPO - SP', 'SANTO ANDRE - SP',
-    'PRAIA GRANDE - SP', 'SAO VICENTE - SP', 'CUBATAO - SP', 'CRUZEIRO - SP',
-    'PIRASSUNUNGA - SP', 'GRAAL CORAL PIRASSUNUNGA - SP', 'LIMEIRA - SP',
-    'RIO CLARO - SP', 'SOROCABA - SP', 'ITU - SP', 'JUNDIAI - SP',
-    'MOGI DAS CRUZES - SP', 'SAO CARLOS - SP', 'ARARAS - SP',
-    'BRAGANCA PAULISTA - SP', 'ATIBAIA - SP', 'ITUVERAVA - SP',
-    'SAO JOAQUIM DA BARRA - SP', 'BARRETOS - SP', 'FRANCA - SP',
-    'OURINHOS - SP', 'GRAAL OURINHOS - SP', 'LINS - SP', 'MARILIA - SP',
-    'ASSIS - SP', 'LEME - SP', 'QUELUZ - SP', 'ARAMINA - SP', 'GUARA - SP',
-    'CACAPAVA - SP', 'EMBU DAS ARTES - SP', 'CARAGUATATUBA - SP',
-    'GUARATINGUETA - SP', 'PINDAMONHANGABA - SP', 'UBATUBA - SP',
-    'SAO SEBASTIAO - SP', 'REGISTRO - SP',
-    'REGISTRO (POSTO GRAAL BUENOS AIRES) - SP', 'APARECIDA - SP',
-    'CACHOEIRA PAULISTA - SP', 'LORENA - SP', 'JACAREI - SP',
-    'AMERICANA - SP',
-    'CHURRASCARIA BATISTELLA SAO J. DO RIO PRETO - SP',
-    
-    // SUL - PR, RS, SC
-    'CURITIBA - PR (RODOVIARIA)', 'CURITIBA - PR (TERMINAL RODOVIARIO)',
-    'LONDRINA - PR', 'MARINGA - PR', 'PONTA GROSSA - PR',
-    'SANTO ANTONIO DA PLATINA - PR',
-    'CHURRASCARIA 101 GRIIL SAO J. DOS PINHAIS - PR',
-    'POSTO IPIRANGAO CASTRO - PR',
-    
-    'PORTO ALEGRE - RS (RODOVIARIA)', 'OSORIO - RS', 'PELOTAS - RS',
-    'CAXIAS DO SUL - RS',
-    
-    'FLORIANOPOLIS - SC (RODOVIARIA)', 'FLORIANOPOLIS - SC (TERMINAL RODOVIARIO)',
-    'JOINVILLE - SC', 'BALNEARIO CAMBORIU - SC',
-    'CHURRASCARIA LANCHONETE DO JAPONES - SC'
-];
+        // ===== CIDADES COMPLETAS =====
+        const cidades = [
+            'RIO DE JANEIRO - RJ', 'SAO PAULO - SP', 'BRASILIA - DF', 'FORTALEZA - CE',
+            'GOIANIA - GO', 'BELO HORIZONTE - MG', 'CURITIBA - PR', 'FLORIANOPOLIS - SC',
+            'NATAL - RN', 'RECIFE - PE', 'SALVADOR - BA', 'BELEM - PA',
+            'MANAUS - AM', 'PORTO ALEGRE - RS', 'CUIABA - MT', 'CAMPO GRANDE - MS',
+            'VITORIA - ES', 'ARACAJU - SE', 'MACEIO - AL', 'JOAO PESSOA - PB',
+            'TERESINA - PI', 'SAO LUIS - MA', 'PALMAS - TO', 'RIO BRANCO - AC',
+            'PORTO VELHO - RO', 'BOA VISTA - RR', 'MACAPA - AP'
+        ];
 
         // ===== VARIAVEIS =====
         let qrInstance = null;
@@ -1014,7 +783,6 @@ const cidades = [
         function showLoading() {
             document.getElementById('loadingOverlay').classList.add('active');
         }
-
         function hideLoading() {
             document.getElementById('loadingOverlay').classList.remove('active');
         }
@@ -1056,7 +824,7 @@ const cidades = [
 
             suggestions.innerHTML = filtered.slice(0, 10).map(c => `
                 <div class="item" onclick="selecionarSugestao('${inputId}', '${suggestionsId}', '${c.replace(/'/g, "\\'")}')">
-                    <span class="icon"></span> ${c}
+                    <span class="icon">◆</span> ${c}
                 </div>
             `).join('');
             suggestions.classList.add('active');
@@ -1081,13 +849,14 @@ const cidades = [
         });
 
         // ===== ULTIMAS BUSCAS =====
-        function atualizarUltimasBuscas(origin, destination) {
-            const busca = origin + ' → ' + destination;
-            ultimasBuscas = ultimasBuscas.filter(b => b !== busca);
+        function atualizarUltimasBuscas(origin, destination, date, passengers) {
+            const busca = { origem: origin, destino: destination, data: date || new Date().toISOString().split('T')[0], passageiros: passengers || 1 };
+            ultimasBuscas = ultimasBuscas.filter(b => b.origem !== origin || b.destino !== destination);
             ultimasBuscas.unshift(busca);
-            if (ultimasBuscas.length > 3) ultimasBuscas.pop();
+            if (ultimasBuscas.length > 5) ultimasBuscas.pop();
             localStorage.setItem('ultimas_buscas', JSON.stringify(ultimasBuscas));
             renderUltimasBuscas();
+            renderUltimasBuscasDetalhadas();
         }
 
         function renderUltimasBuscas() {
@@ -1100,17 +869,119 @@ const cidades = [
             const spans = ['lastSearch1', 'lastSearch2', 'lastSearch3'];
             ultimasBuscas.forEach((busca, i) => {
                 if (i < 3) {
-                    document.getElementById(spans[i]).textContent = busca;
+                    document.getElementById(spans[i]).textContent = busca.origem + ' → ' + busca.destino;
                     document.getElementById(spans[i]).onclick = function() {
-                        const parts = busca.split(' → ');
-                        if (parts.length === 2) {
-                            document.getElementById('origin').value = parts[0];
-                            document.getElementById('destination').value = parts[1];
-                            buscarViagem();
-                        }
+                        document.getElementById('origin').value = busca.origem;
+                        document.getElementById('destination').value = busca.destino;
+                        document.getElementById('departureDate').value = busca.data;
+                        document.getElementById('passengers').value = busca.passageiros;
+                        buscarViagem();
                     };
                 }
             });
+        }
+
+        function renderUltimasBuscasDetalhadas() {
+            const container = document.getElementById('ultimasBuscasDetalhadas');
+            if (ultimasBuscas.length === 0) {
+                container.innerHTML = '<p style="color:#888;font-size:14px;">Nenhuma busca recente.</p>';
+                return;
+            }
+            container.innerHTML = ultimasBuscas.map(b => `
+                <div class="ultima-busca-item">
+                    <div>
+                        <div class="rota">${b.origem} → ${b.destino}</div>
+                        <div class="info">${b.data} · ${b.passageiros} passageiro(s)</div>
+                    </div>
+                    <span class="btn-ver" onclick="document.getElementById('origin').value='${b.origem}';document.getElementById('destination').value='${b.destino}';document.getElementById('departureDate').value='${b.data}';document.getElementById('passengers').value='${b.passageiros}';buscarViagem();">Ver viagens →</span>
+                </div>
+            `).join('');
+        }
+
+        // ===== CALENDARIO =====
+        function gerarCalendario(mes, ano) {
+            const meses = ['Janeiro', 'Fevereiro', 'Marco', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+            const diasSemana = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'];
+
+            const primeiroDia = new Date(ano, mes, 1).getDay();
+            const ultimoDia = new Date(ano, mes + 1, 0).getDate();
+
+            let html = `<div class="calendario-mes"><div class="mes-titulo">${meses[mes]} ${ano}</div><div class="dias-semana">${diasSemana.map(d => `<span>${d}</span>`).join('')}</div><div class="dias">`;
+
+            for (let i = 0; i < primeiroDia; i++) {
+                html += `<div class="dia vazio"></div>`;
+            }
+
+            const hoje = new Date();
+            for (let i = 1; i <= ultimoDia; i++) {
+                const dataAtual = new Date(ano, mes, i);
+                const isHoje = dataAtual.toDateString() === hoje.toDateString();
+                const isDisponivel = i % 3 !== 0 && i % 7 !== 0;
+                const isOcupado = i % 5 === 0;
+
+                let classe = 'dia';
+                if (isHoje) classe += ' hoje';
+                if (isDisponivel && !isHoje) classe += ' disponivel';
+                if (isOcupado) classe += ' ocupado';
+
+                html += `<div class="${classe}" onclick="${isOcupado ? '' : `selecionarData('${ano}-${String(mes+1).padStart(2,'0')}-${String(i).padStart(2,'0')}')`}">${i}</div>`;
+            }
+
+            html += `</div></div>`;
+            return html;
+        }
+
+        function selecionarData(data) {
+            document.getElementById('departureDate').value = data;
+            document.querySelectorAll('.calendario-mes .dia').forEach(el => {
+                if (el.textContent === data.split('-')[2] && !el.classList.contains('vazio') && !el.classList.contains('ocupado')) {
+                    el.style.background = '#436ec9';
+                    el.style.color = '#fff';
+                }
+            });
+        }
+
+        function renderCalendario() {
+            const hoje = new Date();
+            const mesAtual = hoje.getMonth();
+            const anoAtual = hoje.getFullYear();
+            const mesProximo = mesAtual === 11 ? 0 : mesAtual + 1;
+            const anoProximo = mesAtual === 11 ? anoAtual + 1 : anoAtual;
+
+            const container = document.getElementById('calendarioContainer');
+            container.innerHTML = gerarCalendario(mesAtual, anoAtual) + gerarCalendario(mesProximo, anoProximo);
+        }
+
+        function filtrarData(tipo) {
+            const hoje = new Date();
+            document.querySelectorAll('.filtros-rapidos button').forEach(b => b.classList.remove('active'));
+
+            let data;
+            switch(tipo) {
+                case 'hoje':
+                    data = hoje.toISOString().split('T')[0];
+                    document.querySelector('.filtros-rapidos button:first-child').classList.add('active');
+                    break;
+                case 'amanha':
+                    const amanha = new Date(hoje);
+                    amanha.setDate(hoje.getDate() + 1);
+                    data = amanha.toISOString().split('T')[0];
+                    document.querySelector('.filtros-rapidos button:nth-child(2)').classList.add('active');
+                    break;
+                case 'proximo_sabado':
+                    const sabado = new Date(hoje);
+                    sabado.setDate(hoje.getDate() + (6 - hoje.getDay() + 7) % 7);
+                    data = sabado.toISOString().split('T')[0];
+                    document.querySelector('.filtros-rapidos button:nth-child(3)').classList.add('active');
+                    break;
+                case 'limpar':
+                    document.querySelector('.filtros-rapidos button:last-child').classList.add('active');
+                    return;
+                default:
+                    return;
+            }
+            document.getElementById('departureDate').value = data;
+            selecionarData(data);
         }
 
         // ===== BUSCAR VIAGEM =====
@@ -1124,7 +995,7 @@ const cidades = [
                 return;
             }
 
-            atualizarUltimasBuscas(origin, destination);
+            atualizarUltimasBuscas(origin, destination, date, passengers);
             showLoading();
             setTimeout(() => {
                 window.location.href = '/tickets?origin=' + encodeURIComponent(origin) + '&destination=' + encodeURIComponent(destination) + '&date=' + encodeURIComponent(date) + '&passengers=' + passengers;
@@ -1135,12 +1006,6 @@ const cidades = [
             e.preventDefault();
             buscarViagem();
         });
-
-        function fillSearch(origin, destination) {
-            document.getElementById('origin').value = origin;
-            document.getElementById('destination').value = destination;
-            buscarViagem();
-        }
 
         // ===== TROCA =====
         function swapFields() {
@@ -1310,10 +1175,8 @@ const cidades = [
                         }
                     }, 3000);
 
-                } else {
                 }
-            } catch (error) {
-            }
+            } catch (error) {}
             document.getElementById('btnGerarPix').disabled = false;
             document.getElementById('btnGerarPix').textContent = 'Gerar PIX';
         }
@@ -1433,8 +1296,9 @@ const cidades = [
 
         // ===== INICIALIZAR =====
         renderUltimasBuscas();
+        renderUltimasBuscasDetalhadas();
+        renderCalendario();
 
-        // VERIFICA SE VEIO DO TICKETS COM PARAMETRO COMPRAR
         const urlParams = new URLSearchParams(window.location.search);
         const temComprar = urlParams.has('comprar');
         const origem = urlParams.get('origem') || '';
@@ -1443,9 +1307,9 @@ const cidades = [
         const data = urlParams.get('data') || '';
         const hora = urlParams.get('hora') || '';
 
-        // SÓ VAI PARA ASSENTOS SE TIVER O PARAMETRO COMPRAR
         if (temComprar && origem && destino && preco > 0) {
-            // Mostra a página de assentos depois de um pequeno delay
+            const newUrl = window.location.pathname;
+            window.history.replaceState({}, document.title, newUrl);
             setTimeout(() => {
                 irParaAssentos(origem, destino, preco, data, hora);
             }, 300);
