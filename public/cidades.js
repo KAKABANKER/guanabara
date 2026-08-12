@@ -1,11 +1,5 @@
-
-// ============================================
-// TODAS AS CIDADES DO BRASIL COM RODOVIÁRIAS
-// ONDE A GUANABARA PASSA
-// ============================================
-
 const cidadesBrasil = [
-    // ========== NORTE ==========
+    
     // ACRE
     { cidade: 'Rio Branco', estado: 'AC', rodoviaria: 'Rodoviária Internacional de Rio Branco' },
     { cidade: 'Cruzeiro do Sul', estado: 'AC', rodoviaria: 'Rodoviária de Cruzeiro do Sul' },
