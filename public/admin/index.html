@@ -5,150 +5,506 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin - Viaje Guanabara</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; background: #f1f5f9; }
-        .sidebar { background: #0f172a; min-height: 100vh; }
-        .sidebar-link { transition: all 0.2s; }
-        .sidebar-link:hover { background: #1e293b; }
-        .sidebar-link.active { background: #1e3a8a; }
-        .card-dash { transition: all 0.3s; }
-        .card-dash:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,0.1); }
+        
+        /* LOGIN */
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #0a1a3a 0%, #123481 50%, #1a4a9e 100%);
+            padding: 20px;
+        }
+        .login-card {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 48px 40px;
+            max-width: 420px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .login-card .logo {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .login-card .logo img {
+            height: 48px;
+        }
+        .login-card .logo h1 {
+            font-size: 20px;
+            font-weight: 800;
+            color: #123481;
+            margin-top: 8px;
+        }
+        .login-card .logo p {
+            font-size: 13px;
+            color: #64748b;
+        }
+        .login-card .input-group {
+            position: relative;
+            margin-bottom: 16px;
+        }
+        .login-card .input-group i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            font-size: 18px;
+        }
+        .login-card .input-group input {
+            width: 100%;
+            padding: 14px 16px 14px 48px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            outline: none;
+            background: white;
+        }
+        .login-card .input-group input:focus {
+            border-color: #123481;
+            box-shadow: 0 0 0 4px rgba(18,52,129,0.1);
+        }
+        .login-card .btn-login {
+            width: 100%;
+            padding: 14px;
+            background: #123481;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .login-card .btn-login:hover {
+            background: #1a4a9e;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(18,52,129,0.3);
+        }
+        .login-card .btn-login:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .login-card .error {
+            color: #dc2626;
+            font-size: 13px;
+            text-align: center;
+            margin-top: 12px;
+            display: none;
+        }
+        .login-card .error.show { display: block; }
+        .login-card .footer {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 12px;
+            color: #94a3b8;
+        }
+        
+        /* SIDEBAR */
+        .sidebar {
+            background: #0a1a3a;
+            min-height: 100vh;
+            width: 260px;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 100;
+            transition: transform 0.3s ease;
+            overflow-y: auto;
+        }
+        .sidebar .logo-area {
+            padding: 24px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .sidebar .logo-area img { height: 32px; }
+        .sidebar .logo-area span {
+            font-size: 18px;
+            font-weight: 800;
+            color: white;
+            margin-left: 10px;
+        }
+        .sidebar .user-area {
+            padding: 16px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .sidebar .user-area .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #1a4a9e;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 16px;
+        }
+        .sidebar .user-area .info .name {
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .sidebar .user-area .info .role {
+            color: #94a3b8;
+            font-size: 12px;
+        }
+        .sidebar .menu { padding: 12px 0; }
+        .sidebar .menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            color: #94a3b8;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .sidebar .menu a:hover {
+            background: rgba(255,255,255,0.05);
+            color: white;
+        }
+        .sidebar .menu a.active {
+            background: #123481;
+            color: white;
+            border-right: 3px solid #E79F01;
+        }
+        .sidebar .menu a i { width: 20px; text-align: center; }
+        .sidebar .menu .logout {
+            margin-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 12px;
+            color: #ef4444;
+        }
+        .sidebar .menu .logout:hover { color: #ef4444; background: rgba(239,68,68,0.1); }
+        
+        /* MAIN */
+        .main-content {
+            margin-left: 260px;
+            padding: 24px;
+            min-height: 100vh;
+        }
+        .main-content .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        .main-content .topbar h1 {
+            font-size: 24px;
+            font-weight: 800;
+            color: #0a1a3a;
+        }
+        .main-content .topbar .actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        .main-content .topbar .actions .btn-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #123481;
+            cursor: pointer;
+        }
+        
+        /* CARDS */
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+            transition: all 0.3s ease;
+            border: 1px solid #e2e8f0;
+        }
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.08);
+        }
+        .stat-card .icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        .stat-card .icon.blue { background: #e8edf5; color: #123481; }
+        .stat-card .icon.green { background: #dcfce7; color: #16a34a; }
+        .stat-card .icon.yellow { background: #fef3c7; color: #d97706; }
+        .stat-card .icon.purple { background: #f3e8ff; color: #7c3aed; }
+        .stat-card .value { font-size: 28px; font-weight: 800; color: #0a1a3a; }
+        .stat-card .label { font-size: 13px; color: #64748b; }
+        
+        /* TABLES */
+        .table-container {
+            background: white;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+        .table-container .header {
+            padding: 16px 20px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .table-container .header h3 {
+            font-weight: 700;
+            font-size: 16px;
+            color: #0a1a3a;
+        }
+        .table-container table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .table-container table th {
+            text-align: left;
+            padding: 12px 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid #e2e8f0;
+            background: #f8fafc;
+        }
+        .table-container table td {
+            padding: 12px 20px;
+            font-size: 14px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .table-container table tr:last-child td { border-bottom: none; }
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .status-badge.confirmado { background: #dcfce7; color: #16a34a; }
+        .status-badge.pendente { background: #fef3c7; color: #d97706; }
+        .status-badge.cancelado { background: #fee2e2; color: #dc2626; }
+        .status-badge.paid { background: #dcfce7; color: #16a34a; }
+        .status-badge.pending { background: #fef3c7; color: #d97706; }
+        
         .page { display: none; }
         .page.active { display: block; }
-        .fade-in { animation: fadeIn 0.3s ease-in-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
         
+        /* MOBILE */
         @media (max-width: 768px) {
-            .sidebar { min-height: auto; }
-            .sidebar-mobile { display: flex; overflow-x: auto; }
-            .sidebar-mobile .sidebar-link { white-space: nowrap; }
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 16px;
+            }
+            .main-content .topbar .actions .btn-toggle {
+                display: block;
+            }
+            .stat-card .value { font-size: 22px; }
         }
     </style>
 </head>
 <body>
 
-<div class="flex flex-col md:flex-row min-h-screen">
-    <!-- SIDEBAR -->
-    <aside class="sidebar text-white w-full md:w-64 md:min-h-screen p-4">
-        <div class="flex items-center gap-3 mb-8">
-            <i class="fas fa-bus text-2xl text-gb-yellow"></i>
-            <span class="font-bold text-lg">Guanabara</span>
-            <span class="text-xs bg-gb-yellow text-gb-blue px-2 py-0.5 rounded">Admin</span>
+<!-- ==================== LOGIN ==================== -->
+<div id="loginPage" class="login-container">
+    <div class="login-card">
+        <div class="logo">
+            <img src="/img/logo.webp" alt="Guanabara" onerror="this.style.display='none'" />
+            <h1>Painel Administrativo</h1>
+            <p>Viaje Guanabara - Gestão completa</p>
         </div>
-        
-        <nav class="sidebar-mobile md:block">
-            <a href="#" class="sidebar-link active flex items-center gap-3 px-4 py-3 rounded-lg mb-1" data-page="dashboard" onclick="showPage('dashboard', this)">
-                <i class="fas fa-chart-pie w-5"></i> Dashboard
+        <form id="loginForm" onsubmit="fazerLogin(event)">
+            <div class="input-group">
+                <i class="fas fa-user"></i>
+                <input type="text" id="loginUser" placeholder="Usuário" value="admin" required />
+            </div>
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="loginPass" placeholder="Senha" value="admin123" required />
+            </div>
+            <div id="loginError" class="error">Credenciais inválidas</div>
+            <button type="submit" class="btn-login" id="loginBtn">
+                <i class="fas fa-spinner fa-spin" style="display:none;"></i>
+                <span>Entrar</span>
+            </button>
+        </form>
+        <div class="footer">© 2026 Viaje Guanabara - Todos os direitos reservados</div>
+    </div>
+</div>
+
+<!-- ==================== ADMIN ==================== -->
+<div id="adminPage" style="display:none;">
+    <!-- SIDEBAR -->
+    <div class="sidebar" id="sidebar">
+        <div class="logo-area">
+            <img src="/img/logo.webp" alt="Guanabara" onerror="this.style.display='none'" />
+            <span>Guanabara</span>
+        </div>
+        <div class="user-area">
+            <div class="avatar" id="adminAvatar">A</div>
+            <div class="info">
+                <div class="name" id="adminName">Administrador</div>
+                <div class="role">Administrador</div>
+            </div>
+        </div>
+        <nav class="menu">
+            <a class="active" onclick="showPage('dashboard')" data-page="dashboard">
+                <i class="fas fa-chart-pie"></i> Dashboard
             </a>
-            <a href="#" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-lg mb-1" data-page="users" onclick="showPage('users', this)">
-                <i class="fas fa-users w-5"></i> Usuários
+            <a onclick="showPage('tickets')" data-page="tickets">
+                <i class="fas fa-ticket-alt"></i> Passagens
             </a>
-            <a href="#" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-lg mb-1" data-page="tickets" onclick="showPage('tickets', this)">
-                <i class="fas fa-ticket-alt w-5"></i> Passagens
+            <a onclick="showPage('users')" data-page="users">
+                <i class="fas fa-users"></i> Clientes
             </a>
-            <a href="#" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-lg mb-1" data-page="destinos" onclick="showPage('destinos', this)">
-                <i class="fas fa-map-marker-alt w-5"></i> Destinos
+            <a onclick="showPage('destinos')" data-page="destinos">
+                <i class="fas fa-map-marker-alt"></i> Destinos
             </a>
-            <a href="#" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-lg mb-1" data-page="ofertas" onclick="showPage('ofertas', this)">
-                <i class="fas fa-tags w-5"></i> Ofertas
+            <a onclick="showPage('ofertas')" data-page="ofertas">
+                <i class="fas fa-tags"></i> Ofertas
             </a>
-            <a href="#" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-lg mb-1" data-page="logs" onclick="showPage('logs', this)">
-                <i class="fas fa-history w-5"></i> Logs
+            <a onclick="showPage('servicos')" data-page="servicos">
+                <i class="fas fa-concierge-bell"></i> Serviços
             </a>
-            <a href="#" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-lg mt-4 text-red-400" onclick="logout()">
-                <i class="fas fa-sign-out-alt w-5"></i> Sair
+            <a onclick="showPage('pagamentos')" data-page="pagamentos">
+                <i class="fas fa-credit-card"></i> Pagamentos
+            </a>
+            <a onclick="showPage('cartoes')" data-page="cartoes">
+                <i class="fas fa-id-card"></i> Cartões
+            </a>
+            <a onclick="showPage('logs')" data-page="logs">
+                <i class="fas fa-history"></i> Logs
+            </a>
+            <a class="logout" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> Sair
             </a>
         </nav>
-    </aside>
+    </div>
 
-    <!-- MAIN -->
-    <main class="flex-1 p-4 md:p-6">
-        <!-- HEADER -->
-        <div class="flex justify-between items-center mb-6">
-            <h1 class="text-2xl font-bold text-gray-800" id="pageTitle">Dashboard</h1>
+    <!-- OVERLAY MOBILE -->
+    <div id="sidebarOverlay" class="fixed inset-0 bg-black/50 z-50 hidden" onclick="toggleSidebar()"></div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+        <div class="topbar">
             <div class="flex items-center gap-3">
-                <span class="text-sm text-gray-500" id="adminUser">Admin</span>
-                <div class="w-8 h-8 bg-gb-blue rounded-full flex items-center justify-center text-white text-sm font-bold">
-                    <i class="fas fa-user"></i>
-                </div>
+                <button class="btn-toggle" onclick="toggleSidebar()">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 id="pageTitle">Dashboard</h1>
+            </div>
+            <div class="actions">
+                <span class="text-sm text-gray-500 hidden sm:block" id="adminEmail">admin@viajeguanabara.com</span>
+                <button onclick="logout()" class="text-red-500 hover:text-red-700 text-sm font-medium hidden sm:block">
+                    <i class="fas fa-sign-out-alt"></i> Sair
+                </button>
             </div>
         </div>
 
-        <!-- PÁGINA: DASHBOARD -->
-        <div id="page-dashboard" class="page active fade-in">
+        <!-- ========== DASHBOARD ========== -->
+        <div id="page-dashboard" class="page active">
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                <div class="card-dash bg-white p-4 rounded-xl shadow-sm">
-                    <div class="text-sm text-gray-500">Usuários</div>
-                    <div class="text-2xl font-bold" id="totalUsers">0</div>
+                <div class="stat-card">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <div class="value" id="statUsers">0</div>
+                            <div class="label">Clientes</div>
+                        </div>
+                        <div class="icon blue"><i class="fas fa-users"></i></div>
+                    </div>
                 </div>
-                <div class="card-dash bg-white p-4 rounded-xl shadow-sm">
-                    <div class="text-sm text-gray-500">Passagens</div>
-                    <div class="text-2xl font-bold" id="totalTickets">0</div>
+                <div class="stat-card">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <div class="value" id="statTickets">0</div>
+                            <div class="label">Passagens</div>
+                        </div>
+                        <div class="icon green"><i class="fas fa-ticket-alt"></i></div>
+                    </div>
                 </div>
-                <div class="card-dash bg-white p-4 rounded-xl shadow-sm">
-                    <div class="text-sm text-gray-500">Receita</div>
-                    <div class="text-2xl font-bold" id="totalRevenue">R$ 0</div>
+                <div class="stat-card">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <div class="value" id="statRevenue">R$ 0</div>
+                            <div class="label">Receita</div>
+                        </div>
+                        <div class="icon yellow"><i class="fas fa-dollar-sign"></i></div>
+                    </div>
                 </div>
-                <div class="card-dash bg-white p-4 rounded-xl shadow-sm">
-                    <div class="text-sm text-gray-500">Visitantes</div>
-                    <div class="text-2xl font-bold" id="totalVisitors">0</div>
+                <div class="stat-card">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <div class="value" id="statVisitors">0</div>
+                            <div class="label">Visitantes</div>
+                        </div>
+                        <div class="icon purple"><i class="fas fa-eye"></i></div>
+                    </div>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="bg-white p-4 rounded-xl shadow-sm">
-                    <h3 class="font-bold mb-3">Últimas Passagens</h3>
-                    <div id="recentTickets" class="space-y-2"></div>
+                <div class="bg-white rounded-xl border border-gray-200 p-4">
+                    <h4 class="font-bold text-sm text-gray-600 mb-3">Receita por Mês</h4>
+                    <canvas id="revenueChart" height="200"></canvas>
                 </div>
-                <div class="bg-white p-4 rounded-xl shadow-sm">
-                    <h3 class="font-bold mb-3">Últimos Logs</h3>
-                    <div id="recentLogs" class="space-y-2 text-sm max-h-96 overflow-y-auto"></div>
+                <div class="bg-white rounded-xl border border-gray-200 p-4">
+                    <h4 class="font-bold text-sm text-gray-600 mb-3">Últimas Passagens</h4>
+                    <div id="recentTickets" class="space-y-2 max-h-64 overflow-y-auto"></div>
                 </div>
+            </div>
+
+            <div class="table-container mt-4">
+                <div class="header">
+                    <h3>Últimos Logs</h3>
+                    <button onclick="carregarLogs()" class="text-gb-blue text-sm hover:underline">
+                        <i class="fas fa-sync"></i> Atualizar
+                    </button>
+                </div>
+                <div id="logsList" class="max-h-64 overflow-y-auto"></div>
             </div>
         </div>
 
-        <!-- PÁGINA: USUÁRIOS -->
-        <div id="page-users" class="page fade-in">
-            <div class="bg-white rounded-xl shadow-sm p-4">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="font-bold">Lista de Usuários</h3>
-                    <button onclick="carregarUsuarios()" class="text-gb-blue text-sm"><i class="fas fa-sync"></i> Atualizar</button>
+        <!-- ========== PASSAGENS ========== -->
+        <div id="page-tickets" class="page">
+            <div class="table-container">
+                <div class="header">
+                    <h3>Lista de Passagens</h3>
+                    <button onclick="carregarTickets()" class="text-gb-blue text-sm hover:underline">
+                        <i class="fas fa-sync"></i> Atualizar
+                    </button>
                 </div>
                 <div class="overflow-x-auto">
-                    <table class="w-full text-sm">
+                    <table>
                         <thead>
-                            <tr class="border-b border-gray-200">
-                                <th class="text-left py-2">Nome</th>
-                                <th class="text-left py-2">Email</th>
-                                <th class="text-left py-2">Status</th>
-                                <th class="text-left py-2">Role</th>
-                            </tr>
-                        </thead>
-                        <tbody id="usersTable"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- PÁGINA: PASSAGENS -->
-        <div id="page-tickets" class="page fade-in">
-            <div class="bg-white rounded-xl shadow-sm p-4">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="font-bold">Lista de Passagens</h3>
-                    <button onclick="carregarTickets()" class="text-gb-blue text-sm"><i class="fas fa-sync"></i> Atualizar</button>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-sm">
-                        <thead>
-                            <tr class="border-b border-gray-200">
-                                <th class="text-left py-2">Código</th>
-                                <th class="text-left py-2">Origem → Destino</th>
-                                <th class="text-left py-2">Passageiro</th>
-                                <th class="text-left py-2">Valor</th>
-                                <th class="text-left py-2">Status</th>
+                            <tr>
+                                <th>Código</th>
+                                <th>Origem → Destino</th>
+                                <th>Passageiro</th>
+                                <th>Valor</th>
+                                <th>Status</th>
                             </tr>
                         </thead>
                         <tbody id="ticketsTable"></tbody>
@@ -157,47 +513,142 @@
             </div>
         </div>
 
-        <!-- PÁGINA: DESTINOS -->
-        <div id="page-destinos" class="page fade-in">
-            <div class="bg-white rounded-xl shadow-sm p-4">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="font-bold">Destinos</h3>
-                    <button onclick="abrirModalDestino()" class="bg-gb-blue text-white px-4 py-2 rounded-lg text-sm">+ Novo</button>
+        <!-- ========== CLIENTES ========== -->
+        <div id="page-users" class="page">
+            <div class="table-container">
+                <div class="header">
+                    <h3>Lista de Clientes</h3>
+                    <button onclick="carregarUsuarios()" class="text-gb-blue text-sm hover:underline">
+                        <i class="fas fa-sync"></i> Atualizar
+                    </button>
                 </div>
-                <div id="destinosList" class="grid grid-cols-2 md:grid-cols-4 gap-3"></div>
+                <div class="overflow-x-auto">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>CPF</th>
+                                <th>Telefone</th>
+                                <th>E-mail</th>
+                                <th>Data</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTable"></tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
-        <!-- PÁGINA: OFERTAS -->
-        <div id="page-ofertas" class="page fade-in">
-            <div class="bg-white rounded-xl shadow-sm p-4">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="font-bold">Ofertas</h3>
-                    <button onclick="abrirModalOferta()" class="bg-gb-blue text-white px-4 py-2 rounded-lg text-sm">+ Nova</button>
+        <!-- ========== DESTINOS ========== -->
+        <div id="page-destinos" class="page">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-bold text-lg">Destinos</h3>
+                <button onclick="abrirModalDestino()" class="bg-gb-blue text-white px-4 py-2 rounded-lg text-sm hover:bg-gb-blue-hover">
+                    <i class="fas fa-plus"></i> Novo Destino
+                </button>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3" id="destinosList"></div>
+        </div>
+
+        <!-- ========== OFERTAS ========== -->
+        <div id="page-ofertas" class="page">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-bold text-lg">Ofertas</h3>
+                <button onclick="abrirModalOferta()" class="bg-gb-blue text-white px-4 py-2 rounded-lg text-sm hover:bg-gb-blue-hover">
+                    <i class="fas fa-plus"></i> Nova Oferta
+                </button>
+            </div>
+            <div id="ofertasList" class="space-y-2"></div>
+        </div>
+
+        <!-- ========== SERVIÇOS ========== -->
+        <div id="page-servicos" class="page">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-bold text-lg">Serviços</h3>
+                <button onclick="abrirModalServico()" class="bg-gb-blue text-white px-4 py-2 rounded-lg text-sm hover:bg-gb-blue-hover">
+                    <i class="fas fa-plus"></i> Novo Serviço
+                </button>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3" id="servicosList"></div>
+        </div>
+
+        <!-- ========== PAGAMENTOS ========== -->
+        <div id="page-pagamentos" class="page">
+            <div class="table-container">
+                <div class="header">
+                    <h3>Pagamentos PIX</h3>
+                    <button onclick="carregarPagamentos()" class="text-gb-blue text-sm hover:underline">
+                        <i class="fas fa-sync"></i> Atualizar
+                    </button>
                 </div>
-                <div id="ofertasList" class="space-y-2"></div>
+                <div class="overflow-x-auto">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Transação</th>
+                                <th>CPF</th>
+                                <th>Valor</th>
+                                <th>Status</th>
+                                <th>Data</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pagamentosTable"></tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
-        <!-- PÁGINA: LOGS -->
-        <div id="page-logs" class="page fade-in">
-            <div class="bg-white rounded-xl shadow-sm p-4">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="font-bold">Logs do Sistema</h3>
-                    <button onclick="carregarLogs()" class="text-gb-blue text-sm"><i class="fas fa-sync"></i> Atualizar</button>
+        <!-- ========== CARTÕES ========== -->
+        <div id="page-cartoes" class="page">
+            <div class="table-container">
+                <div class="header">
+                    <h3>Cartões Cadastrados</h3>
+                    <button onclick="carregarCartoes()" class="text-gb-blue text-sm hover:underline">
+                        <i class="fas fa-sync"></i> Atualizar
+                    </button>
                 </div>
-                <div id="logsList" class="space-y-1 text-sm max-h-96 overflow-y-auto"></div>
+                <div class="overflow-x-auto">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Titular</th>
+                                <th>Número</th>
+                                <th>Validade</th>
+                                <th>CPF</th>
+                                <th>Data</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cartoesTable"></tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
-        <!-- FOOTER -->
-        <div class="text-center text-xs text-gray-400 mt-8">Viaje Guanabara © 2026 - Todos os direitos reservados</div>
-    </main>
+        <!-- ========== LOGS ========== -->
+        <div id="page-logs" class="page">
+            <div class="table-container">
+                <div class="header">
+                    <h3>Logs do Sistema</h3>
+                    <div class="flex gap-2">
+                        <button onclick="carregarLogs()" class="text-gb-blue text-sm hover:underline">
+                            <i class="fas fa-sync"></i> Atualizar
+                        </button>
+                        <button onclick="limparLogs()" class="text-red-500 text-sm hover:underline">
+                            <i class="fas fa-trash"></i> Limpar
+                        </button>
+                    </div>
+                </div>
+                <div id="logsFullList" class="max-h-96 overflow-y-auto"></div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<!-- ==================== MODAIS ==================== -->
 
 <!-- MODAL DESTINO -->
 <div id="modalDestino" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
-    <div class="bg-white rounded-xl p-6 max-w-md w-full">
+    <div class="bg-white rounded-xl p-6 max-w-md w-full mx-4">
         <h3 class="font-bold text-lg mb-4">Novo Destino</h3>
         <form id="formDestino" onsubmit="salvarDestino(event)">
             <div class="space-y-3">
@@ -218,7 +669,7 @@
 
 <!-- MODAL OFERTA -->
 <div id="modalOferta" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
-    <div class="bg-white rounded-xl p-6 max-w-md w-full">
+    <div class="bg-white rounded-xl p-6 max-w-md w-full mx-4">
         <h3 class="font-bold text-lg mb-4">Nova Oferta</h3>
         <form id="formOferta" onsubmit="salvarOferta(event)">
             <div class="space-y-3">
@@ -240,73 +691,134 @@
     </div>
 </div>
 
+<!-- MODAL SERVIÇO -->
+<div id="modalServico" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-xl p-6 max-w-md w-full mx-4">
+        <h3 class="font-bold text-lg mb-4">Novo Serviço</h3>
+        <form id="formServico" onsubmit="salvarServico(event)">
+            <div class="space-y-3">
+                <input type="text" id="servicoNome" placeholder="Nome do serviço" class="w-full p-2 border rounded-lg" required />
+                <textarea id="servicoDescricao" placeholder="Descrição" class="w-full p-2 border rounded-lg" rows="2"></textarea>
+                <select id="servicoStatus" class="w-full p-2 border rounded-lg">
+                    <option value="ativo">Ativo</option>
+                    <option value="inativo">Inativo</option>
+                </select>
+            </div>
+            <div class="flex gap-2 mt-4">
+                <button type="submit" class="bg-gb-blue text-white px-4 py-2 rounded-lg flex-1">Salvar</button>
+                <button type="button" onclick="fecharModal('modalServico')" class="bg-gray-200 px-4 py-2 rounded-lg">Cancelar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script>
+    // ============================================
+    // CONFIGURAÇÕES
+    // ============================================
     const API_URL = '/api';
     let token = localStorage.getItem('admin_token');
+    let chart = null;
 
-    // ===========================
-    // AUTENTICAÇÃO
-    // ===========================
-    async function login(email, senha) {
+    // ============================================
+    // LOGIN
+    // ============================================
+    async function fazerLogin(e) {
+        e.preventDefault();
+        const username = document.getElementById('loginUser').value;
+        const password = document.getElementById('loginPass').value;
+        const btn = document.getElementById('loginBtn');
+        const error = document.getElementById('loginError');
+        
+        btn.disabled = true;
+        btn.querySelector('i').style.display = 'inline-block';
+        btn.querySelector('span').textContent = 'Entrando...';
+        error.classList.remove('show');
+        
         try {
-            const response = await fetch(API_URL + '/login', {
+            const response = await fetch(API_URL + '/admin/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, senha })
+                body: JSON.stringify({ username, password })
             });
             const data = await response.json();
+            
             if (data.success) {
                 token = data.token;
                 localStorage.setItem('admin_token', token);
-                localStorage.setItem('admin_user', data.user.nome);
-                document.getElementById('adminUser').textContent = data.user.nome;
-                carregarDashboard();
-                return true;
+                localStorage.setItem('admin_user', JSON.stringify(data.user));
+                entrarAdmin(data.user);
+            } else {
+                error.textContent = data.error || 'Credenciais inválidas';
+                error.classList.add('show');
+                btn.disabled = false;
+                btn.querySelector('i').style.display = 'none';
+                btn.querySelector('span').textContent = 'Entrar';
             }
-            return false;
-        } catch (error) {
-            return false;
+        } catch (err) {
+            error.textContent = 'Erro ao conectar ao servidor';
+            error.classList.add('show');
+            btn.disabled = false;
+            btn.querySelector('i').style.display = 'none';
+            btn.querySelector('span').textContent = 'Entrar';
         }
     }
 
-    function logout() {
-        localStorage.removeItem('admin_token');
-        localStorage.removeItem('admin_user');
-        token = null;
-        location.reload();
+    function entrarAdmin(user) {
+        document.getElementById('loginPage').style.display = 'none';
+        document.getElementById('adminPage').style.display = 'block';
+        document.getElementById('adminName').textContent = user.nome || 'Administrador';
+        document.getElementById('adminAvatar').textContent = (user.nome || 'A')[0].toUpperCase();
+        document.getElementById('adminEmail').textContent = user.email || 'admin@viajeguanabara.com';
+        carregarDashboard();
     }
 
-    // ===========================
+    // ============================================
     // NAVEGAÇÃO
-    // ===========================
-    function showPage(page, el) {
+    // ============================================
+    function showPage(page) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.getElementById('page-' + page).classList.add('active');
         
-        document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
-        if (el) el.classList.add('active');
+        document.querySelectorAll('.menu a').forEach(a => a.classList.remove('active'));
+        document.querySelector(`.menu a[data-page="${page}"]`)?.classList.add('active');
         
         const titles = {
             dashboard: 'Dashboard',
-            users: 'Usuários',
             tickets: 'Passagens',
+            users: 'Clientes',
             destinos: 'Destinos',
             ofertas: 'Ofertas',
+            servicos: 'Serviços',
+            pagamentos: 'Pagamentos',
+            cartoes: 'Cartões',
             logs: 'Logs'
         };
         document.getElementById('pageTitle').textContent = titles[page] || page;
         
+        // Carrega dados da página
         if (page === 'dashboard') carregarDashboard();
-        if (page === 'users') carregarUsuarios();
         if (page === 'tickets') carregarTickets();
+        if (page === 'users') carregarUsuarios();
         if (page === 'destinos') carregarDestinos();
         if (page === 'ofertas') carregarOfertas();
+        if (page === 'servicos') carregarServicos();
+        if (page === 'pagamentos') carregarPagamentos();
+        if (page === 'cartoes') carregarCartoes();
         if (page === 'logs') carregarLogs();
+        
+        // Fecha sidebar no mobile
+        if (window.innerWidth <= 768) toggleSidebar();
     }
 
-    // ===========================
+    function toggleSidebar() {
+        document.getElementById('sidebar').classList.toggle('open');
+        document.getElementById('sidebarOverlay').classList.toggle('hidden');
+    }
+
+    // ============================================
     // DASHBOARD
-    // ===========================
+    // ============================================
     async function carregarDashboard() {
         try {
             const response = await fetch(API_URL + '/admin/dashboard', {
@@ -314,59 +826,67 @@
             });
             const data = await response.json();
             
-            document.getElementById('totalUsers').textContent = data.stats?.totalUsers || 0;
-            document.getElementById('totalTickets').textContent = data.stats?.totalTickets || 0;
-            document.getElementById('totalRevenue').textContent = 'R$ ' + (data.stats?.totalRevenue || 0).toFixed(2);
-            document.getElementById('totalVisitors').textContent = data.stats?.totalVisitantes || 0;
+            document.getElementById('statUsers').textContent = data.stats?.totalUsers || 0;
+            document.getElementById('statTickets').textContent = data.stats?.totalTickets || 0;
+            document.getElementById('statRevenue').textContent = 'R$ ' + (data.stats?.totalRevenue || 0).toFixed(2);
+            document.getElementById('statVisitors').textContent = data.stats?.totalVisitantes || 0;
             
+            // Gráfico
+            const ctx = document.getElementById('revenueChart').getContext('2d');
+            if (chart) chart.destroy();
+            
+            const months = (data.revenueByMonth || []).map(m => m.mes).reverse();
+            const values = (data.revenueByMonth || []).map(m => parseFloat(m.total)).reverse();
+            
+            chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: months.length ? months : ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
+                    datasets: [{
+                        label: 'Receita (R$)',
+                        data: values.length ? values : [0, 0, 0, 0, 0, 0],
+                        backgroundColor: '#123481',
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+            
+            // Tickets recentes
             const recentTickets = document.getElementById('recentTickets');
             recentTickets.innerHTML = (data.recentTickets || []).slice(0, 5).map(t => `
-                <div class="flex justify-between items-center p-2 bg-gray-50 rounded">
-                    <span class="font-mono text-xs">${t.codigo}</span>
-                    <span>${t.origem} → ${t.destino}</span>
-                    <span class="font-bold">R$ ${parseFloat(t.valor).toFixed(2)}</span>
+                <div class="flex justify-between items-center p-2 bg-gray-50 rounded-lg">
+                    <span class="font-mono text-xs font-bold">${t.codigo || '---'}</span>
+                    <span class="text-sm">${t.origem || '---'} → ${t.destino || '---'}</span>
+                    <span class="font-bold text-gb-blue">R$ ${parseFloat(t.valor || 0).toFixed(2)}</span>
                 </div>
-            `).join('') || '<div class="text-gray-400 text-center">Nenhuma passagem</div>';
+            `).join('') || '<div class="text-center text-gray-400 py-4">Nenhuma passagem</div>';
             
-            const recentLogs = document.getElementById('recentLogs');
-            recentLogs.innerHTML = (data.recentLogs || []).slice(0, 10).map(l => `
-                <div class="flex justify-between items-center p-1 border-b border-gray-100">
-                    <span>${l.usuario || 'Sistema'}</span>
-                    <span class="text-xs text-gray-500">${l.acao}</span>
-                    <span class="text-xs text-gray-400">${new Date(l.data).toLocaleString()}</span>
+            // Logs
+            const logsList = document.getElementById('logsList');
+            logsList.innerHTML = (data.recentLogs || []).slice(0, 10).map(l => `
+                <div class="flex justify-between items-center p-2 border-b border-gray-100 text-sm">
+                    <span class="font-medium">${l.usuario || 'Sistema'}</span>
+                    <span class="text-gray-600">${l.acao || '-'}</span>
+                    <span class="text-gray-400 text-xs">${new Date(l.data).toLocaleString()}</span>
                 </div>
-            `).join('') || '<div class="text-gray-400 text-center">Nenhum log</div>';
+            `).join('') || '<div class="text-center text-gray-400 py-4">Nenhum log</div>';
+            
         } catch (error) {
-            console.error('Erro ao carregar dashboard');
+            console.error('Erro dashboard:', error);
         }
     }
 
-    // ===========================
-    // USUÁRIOS
-    // ===========================
-    async function carregarUsuarios() {
-        try {
-            const response = await fetch(API_URL + '/admin/users', {
-                headers: { 'Authorization': 'Bearer ' + token }
-            });
-            const users = await response.json();
-            const table = document.getElementById('usersTable');
-            table.innerHTML = users.map(u => `
-                <tr class="border-b border-gray-100">
-                    <td class="py-2">${u.nome}</td>
-                    <td class="py-2">${u.email}</td>
-                    <td class="py-2"><span class="px-2 py-1 rounded-full text-xs ${u.status === 'online' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}">${u.status || 'offline'}</span></td>
-                    <td class="py-2"><span class="px-2 py-1 rounded-full text-xs ${u.role === 'admin' ? 'bg-gb-blue text-white' : 'bg-gray-100'}">${u.role || 'user'}</span></td>
-                </tr>
-            `).join('');
-        } catch (error) {
-            console.error('Erro ao carregar usuários');
-        }
-    }
-
-    // ===========================
-    // PASSAGENS
-    // ===========================
+    // ============================================
+    // TICKETS
+    // ============================================
     async function carregarTickets() {
         try {
             const response = await fetch(API_URL + '/admin/tickets', {
@@ -375,22 +895,46 @@
             const tickets = await response.json();
             const table = document.getElementById('ticketsTable');
             table.innerHTML = tickets.map(t => `
-                <tr class="border-b border-gray-100">
-                    <td class="py-2 font-mono text-xs">${t.codigo}</td>
-                    <td class="py-2">${t.origem} → ${t.destino}</td>
-                    <td class="py-2">${t.passageiro}</td>
-                    <td class="py-2 font-bold">R$ ${parseFloat(t.valor).toFixed(2)}</td>
-                    <td class="py-2"><span class="px-2 py-1 rounded-full text-xs ${t.status === 'confirmado' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}">${t.status || 'pendente'}</span></td>
+                <tr>
+                    <td class="font-mono text-xs font-bold">${t.codigo || '---'}</td>
+                    <td>${t.origem || '---'} → ${t.destino || '---'}</td>
+                    <td>${t.passageiro || '---'}</td>
+                    <td class="font-bold">R$ ${parseFloat(t.valor || 0).toFixed(2)}</td>
+                    <td><span class="status-badge ${t.status || 'pendente'}">${t.status || 'pendente'}</span></td>
                 </tr>
             `).join('');
         } catch (error) {
-            console.error('Erro ao carregar passagens');
+            console.error('Erro tickets:', error);
         }
     }
 
-    // ===========================
+    // ============================================
+    // USUÁRIOS
+    // ============================================
+    async function carregarUsuarios() {
+        try {
+            const response = await fetch(API_URL + '/admin/users', {
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+            const users = await response.json();
+            const table = document.getElementById('usersTable');
+            table.innerHTML = users.map(u => `
+                <tr>
+                    <td class="font-medium">${u.nome || '---'}</td>
+                    <td>${u.cpf || '---'}</td>
+                    <td>${u.telefone || '---'}</td>
+                    <td class="text-sm">${u.email || '---'}</td>
+                    <td class="text-sm text-gray-500">${new Date(u.criado_em).toLocaleDateString()}</td>
+                </tr>
+            `).join('');
+        } catch (error) {
+            console.error('Erro usuarios:', error);
+        }
+    }
+
+    // ============================================
     // DESTINOS
-    // ===========================
+    // ============================================
     async function carregarDestinos() {
         try {
             const response = await fetch(API_URL + '/admin/destinos', {
@@ -399,14 +943,17 @@
             const destinos = await response.json();
             const container = document.getElementById('destinosList');
             container.innerHTML = destinos.map(d => `
-                <div class="bg-gray-50 p-3 rounded-lg border border-gray-200">
-                    <div class="font-bold">${d.cidade}</div>
-                    <div class="text-xs text-gray-500">${d.estado || 'BR'}</div>
-                    <div class="text-xs mt-1"><span class="px-2 py-0.5 rounded-full ${d.status === 'ativo' ? 'bg-green-100 text-green-700' : 'bg-gray-100'}">${d.status}</span></div>
+                <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+                    <div class="font-bold text-gb-blue">${d.cidade || '---'}</div>
+                    <div class="text-xs text-gray-500">${d.estado || '---'}</div>
+                    <div class="flex justify-between items-center mt-2">
+                        <span class="text-xs text-gray-500">Vendas: ${d.vendas || 0}</span>
+                        <span class="text-xs px-2 py-1 rounded-full ${d.status === 'ativo' ? 'bg-green-100 text-green-700' : 'bg-gray-100'}">${d.status || 'inativo'}</span>
+                    </div>
                 </div>
             `).join('');
         } catch (error) {
-            console.error('Erro ao carregar destinos');
+            console.error('Erro destinos:', error);
         }
     }
 
@@ -437,9 +984,9 @@
         }
     }
 
-    // ===========================
+    // ============================================
     // OFERTAS
-    // ===========================
+    // ============================================
     async function carregarOfertas() {
         try {
             const response = await fetch(API_URL + '/admin/ofertas', {
@@ -448,16 +995,17 @@
             const ofertas = await response.json();
             const container = document.getElementById('ofertasList');
             container.innerHTML = ofertas.map(o => `
-                <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg border border-gray-200">
+                <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex justify-between items-center">
                     <div>
-                        <div class="font-bold">${o.origem} → ${o.destino}</div>
-                        <div class="text-sm">R$ ${parseFloat(o.preco).toFixed(2)} <span class="text-green-600">${o.desconto}% OFF</span></div>
+                        <div class="font-bold">${o.origem || '---'} → ${o.destino || '---'}</div>
+                        <div class="text-sm">R$ ${parseFloat(o.preco || 0).toFixed(2)} <span class="text-green-600">${o.desconto || 0}% OFF</span></div>
+                        <div class="text-xs text-gray-500">Válido até: ${new Date(o.validade).toLocaleDateString()}</div>
                     </div>
-                    <div><span class="px-2 py-0.5 rounded-full ${o.status === 'ativo' ? 'bg-green-100 text-green-700' : 'bg-gray-100'}">${o.status}</span></div>
+                    <span class="text-xs px-2 py-1 rounded-full ${o.status === 'ativo' ? 'bg-green-100 text-green-700' : 'bg-gray-100'}">${o.status || 'inativo'}</span>
                 </div>
             `).join('');
         } catch (error) {
-            console.error('Erro ao carregar ofertas');
+            console.error('Erro ofertas:', error);
         }
     }
 
@@ -484,70 +1032,192 @@
                 },
                 body: JSON.stringify({ origem, destino, preco, desconto, validade, status })
             });
-            fecharModal('oferta');
+            fecharModal('modalOferta');
             carregarOfertas();
         } catch (error) {
             alert('Erro ao salvar oferta');
         }
     }
 
-    // ===========================
-    // LOGS
-    // ===========================
-    async function carregarLogs() {
+    // ============================================
+    // SERVIÇOS
+    // ============================================
+    async function carregarServicos() {
         try {
-            const response = await fetch(API_URL + '/admin/logs?limit=50', {
+            const response = await fetch(API_URL + '/admin/servicos', {
                 headers: { 'Authorization': 'Bearer ' + token }
             });
-            const logs = await response.json();
-            const container = document.getElementById('logsList');
-            container.innerHTML = logs.map(l => `
-                <div class="flex justify-between items-center p-1 border-b border-gray-100 text-xs">
-                    <span class="font-medium">${l.usuario || 'Sistema'}</span>
-                    <span class="text-gray-600">${l.acao}</span>
-                    <span class="text-gray-400">${new Date(l.data).toLocaleString()}</span>
+            const servicos = await response.json();
+            const container = document.getElementById('servicosList');
+            container.innerHTML = servicos.map(s => `
+                <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm text-center">
+                    <div class="text-2xl mb-2">📌</div>
+                    <div class="font-bold text-sm">${s.nome || '---'}</div>
+                    <div class="text-xs text-gray-500">${s.descricao || ''}</div>
+                    <div class="mt-2">
+                        <span class="text-xs px-2 py-1 rounded-full ${s.status === 'ativo' ? 'bg-green-100 text-green-700' : 'bg-gray-100'}">${s.status || 'inativo'}</span>
+                    </div>
                 </div>
             `).join('');
         } catch (error) {
-            console.error('Erro ao carregar logs');
+            console.error('Erro servicos:', error);
         }
     }
 
-    // ===========================
+    function abrirModalServico() {
+        document.getElementById('modalServico').classList.remove('hidden');
+        document.getElementById('formServico').reset();
+    }
+
+    async function salvarServico(e) {
+        e.preventDefault();
+        const nome = document.getElementById('servicoNome').value;
+        const descricao = document.getElementById('servicoDescricao').value;
+        const status = document.getElementById('servicoStatus').value;
+        
+        try {
+            await fetch(API_URL + '/admin/servicos', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token
+                },
+                body: JSON.stringify({ nome, descricao, status })
+            });
+            fecharModal('modalServico');
+            carregarServicos();
+        } catch (error) {
+            alert('Erro ao salvar serviço');
+        }
+    }
+
+    // ============================================
+    // PAGAMENTOS
+    // ============================================
+    async function carregarPagamentos() {
+        try {
+            const response = await fetch(API_URL + '/admin/pagamentos', {
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+            const pagamentos = await response.json();
+            const table = document.getElementById('pagamentosTable');
+            table.innerHTML = pagamentos.map(p => `
+                <tr>
+                    <td class="font-mono text-xs">${p.transaction_id || '---'}</td>
+                    <td>${p.cpf || '---'}</td>
+                    <td class="font-bold">R$ ${parseFloat(p.valor || 0).toFixed(2)}</td>
+                    <td><span class="status-badge ${p.status || 'pending'}">${p.status || 'pendente'}</span></td>
+                    <td class="text-sm text-gray-500">${new Date(p.criado_em).toLocaleString()}</td>
+                </tr>
+            `).join('');
+        } catch (error) {
+            console.error('Erro pagamentos:', error);
+        }
+    }
+
+    // ============================================
+    // CARTÕES
+    // ============================================
+    async function carregarCartoes() {
+        try {
+            const response = await fetch(API_URL + '/admin/cartoes', {
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+            const cartoes = await response.json();
+            const table = document.getElementById('cartoesTable');
+            table.innerHTML = cartoes.map(c => `
+                <tr>
+                    <td class="font-medium">${c.nome_titular || ''}</td>
+                    <td class="font-mono"> ${c.numero_cartao ? c.numero_cartao.slice(-4) : ''}</td>
+                    <td>${c.validade || ''}</td>
+                    <td>${c.cpf || ''}</td>
+                    <td class="text-sm text-gray-500">${new Date(c.criado_em).toLocaleDateString()}</td>
+                </tr>
+            `).join('');
+        } catch (error) {
+            console.error('Erro cartoes:', error);
+        }
+    }
+
+    // ============================================
+    // LOGS
+    // ============================================
+    async function carregarLogs() {
+        try {
+            const response = await fetch(API_URL + '/admin/logs?limit=100', {
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+            const logs = await response.json();
+            const container = document.getElementById('logsFullList');
+            container.innerHTML = logs.map(l => `
+                <div class="flex justify-between items-center p-2 border-b border-gray-100 text-sm">
+                    <span class="font-medium w-32">${l.usuario || 'Sistema'}</span>
+                    <span class="text-gray-600 flex-1">${l.acao || '-'}</span>
+                    <span class="text-gray-400 text-xs">${new Date(l.data).toLocaleString()}</span>
+                </div>
+            `).join('') || '<div class="text-center text-gray-400 py-4">Nenhum log</div>';
+        } catch (error) {
+            console.error('Erro logs:', error);
+        }
+    }
+
+    async function limparLogs() {
+        if (!confirm('Tem certeza que deseja limpar todos os logs?')) return;
+        try {
+            await fetch(API_URL + '/admin/logs', {
+                method: 'DELETE',
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+            carregarLogs();
+        } catch (error) {
+            alert('Erro ao limpar logs');
+        }
+    }
+
+    // ============================================
     // UTILITÁRIOS
-    // ===========================
+    // ============================================
     function fecharModal(id) {
         document.getElementById(id).classList.add('hidden');
     }
 
-    // ===========================
-    // VERIFICA LOGIN
-    // ===========================
-    if (!token) {
-        const email = prompt('Email do Admin:');
-        const senha = prompt('Senha:');
-        if (email && senha) {
-            login(email, senha).then(success => {
-                if (!success) {
-                    alert('Login falhou! Tente novamente.');
-                    location.reload();
-                }
-            });
-        } else {
-            location.href = '/';
-        }
-    } else {
-        carregarDashboard();
-        document.getElementById('adminUser').textContent = localStorage.getItem('admin_user') || 'Admin';
+    function logout() {
+        localStorage.removeItem('admin_token');
+        localStorage.removeItem('admin_user');
+        token = null;
+        document.getElementById('loginPage').style.display = 'flex';
+        document.getElementById('adminPage').style.display = 'none';
     }
 
-    // Fecha modais clicando fora
-    document.querySelectorAll('.fixed.inset-0').forEach(modal => {
-        modal.addEventListener('click', function(e) {
-            if (e.target === this) this.classList.add('hidden');
-        });
-    });
-</script>
+    // ============================================
+    // VERIFICA LOGIN
+    // ============================================
+    async function verificarLogin() {
+        if (!token) {
+            document.getElementById('loginPage').style.display = 'flex';
+            return;
+        }
+        
+        try {
+            const response = await fetch(API_URL + '/admin/verify', {
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+            const data = await response.json();
+            if (data.valid) {
+                const user = JSON.parse(localStorage.getItem('admin_user')) || { nome: 'Administrador' };
+                entrarAdmin(user);
+            } else {
+                logout();
+            }
+        } catch (error) {
+            logout();
+        }
+    }
 
+    // ============================================
+    // INICIALIZAÇÃO
+    // ============================================
+    verificarLogin();
+</script>
 </body>
 </html>
