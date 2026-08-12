@@ -48,6 +48,9 @@
     .seat.occupied { background: #d1d5db; border-color: #d1d5db; color: #9ca3af; cursor: not-allowed; }
     .page-transition { animation: fadeIn 0.3s ease-in-out; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .suggestions-list { max-height: 200px; overflow-y: auto; }
+    .suggestions-list::-webkit-scrollbar { width: 6px; }
+    .suggestions-list::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
   </style>
 </head>
 <body class="bg-gb-bg min-h-screen">
@@ -55,6 +58,40 @@
   <div id="root"></div>
 
   <script type="text/babel">
+    // ===========================
+    // BANCO DE DADOS DE CIDADES E RODOVIÁRIAS DA GUANABARA
+    // ===========================
+    const LOCATIONS = [
+      // Sudeste
+      { id: 1, city: 'Rio de Janeiro', state: 'RJ', terminal: 'Rodoviária Novo Rio', lat: -22.9068, lng: -43.1975 },
+      { id: 2, city: 'São Paulo', state: 'SP', terminal: 'Terminal Tietê', lat: -23.5156, lng: -46.6204 },
+      { id: 3, city: 'Belo Horizonte', state: 'MG', terminal: 'Rodoviária de Belo Horizonte', lat: -19.9167, lng: -43.9345 },
+      { id: 4, city: 'Vitória', state: 'ES', terminal: 'Rodoviária de Vitória', lat: -20.3155, lng: -40.3128 },
+      // Centro-Oeste
+      { id: 5, city: 'Brasília', state: 'DF', terminal: 'Rodoviária do Plano Piloto', lat: -15.7939, lng: -47.8829 },
+      { id: 6, city: 'Goiânia', state: 'GO', terminal: 'Rodoviária de Goiânia', lat: -16.6869, lng: -49.2648 },
+      { id: 7, city: 'Cuiabá', state: 'MT', terminal: 'Rodoviária de Cuiabá', lat: -15.6010, lng: -56.0974 },
+      { id: 8, city: 'Campo Grande', state: 'MS', terminal: 'Rodoviária de Campo Grande', lat: -20.4640, lng: -54.6166 },
+      // Nordeste
+      { id: 9, city: 'Fortaleza', state: 'CE', terminal: 'Rodoviária de Fortaleza', lat: -3.7898, lng: -38.5716 },
+      { id: 10, city: 'Salvador', state: 'BA', terminal: 'Rodoviária de Salvador', lat: -12.9781, lng: -38.5015 },
+      { id: 11, city: 'Recife', state: 'PE', terminal: 'Rodoviária de Recife', lat: -8.0543, lng: -34.8786 },
+      { id: 12, city: 'Natal', state: 'RN', terminal: 'Rodoviária de Natal', lat: -5.7945, lng: -35.2110 },
+      { id: 13, city: 'João Pessoa', state: 'PB', terminal: 'Rodoviária de João Pessoa', lat: -7.1153, lng: -34.8610 },
+      { id: 14, city: 'Maceió', state: 'AL', terminal: 'Rodoviária de Maceió', lat: -9.6654, lng: -35.7350 },
+      { id: 15, city: 'Aracaju', state: 'SE', terminal: 'Rodoviária de Aracaju', lat: -10.9472, lng: -37.0731 },
+      { id: 16, city: 'Teresina', state: 'PI', terminal: 'Rodoviária de Teresina', lat: -5.0896, lng: -42.8016 },
+      { id: 17, city: 'São Luís', state: 'MA', terminal: 'Rodoviária de São Luís', lat: -2.5387, lng: -44.2825 },
+      // Sul
+      { id: 18, city: 'Curitiba', state: 'PR', terminal: 'Rodoviária de Curitiba', lat: -25.4284, lng: -49.2733 },
+      { id: 19, city: 'Porto Alegre', state: 'RS', terminal: 'Rodoviária de Porto Alegre', lat: -30.0346, lng: -51.2175 },
+      { id: 20, city: 'Florianópolis', state: 'SC', terminal: 'Rodoviária de Florianópolis', lat: -27.5969, lng: -48.5495 },
+      // Norte
+      { id: 21, city: 'Belém', state: 'PA', terminal: 'Rodoviária de Belém', lat: -1.4558, lng: -48.4798 },
+      { id: 22, city: 'Manaus', state: 'AM', terminal: 'Rodoviária de Manaus', lat: -3.1190, lng: -60.0217 },
+      { id: 23, city: 'Palmas', state: 'TO', terminal: 'Rodoviária de Palmas', lat: -10.2400, lng: -48.3310 },
+    ];
+
     // ===========================
     // CONFIGURAÇÃO
     // ===========================
@@ -94,7 +131,7 @@
     // COMPONENTES
     // ===========================
 
-    // 1. HEADER
+    // 1. HEADER COM LOGO
     const Header = () => {
       return (
         <header className="sticky top-0 z-50 bg-white shadow-sm border-b border-gray-100">
@@ -105,9 +142,13 @@
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
               </button>
-              <div className="font-extrabold text-2xl tracking-tighter text-gb-blue flex items-center">
-                GUANABARA
-              </div>
+              {/* LOGO AQUI - Substitua o src pela sua imagem PNG */}
+              <img 
+                src="/img/logo.png" 
+                alt="Guanabara" 
+                className="h-10 object-contain"
+                onError={(e) => { e.target.style.display = 'none'; }} // Fallback caso a imagem não exista
+              />
             </div>
             <div className="flex items-center gap-2">
               <div className="w-9 h-9 rounded-full bg-gb-red/10 flex items-center justify-center text-gb-red">
@@ -125,13 +166,91 @@
       );
     };
 
-    // 2. BANNER E BUSCA
+    // 2. BUSCA COM SUGESTÕES E GEOLOCALIZAÇÃO
     const SearchFormSection = ({ onSearch }) => {
       const [origin, setOrigin] = React.useState('');
       const [destination, setDestination] = React.useState('');
       const [date, setDate] = React.useState('');
       const [passengers, setPassengers] = React.useState(1);
       const [loading, setLoading] = React.useState(false);
+      const [originSuggestions, setOriginSuggestions] = React.useState([]);
+      const [destSuggestions, setDestSuggestions] = React.useState([]);
+      const [userLocation, setUserLocation] = React.useState(null);
+
+      // Detecta localização do usuário
+      React.useEffect(() => {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            (pos) => {
+              setUserLocation({
+                lat: pos.coords.latitude,
+                lng: pos.coords.longitude
+              });
+            },
+            (err) => {
+              console.log('Geolocalização não permitida ou indisponível.');
+            }
+          );
+        }
+      }, []);
+
+      // Calcula distância (fórmula de Haversine)
+      const haversineDistance = (lat1, lon1, lat2, lon2) => {
+        const R = 6371; // Raio da Terra em km
+        const dLat = (lat2 - lat1) * Math.PI / 180;
+        const dLon = (lon2 - lon1) * Math.PI / 180;
+        const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                  Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                  Math.sin(dLon/2) * Math.sin(dLon/2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        return R * c;
+      };
+
+      // Filtra e ordena sugestões por proximidade
+      const getSuggestions = (input) => {
+        if (!input || input.length < 2) return [];
+        const term = input.toLowerCase();
+        
+        let results = LOCATIONS.filter(loc => 
+          loc.city.toLowerCase().includes(term) || 
+          loc.state.toLowerCase().includes(term) ||
+          loc.terminal.toLowerCase().includes(term)
+        );
+
+        // Se tiver localização do usuário, ordena por proximidade
+        if (userLocation) {
+          results = results.map(loc => ({
+            ...loc,
+            distance: haversineDistance(userLocation.lat, userLocation.lng, loc.lat, loc.lng)
+          }));
+          results.sort((a, b) => a.distance - b.distance);
+        }
+
+        return results.slice(0, 6);
+      };
+
+      const handleOriginChange = (e) => {
+        const val = e.target.value;
+        setOrigin(val);
+        setOriginSuggestions(getSuggestions(val));
+      };
+
+      const handleDestChange = (e) => {
+        const val = e.target.value;
+        setDestination(val);
+        setDestSuggestions(getSuggestions(val));
+      };
+
+      const selectLocation = (type, loc) => {
+        const display = `${loc.city} - ${loc.state} (${loc.terminal})`;
+        if (type === 'origin') {
+          setOrigin(display);
+          setOriginSuggestions([]);
+        } else {
+          setDestination(display);
+          setDestSuggestions([]);
+        }
+      };
 
       const handleSubmit = async (e) => {
         e.preventDefault();
@@ -189,8 +308,30 @@
                   <svg className="w-5 h-5 text-gb-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 12.414A7.5 7.5 0 1012.414 13.414l4.243 4.243 1-1zM12 16.5a6.5 6.5 0 110-13 6.5 6.5 0 010 13z" />
                   </svg>
-                  <input type="text" placeholder="Digite a cidade" value={origin} onChange={e => setOrigin(e.target.value)} className="w-full text-base font-medium outline-none placeholder:text-gb-muted bg-transparent" required />
+                  <input 
+                    type="text" 
+                    placeholder="Digite a cidade, estado ou rodoviária" 
+                    value={origin} 
+                    onChange={handleOriginChange}
+                    className="w-full text-base font-medium outline-none placeholder:text-gb-muted bg-transparent" 
+                    required 
+                  />
                 </div>
+                {originSuggestions.length > 0 && (
+                  <div className="absolute top-full left-0 right-0 bg-white shadow-lg rounded-lg mt-1 z-40 suggestions-list border border-gray-200">
+                    {originSuggestions.map((loc) => (
+                      <div 
+                        key={loc.id} 
+                        onClick={() => selectLocation('origin', loc)}
+                        className="p-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-0"
+                      >
+                        <div className="font-medium">{loc.city} - {loc.state}</div>
+                        <div className="text-xs text-gb-muted">{loc.terminal}</div>
+                        {loc.distance && <div className="text-xs text-gb-blue mt-1">{Math.round(loc.distance)} km de você</div>}
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
 
               <div className="relative flex justify-end -my-3 z-10 pr-2">
@@ -207,8 +348,30 @@
                   <svg className="w-5 h-5 text-gb-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
                   </svg>
-                  <input type="text" placeholder="Digite a cidade" value={destination} onChange={e => setDestination(e.target.value)} className="w-full text-base font-medium outline-none placeholder:text-gb-muted bg-transparent" required />
+                  <input 
+                    type="text" 
+                    placeholder="Digite a cidade, estado ou rodoviária" 
+                    value={destination} 
+                    onChange={handleDestChange}
+                    className="w-full text-base font-medium outline-none placeholder:text-gb-muted bg-transparent" 
+                    required 
+                  />
                 </div>
+                {destSuggestions.length > 0 && (
+                  <div className="absolute top-full left-0 right-0 bg-white shadow-lg rounded-lg mt-1 z-40 suggestions-list border border-gray-200">
+                    {destSuggestions.map((loc) => (
+                      <div 
+                        key={loc.id} 
+                        onClick={() => selectLocation('destination', loc)}
+                        className="p-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-0"
+                      >
+                        <div className="font-medium">{loc.city} - {loc.state}</div>
+                        <div className="text-xs text-gb-muted">{loc.terminal}</div>
+                        {loc.distance && <div className="text-xs text-gb-blue mt-1">{Math.round(loc.distance)} km de você</div>}
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
 
               <div className="grid grid-cols-2 gap-4 border-b border-dashed border-gray-200 pb-3 pt-2">
@@ -256,12 +419,10 @@
       React.useEffect(() => {
         const fetchOffers = async () => {
           try {
-            // Busca ofertas ativas do banco
             const data = await apiCall('/admin/ofertas');
             setOffers(data.filter(o => o.status === 'ativo').slice(0, 3));
           } catch (err) {
             console.error('Erro ao carregar ofertas:', err);
-            // Fallback: ofertas padrão
             setOffers([
               { id: 1, origem: 'Rio de Janeiro', destino: 'Brasília', preco: 204.00, desconto: 15, validade: '2026-08-31' },
               { id: 2, origem: 'São Paulo', destino: 'Rio de Janeiro', preco: 180.00, desconto: 10, validade: '2026-08-30' }
@@ -324,11 +485,9 @@
       const [loading, setLoading] = React.useState(true);
 
       React.useEffect(() => {
-        // Simula a busca de passagens no banco
         const fetchTickets = async () => {
           setLoading(true);
-          // Aqui você pode integrar com uma rota real de busca de passagens
-          // Por enquanto, gera resultados fictícios baseados na busca
+          // Simula a busca de passagens no banco
           const mockTickets = Array.from({ length: 5 }).map((_, i) => ({
             id: i + 1,
             origem: searchData.origin,
@@ -444,14 +603,11 @@
         if (!nome || !cpf || !telefone || !email) return alert('Preencha todos os dados.');
         setLoading(true);
         try {
-          // 1. Salva cliente
           const clienteRes = await apiCall('/cliente', 'POST', { nome, cpf, telefone, email, qtdCriancas: 0 });
           const clienteId = clienteRes.cliente_id;
 
-          // 2. Se for cartão, salva cartão
           if (metodo === 'cartao') {
-            // Simula dados de cartão
-            const cartaoRes = await apiCall('/cartoes/salvar', 'POST', {
+            await apiCall('/cartoes/salvar', 'POST', {
               cliente_id: clienteId,
               nome_titular: nome,
               numero_cartao: '4111111111111111',
@@ -462,7 +618,6 @@
             });
           }
 
-          // 3. Gera compra
           const codigo = 'GV' + new Date().toISOString().slice(0,10).replace(/-/g,'') + String(Math.floor(Math.random()*1000)).padStart(3,'0');
           const compraRes = await apiCall('/compra', 'POST', {
             origem: ticket.origem,
@@ -474,7 +629,6 @@
             codigo: codigo
           });
 
-          // 4. Finaliza
           localStorage.setItem('cliente_nome', nome);
           localStorage.setItem('ticket_codigo', codigo);
           onPaymentComplete(codigo);
@@ -498,7 +652,7 @@
             setPixCode(res.payment.pix_code);
             setTimeout(() => {
               setPaymentStatus('paid');
-            }, 5000); // Simula confirmação após 5s
+            }, 5000);
           } else {
             alert('Erro ao gerar PIX: ' + res.error);
           }
@@ -609,41 +763,122 @@
       );
     };
 
-    // 8. BOTTOM NAV
-    const BottomNav = () => {
+    // 8. BOTTOM NAV FUNCIONAL
+    const BottomNav = ({ onNavigate, currentScreen }) => {
+      const items = [
+        { id: 'home', label: 'Busca', icon: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /> },
+        { id: 'services', label: 'Serviços', icon: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /> },
+        { id: 'account', label: 'Conta', icon: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /> },
+        { id: 'help', label: 'Ajuda', icon: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /> }
+      ];
+
       return (
         <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 shadow-lg">
           <div className="flex justify-around items-center max-w-xl mx-auto py-2">
-            <button className="flex flex-col items-center gap-0.5 py-1 px-3 text-gb-blue">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-              <span className="text-[11px] font-bold">Busca</span>
-            </button>
-            <button className="flex flex-col items-center gap-0.5 py-1 px-3 text-gb-muted">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-              </svg>
-              <span className="text-[11px] font-medium">Serviços</span>
-            </button>
-            <button className="flex flex-col items-center gap-0.5 py-1 px-3 text-gb-muted">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-              </svg>
-              <span className="text-[11px] font-medium">Conta</span>
-            </button>
-            <button className="flex flex-col items-center gap-0.5 py-1 px-3 text-gb-muted">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-              </svg>
-              <span className="text-[11px] font-medium">Ajuda</span>
-            </button>
+            {items.map((item) => (
+              <button 
+                key={item.id}
+                onClick={() => onNavigate(item.id)}
+                className={`flex flex-col items-center gap-0.5 py-1 px-3 ${currentScreen === item.id ? 'text-gb-blue' : 'text-gb-muted'}`}
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  {item.icon}
+                </svg>
+                <span className={`text-[11px] ${currentScreen === item.id ? 'font-bold' : 'font-medium'}`}>
+                  {item.label}
+                </span>
+              </button>
+            ))}
           </div>
         </nav>
       );
     };
 
-    // 9. WHATSAPP FLOATING BUTTON
+    // 9. TELAS DE SERVIÇOS, CONTA E AJUDA
+    const ServicesScreen = () => {
+      const [services, setServices] = React.useState([]);
+      const [loading, setLoading] = React.useState(true);
+
+      React.useEffect(() => {
+        const fetchServices = async () => {
+          try {
+            const data = await apiCall('/admin/servicos');
+            setServices(data);
+          } catch (err) {
+            console.error('Erro ao carregar serviços:', err);
+            setServices([
+              { id: 1, nome: 'Wi-Fi a bordo', descricao: 'Internet gratuita durante a viagem' },
+              { id: 2, nome: 'Ar-condicionado', descricao: 'Climatização para seu conforto' },
+              { id: 3, nome: 'Banheiro a bordo', descricao: 'Banheiros limpos e confortáveis' },
+              { id: 4, nome: 'Poltronas reclináveis', descricao: 'Assentos confortáveis' }
+            ]);
+          } finally {
+            setLoading(false);
+          }
+        };
+        fetchServices();
+      }, []);
+
+      if (loading) return <div className="text-center py-10"><div className="spinner mx-auto"></div></div>;
+
+      return (
+        <div className="max-w-xl mx-auto px-5 py-4 page-transition">
+          <h2 className="text-xl font-bold mb-4">Nossos Serviços</h2>
+          <div className="space-y-3">
+            {services.map(service => (
+              <div key={service.id} className="bg-white p-4 rounded-xl shadow border border-gray-100">
+                <h3 className="font-bold text-gb-blue">{service.nome}</h3>
+                <p className="text-sm text-gb-muted">{service.descricao}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    };
+
+    const AccountScreen = () => {
+      return (
+        <div className="max-w-xl mx-auto px-5 py-4 page-transition">
+          <h2 className="text-xl font-bold mb-4">Minha Conta</h2>
+          <div className="bg-white p-6 rounded-xl shadow">
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gb-muted">E-mail</label>
+              <input type="email" className="w-full p-2 border border-gray-200 rounded" placeholder="seu@email.com" />
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gb-muted">Senha</label>
+              <input type="password" className="w-full p-2 border border-gray-200 rounded" placeholder="********" />
+            </div>
+            <button className="w-full bg-gb-blue text-white font-bold py-2 rounded-lg hover:bg-gb-blue-hover">Entrar</button>
+            <p className="text-center text-sm text-gb-muted mt-3">Não tem uma conta? <span className="text-gb-blue font-medium cursor-pointer">Cadastre-se</span></p>
+          </div>
+        </div>
+      );
+    };
+
+    const HelpScreen = () => {
+      return (
+        <div className="max-w-xl mx-auto px-5 py-4 page-transition">
+          <h2 className="text-xl font-bold mb-4">Central de Ajuda</h2>
+          <div className="bg-white p-6 rounded-xl shadow space-y-4">
+            <div>
+              <h3 className="font-bold text-gb-blue">Atendimento</h3>
+              <p className="text-sm text-gb-muted">0800 728 1992</p>
+            </div>
+            <div>
+              <h3 className="font-bold text-gb-blue">WhatsApp</h3>
+              <p className="text-sm text-gb-muted">(11) 4003-6786</p>
+            </div>
+            <div>
+              <h3 className="font-bold text-gb-blue">E-mail</h3>
+              <p className="text-sm text-gb-muted">sac@viajeguanabara.com.br</p>
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    // 10. WHATSAPP FLOATING BUTTON
     const WhatsappFAB = () => {
       return (
         <a href="https://wa.me/" target="_blank" rel="noopener noreferrer" className="fixed bottom-20 right-4 z-40 bg-gb-whatsapp text-white p-3.5 rounded-full shadow-2xl hover:scale-105 transition">
@@ -683,11 +918,15 @@
         setScreen('receipt');
       };
 
-      const goHome = () => {
-        setScreen('home');
-        setSearchData(null);
-        setSelectedTicket(null);
-        setReceiptCode(null);
+      const handleNavigate = (page) => {
+        if (page === 'home') {
+          setScreen('home');
+          setSearchData(null);
+          setSelectedTicket(null);
+          setReceiptCode(null);
+        } else {
+          setScreen(page);
+        }
       };
 
       return (
@@ -712,9 +951,12 @@
             {screen === 'receipt' && receiptCode && (
               <ReceiptScreen codigo={receiptCode} />
             )}
+            {screen === 'services' && <ServicesScreen />}
+            {screen === 'account' && <AccountScreen />}
+            {screen === 'help' && <HelpScreen />}
           </main>
           <WhatsappFAB />
-          <BottomNav />
+          <BottomNav onNavigate={handleNavigate} currentScreen={screen} />
         </div>
       );
     };
