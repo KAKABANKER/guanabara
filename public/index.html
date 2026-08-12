@@ -48,55 +48,101 @@
         .page { display: none; }
         .page.active { display: block; }
         
-        /* ASSENTOS MELHORADOS */
         .seat-wrapper { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; padding: 8px; }
         .seat { 
-            width: 42px; 
-            height: 42px; 
-            border-radius: 10px; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: center; 
-            font-weight: 700; 
-            font-size: 11px; 
-            cursor: pointer; 
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); 
-            border: 2px solid #cbd5e1; 
-            background: #fff; 
-            color: #4a5568; 
-            position: relative;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+            width: 42px; height: 42px; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 700; font-size: 11px; cursor: pointer; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); border: 2px solid #cbd5e1; background: #fff; color: #4a5568; position: relative; box-shadow: 0 2px 4px rgba(0,0,0,0.04);
         }
-        .seat.available { 
-            border-color: #123481; 
-            color: #123481; 
-            background: #f0f4ff;
-        }
-        .seat.available:hover { 
-            transform: translateY(-3px) scale(1.05); 
-            box-shadow: 0 6px 16px rgba(18, 52, 129, 0.25); 
-            background: #dce6ff;
-            border-color: #123481;
-        }
-        .seat.selected { 
-            border-color: #123481; 
-            background: #123481; 
-            color: white; 
-            transform: scale(1.08); 
-            box-shadow: 0 6px 20px rgba(18, 52, 129, 0.35); 
-        }
+        .seat.available { border-color: #123481; color: #123481; background: #f0f4ff; }
+        .seat.available:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 6px 16px rgba(18, 52, 129, 0.25); background: #dce6ff; border-color: #123481; }
+        .seat.selected { border-color: #123481; background: #123481; color: white; transform: scale(1.08); box-shadow: 0 6px 20px rgba(18, 52, 129, 0.35); }
         .seat.selected i { color: white !important; }
-        .seat.occupied { 
-            background: #e2e8f0; 
-            border-color: #cbd5e1; 
-            color: #a0aec0; 
-            cursor: not-allowed; 
-            opacity: 0.6; 
-        }
+        .seat.occupied { background: #e2e8f0; border-color: #cbd5e1; color: #a0aec0; cursor: not-allowed; opacity: 0.6; }
         .seat i { font-size: 14px; margin-bottom: 2px; }
         .seat.available i { color: #123481; }
         
+        /* INPUT DATE - BRANCO COM TEMA AZUL */
+        input[type="date"] {
+            background: white !important;
+            color: #123481 !important;
+            border: 2px solid #123481 !important;
+            border-radius: 10px !important;
+            padding: 12px 16px !important;
+            font-weight: 600 !important;
+            font-size: 14px !important;
+            cursor: pointer !important;
+            transition: all 0.3s ease !important;
+            width: 100% !important;
+        }
+        input[type="date"]:focus {
+            outline: none !important;
+            box-shadow: 0 0 0 4px rgba(18, 52, 129, 0.15) !important;
+            border-color: #123481 !important;
+        }
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(20%) sepia(80%) saturate(3000%) hue-rotate(210deg) brightness(70%);
+            cursor: pointer;
+            padding: 4px;
+        }
+        input[type="date"]::-webkit-datetime-edit {
+            color: #123481 !important;
+        }
+        input[type="date"]::-webkit-datetime-edit-fields-wrapper {
+            color: #123481 !important;
+        }
+        input[type="date"]::-webkit-datetime-edit-text {
+            color: #123481 !important;
+        }
+        input[type="date"]::-webkit-datetime-edit-month-field {
+            color: #123481 !important;
+        }
+        input[type="date"]::-webkit-datetime-edit-day-field {
+            color: #123481 !important;
+        }
+        input[type="date"]::-webkit-datetime-edit-year-field {
+            color: #123481 !important;
+        }
+        input[type="date"]:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(18, 52, 129, 0.15);
+        }
+        input[type="date"]:active {
+            transform: scale(0.98);
+        }
+        
+        .date-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: #123481;
+            margin-bottom: 4px;
+            display: block;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        /* INPUT DE TEXTO COM SUGESTÃO */
+        input[list] {
+            background: white !important;
+            border: 2px solid #e2e8f0 !important;
+            border-radius: 10px !important;
+            padding: 12px 16px !important;
+            font-size: 15px !important;
+            font-weight: 500 !important;
+            transition: all 0.3s ease !important;
+            width: 100% !important;
+        }
+        input[list]:focus {
+            outline: none !important;
+            border-color: #123481 !important;
+            box-shadow: 0 0 0 4px rgba(18, 52, 129, 0.1) !important;
+        }
+        input[list]::-webkit-calendar-picker-indicator {
+            opacity: 0.6;
+            cursor: pointer;
+        }
+        input[list]:hover::-webkit-calendar-picker-indicator {
+            opacity: 1;
+        }
+
         .drawer-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 998; display: none; backdrop-filter: blur(4px); }
         .drawer-overlay.active { display: block; }
         .drawer-panel { position: fixed; bottom: -100%; left: 0; right: 0; max-height: 92vh; background: white; z-index: 999; border-radius: 24px 24px 0 0; transition: bottom 0.4s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; box-shadow: 0 -20px 40px rgba(0,0,0,0.15); overflow: hidden; }
@@ -110,6 +156,7 @@
             .seat i { font-size: 11px; } 
         }
 
+        /* Outros estilos */
         .checkout-title { text-align: center; font-size: 20px; font-weight: 800; color: #123481; margin-bottom: 4px; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .timer-subtitle { text-align: center; font-size: 13px; color: #475569; margin-bottom: 20px; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 6px; }
         .card-buyer { background: #fff; border-radius: 16px; padding: 20px; max-width: 620px; margin: 0 auto; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border: 1px solid #e2e8f0; }
@@ -199,19 +246,6 @@
                 right: 16px;
             }
         }
-
-        /* Cores azuis para tudo */
-        .text-gb-yellow { color: #123481 !important; }
-        .bg-gb-yellow { background: #123481 !important; }
-        .border-gb-yellow { border-color: #123481 !important; }
-        .hover\\:bg-gb-yellow:hover { background: #123481 !important; }
-        .hover\\:text-gb-yellow:hover { color: #123481 !important; }
-        
-        .btn-blue { background: #123481; color: white; }
-        .btn-blue:hover { background: #1a4a9e; }
-        
-        .bg-gradient-to-r.from-gb-blue { background: #123481; }
-        .bg-gradient-to-r.to-gb-blue-hover { background: #1a4a9e; }
     </style>
 </head>
 <body>
@@ -267,7 +301,9 @@
         <div id="page-home" class="page active fade-in">
             <!-- SLIDER PRINCIPAL -->
             <div class="slider-container mt-4">
-                <img src="https://viajeguanabara.com.br/_next/image/?url=https%3A%2F%2Fprod-sn-assets.us-east-2.viajeguanabara.com.br%2Fimg%2Fcampanhadesk2026ago.jpg&w=1920&q=90" class="slider-slide active" />
+                <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=1200&h=400&fit=crop" class="slider-slide active" />
+                <img src="https://images.unsplash.com/photo-1570125909232-eb263c188f7e?w=1200&h=400&fit=crop" class="slider-slide" />
+                <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=1200&h=400&fit=crop" class="slider-slide" />
                 <div class="slider-dots">
                     <div class="slider-dot active" onclick="goToSlide(0)"></div>
                     <div class="slider-dot" onclick="goToSlide(1)"></div>
@@ -280,31 +316,10 @@
                 <form id="searchForm" class="space-y-3" onsubmit="buscarViagens(event)">
                     <div>
                         <label class="text-xs font-semibold text-gray-400 block mb-1">Saindo de</label>
-                        <div class="flex items-center border-b border-gray-200 pb-1">
-                            <i class="fas fa-map-marker-alt text-gb-blue mr-2"></i>
-                            <input type="text" id="origin" placeholder="Digite a cidade" class="w-full text-base font-medium outline-none bg-transparent" required list="cidadesSugestao" />
-                            <datalist id="cidadesSugestao">
-                                <option value="Rio de Janeiro - RJ" />
-                                <option value="São Paulo - SP" />
-                                <option value="Brasília - DF" />
-                                <option value="Salvador - BA" />
-                                <option value="Fortaleza - CE" />
-                                <option value="Belo Horizonte - MG" />
-                                <option value="Curitiba - PR" />
-                                <option value="Porto Alegre - RS" />
-                                <option value="Recife - PE" />
-                                <option value="Goiânia - GO" />
-                                <option value="Belém - PA" />
-                                <option value="Manaus - AM" />
-                                <option value="Florianópolis - SC" />
-                                <option value="Vitória - ES" />
-                                <option value="Natal - RN" />
-                                <option value="Campo Grande - MS" />
-                                <option value="Cuiabá - MT" />
-                                <option value="João Pessoa - PB" />
-                                <option value="Aracaju - SE" />
-                                <option value="Maceió - AL" />
-                            </datalist>
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-map-marker-alt text-gb-blue"></i>
+                            <input type="text" id="origin" placeholder="Digite a cidade" class="w-full" required list="cidadesSugestao" />
+                            <datalist id="cidadesSugestao"></datalist>
                         </div>
                     </div>
                     <div class="flex justify-center -my-1">
@@ -314,41 +329,20 @@
                     </div>
                     <div>
                         <label class="text-xs font-semibold text-gray-400 block mb-1">Indo para</label>
-                        <div class="flex items-center border-b border-gray-200 pb-1">
-                            <i class="fas fa-map-pin text-gb-blue mr-2"></i>
-                            <input type="text" id="destino" placeholder="Digite a cidade" class="w-full text-base font-medium outline-none bg-transparent" required list="cidadesSugestao2" />
-                            <datalist id="cidadesSugestao2">
-                                <option value="Rio de Janeiro - RJ" />
-                                <option value="São Paulo - SP" />
-                                <option value="Brasília - DF" />
-                                <option value="Salvador - BA" />
-                                <option value="Fortaleza - CE" />
-                                <option value="Belo Horizonte - MG" />
-                                <option value="Curitiba - PR" />
-                                <option value="Porto Alegre - RS" />
-                                <option value="Recife - PE" />
-                                <option value="Goiânia - GO" />
-                                <option value="Belém - PA" />
-                                <option value="Manaus - AM" />
-                                <option value="Florianópolis - SC" />
-                                <option value="Vitória - ES" />
-                                <option value="Natal - RN" />
-                                <option value="Campo Grande - MS" />
-                                <option value="Cuiabá - MT" />
-                                <option value="João Pessoa - PB" />
-                                <option value="Aracaju - SE" />
-                                <option value="Maceió - AL" />
-                            </datalist>
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-map-pin text-gb-blue"></i>
+                            <input type="text" id="destino" placeholder="Digite a cidade" class="w-full" required list="cidadesSugestao2" />
+                            <datalist id="cidadesSugestao2"></datalist>
                         </div>
                     </div>
                     <div class="grid grid-cols-2 gap-3 pt-1">
                         <div>
-                            <label class="text-xs font-semibold text-gray-400 block mb-1">Ida</label>
-                            <input type="date" id="dataIda" class="w-full text-sm font-medium outline-none bg-gray-50 rounded-lg p-2" required />
+                            <label class="date-label">Data de Ida</label>
+                            <input type="date" id="dataIda" required />
                         </div>
                         <div>
-                            <label class="text-xs font-semibold text-gray-400 block mb-1">Volta</label>
-                            <input type="date" id="dataVolta" class="w-full text-sm font-medium outline-none bg-gray-50 rounded-lg p-2" />
+                            <label class="date-label">Data de Volta</label>
+                            <input type="date" id="dataVolta" />
                         </div>
                     </div>
                     <div>
@@ -563,7 +557,6 @@
         <div id="page-tickets" class="page fade-in">
             <div class="flex items-center gap-2 mb-4">
                 <h2 class="text-xl font-bold text-gb-blue">Viagens encontradas</h2>
-                <span class="text-xl"></span>
                 <span id="totalResultados" class="text-sm font-normal text-gray-500"></span>
             </div>
             <div id="ticketsList"></div>
@@ -886,7 +879,36 @@
         <i class="fab fa-whatsapp"></i>
     </a>
 
+    <!-- CARREGA O JS DAS CIDADES PRIMEIRO -->
+    <script src="cidades.js"></script>
+    
+    <!-- SCRIPT PRINCIPAL -->
     <script>
+        // PREENCHER DATALISTS COM TODAS AS CIDADES
+        function preencherDatalists() {
+            const datalist1 = document.getElementById('cidadesSugestao');
+            const datalist2 = document.getElementById('cidadesSugestao2');
+            
+            // Usa a função do cidades.js
+            if (typeof getCidades !== 'undefined') {
+                const cidades = getCidades();
+                cidades.forEach(cidade => {
+                    const option1 = document.createElement('option');
+                    option1.value = cidade;
+                    datalist1.appendChild(option1);
+                    
+                    const option2 = document.createElement('option');
+                    option2.value = cidade;
+                    datalist2.appendChild(option2);
+                });
+                console.log('✅ ' + cidades.length + ' cidades carregadas!');
+            } else {
+                console.log('⚠️ Aguardando carregamento do cidades.js...');
+                // Tenta novamente depois
+                setTimeout(preencherDatalists, 500);
+            }
+        }
+
         // SLIDER
         let slideIndex = 0;
         const slides = document.querySelectorAll('.slider-slide');
@@ -995,7 +1017,6 @@
             destino.value = temp;
         }
 
-        // GERAR HORÁRIOS ALEATÓRIOS
         function gerarHorarioAleatorio() {
             const horas = Math.floor(Math.random() * 12) + 6;
             const minutos = Math.floor(Math.random() * 60);
@@ -1028,15 +1049,17 @@
                 });
             } catch (error) {}
 
-            // Gerar 8 viagens com horários aleatórios
             const tipos = ['Executivo', 'Leito', 'Semileito', 'Convencional'];
-            const empresas = ['GUANABARA', 'GUANABARA EXPRESS', 'VIAÇÃO GUANABARA'];
+            const empresas = ['GUANABARA', 'GUANABARA EXPRESS', 'VIAÇÃO GUANABARA', 'GUANABARA PREMIUM'];
             const terminais = [
                 'Rodoviária do Plano Piloto',
                 'Rodoviária Novo Rio',
                 'Terminal Tietê',
                 'Rodoviária de Salvador',
-                'Rodoviária de Fortaleza'
+                'Rodoviária de Fortaleza',
+                'Rodoviária de Belo Horizonte',
+                'Rodoviária de Curitiba',
+                'Rodoviária de Porto Alegre'
             ];
             
             const tickets = [];
@@ -1070,7 +1093,6 @@
                 });
             }
 
-            // Ordena por preço
             tickets.sort((a, b) => a.valor - b.valor);
 
             localStorage.setItem('busca_origem', origin);
@@ -1316,7 +1338,14 @@
         }
 
         // INICIALIZAÇÃO
+        // Aguarda o carregamento do cidades.js
+        setTimeout(preencherDatalists, 300);
         carregarDestinos();
+
+        // Seta data mínima para hoje
+        const hoje = new Date().toISOString().split('T')[0];
+        document.getElementById('dataIda').min = hoje;
+        document.getElementById('dataVolta').min = hoje;
 
         fetch('/api/visitante', {
             method: 'POST',
