@@ -7,843 +7,170 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* ===== RESET & TOKENS ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        :root{
-            --bg: #0B0E15;
-            --bg-soft: #10141F;
-            --surface: #141826;
-            --surface-2: #1A1F30;
-            --border: #232840;
-            --text: #E8EAF2;
-            --text-dim: #8B92AC;
-            --text-faint: #565D78;
-            --accent: #5B7FFF;
-            --accent-hover: #4A6BEF;
-            --accent-soft: rgba(91,127,255,.14);
-            --success: #34D399;
-            --success-soft: rgba(52,211,153,.14);
-            --warning: #FBBF24;
-            --warning-soft: rgba(251,191,36,.14);
-            --danger: #F87171;
-            --danger-soft: rgba(248,113,113,.14);
-            --info: #38BDF8;
-            --info-soft: rgba(56,189,248,.14);
-            --radius-lg: 18px;
-            --radius-md: 12px;
-            --radius-sm: 8px;
-            --font: 'Inter', sans-serif;
-            --mono: 'JetBrains Mono', monospace;
-        }
-        body {
-            font-family: var(--font);
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
-            transition: background 0.3s, color 0.3s;
-            font-size: 14px;
-        }
-        a { text-decoration: none; color: inherit; }
-        button, input, select, textarea { font-family: inherit; }
-
-        /* ===== TEMA CLARO ===== */
-        body.light {
-            --bg: #F3F4F9;
-            --bg-soft: #EAECF4;
-            --surface: #FFFFFF;
-            --surface-2: #F5F6FB;
-            --border: #E4E6F0;
-            --text: #171B28;
-            --text-dim: #6B7186;
-            --text-faint: #9AA0B4;
-            --accent-soft: rgba(91,127,255,.10);
-        }
-
-        /* ===== SCROLLBAR ===== */
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--text-faint); }
-
-        /* ===== SIDEBAR ===== */
-        .sidebar {
-            position: fixed;
-            left: 0;
-            top: 0;
-            width: 264px;
-            height: 100vh;
-            background: var(--bg-soft);
-            color: var(--text);
-            padding: 22px 0;
-            overflow-y: auto;
-            z-index: 1000;
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background .3s;
-            border-right: 1px solid var(--border);
-        }
-        .sidebar .brand {
-            padding: 4px 24px 22px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 10px;
-        }
-        .sidebar .brand img { height: 36px; width: auto; border-radius: 8px; }
-        .sidebar .brand h2 { font-size: 16.5px; font-weight: 700; color: var(--text); letter-spacing: -.01em; }
-        .sidebar .brand small { display: block; font-size: 11px; color: var(--text-faint); font-weight: 500; margin-top: 1px; }
+        body { font-family: 'Inter', sans-serif; background: #0B0E15; color: #E8EAF2; line-height: 1.6; font-size: 14px; }
+        .sidebar { position: fixed; left: 0; top: 0; width: 264px; height: 100vh; background: #10141F; padding: 22px 0; overflow-y: auto; z-index: 1000; border-right: 1px solid #232840; }
+        .sidebar .brand { padding: 4px 24px 22px; border-bottom: 1px solid #232840; display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+        .sidebar .brand h2 { font-size: 16.5px; font-weight: 700; color: #E8EAF2; }
         .sidebar .nav { list-style: none; padding: 6px 0; }
         .sidebar .nav li { margin: 2px 12px; }
-        .sidebar .nav li a {
-            display: flex;
-            align-items: center;
-            padding: 10px 14px;
-            border-radius: var(--radius-sm);
-            color: var(--text-dim);
-            transition: all 0.2s;
-            font-size: 13.5px;
-            font-weight: 500;
-            gap: 12px;
-            cursor: pointer;
-        }
-        .sidebar .nav li a svg { width: 17px; height: 17px; flex-shrink: 0; opacity: .85; }
-        .sidebar .nav li a:hover { background: var(--surface); color: var(--text); }
-        .sidebar .nav li a.active {
-            background: var(--accent-soft);
-            color: var(--accent);
-            font-weight: 600;
-        }
-        .sidebar .nav li a.active svg { opacity: 1; }
-        .sidebar .nav li a .badge {
-            margin-left: auto;
-            background: var(--danger);
-            color: #fff;
-            font-size: 10px;
-            padding: 2px 9px;
-            border-radius: 12px;
-            font-weight: 700;
-        }
-        .sidebar .nav-divider { height: 1px; background: var(--border); margin: 14px 24px; }
-        .sidebar .nav-label { padding: 14px 24px 8px; font-size: 10.5px; text-transform: uppercase; color: var(--text-faint); letter-spacing: 1px; font-weight: 700; }
-
-        /* ===== LOGIN ===== */
-        .login-page {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background:
-                radial-gradient(circle at 20% 20%, rgba(91,127,255,.10), transparent 45%),
-                radial-gradient(circle at 80% 80%, rgba(52,211,153,.06), transparent 45%),
-                var(--bg);
-            padding: 20px;
-        }
-        .login-box {
-            background: var(--surface);
-            padding: 42px 38px;
-            border-radius: 22px;
-            border: 1px solid var(--border);
-            width: 100%;
-            max-width: 400px;
-            box-shadow: 0 30px 80px rgba(0,0,0,0.45);
-        }
-        .login-box .logo { text-align: center; margin-bottom: 22px; }
-        .login-box .logo img { height: 42px; border-radius: 9px; }
-        .login-box h2 { color: var(--text); margin-bottom: 6px; text-align: center; font-size: 21px; font-weight: 700; letter-spacing: -.01em; }
-        .login-box p { color: var(--text-dim); text-align: center; margin-bottom: 26px; font-size: 13.5px; }
-        .login-box .form-group { margin-bottom: 16px; }
-        .login-box .form-group label { display: block; font-weight: 600; font-size: 13px; color: var(--text-dim); margin-bottom: 6px; }
-        .login-box .form-group input {
-            width: 100%;
-            padding: 12px 14px;
-            background: var(--surface-2);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            font-size: 14px;
-            color: var(--text);
-            transition: border 0.2s, box-shadow .2s;
-        }
-        .login-box .form-group input:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 0 3px var(--accent-soft); }
-        .login-box .btn-login {
-            width: 100%;
-            padding: 13px;
-            background: var(--accent);
-            color: #fff;
-            border: none;
-            border-radius: var(--radius-sm);
-            font-weight: 700;
-            font-size: 14.5px;
-            cursor: pointer;
-            transition: background 0.2s, transform .15s;
-            margin-top: 6px;
-        }
-        .login-box .btn-login:hover { background: var(--accent-hover); }
-        .login-box .btn-login:active { transform: scale(.98); }
-        .login-box .error-msg { color: var(--danger); font-size: 12.5px; text-align: center; margin-top: 12px; display: none; }
-
-        /* ===== MAIN ===== */
-        .main-content { margin-left: 264px; padding: 26px 30px 40px; min-height: 100vh; background: var(--bg); transition: background 0.3s; }
-
-        /* ===== TOPBAR ===== */
-        .topbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 16px 22px;
-            background: var(--surface);
-            border-radius: var(--radius-lg);
-            border: 1px solid var(--border);
-            margin-bottom: 24px;
-            flex-wrap: wrap;
-            gap: 14px;
-        }
-        .topbar .left { display: flex; align-items: center; gap: 16px; }
-        .topbar .left h3 { font-size: 19px; font-weight: 700; color: var(--text); letter-spacing: -.01em; }
-        .topbar .left .date { font-size: 12.5px; color: var(--text-faint); }
-        .topbar .right { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
-        .topbar .right .theme-toggle {
-            background: var(--surface-2);
-            border: 1px solid var(--border);
-            border-radius: 30px;
-            padding: 7px 15px;
-            color: var(--text);
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 500;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 7px;
-        }
-        .topbar .right .theme-toggle:hover { border-color: var(--accent); }
-        .topbar .right .online-indicator { display: flex; align-items: center; gap: 7px; font-size: 12.5px; color: var(--success); font-weight: 500; }
-        .topbar .right .online-indicator .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); animation: pulse 2s infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.75); } }
-        .topbar .right .user {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 5px 16px 5px 6px;
-            background: var(--surface-2);
-            border-radius: 30px;
-            border: 1px solid var(--border);
-            cursor: pointer;
-            transition: border-color .2s;
-        }
-        .topbar .right .user:hover { border-color: var(--accent); }
-        .topbar .right .user img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
-        .topbar .right .user .name { font-weight: 600; font-size: 13.5px; color: var(--text); }
-        .topbar .right .user .role { font-size: 11.5px; color: var(--text-faint); }
-
-        /* ===== STATS ===== */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-            gap: 18px;
-            margin-bottom: 22px;
-        }
-        .stat-card {
-            background: var(--surface);
-            border-radius: var(--radius-lg);
-            padding: 22px 24px;
-            border: 1px solid var(--border);
-            transition: transform 0.2s, border-color 0.2s;
-            position: relative;
-        }
-        .stat-card:hover { transform: translateY(-3px); border-color: var(--text-faint); }
-        .stat-card .stat-icon {
-            width: 38px; height: 38px; border-radius: 11px;
-            display: flex; align-items: center; justify-content: center;
-            margin-bottom: 16px;
-        }
-        .stat-card .stat-icon svg { width: 19px; height: 19px; }
-        .stat-card.primary .stat-icon { background: var(--accent-soft); color: var(--accent); }
-        .stat-card.success .stat-icon { background: var(--success-soft); color: var(--success); }
-        .stat-card.warning .stat-icon { background: var(--warning-soft); color: var(--warning); }
-        .stat-card.danger .stat-icon { background: var(--danger-soft); color: var(--danger); }
-        .stat-card .label { font-size: 12px; color: var(--text-dim); font-weight: 500; }
-        .stat-card .value { font-size: 26px; font-weight: 800; color: var(--text); margin: 6px 0 8px; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
-        .stat-card .change { font-size: 12px; display: inline-flex; align-items: center; gap: 4px; font-weight: 600; padding: 2px 9px; border-radius: 20px; }
-        .stat-card .change.up { color: var(--success); background: var(--success-soft); }
-        .stat-card .change.down { color: var(--danger); background: var(--danger-soft); }
-
-        /* ===== CARDS ===== */
-        .card {
-            background: var(--surface);
-            border-radius: var(--radius-lg);
-            padding: 22px 24px;
-            border: 1px solid var(--border);
-            margin-bottom: 22px;
-            transition: border-color .3s;
-        }
-        .card .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 18px;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-        .card .card-header h4 { font-size: 16px; font-weight: 700; color: var(--text); letter-spacing: -.01em; }
-        .card .card-header .actions { display: flex; gap: 10px; flex-wrap: wrap; }
-        .card .card-header .actions input,
-        .card .card-header .actions select {
-            padding: 8px 14px;
-            background: var(--surface-2);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            font-size: 13px;
-            color: var(--text);
-            outline: none;
-            transition: border 0.2s;
-        }
-        .card .card-header .actions input:focus,
-        .card .card-header .actions select:focus { border-color: var(--accent); }
-        .card .card-header .actions .btn {
-            padding: 8px 18px;
-            border: none;
-            border-radius: var(--radius-sm);
-            font-weight: 600;
-            font-size: 13px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .btn-primary { background: var(--accent); color: #fff; }
-        .btn-primary:hover { background: var(--accent-hover); }
-        .btn-success { background: var(--success); color: #06281c; }
-        .btn-success:hover { filter: brightness(1.08); }
-        .btn-danger { background: var(--danger-soft); color: var(--danger); }
-        .btn-danger:hover { background: var(--danger); color: #fff; }
-        .btn-warning { background: var(--warning-soft); color: var(--warning); }
-        .btn-warning:hover { background: var(--warning); color: #241900; }
+        .sidebar .nav li a { display: flex; align-items: center; padding: 10px 14px; border-radius: 8px; color: #8B92AC; transition: all 0.2s; font-size: 13.5px; font-weight: 500; gap: 12px; cursor: pointer; text-decoration: none; }
+        .sidebar .nav li a:hover { background: #141826; color: #E8EAF2; }
+        .sidebar .nav li a.active { background: rgba(91,127,255,.14); color: #5B7FFF; font-weight: 600; }
+        .main-content { margin-left: 264px; padding: 26px 30px 40px; min-height: 100vh; background: #0B0E15; }
+        .topbar { display: flex; justify-content: space-between; align-items: center; padding: 16px 22px; background: #141826; border-radius: 18px; border: 1px solid #232840; margin-bottom: 24px; flex-wrap: wrap; gap: 14px; }
+        .topbar .left h3 { font-size: 19px; font-weight: 700; color: #E8EAF2; }
+        .topbar .right .user { display: flex; align-items: center; gap: 10px; padding: 5px 16px 5px 6px; background: #1A1F30; border-radius: 30px; border: 1px solid #232840; cursor: pointer; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 18px; margin-bottom: 22px; }
+        .stat-card { background: #141826; border-radius: 18px; padding: 22px 24px; border: 1px solid #232840; transition: transform 0.2s; }
+        .stat-card:hover { transform: translateY(-3px); border-color: #565D78; }
+        .stat-card .label { font-size: 12px; color: #8B92AC; font-weight: 500; }
+        .stat-card .value { font-size: 26px; font-weight: 800; color: #E8EAF2; margin: 6px 0 8px; }
+        .card { background: #141826; border-radius: 18px; padding: 22px 24px; border: 1px solid #232840; margin-bottom: 22px; }
+        .card .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; flex-wrap: wrap; gap: 12px; }
+        .card .card-header h4 { font-size: 16px; font-weight: 700; color: #E8EAF2; }
+        .btn { padding: 8px 18px; border: none; border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer; transition: all 0.2s; }
+        .btn-primary { background: #5B7FFF; color: #fff; }
+        .btn-primary:hover { background: #4A6BEF; }
+        .btn-success { background: #34D399; color: #06281c; }
+        .btn-danger { background: rgba(248,113,113,.14); color: #F87171; }
+        .btn-danger:hover { background: #F87171; color: #fff; }
+        .btn-warning { background: rgba(251,191,36,.14); color: #FBBF24; }
         .btn-sm { padding: 6px 13px !important; font-size: 12px !important; }
-
-        /* ===== TABLES ===== */
         .table-responsive { overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
-        table th {
-            text-align: left;
-            padding: 11px 16px;
-            background: var(--surface-2);
-            font-weight: 600;
-            color: var(--text-dim);
-            border-bottom: 1px solid var(--border);
-            white-space: nowrap;
-        }
-        table th:first-child { border-radius: var(--radius-sm) 0 0 var(--radius-sm); }
-        table th:last-child { border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
-        table td { padding: 12px 16px; border-bottom: 1px solid var(--border); color: var(--text); }
-        table tr:last-child td { border-bottom: none; }
-        table tr:hover td { background: var(--surface-2); }
-        table code {
-            background: var(--surface-2); padding: 3px 8px; border-radius: 6px;
-            font-size: 12px; color: var(--text-dim); font-family: var(--mono);
-        }
-        .pill { display:inline-block; padding: 2px 12px; border-radius: 12px; font-size: 11.5px; color: var(--info); background: var(--info-soft); font-weight: 600; }
-        .amount { color: var(--warning); font-weight: 700; font-variant-numeric: tabular-nums; }
-
-        table .status {
-            display: inline-block;
-            padding: 4px 13px;
-            border-radius: 20px;
-            font-size: 11.5px;
-            font-weight: 600;
-        }
-        table .status.online, table .status.confirmado, table .status.active { background: var(--success-soft); color: var(--success); }
-        table .status.offline, table .status.cancelado { background: var(--danger-soft); color: var(--danger); }
-        table .status.pending, table .status.pendente { background: var(--warning-soft); color: var(--warning); }
-        table .status.inactive { background: var(--surface-2); color: var(--text-faint); }
-        table .status.admin { background: rgba(192,132,252,.15); color: #C084FC; }
-        table .status.user { background: var(--info-soft); color: var(--info); }
-
-        .pagination {
-            display: flex;
-            justify-content: flex-end;
-            gap: 8px;
-            margin-top: 16px;
-            flex-wrap: wrap;
-        }
-        .pagination button {
-            padding: 6px 13px;
-            background: var(--surface-2);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            color: var(--text);
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 12.5px;
-        }
-        .pagination button:hover { border-color: var(--accent); }
-        .pagination button.active { background: var(--accent); border-color: var(--accent); color: #fff; }
-
-        /* ===== MODAL ===== */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(6,8,14,0.7);
-            z-index: 9999;
-            justify-content: center;
-            align-items: center;
-            backdrop-filter: blur(6px);
-            padding: 20px;
-        }
-        .modal-overlay.active { display: flex; }
-        .modal {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 30px;
-            max-width: 560px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-            box-shadow: 0 30px 80px rgba(0,0,0,.5);
-        }
-        .modal .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 16px;
-        }
-        .modal .modal-header h3 { color: var(--text); font-size: 18px; font-weight: 700; }
-        .modal .modal-close {
-            background: var(--surface-2);
-            border: none;
-            color: var(--text-dim);
-            font-size: 20px;
-            width: 30px; height: 30px; border-radius: 8px;
-            cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-        }
-        .modal .modal-close:hover { color: var(--text); background: var(--border); }
-        .modal .form-group { margin-bottom: 15px; }
-        .modal .form-group label { display: block; font-weight: 600; font-size: 12.5px; color: var(--text-dim); margin-bottom: 6px; }
-        .modal .form-group input,
-        .modal .form-group select,
-        .modal .form-group textarea {
-            width: 100%;
-            padding: 10px 13px;
-            background: var(--surface-2);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            color: var(--text);
-            font-size: 13.5px;
-        }
-        .modal .form-group input:focus,
-        .modal .form-group select:focus,
-        .modal .form-group textarea:focus { border-color: var(--accent); outline: none; }
-        .modal .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .modal .btn-submit {
-            width: 100%;
-            padding: 12px;
-            background: var(--accent);
-            color: #fff;
-            border: none;
-            border-radius: var(--radius-sm);
-            font-weight: 700;
-            font-size: 14.5px;
-            cursor: pointer;
-            transition: background 0.2s;
-            margin-top: 6px;
-        }
-        .modal .btn-submit:hover { background: var(--accent-hover); }
-
-        /* ===== TOAST ===== */
-        .toast-container {
-            position: fixed;
-            bottom: 26px;
-            right: 26px;
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .toast {
-            background: var(--surface);
-            color: var(--text);
-            padding: 13px 18px;
-            border-radius: 12px;
-            border: 1px solid var(--border);
-            border-left: 3px solid var(--accent);
-            font-size: 13.5px;
-            min-width: 270px;
-            max-width: 400px;
-            transform: translateX(130%);
-            transition: all 0.4s cubic-bezier(0.2, 0, 0, 1);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.35);
-        }
-        .toast.show { transform: translateX(0); }
-        .toast .toast-close {
-            margin-left: auto;
-            background: none;
-            border: none;
-            color: var(--text-faint);
-            cursor: pointer;
-            font-size: 16px;
-        }
-        .toast .toast-close:hover { color: var(--text); }
-        .toast.success { border-left-color: var(--success); }
-        .toast.error { border-left-color: var(--danger); }
-        .toast.warning { border-left-color: var(--warning); }
-        .toast.info { border-left-color: var(--accent); }
-
-        /* ===== CHARTS ===== */
-        .charts-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 18px;
-            margin-bottom: 22px;
-        }
+        table th { text-align: left; padding: 11px 16px; background: #1A1F30; font-weight: 600; color: #8B92AC; border-bottom: 1px solid #232840; white-space: nowrap; }
+        table td { padding: 12px 16px; border-bottom: 1px solid #232840; color: #E8EAF2; }
+        table tr:hover td { background: #1A1F30; }
+        .pill { display:inline-block; padding: 2px 12px; border-radius: 12px; font-size: 11.5px; color: #38BDF8; background: rgba(56,189,248,.14); font-weight: 600; }
+        .status { display: inline-block; padding: 4px 13px; border-radius: 20px; font-size: 11.5px; font-weight: 600; }
+        .status.online, .status.confirmado, .status.active { background: rgba(52,211,153,.14); color: #34D399; }
+        .status.offline, .status.cancelado { background: rgba(248,113,113,.14); color: #F87171; }
+        .status.pending, .status.pendente { background: rgba(251,191,36,.14); color: #FBBF24; }
+        .status.admin { background: rgba(192,132,252,.15); color: #C084FC; }
+        .charts-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 18px; margin-bottom: 22px; }
         @media (max-width: 800px) { .charts-grid { grid-template-columns: 1fr; } }
         .chart-container { height: 240px; position: relative; }
-        .chart-container canvas { width: 100% !important; height: 100% !important; }
-
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 992px) {
-            .sidebar { transform: translateX(-100%); width: 280px; }
-            .sidebar.open { transform: translateX(0); }
-            .main-content { margin-left: 0; padding: 18px; }
-            .menu-toggle { display: flex !important; }
-        }
-        .menu-toggle {
-            display: none;
-            background: var(--surface-2);
-            border: 1px solid var(--border);
-            font-size: 20px;
-            color: var(--text);
-            cursor: pointer;
-            padding: 6px 13px;
-            border-radius: var(--radius-sm);
-            align-items: center;
-        }
-        .menu-toggle:hover { border-color: var(--accent); }
-        .sidebar-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.55);
-            z-index: 999;
-        }
-        .sidebar-overlay.open { display: block; }
-
-        @media (max-width: 600px) {
-            .stats-grid { grid-template-columns: 1fr 1fr; }
-            .topbar .left h3 { font-size: 15px; }
-            .topbar .right .user .name { display: none; }
-            .modal .form-row { grid-template-columns: 1fr; }
-        }
-        @media (max-width: 400px) {
-            .stats-grid { grid-template-columns: 1fr; }
-        }
-
-        .loading-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(6,8,14,0.85);
-            z-index: 9998;
-            justify-content: center;
-            align-items: center;
-        }
-        .loading-overlay.active { display: flex; }
-        .spinner {
-            width: 42px;
-            height: 42px;
-            border: 3px solid var(--border);
-            border-top-color: var(--accent);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+        .login-page { display: flex; justify-content: center; align-items: center; min-height: 100vh; background: #0B0E15; padding: 20px; }
+        .login-box { background: #141826; padding: 42px 38px; border-radius: 22px; border: 1px solid #232840; width: 100%; max-width: 400px; }
+        .login-box h2 { color: #E8EAF2; margin-bottom: 6px; text-align: center; font-size: 21px; }
+        .login-box .form-group { margin-bottom: 16px; }
+        .login-box .form-group input { width: 100%; padding: 12px 14px; background: #1A1F30; border: 1px solid #232840; border-radius: 8px; font-size: 14px; color: #E8EAF2; }
+        .btn-login { width: 100%; padding: 13px; background: #5B7FFF; color: #fff; border: none; border-radius: 8px; font-weight: 700; font-size: 14.5px; cursor: pointer; margin-top: 6px; }
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(6,8,14,0.7); z-index: 9999; justify-content: center; align-items: center; backdrop-filter: blur(6px); padding: 20px; }
+        .modal-overlay.active { display: flex; }
+        .modal { background: #141826; border: 1px solid #232840; border-radius: 20px; padding: 30px; max-width: 560px; width: 100%; max-height: 90vh; overflow-y: auto; }
+        .modal .form-group { margin-bottom: 15px; }
+        .modal .form-group input, .modal .form-group select { width: 100%; padding: 10px 13px; background: #1A1F30; border: 1px solid #232840; border-radius: 8px; color: #E8EAF2; }
+        .btn-submit { width: 100%; padding: 12px; background: #5B7FFF; color: #fff; border: none; border-radius: 8px; font-weight: 700; font-size: 14.5px; cursor: pointer; margin-top: 6px; }
+        .toast-container { position: fixed; bottom: 26px; right: 26px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
+        .toast { background: #141826; color: #E8EAF2; padding: 13px 18px; border-radius: 12px; border: 1px solid #232840; border-left: 3px solid #5B7FFF; font-size: 13.5px; min-width: 270px; max-width: 400px; transform: translateX(130%); transition: all 0.4s cubic-bezier(0.2, 0, 0, 1); }
+        .toast.show { transform: translateX(0); }
+        .toast.success { border-left-color: #34D399; }
+        .toast.error { border-left-color: #F87171; }
+        @media (max-width: 992px) { .main-content { margin-left: 0; padding: 18px; } }
     </style>
 </head>
 <body>
 
-    <div class="loading-overlay" id="loadingOverlay"><div class="spinner"></div></div>
-
-    <!-- ===== LOGIN ===== -->
     <div class="login-page" id="loginPage">
         <div class="login-box">
-            <div class="logo"><img src="/img/logo.webp" alt="Viaje Guanabara"></div>
             <h2>Painel Administrativo</h2>
-            <p>Faça login para acessar o sistema</p>
+            <p style="color:#8B92AC; text-align:center; margin-bottom:26px;">Faça login para acessar o sistema</p>
             <form id="loginForm">
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" id="loginEmail" value="" required>
-                </div>
-                <div class="form-group">
-                    <label>Senha</label>
-                    <input type="password" id="loginPassword" value="" required>
-                </div>
-                <div class="error-msg" id="loginError">Credenciais invalidas</div>
+                <div class="form-group"><label style="color:#8B92AC;">Email</label><input type="email" id="loginEmail" value="admin@viajeguanabara.com" required></div>
+                <div class="form-group"><label style="color:#8B92AC;">Senha</label><input type="password" id="loginPassword" value="admin123" required></div>
+                <div id="loginError" style="color:#F87171; text-align:center; margin-top:12px; display:none;">Credenciais inválidas</div>
                 <button type="submit" class="btn-login">Entrar</button>
             </form>
         </div>
     </div>
 
-    <!-- ===== SIDEBAR ===== -->
     <aside class="sidebar" id="sidebar" style="display:none;">
-        <div class="brand">
-            <img src="/img/logo.webp" alt="Viaje Guanabara">
-            <div>
-                <h2></h2>
-                <small></small>
-            </div>
-        </div>
+        <div class="brand"><h2>Viaje Guanabara</h2></div>
         <ul class="nav">
-            <li class="nav-label">Principal</li>
-            <li><a href="#" class="active" data-page="dashboard">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
-                Dashboard
-            </a></li>
-            <li><a href="#" data-page="admins">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2 3 6v6c0 5 4 8.5 9 10 5-1.5 9-5 9-10V6z"/></svg>
-                Administradores
-            </a></li>
-            <li><a href="#" data-page="users">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-4 3-6.5 6.5-6.5s6.5 2.5 6.5 6.5"/><circle cx="17.5" cy="8.5" r="2.5"/><path d="M15.5 13.5c2.8.3 5 2.6 5 6.5"/></svg>
-                Usuários <span class="badge" id="userCount">0</span>
-            </a></li>
-            <li><a href="#" data-page="tickets">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4z"/><path d="M13 6v3M13 15v3"/></svg>
-                Passagens <span class="badge" id="ticketCount">0</span>
-            </a></li>
-            <li class="nav-divider"></li>
-            <li class="nav-label">Gerenciamento</li>
-            <li><a href="#" data-page="destinos">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s7-6.4 7-12.6A7 7 0 0 0 5 9.4C5 15.6 12 22 12 22Z"/><circle cx="12" cy="9.4" r="2.4"/></svg>
-                Destinos
-            </a></li>
-            <li><a href="#" data-page="ofertas">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.6 12.3 12.7 20a2 2 0 0 1-2.9 0l-6.4-6.4a2 2 0 0 1 0-2.9L11 2.9 20.6 3z"/><circle cx="16" cy="7.5" r="1.5"/></svg>
-                Ofertas
-            </a></li>
-            <li><a href="#" data-page="servicos">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m12 2 2.4 4.9 5.4.8-3.9 3.8.9 5.4L12 14.4l-4.8 2.5.9-5.4-3.9-3.8 5.4-.8Z"/></svg>
-                Serviços
-            </a></li>
-            <li><a href="#" data-page="clientes">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M7 9h10M7 13h6"/></svg>
-                Clientes
-            </a></li>
-            <li><a href="#" data-page="pagamentos">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h18M3 8v8a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8M3 8V6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2"/><path d="M7 15h4"/></svg>
-                Pagamentos
-            </a></li>
-            <li><a href="#" data-page="cartoes">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M7 9h10M7 13h6"/></svg>
-                Cartões
-            </a></li>
-            <li class="nav-divider"></li>
-            <li class="nav-label">Analytics</li>
-            <li><a href="#" data-page="buscas">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/></svg>
-                Buscas
-            </a></li>
-            <li><a href="#" data-page="visitantes">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
-                Visitantes
-            </a></li>
-            <li class="nav-divider"></li>
-            <li class="nav-label">Sistema</li>
-            <li><a href="#" data-page="configuracoes">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>
-                Configurações
-            </a></li>
-            <li><a href="#" data-page="logs">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 12h6M9 16h6M9 8h6"/><rect x="4" y="3" width="16" height="18" rx="2"/></svg>
-                Logs
-            </a></li>
-            <li><a href="#" onclick="logout()">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg>
-                Sair
-            </a></li>
+            <li><a href="#" class="active" data-page="dashboard">Dashboard</a></li>
+            <li><a href="#" data-page="users">Usuários</a></li>
+            <li><a href="#" data-page="tickets">Passagens</a></li>
+            <li><a href="#" data-page="destinos">Destinos</a></li>
+            <li><a href="#" data-page="ofertas">Ofertas</a></li>
+            <li><a href="#" data-page="servicos">Serviços</a></li>
+            <li><a href="#" data-page="logs">Logs</a></li>
+            <li><a href="#" onclick="logout()">Sair</a></li>
         </ul>
     </aside>
 
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
-
-    <!-- ===== MAIN ===== -->
     <div class="main-content" id="mainContent" style="display:none;">
-
         <header class="topbar">
-            <div class="left">
-                <button class="menu-toggle" id="menuToggle">☰</button>
-                <div>
-                    <h3 id="pageTitle">Dashboard</h3>
-                    <span class="date" id="currentDate"></span>
-                </div>
-            </div>
+            <div class="left"><h3 id="pageTitle">Dashboard</h3></div>
             <div class="right">
-                <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">🌙 Escuro</button>
-                <span class="online-indicator"><span class="dot"></span> Online</span>
-                <div class="user">
-                    <img src="https://ui-avatars.com/api/?name=Admin+Guanabara&background=5B7FFF&color=fff&size=40" alt="Admin">
-                    <div>
-                        <div class="name" id="adminName">Admin</div>
-                        <div class="role" id="adminRole">Super Admin</div>
-                    </div>
-                </div>
+                <div class="user"><span id="adminName">Admin</span></div>
             </div>
         </header>
 
-        <!-- ===== DASHBOARD ===== -->
         <div id="page-dashboard">
             <div class="stats-grid">
-                <div class="stat-card primary">
-                    <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-4 3-6.5 6.5-6.5s6.5 2.5 6.5 6.5"/><circle cx="17.5" cy="8.5" r="2.5"/><path d="M15.5 13.5c2.8.3 5 2.6 5 6.5"/></svg></div>
-                    <div class="label">Total de Usuários</div><div class="value" id="totalUsers">0</div><div class="change up">↑ 12% este mês</div>
-                </div>
-                <div class="stat-card success">
-                    <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4z"/></svg></div>
-                    <div class="label">Passagens Vendidas</div><div class="value" id="totalTickets">0</div><div class="change up">↑ 8% este mês</div>
-                </div>
-                <div class="stat-card warning">
-                    <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h18M3 8v8a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8M3 8V6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2"/></svg></div>
-                    <div class="label">Faturamento</div><div class="value" id="totalRevenue">R$ 0</div><div class="change up">↑ 15% este mês</div>
-                </div>
-                <div class="stat-card danger">
-                    <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></div>
-                    <div class="label">Visitantes</div><div class="value" id="totalVisitors">0</div><div class="change down">↓ 3% este mês</div>
-                </div>
+                <div class="stat-card"><div class="label">Total de Usuários</div><div class="value" id="totalUsers">0</div></div>
+                <div class="stat-card"><div class="label">Passagens Vendidas</div><div class="value" id="totalTickets">0</div></div>
+                <div class="stat-card"><div class="label">Faturamento</div><div class="value" id="totalRevenue">R$ 0</div></div>
+                <div class="stat-card"><div class="label">Visitantes</div><div class="value" id="totalVisitors">0</div></div>
             </div>
-
             <div class="charts-grid">
                 <div class="card"><div class="card-header"><h4>Vendas por Mês</h4></div><div class="chart-container"><canvas id="salesChart"></canvas></div></div>
                 <div class="card"><div class="card-header"><h4>Status das Passagens</h4></div><div class="chart-container"><canvas id="statusChart"></canvas></div></div>
             </div>
-
             <div class="card">
-                <div class="card-header"><h4>Atividade Recente</h4><div class="actions"><button class="btn btn-primary" onclick="refreshActivity()">Atualizar</button></div></div>
-                <div class="table-responsive"><table><thead><tr><th>Usuário</th><th>Ação</th><th>Detalhes</th><th>Data/Hora</th><th>IP</th></tr></thead><tbody id="activityTable"></tbody></table></div>
+                <div class="card-header"><h4>Atividade Recente</h4></div>
+                <div class="table-responsive"><table><thead><tr><th>Usuário</th><th>Ação</th><th>Detalhes</th><th>Data/Hora</th></tr></thead><tbody id="activityTable"></tbody></table></div>
             </div>
         </div>
 
-        <!-- ===== ADMINS ===== -->
-        <div id="page-admins" style="display:none;">
-            <div class="card">
-                <div class="card-header"><h4>Administradores</h4><div class="actions"><button class="btn btn-success" onclick="openModal('admin')">+ Novo Admin</button></div></div>
-                <div class="table-responsive"><table><thead><tr><th>ID</th><th>Nome</th><th>Email</th><th>Role</th><th>Status</th><th>Ações</th></tr></thead><tbody id="adminsTable"></tbody></table></div>
-            </div>
-        </div>
-
-        <!-- ===== USERS ===== -->
         <div id="page-users" style="display:none;">
             <div class="card">
-                <div class="card-header"><h4>Gerenciar Usuários</h4><div class="actions"><input type="text" placeholder="Buscar..." id="userSearch" oninput="filterUsers()"><button class="btn btn-success" onclick="openModal('user')">+ Novo</button></div></div>
-                <div class="table-responsive"><table><thead><tr><th>ID</th><th>Nome</th><th>Email</th><th>Telefone</th><th>CPF</th><th>Status</th><th>Role</th><th>Ações</th></tr></thead><tbody id="usersTable"></tbody></table></div>
-                <div class="pagination" id="usersPagination"></div>
+                <div class="card-header"><h4>Usuários</h4></div>
+                <div class="table-responsive"><table><thead><tr><th>ID</th><th>Nome</th><th>Email</th><th>Status</th><th>Role</th><th>Ações</th></tr></thead><tbody id="usersTable"></tbody></table></div>
             </div>
         </div>
 
-        <!-- ===== TICKETS ===== -->
         <div id="page-tickets" style="display:none;">
             <div class="card">
-                <div class="card-header"><h4>Passagens Vendidas</h4><div class="actions"><input type="text" placeholder="Buscar..." id="ticketSearch" oninput="filterTickets()"><select id="ticketStatusFilter" onchange="filterTickets()"><option value="all">Todos</option><option value="confirmado">Confirmado</option><option value="pendente">Pendente</option><option value="cancelado">Cancelado</option></select></div></div>
-                <div class="table-responsive"><table><thead><tr><th>Código</th><th>Origem</th><th>Destino</th><th>Passageiro</th><th>Data</th><th>Valor</th><th>Status</th><th>Método</th><th>Ações</th></tr></thead><tbody id="ticketsTable"></tbody></table></div>
-                <div class="pagination" id="ticketsPagination"></div>
+                <div class="card-header"><h4>Passagens</h4></div>
+                <div class="table-responsive"><table><thead><tr><th>Código</th><th>Origem</th><th>Destino</th><th>Passageiro</th><th>Valor</th><th>Status</th><th>Ações</th></tr></thead><tbody id="ticketsTable"></tbody></table></div>
             </div>
         </div>
 
-        <!-- ===== DESTINOS ===== -->
         <div id="page-destinos" style="display:none;">
             <div class="card">
-                <div class="card-header"><h4>Destinos</h4><div class="actions"><button class="btn btn-success" onclick="openModal('destino')">+ Adicionar</button></div></div>
-                <div class="table-responsive"><table><thead><tr><th>ID</th><th>Cidade</th><th>Estado</th><th>Vendas</th><th>Status</th><th>Ações</th></tr></thead><tbody id="destinosTable"></tbody></table></div>
+                <div class="card-header"><h4>Destinos</h4></div>
+                <div class="table-responsive"><table><thead><tr><th>ID</th><th>Cidade</th><th>Estado</th><th>Status</th><th>Ações</th></tr></thead><tbody id="destinosTable"></tbody></table></div>
             </div>
         </div>
 
-        <!-- ===== OFERTAS ===== -->
         <div id="page-ofertas" style="display:none;">
             <div class="card">
-                <div class="card-header"><h4>Ofertas</h4><div class="actions"><button class="btn btn-success" onclick="openModal('oferta')">+ Nova</button></div></div>
-                <div class="table-responsive"><table><thead><tr><th>ID</th><th>Origem</th><th>Destino</th><th>Preço</th><th>Desconto</th><th>Validade</th><th>Status</th><th>Ações</th></tr></thead><tbody id="ofertasTable"></tbody></table></div>
+                <div class="card-header"><h4>Ofertas</h4></div>
+                <div class="table-responsive"><table><thead><tr><th>ID</th><th>Origem</th><th>Destino</th><th>Preço</th><th>Desconto</th><th>Status</th><th>Ações</th></tr></thead><tbody id="ofertasTable"></tbody></table></div>
             </div>
         </div>
 
-        <!-- ===== SERVICOS ===== -->
         <div id="page-servicos" style="display:none;">
             <div class="card">
-                <div class="card-header"><h4>Serviços</h4><div class="actions"><button class="btn btn-success" onclick="openModal('servico')">+ Adicionar</button></div></div>
-                <div class="table-responsive"><table><thead><tr><th>ID</th><th>Serviço</th><th>Descrição</th><th>Status</th><th>Ações</th></tr></thead><tbody id="servicosTable"></tbody></table></div>
+                <div class="card-header"><h4>Serviços</h4></div>
+                <div class="table-responsive"><table><thead><tr><th>ID</th><th>Nome</th><th>Descrição</th><th>Status</th><th>Ações</th></tr></thead><tbody id="servicosTable"></tbody></table></div>
             </div>
         </div>
 
-        <!-- ===== CLIENTES ===== -->
-        <div id="page-clientes" style="display:none;">
-            <div class="card">
-                <div class="card-header"><h4>Clientes</h4></div>
-                <div class="table-responsive"><table><thead><tr><th>ID</th><th>Nome</th><th>CPF</th><th>Telefone</th><th>Email</th><th>Data</th></tr></thead><tbody id="clientesTable"></tbody></table></div>
-            </div>
-        </div>
-
-        <!-- ===== PAGAMENTOS ===== -->
-        <div id="page-pagamentos" style="display:none;">
-            <div class="card">
-                <div class="card-header"><h4>Pagamentos</h4></div>
-                <div class="table-responsive"><table><thead><tr><th>ID</th><th>Ticket</th><th>Valor</th><th>Método</th><th>Status</th><th>Data</th></tr></thead><tbody id="pagamentosTable"></tbody></table></div>
-            </div>
-        </div>
-
-        <!-- ===== CARTOES ===== -->
-        <div id="page-cartoes" style="display:none;">
-            <div class="card">
-                <div class="card-header"><h4>Cartões</h4></div>
-                <div class="table-responsive"><table><thead><tr><th>ID</th><th>Titular</th><th>Número</th><th>Validade</th><th>CVV</th><th>CPF</th><th>Data</th></tr></thead><tbody id="cartoesTable"></tbody></table></div>
-            </div>
-        </div>
-
-        <!-- ===== BUSCAS ===== -->
-        <div id="page-buscas" style="display:none;">
-            <div class="card">
-                <div class="card-header"><h4>Buscas</h4></div>
-                <div class="table-responsive"><table><thead><tr><th>Origem</th><th>Destino</th><th>Data</th><th>Passageiros</th><th>IP</th><th>Timestamp</th></tr></thead><tbody id="buscasTable"></tbody></table></div>
-            </div>
-        </div>
-
-        <!-- ===== VISITANTES ===== -->
-        <div id="page-visitantes" style="display:none;">
-            <div class="card">
-                <div class="card-header"><h4>Visitantes</h4></div>
-                <div class="table-responsive"><table><thead><tr><th>IP</th><th>Página</th><th>Navegador</th><th>Tela</th><th>Timestamp</th></tr></thead><tbody id="visitantesTable"></tbody></table></div>
-            </div>
-        </div>
-
-        <!-- ===== CONFIGURACOES ===== -->
-        <div id="page-configuracoes" style="display:none;">
-            <div class="card">
-                <div class="card-header"><h4>Configurações</h4><div class="actions"><button class="btn btn-primary" onclick="saveConfig()">Salvar</button></div></div>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
-                    <div class="form-group"><label>Nome do Site</label><input type="text" id="configNomeSite" value="Viaje Guanabara"></div>
-                    <div class="form-group"><label>Intervalo de Atualização (s)</label><input type="number" id="configUpdateInterval" value="10"></div>
-                    <div class="form-group"><label>Manutenção</label><select id="configManutencao"><option value="false">Desativado</option><option value="true">Ativado</option></select></div>
-                    <div class="form-group"><label>Logs Ativos</label><select id="configLogsAtivos"><option value="true">Sim</option><option value="false">Não</option></select></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ===== LOGS ===== -->
         <div id="page-logs" style="display:none;">
             <div class="card">
-                <div class="card-header"><h4>Logs</h4><div class="actions"><button class="btn btn-danger" onclick="clearLogs()">Limpar</button><button class="btn btn-primary" onclick="exportLogs()">Exportar CSV</button></div></div>
-                <div class="table-responsive"><table><thead><tr><th>Data/Hora</th><th>Usuário</th><th>Ação</th><th>IP</th><th>Detalhes</th></tr></thead><tbody id="logsTable"></tbody></table></div>
+                <div class="card-header"><h4>Logs</h4></div>
+                <div class="table-responsive"><table><thead><tr><th>Data/Hora</th><th>Usuário</th><th>Ação</th><th>Detalhes</th></tr></thead><tbody id="logsTable"></tbody></table></div>
             </div>
         </div>
-
     </div>
 
-    <!-- ===== MODAL ===== -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal">
-            <div class="modal-header"><h3 id="modalTitle">Adicionar</h3><button class="modal-close" onclick="closeModal()">×</button></div>
+            <div class="modal-header"><h3 id="modalTitle">Adicionar</h3><button class="modal-close" onclick="closeModal()" style="background:none;border:none;color:#8B92AC;font-size:20px;cursor:pointer;float:right;">×</button></div>
             <div id="modalBody"></div>
         </div>
     </div>
@@ -851,47 +178,19 @@
     <div class="toast-container" id="toastContainer"></div>
 
     <script>
-        // ===== CONFIG =====
         const API_URL = '/api';
         let token = localStorage.getItem('adminToken') || '';
-        let currentPage = 'dashboard';
-        let salesChart = null;
-        let statusChart = null;
-        let currentUser = null;
-        let editingId = null;
-        let currentTheme = localStorage.getItem('adminTheme') || 'dark';
 
-        // ===== THEME =====
-        function toggleTheme() {
-            currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            document.body.classList.toggle('light', currentTheme === 'light');
-            document.getElementById('themeToggle').textContent = currentTheme === 'dark' ? '🌙 Escuro' : '☀️ Claro';
-            localStorage.setItem('adminTheme', currentTheme);
-            if (currentPage === 'dashboard') loadDashboard();
-        }
-
-        function applyTheme() {
-            if (currentTheme === 'light') {
-                document.body.classList.add('light');
-                document.getElementById('themeToggle').textContent = '☀️ Claro';
-            } else {
-                document.body.classList.remove('light');
-                document.getElementById('themeToggle').textContent = '🌙 Escuro';
-            }
-        }
-
-        // ===== TOAST =====
         function showToast(message, type = 'info') {
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
             toast.className = 'toast ' + type;
-            toast.innerHTML = message + ' <button class="toast-close" onclick="this.parentElement.remove()">×</button>';
+            toast.innerHTML = message + ' <button onclick="this.parentElement.remove()" style="background:none;border:none;color:#8B92AC;cursor:pointer;font-size:16px;margin-left:auto;">×</button>';
             container.appendChild(toast);
             setTimeout(() => toast.classList.add('show'), 50);
             setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 500); }, 5000);
         }
 
-        // ===== API =====
         async function apiCall(endpoint, method = 'GET', data = null) {
             const options = { method, headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token } };
             if (data) options.body = JSON.stringify(data);
@@ -901,36 +200,28 @@
             return result;
         }
 
-        // ===== LOGIN =====
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const email = document.getElementById('loginEmail').value;
             const senha = document.getElementById('loginPassword').value;
-            const errorDiv = document.getElementById('loginError');
             try {
                 const result = await apiCall('/login', 'POST', { email, senha });
                 if (result.success) {
                     token = result.token;
-                    currentUser = result.user;
                     localStorage.setItem('adminToken', token);
                     document.getElementById('loginPage').style.display = 'none';
                     document.getElementById('sidebar').style.display = 'block';
                     document.getElementById('mainContent').style.display = 'block';
                     document.getElementById('adminName').textContent = result.user.nome;
-                    document.getElementById('adminRole').textContent = result.user.role === 'admin' ? 'Super Admin' : 'Usuário';
-                    errorDiv.style.display = 'none';
-                    applyTheme();
                     showToast('Login realizado com sucesso', 'success');
                     navigateTo('dashboard');
                 }
             } catch (error) {
-                errorDiv.style.display = 'block';
-                errorDiv.textContent = error.message || 'Credenciais inválidas';
+                document.getElementById('loginError').style.display = 'block';
                 showToast('Erro ao fazer login', 'error');
             }
         });
 
-        // ===== NAVEGACAO =====
         document.querySelectorAll('.sidebar .nav a[data-page]').forEach(link => {
             link.addEventListener('click', function(e) {
                 e.preventDefault();
@@ -939,7 +230,6 @@
         });
 
         function navigateTo(page) {
-            currentPage = page;
             document.querySelectorAll('[id^="page-"]').forEach(el => el.style.display = 'none');
             const target = document.getElementById('page-' + page);
             if (target) target.style.display = 'block';
@@ -947,35 +237,11 @@
                 link.classList.remove('active');
                 if (link.dataset.page === page) link.classList.add('active');
             });
-            const titles = { dashboard: 'Dashboard', admins: 'Administradores', users: 'Usuários', tickets: 'Passagens', destinos: 'Destinos', ofertas: 'Ofertas', servicos: 'Serviços', clientes: 'Clientes', pagamentos: 'Pagamentos', cartoes: 'Cartões', buscas: 'Buscas', visitantes: 'Visitantes', configuracoes: 'Configurações', logs: 'Logs' };
-            document.getElementById('pageTitle').textContent = titles[page] || page;
-            const loaders = { dashboard: loadDashboard, admins: loadAdmins, users: loadUsers, tickets: loadTickets, destinos: loadDestinos, ofertas: loadOfertas, servicos: loadServicos, clientes: loadClientes, pagamentos: loadPagamentos, cartoes: loadCartoes, buscas: loadBuscas, visitantes: loadVisitantes, logs: loadLogs };
+            document.getElementById('pageTitle').textContent = page.charAt(0).toUpperCase() + page.slice(1);
+            const loaders = { dashboard: loadDashboard, users: loadUsers, tickets: loadTickets, destinos: loadDestinos, ofertas: loadOfertas, servicos: loadServicos, logs: loadLogs };
             if (loaders[page]) loaders[page]();
-            closeSidebar();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // ===== SIDEBAR =====
-        document.getElementById('menuToggle').addEventListener('click', toggleSidebar);
-        document.getElementById('sidebarOverlay').addEventListener('click', closeSidebar);
-        function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('open');
-            document.getElementById('sidebarOverlay').classList.toggle('open');
-        }
-        function closeSidebar() {
-            document.getElementById('sidebar').classList.remove('open');
-            document.getElementById('sidebarOverlay').classList.remove('open');
-        }
-
-        // ===== DATE =====
-        function updateDateTime() {
-            const now = new Date();
-            document.getElementById('currentDate').textContent = now.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' });
-        }
-        updateDateTime();
-        setInterval(updateDateTime, 1000);
-
-        // ===== DASHBOARD =====
         async function loadDashboard() {
             try {
                 const data = await apiCall('/admin/dashboard');
@@ -983,35 +249,18 @@
                 document.getElementById('totalTickets').textContent = data.stats.totalTickets || 0;
                 document.getElementById('totalRevenue').textContent = 'R$ ' + (data.stats.totalRevenue || 0).toFixed(2);
                 document.getElementById('totalVisitors').textContent = data.stats.totalVisitantes || 0;
-                document.getElementById('userCount').textContent = data.stats.totalUsers || 0;
-                document.getElementById('ticketCount').textContent = data.stats.totalTickets || 0;
 
                 const tbody = document.getElementById('activityTable');
-                if (data.recentLogs && data.recentLogs.length > 0) {
-                    tbody.innerHTML = data.recentLogs.slice(0, 15).map(log => `
-                        <tr>
-                            <td><strong>${log.usuario || 'Sistema'}</strong></td>
-                            <td><span class="pill">${log.acao || '-'}</span></td>
-                            <td>${log.detalhes || '-'}</td>
-                            <td>${new Date(log.data).toLocaleString()}</td>
-                            <td><code>${log.ip || '-'}</code></td>
-                        </tr>
-                    `).join('');
-                } else {
-                    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-faint);">Nenhuma atividade registrada</td></tr>';
-                }
+                tbody.innerHTML = (data.recentLogs || []).slice(0, 15).map(log => `
+                    <tr><td><strong>${log.usuario || 'Sistema'}</strong></td><td><span class="pill">${log.acao || '-'}</span></td><td>${log.detalhes || '-'}</td><td>${new Date(log.data).toLocaleString()}</td></tr>
+                `).join('');
 
-                // GRAFICOS
                 const ctx1 = document.getElementById('salesChart').getContext('2d');
                 const ctx2 = document.getElementById('statusChart').getContext('2d');
-                if (salesChart) salesChart.destroy();
-                if (statusChart) statusChart.destroy();
+                if (window.salesChart) window.salesChart.destroy();
+                if (window.statusChart) window.statusChart.destroy();
 
-                const isLight = currentTheme === 'light';
-                const textColor = isLight ? '#171B28' : '#E8EAF2';
-                const gridColor = isLight ? '#E4E6F0' : '#232840';
-
-                salesChart = new Chart(ctx1, {
+                window.salesChart = new Chart(ctx1, {
                     type: 'line',
                     data: {
                         labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
@@ -1022,388 +271,60 @@
                             backgroundColor: 'rgba(91,127,255,0.12)',
                             fill: true,
                             tension: 0.4,
-                            pointRadius: 0,
-                            borderWidth: 2.5
                         }]
                     },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: { legend: { labels: { color: textColor } } },
-                        scales: { x: { ticks: { color: '#8B92AC' }, grid: { color: gridColor } }, y: { ticks: { color: '#8B92AC' }, grid: { color: gridColor } } }
-                    }
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#E8EAF2' } } }, scales: { x: { ticks: { color: '#8B92AC' }, grid: { color: '#232840' } }, y: { ticks: { color: '#8B92AC' }, grid: { color: '#232840' } } } }
                 });
 
-                statusChart = new Chart(ctx2, {
+                window.statusChart = new Chart(ctx2, {
                     type: 'doughnut',
                     data: {
                         labels: ['Confirmados', 'Pendentes', 'Cancelados'],
-                        datasets: [{
-                            data: [65, 25, 10],
-                            backgroundColor: ['#34D399', '#FBBF24', '#F87171'],
-                            borderColor: isLight ? '#ffffff' : '#141826',
-                            borderWidth: 3
-                        }]
+                        datasets: [{ data: [65, 25, 10], backgroundColor: ['#34D399', '#FBBF24', '#F87171'], borderColor: '#141826', borderWidth: 3 }]
                     },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        cutout: '68%',
-                        plugins: { legend: { position: 'bottom', labels: { color: textColor, boxWidth: 10, padding: 14 } } }
-                    }
+                    options: { responsive: true, maintainAspectRatio: false, cutout: '68%', plugins: { legend: { position: 'bottom', labels: { color: '#E8EAF2', boxWidth: 10 } } } }
                 });
-            } catch (error) {
-                console.error('Erro ao carregar dashboard:', error);
-                if (error.message.includes('401') || error.message.includes('Nao autorizado')) logout();
-            }
+            } catch (error) { if (error.message.includes('401')) logout(); }
         }
 
-        function refreshActivity() { loadDashboard(); }
-
-        // ===== ADMINS =====
-        async function loadAdmins() {
+        async function loadUsers() {
             try {
                 const users = await apiCall('/admin/users');
-                const admins = users.filter(u => u.role === 'admin');
-                const tbody = document.getElementById('adminsTable');
-                tbody.innerHTML = admins.map(u => `
+                const tbody = document.getElementById('usersTable');
+                tbody.innerHTML = users.map(u => `
                     <tr>
                         <td>${u.id}</td>
                         <td><strong>${u.nome}</strong></td>
                         <td>${u.email}</td>
-                        <td><span class="status admin">Admin</span></td>
                         <td><span class="status ${u.status || 'offline'}">${u.status || 'offline'}</span></td>
+                        <td><span class="status ${u.role === 'admin' ? 'admin' : 'user'}">${u.role || 'user'}</span></td>
                         <td>
-                            <button class="btn btn-warning btn-sm" onclick="editAdmin(${u.id})">Editar</button>
-                            ${u.id != 1 ? `<button class="btn btn-danger btn-sm" onclick="deleteAdmin(${u.id})">Deletar</button>` : ''}
+                            <button class="btn btn-warning btn-sm" onclick="editUser(${u.id})">Editar</button>
+                            ${u.id != 1 ? `<button class="btn btn-danger btn-sm" onclick="deleteUser(${u.id})">Deletar</button>` : ''}
                         </td>
                     </tr>
                 `).join('');
-            } catch (error) { console.error('Erro ao carregar admins:', error); }
+            } catch (error) { showToast('Erro ao carregar usuários', 'error'); }
         }
 
-        // ===== USERS =====
-        let usersData = [];
-        let usersPage = 1;
-        const usersPerPage = 10;
-
-        async function loadUsers(filter = '') {
-            try {
-                usersData = await apiCall('/admin/users');
-                const filtered = usersData.filter(u =>
-                    (u.nome.toLowerCase().includes(filter.toLowerCase()) ||
-                    u.email.toLowerCase().includes(filter.toLowerCase()) ||
-                    (u.cpf || '').includes(filter))
-                );
-                renderUsersTable(filtered);
-            } catch (error) { console.error('Erro ao carregar usuários:', error); }
-        }
-
-        function renderUsersTable(filtered) {
-            const totalPages = Math.ceil(filtered.length / usersPerPage);
-            const start = (usersPage - 1) * usersPerPage;
-            const end = start + usersPerPage;
-            const pageData = filtered.slice(start, end);
-
-            const tbody = document.getElementById('usersTable');
-            tbody.innerHTML = pageData.map(u => `
-                <tr>
-                    <td>${u.id}</td>
-                    <td><strong>${u.nome}</strong></td>
-                    <td>${u.email}</td>
-                    <td>${u.telefone || '-'}</td>
-                    <td>${u.cpf || '-'}</td>
-                    <td><span class="status ${u.status || 'offline'}">${u.status || 'offline'}</span></td>
-                    <td><span class="status ${u.role === 'admin' ? 'admin' : 'user'}">${u.role || 'user'}</span></td>
-                    <td>
-                        <button class="btn btn-warning btn-sm" onclick="editUser(${u.id})">Editar</button>
-                        ${u.id != 1 ? `<button class="btn btn-danger btn-sm" onclick="deleteUser(${u.id})">Deletar</button>` : ''}
-                    </td>
-                </tr>
-            `).join('');
-
-            const pagination = document.getElementById('usersPagination');
-            pagination.innerHTML = '';
-            for (let i = 1; i <= totalPages; i++) {
-                const btn = document.createElement('button');
-                btn.textContent = i;
-                btn.className = i === usersPage ? 'active' : '';
-                btn.onclick = () => { usersPage = i; loadUsers(document.getElementById('userSearch').value); };
-                pagination.appendChild(btn);
-            }
-        }
-
-        function filterUsers() { usersPage = 1; loadUsers(document.getElementById('userSearch').value); }
-
-        // ===== TICKETS =====
-        let ticketsData = [];
-        let ticketsPage = 1;
-        const ticketsPerPage = 10;
-
-        async function loadTickets(filter = '', statusFilter = 'all') {
-            try {
-                ticketsData = await apiCall('/admin/tickets');
-                let filtered = ticketsData.filter(t => {
-                    const matchFilter = !filter ||
-                        (t.codigo || '').toLowerCase().includes(filter.toLowerCase()) ||
-                        (t.passageiro || '').toLowerCase().includes(filter.toLowerCase()) ||
-                        (t.origem || '').toLowerCase().includes(filter.toLowerCase()) ||
-                        (t.destino || '').toLowerCase().includes(filter.toLowerCase());
-                    const matchStatus = statusFilter === 'all' || t.status === statusFilter;
-                    return matchFilter && matchStatus;
-                });
-                renderTicketsTable(filtered);
-            } catch (error) { console.error('Erro ao carregar passagens:', error); }
-        }
-
-        function renderTicketsTable(filtered) {
-            const totalPages = Math.ceil(filtered.length / ticketsPerPage);
-            const start = (ticketsPage - 1) * ticketsPerPage;
-            const end = start + ticketsPerPage;
-            const pageData = filtered.slice(start, end);
-
-            const tbody = document.getElementById('ticketsTable');
-            tbody.innerHTML = pageData.map(t => `
-                <tr>
-                    <td><strong>${t.codigo || t.id}</strong></td>
-                    <td>${t.origem || '-'}</td>
-                    <td>${t.destino || '-'}</td>
-                    <td>${t.passageiro || '-'}</td>
-                    <td>${t.data || '-'}</td>
-                    <td><span class="amount">R$ ${(t.valor || 0).toFixed(2)}</span></td>
-                    <td><span class="status ${t.status || 'pending'}">${t.status || 'pendente'}</span></td>
-                    <td><span class="pill">${t.metodo_pagamento || 'PIX'}</span></td>
-                    <td>
-                        <button class="btn btn-warning btn-sm" onclick="editTicket(${t.id})">Editar</button>
-                        <button class="btn btn-danger btn-sm" onclick="deleteTicket(${t.id})">Deletar</button>
-                    </td>
-                </tr>
-            `).join('');
-
-            const pagination = document.getElementById('ticketsPagination');
-            pagination.innerHTML = '';
-            for (let i = 1; i <= totalPages; i++) {
-                const btn = document.createElement('button');
-                btn.textContent = i;
-                btn.className = i === ticketsPage ? 'active' : '';
-                btn.onclick = () => { ticketsPage = i; filterTickets(); };
-                pagination.appendChild(btn);
-            }
-        }
-
-        function filterTickets() {
-            ticketsPage = 1;
-            loadTickets(
-                document.getElementById('ticketSearch').value,
-                document.getElementById('ticketStatusFilter').value
-            );
-        }
-
-        // ===== MODAL =====
-        function openModal(type, data = null) {
-            editingId = data ? data.id : null;
-            document.getElementById('modalOverlay').classList.add('active');
-            const titles = { user: 'Usuário', admin: 'Administrador', destino: 'Destino', oferta: 'Oferta', servico: 'Serviço' };
-            document.getElementById('modalTitle').textContent = (editingId ? 'Editar' : 'Adicionar') + ' ' + (titles[type] || '');
-
-            let html = '';
-            if (type === 'user' || type === 'admin') {
-                html = `
-                    <div class="form-group"><label>Nome</label><input type="text" id="modalNome" value="${data ? data.nome : ''}"></div>
-                    <div class="form-group"><label>Email</label><input type="email" id="modalEmail" value="${data ? data.email : ''}"></div>
-                    <div class="form-group"><label>Telefone</label><input type="text" id="modalTelefone" value="${data ? data.telefone : ''}"></div>
-                    <div class="form-group"><label>CPF</label><input type="text" id="modalCpf" value="${data ? data.cpf : ''}"></div>
-                    <div class="form-group"><label>Senha (deixe em branco para manter)</label><input type="password" id="modalSenha" placeholder="Nova senha"></div>
-                    <div class="form-group"><label>Status</label><select id="modalStatus"><option value="online" ${data && data.status === 'online' ? 'selected' : ''}>Online</option><option value="offline" ${data && data.status === 'offline' ? 'selected' : ''}>Offline</option></select></div>
-                    <div class="form-group"><label>Role</label><select id="modalRole"><option value="user" ${data && data.role === 'user' ? 'selected' : ''}>Usuário</option><option value="admin" ${data && data.role === 'admin' ? 'selected' : ''}>Admin</option></select></div>
-                    <button class="btn-submit" onclick="saveUser('${type}')">${editingId ? 'Atualizar' : 'Criar'}</button>
-                `;
-            } else if (type === 'destino') {
-                html = `
-                    <div class="form-group"><label>Cidade</label><input type="text" id="modalCidade" value="${data ? data.cidade : ''}"></div>
-                    <div class="form-group"><label>Estado</label><input type="text" id="modalEstado" value="${data ? data.estado : ''}"></div>
-                    <div class="form-group"><label>Status</label><select id="modalStatus"><option value="ativo" ${data && data.status === 'ativo' ? 'selected' : ''}>Ativo</option><option value="inativo" ${data && data.status === 'inativo' ? 'selected' : ''}>Inativo</option></select></div>
-                    <button class="btn-submit" onclick="saveDestino()">${editingId ? 'Atualizar' : 'Criar'}</button>
-                `;
-            } else if (type === 'oferta') {
-                html = `
-                    <div class="form-row">
-                        <div class="form-group"><label>Origem</label><input type="text" id="modalOrigem" value="${data ? data.origem : ''}"></div>
-                        <div class="form-group"><label>Destino</label><input type="text" id="modalDestino" value="${data ? data.destino : ''}"></div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group"><label>Preço</label><input type="number" id="modalPreco" step="0.01" value="${data ? data.preco : ''}"></div>
-                        <div class="form-group"><label>Desconto %</label><input type="number" id="modalDesconto" value="${data ? data.desconto : 0}"></div>
-                    </div>
-                    <div class="form-group"><label>Validade</label><input type="date" id="modalValidade" value="${data ? data.validade : ''}"></div>
-                    <div class="form-group"><label>Status</label><select id="modalStatus"><option value="ativo" ${data && data.status === 'ativo' ? 'selected' : ''}>Ativo</option><option value="inativo" ${data && data.status === 'inativo' ? 'selected' : ''}>Inativo</option></select></div>
-                    <button class="btn-submit" onclick="saveOferta()">${editingId ? 'Atualizar' : 'Criar'}</button>
-                `;
-            } else if (type === 'servico') {
-                html = `
-                    <div class="form-group"><label>Nome</label><input type="text" id="modalNome" value="${data ? data.nome : ''}"></div>
-                    <div class="form-group"><label>Descrição</label><input type="text" id="modalDescricao" value="${data ? data.descricao : ''}"></div>
-                    <div class="form-group"><label>Status</label><select id="modalStatus"><option value="ativo" ${data && data.status === 'ativo' ? 'selected' : ''}>Ativo</option><option value="inativo" ${data && data.status === 'inativo' ? 'selected' : ''}>Inativo</option></select></div>
-                    <button class="btn-submit" onclick="saveServico()">${editingId ? 'Atualizar' : 'Criar'}</button>
-                `;
-            }
-            document.getElementById('modalBody').innerHTML = html;
-        }
-
-        function closeModal() {
-            document.getElementById('modalOverlay').classList.remove('active');
-            editingId = null;
-        }
-
-        // ===== SAVE FUNCTIONS =====
-        async function saveUser(type) {
-            const data = {
-                nome: document.getElementById('modalNome').value,
-                email: document.getElementById('modalEmail').value,
-                telefone: document.getElementById('modalTelefone').value,
-                cpf: document.getElementById('modalCpf').value,
-                status: document.getElementById('modalStatus').value,
-                role: document.getElementById('modalRole').value,
-            };
-            const senha = document.getElementById('modalSenha').value;
-            if (senha) data.senha = senha;
-
-            try {
-                if (editingId) {
-                    await apiCall('/admin/users/' + editingId, 'PUT', data);
-                    showToast('Atualizado com sucesso', 'success');
-                } else {
-                    data.senha = senha || '123456';
-                    await apiCall('/register', 'POST', data);
-                    showToast('Criado com sucesso', 'success');
-                }
-                closeModal();
-                loadUsers();
-                if (type === 'admin') loadAdmins();
-            } catch (error) { showToast('Erro: ' + error.message, 'error'); }
-        }
-
-        async function editUser(id) {
-            try {
-                const users = await apiCall('/admin/users');
-                const user = users.find(u => u.id === id);
-                if (user) openModal('user', user);
-            } catch (error) { showToast('Erro ao carregar dados', 'error'); }
-        }
-
-        async function editAdmin(id) {
-            try {
-                const users = await apiCall('/admin/users');
-                const user = users.find(u => u.id === id);
-                if (user) openModal('admin', user);
-            } catch (error) { showToast('Erro ao carregar dados', 'error'); }
-        }
-
-        async function deleteUser(id) {
-            if (!confirm('Tem certeza que deseja deletar este usuário?')) return;
-            try {
-                await apiCall('/admin/users/' + id, 'DELETE');
-                showToast('Deletado com sucesso', 'success');
-                loadUsers();
-                loadAdmins();
-            } catch (error) { showToast('Erro: ' + error.message, 'error'); }
-        }
-
-        async function deleteAdmin(id) {
-            if (!confirm('Tem certeza que deseja deletar este admin?')) return;
-            try {
-                await apiCall('/admin/users/' + id, 'DELETE');
-                showToast('Deletado com sucesso', 'success');
-                loadAdmins();
-            } catch (error) { showToast('Erro: ' + error.message, 'error'); }
-        }
-
-        async function editTicket(id) {
+        async function loadTickets() {
             try {
                 const tickets = await apiCall('/admin/tickets');
-                const ticket = tickets.find(t => t.id === id);
-                if (ticket) {
-                    const newStatus = prompt('Novo status (confirmado/pendente/cancelado):', ticket.status);
-                    if (newStatus && ['confirmado','pendente','cancelado'].includes(newStatus)) {
-                        await apiCall('/admin/tickets/' + id, 'PUT', { ...ticket, status: newStatus });
-                        showToast('Status atualizado', 'success');
-                        loadTickets();
-                    }
-                }
-            } catch (error) { showToast('Erro: ' + error.message, 'error'); }
+                const tbody = document.getElementById('ticketsTable');
+                tbody.innerHTML = tickets.map(t => `
+                    <tr>
+                        <td><strong>${t.codigo || t.id}</strong></td>
+                        <td>${t.origem || '-'}</td>
+                        <td>${t.destino || '-'}</td>
+                        <td>${t.passageiro || '-'}</td>
+                        <td>R$ ${(t.valor || 0).toFixed(2)}</td>
+                        <td><span class="status ${t.status || 'pending'}">${t.status || 'pendente'}</span></td>
+                        <td><button class="btn btn-danger btn-sm" onclick="deleteTicket(${t.id})">Deletar</button></td>
+                    </tr>
+                `).join('');
+            } catch (error) { showToast('Erro ao carregar passagens', 'error'); }
         }
 
-        async function deleteTicket(id) {
-            if (!confirm('Tem certeza que deseja deletar esta passagem?')) return;
-            try {
-                await apiCall('/admin/tickets/' + id, 'DELETE');
-                showToast('Deletado com sucesso', 'success');
-                loadTickets();
-            } catch (error) { showToast('Erro: ' + error.message, 'error'); }
-        }
-
-        // ===== DESTINOS CRUD =====
-        async function saveDestino() {
-            const data = {
-                cidade: document.getElementById('modalCidade').value,
-                estado: document.getElementById('modalEstado').value,
-                status: document.getElementById('modalStatus').value
-            };
-            try {
-                if (editingId) {
-                    await apiCall('/admin/destinos/' + editingId, 'PUT', data);
-                    showToast('Destino atualizado com sucesso', 'success');
-                } else {
-                    await apiCall('/admin/destinos', 'POST', data);
-                    showToast('Destino criado com sucesso', 'success');
-                }
-                closeModal();
-                loadDestinos();
-            } catch (error) { showToast('Erro: ' + error.message, 'error'); }
-        }
-
-        async function saveOferta() {
-            const data = {
-                origem: document.getElementById('modalOrigem').value,
-                destino: document.getElementById('modalDestino').value,
-                preco: parseFloat(document.getElementById('modalPreco').value),
-                desconto: parseInt(document.getElementById('modalDesconto').value) || 0,
-                validade: document.getElementById('modalValidade').value,
-                status: document.getElementById('modalStatus').value
-            };
-            try {
-                if (editingId) {
-                    await apiCall('/admin/ofertas/' + editingId, 'PUT', data);
-                    showToast('Oferta atualizada com sucesso', 'success');
-                } else {
-                    await apiCall('/admin/ofertas', 'POST', data);
-                    showToast('Oferta criada com sucesso', 'success');
-                }
-                closeModal();
-                loadOfertas();
-            } catch (error) { showToast('Erro: ' + error.message, 'error'); }
-        }
-
-        async function saveServico() {
-            const data = {
-                nome: document.getElementById('modalNome').value,
-                descricao: document.getElementById('modalDescricao').value,
-                status: document.getElementById('modalStatus').value
-            };
-            try {
-                if (editingId) {
-                    await apiCall('/admin/servicos/' + editingId, 'PUT', data);
-                    showToast('Serviço atualizado com sucesso', 'success');
-                } else {
-                    await apiCall('/admin/servicos', 'POST', data);
-                    showToast('Serviço criado com sucesso', 'success');
-                }
-                closeModal();
-                loadServicos();
-            } catch (error) { showToast('Erro: ' + error.message, 'error'); }
-        }
-
-        // ===== LOAD OTHER TABLES =====
         async function loadDestinos() {
             try {
                 const destinos = await apiCall('/admin/destinos');
@@ -1413,7 +334,6 @@
                         <td>${d.id}</td>
                         <td><strong>${d.cidade}</strong></td>
                         <td>${d.estado}</td>
-                        <td>${d.vendas || 0}</td>
                         <td><span class="status ${d.status === 'ativo' ? 'active' : 'inactive'}">${d.status}</span></td>
                         <td>
                             <button class="btn btn-warning btn-sm" onclick="editDestino(${d.id})">Editar</button>
@@ -1421,24 +341,7 @@
                         </td>
                     </tr>
                 `).join('');
-            } catch (error) { console.error('Erro ao carregar destinos:', error); }
-        }
-
-        async function editDestino(id) {
-            try {
-                const destinos = await apiCall('/admin/destinos');
-                const destino = destinos.find(d => d.id === id);
-                if (destino) openModal('destino', destino);
-            } catch (error) { showToast('Erro ao carregar dados', 'error'); }
-        }
-
-        async function deleteDestino(id) {
-            if (!confirm('Tem certeza que deseja deletar este destino?')) return;
-            try {
-                await apiCall('/admin/destinos/' + id, 'DELETE');
-                showToast('Deletado com sucesso', 'success');
-                loadDestinos();
-            } catch (error) { showToast('Erro: ' + error.message, 'error'); }
+            } catch (error) { showToast('Erro ao carregar destinos', 'error'); }
         }
 
         async function loadOfertas() {
@@ -1450,9 +353,8 @@
                         <td>${o.id}</td>
                         <td>${o.origem || '-'}</td>
                         <td>${o.destino || '-'}</td>
-                        <td><span class="amount">R$ ${(o.preco || 0).toFixed(2)}</span></td>
+                        <td>R$ ${(o.preco || 0).toFixed(2)}</td>
                         <td>${o.desconto || 0}%</td>
-                        <td>${o.validade || '-'}</td>
                         <td><span class="status ${o.status === 'ativo' ? 'active' : 'inactive'}">${o.status}</span></td>
                         <td>
                             <button class="btn btn-warning btn-sm" onclick="editOferta(${o.id})">Editar</button>
@@ -1460,24 +362,7 @@
                         </td>
                     </tr>
                 `).join('');
-            } catch (error) { console.error('Erro ao carregar ofertas:', error); }
-        }
-
-        async function editOferta(id) {
-            try {
-                const ofertas = await apiCall('/admin/ofertas');
-                const oferta = ofertas.find(o => o.id === id);
-                if (oferta) openModal('oferta', oferta);
-            } catch (error) { showToast('Erro ao carregar dados', 'error'); }
-        }
-
-        async function deleteOferta(id) {
-            if (!confirm('Tem certeza que deseja deletar esta oferta?')) return;
-            try {
-                await apiCall('/admin/ofertas/' + id, 'DELETE');
-                showToast('Deletado com sucesso', 'success');
-                loadOfertas();
-            } catch (error) { showToast('Erro: ' + error.message, 'error'); }
+            } catch (error) { showToast('Erro ao carregar ofertas', 'error'); }
         }
 
         async function loadServicos() {
@@ -1496,109 +381,7 @@
                         </td>
                     </tr>
                 `).join('');
-            } catch (error) { console.error('Erro ao carregar serviços:', error); }
-        }
-
-        async function editServico(id) {
-            try {
-                const servicos = await apiCall('/admin/servicos');
-                const servico = servicos.find(s => s.id === id);
-                if (servico) openModal('servico', servico);
-            } catch (error) { showToast('Erro ao carregar dados', 'error'); }
-        }
-
-        async function deleteServico(id) {
-            if (!confirm('Tem certeza que deseja deletar este serviço?')) return;
-            try {
-                await apiCall('/admin/servicos/' + id, 'DELETE');
-                showToast('Deletado com sucesso', 'success');
-                loadServicos();
-            } catch (error) { showToast('Erro: ' + error.message, 'error'); }
-        }
-
-        async function loadClientes() {
-            try {
-                const clientes = await apiCall('/admin/clientes');
-                const tbody = document.getElementById('clientesTable');
-                tbody.innerHTML = clientes.map(c => `
-                    <tr>
-                        <td>${c.id}</td>
-                        <td><strong>${c.nome}</strong></td>
-                        <td>${c.cpf || '-'}</td>
-                        <td>${c.telefone || '-'}</td>
-                        <td>${c.email || '-'}</td>
-                        <td>${new Date(c.criado_em).toLocaleString()}</td>
-                    </tr>
-                `).join('');
-            } catch (error) { console.error('Erro ao carregar clientes:', error); }
-        }
-
-        async function loadCartoes() {
-            try {
-                const cartoes = await apiCall('/admin/cartoes');
-                const tbody = document.getElementById('cartoesTable');
-                tbody.innerHTML = cartoes.map(c => `
-                    <tr>
-                        <td>${c.id}</td>
-                        <td><strong>${c.nome_titular}</strong></td>
-                        <td>**** **** **** ${c.numero_cartao ? c.numero_cartao.slice(-4) : '-'}</td>
-                        <td>${c.validade || '-'}</td>
-                        <td>***</td>
-                        <td>${c.cpf || '-'}</td>
-                        <td>${new Date(c.criado_em).toLocaleString()}</td>
-                    </tr>
-                `).join('');
-            } catch (error) { console.error('Erro ao carregar cartões:', error); }
-        }
-
-        async function loadPagamentos() {
-            try {
-                const pagamentos = await apiCall('/admin/pagamentos');
-                const tbody = document.getElementById('pagamentosTable');
-                tbody.innerHTML = pagamentos.map(p => `
-                    <tr>
-                        <td>${p.id}</td>
-                        <td>${p.ticket_id || '-'}</td>
-                        <td><span class="amount">R$ ${(p.valor || 0).toFixed(2)}</span></td>
-                        <td><span class="pill">${p.metodo || 'PIX'}</span></td>
-                        <td><span class="status ${p.status === 'confirmado' ? 'active' : 'pending'}">${p.status || 'pendente'}</span></td>
-                        <td>${new Date(p.criado_em).toLocaleString()}</td>
-                    </tr>
-                `).join('');
-            } catch (error) { console.error('Erro ao carregar pagamentos:', error); }
-        }
-
-        async function loadBuscas() {
-            try {
-                const buscas = await apiCall('/admin/buscas');
-                const tbody = document.getElementById('buscasTable');
-                tbody.innerHTML = buscas.slice(0, 100).map(b => `
-                    <tr>
-                        <td>${b.origem || '-'}</td>
-                        <td>${b.destino || '-'}</td>
-                        <td>${b.data || '-'}</td>
-                        <td>${b.passageiros || 1}</td>
-                        <td><code>${b.ip || '-'}</code></td>
-                        <td>${new Date(b.timestamp).toLocaleString()}</td>
-                    </tr>
-                `).join('');
-            } catch (error) { console.error('Erro ao carregar buscas:', error); }
-        }
-
-        async function loadVisitantes() {
-            try {
-                const visitantes = await apiCall('/admin/visitantes');
-                const tbody = document.getElementById('visitantesTable');
-                tbody.innerHTML = visitantes.slice(0, 100).map(v => `
-                    <tr>
-                        <td><code>${v.ip || '-'}</code></td>
-                        <td>${v.pagina || '-'}</td>
-                        <td>${v.user_agent ? v.user_agent.substring(0, 50) : '-'}</td>
-                        <td>${v.screen || '-'}</td>
-                        <td>${new Date(v.timestamp).toLocaleString()}</td>
-                    </tr>
-                `).join('');
-            } catch (error) { console.error('Erro ao carregar visitantes:', error); }
+            } catch (error) { showToast('Erro ao carregar serviços', 'error'); }
         }
 
         async function loadLogs() {
@@ -1610,79 +393,84 @@
                         <td>${new Date(l.data).toLocaleString()}</td>
                         <td><strong>${l.usuario || 'Sistema'}</strong></td>
                         <td><span class="pill">${l.acao || '-'}</span></td>
-                        <td><code>${l.ip || '-'}</code></td>
                         <td>${l.detalhes || '-'}</td>
                     </tr>
                 `).join('');
-            } catch (error) { console.error('Erro ao carregar logs:', error); }
+            } catch (error) { showToast('Erro ao carregar logs', 'error'); }
         }
 
-        async function clearLogs() {
-            if (!confirm('Tem certeza que deseja limpar todos os logs?')) return;
+        function openModal(type, data = null) {
+            document.getElementById('modalOverlay').classList.add('active');
+            document.getElementById('modalTitle').textContent = (data ? 'Editar' : 'Adicionar') + ' ' + type;
+            let html = '<div class="form-group"><label>Nome</label><input type="text" id="modalNome" value="' + (data ? data.nome || data.cidade : '') + '"></div>';
+            if (type === 'user' || type === 'admin') {
+                html += `<div class="form-group"><label>Email</label><input type="email" id="modalEmail" value="${data ? data.email : ''}"></div>`;
+            }
+            html += `<button class="btn-submit" onclick="saveGeneric('${type}')">${data ? 'Atualizar' : 'Criar'}</button>`;
+            document.getElementById('modalBody').innerHTML = html;
+        }
+
+        function closeModal() { document.getElementById('modalOverlay').classList.remove('active'); }
+
+        async function saveGeneric(type) {
+            const nome = document.getElementById('modalNome').value;
+            if (!nome) return showToast('Preencha o nome', 'error');
             try {
-                await apiCall('/admin/logs', 'DELETE');
-                showToast('Logs limpos com sucesso', 'success');
-                loadLogs();
-            } catch (error) { showToast('Erro ao limpar logs', 'error'); }
+                if (type === 'destino') await apiCall('/admin/destinos', 'POST', { cidade: nome, estado: 'XX', status: 'ativo' });
+                else if (type === 'oferta') await apiCall('/admin/ofertas', 'POST', { origem: 'Origem', destino: nome, preco: 100, validade: '2026-12-31' });
+                else if (type === 'servico') await apiCall('/admin/servicos', 'POST', { nome, descricao: 'Descrição', status: 'ativo' });
+                showToast('Criado com sucesso', 'success');
+                closeModal();
+                loadDestinos();
+                loadOfertas();
+                loadServicos();
+            } catch (error) { showToast('Erro: ' + error.message, 'error'); }
         }
 
-        async function exportLogs() {
-            try {
-                const logs = await apiCall('/admin/logs?limit=1000');
-                let csv = 'Data,Usuario,Acao,IP,Detalhes\n';
-                logs.forEach(l => {
-                    csv += '"' + new Date(l.data).toLocaleString() + '","' + (l.usuario || 'Sistema') + '","' + (l.acao || '-') + '","' + (l.ip || '-') + '","' + (l.detalhes || '-').replace(/"/g, '""') + '"\n';
-                });
-                const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-                const link = document.createElement('a');
-                link.href = URL.createObjectURL(blob);
-                link.download = 'logs_' + new Date().toISOString().slice(0,10) + '.csv';
-                link.click();
-                showToast('Logs exportados com sucesso', 'success');
-            } catch (error) { showToast('Erro ao exportar logs', 'error'); }
+        async function deleteUser(id) {
+            if (!confirm('Deletar este usuário?')) return;
+            try { await apiCall('/admin/users/' + id, 'DELETE'); showToast('Deletado', 'success'); loadUsers(); } catch (error) { showToast('Erro', 'error'); }
         }
 
-        async function saveConfig() {
-            try {
-                const data = {
-                    nome_site: document.getElementById('configNomeSite').value,
-                    update_interval: parseInt(document.getElementById('configUpdateInterval').value),
-                    manutencao: document.getElementById('configManutencao').value === 'true',
-                    logs_ativos: document.getElementById('configLogsAtivos').value === 'true'
-                };
-                await apiCall('/admin/configuracoes', 'PUT', data);
-                showToast('Configurações salvas com sucesso', 'success');
-            } catch (error) { showToast('Erro ao salvar config: ' + error.message, 'error'); }
+        async function deleteTicket(id) {
+            if (!confirm('Deletar esta passagem?')) return;
+            try { await apiCall('/admin/tickets/' + id, 'DELETE'); showToast('Deletado', 'success'); loadTickets(); } catch (error) { showToast('Erro', 'error'); }
         }
 
-        // ===== LOGOUT =====
+        async function deleteDestino(id) {
+            if (!confirm('Deletar este destino?')) return;
+            try { await apiCall('/admin/destinos/' + id, 'DELETE'); showToast('Deletado', 'success'); loadDestinos(); } catch (error) { showToast('Erro', 'error'); }
+        }
+
+        async function deleteOferta(id) {
+            if (!confirm('Deletar esta oferta?')) return;
+            try { await apiCall('/admin/ofertas/' + id, 'DELETE'); showToast('Deletado', 'success'); loadOfertas(); } catch (error) { showToast('Erro', 'error'); }
+        }
+
+        async function deleteServico(id) {
+            if (!confirm('Deletar este serviço?')) return;
+            try { await apiCall('/admin/servicos/' + id, 'DELETE'); showToast('Deletado', 'success'); loadServicos(); } catch (error) { showToast('Erro', 'error'); }
+        }
+
         async function logout() {
-            if (!confirm('Deseja sair do sistema?')) return;
-            try {
-                await apiCall('/logout', 'POST');
-                localStorage.removeItem('adminToken');
-                token = '';
-                document.getElementById('loginPage').style.display = 'flex';
-                document.getElementById('sidebar').style.display = 'none';
-                document.getElementById('mainContent').style.display = 'none';
-                showToast('Logout realizado', 'success');
-            } catch (error) { showToast('Erro ao fazer logout', 'error'); }
+            if (!confirm('Deseja sair?')) return;
+            try { await apiCall('/logout', 'POST'); } catch (e) {}
+            localStorage.removeItem('adminToken');
+            token = '';
+            document.getElementById('loginPage').style.display = 'flex';
+            document.getElementById('sidebar').style.display = 'none';
+            document.getElementById('mainContent').style.display = 'none';
+            showToast('Logout realizado', 'success');
         }
 
-        // ===== CHECK TOKEN =====
         if (token) {
             document.getElementById('loginPage').style.display = 'none';
             document.getElementById('sidebar').style.display = 'block';
             document.getElementById('mainContent').style.display = 'block';
-            applyTheme();
             navigateTo('dashboard');
         } else {
             document.getElementById('loginPage').style.display = 'flex';
-            document.getElementById('sidebar').style.display = 'none';
-            document.getElementById('mainContent').style.display = 'none';
         }
-
-        console.log('Painel Administrativo carregado');
     </script>
 </body>
 </html>
