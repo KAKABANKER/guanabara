@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Viaje Guanabara - Passagens de Ônibus</title>
-
+    
     <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -38,159 +38,104 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-        body {
-            font-family: 'Inter', sans-serif;
-            background: #F4F7FA;
-            color: #333;
-            -webkit-font-smoothing: antialiased;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Inter', sans-serif; background: #F4F7FA; color: #333; -webkit-font-smoothing: antialiased; }
+        
+        .spinner { width: 30px; height: 30px; border: 3px solid #e5e7eb; border-top: 3px solid #123481; border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* Spinner */
-        .spinner {
-            width: 30px;
-            height: 30px;
-            border: 3px solid #e5e7eb;
-            border-top: 3px solid #123481;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-            100% {
-                transform: rotate(360deg);
-            }
-        }
+        .seat-wrapper { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+        .seat { width: 38px; height: 38px; border-radius: 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 700; font-size: 10px; cursor: pointer; transition: all 0.15s; border: 2px solid #d1d5db; background: #fff; color: #374151; }
+        .seat.available { border-color: #22c55e; color: #15803d; }
+        .seat.available:active { transform: scale(0.95); }
+        .seat.selected { border-color: #E79F01; background: #E79F01; color: white; transform: scale(1.05); }
+        .seat.occupied { background: #f3f4f6; border-color: #e5e7eb; color: #9ca3af; cursor: not-allowed; }
+        .seat i { font-size: 14px; margin-bottom: 1px; }
 
-        /* Assentos (Mobile Otimizado) */
-        .seat-wrapper {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            justify-content: center;
-        }
-        .seat {
-            width: 38px;
-            height: 38px;
-            border-radius: 6px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 10px;
-            cursor: pointer;
-            transition: all 0.15s;
-            border: 2px solid #d1d5db;
-            background: #fff;
-            color: #374151;
-        }
-        .seat.available {
-            border-color: #22c55e;
-            color: #15803d;
-        }
-        .seat.available:active {
-            transform: scale(0.95);
-        }
-        .seat.selected {
-            border-color: #E79F01;
-            background: #E79F01;
-            color: white;
-            transform: scale(1.05);
-        }
-        .seat.occupied {
-            background: #f3f4f6;
-            border-color: #e5e7eb;
-            color: #9ca3af;
-            cursor: not-allowed;
-        }
-        .seat i {
-            font-size: 14px;
-            margin-bottom: 1px;
-        }
+        .fade-in { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .slide-up { animation: slideUp 0.3s ease-out; }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
 
-        /* Animações */
-        .fade-in {
-            animation: fadeIn 0.3s ease-in-out;
-        }
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(8px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        .slide-up {
-            animation: slideUp 0.3s ease-out;
-        }
-        @keyframes slideUp {
-            from {
-                transform: translateY(100%);
-            }
-            to {
-                transform: translateY(0);
-            }
-        }
+        .drawer-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 998; display: none; }
+        .drawer-overlay.active { display: block; }
+        .drawer-panel { position: fixed; bottom: -100%; left: 0; right: 0; max-height: 95vh; background: white; z-index: 999; border-radius: 20px 20px 0 0; transition: bottom 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; box-shadow: 0 -10px 30px rgba(0,0,0,0.1); overflow: hidden; }
+        .drawer-panel.active { bottom: 0; }
 
-        /* Drawer */
-        .drawer-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 998;
-            display: none;
-        }
-        .drawer-overlay.active {
-            display: block;
-        }
-        .drawer-panel {
-            position: fixed;
-            bottom: -100%;
-            left: 0;
-            right: 0;
-            max-height: 95vh;
-            background: white;
-            z-index: 999;
-            border-radius: 20px 20px 0 0;
-            transition: bottom 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
-        .drawer-panel.active {
-            bottom: 0;
-        }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 8px; }
 
-        /* Scrollbar Suave */
-        ::-webkit-scrollbar {
-            width: 4px;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 8px;
-        }
-
-        /* Ajustes Mobile */
         @media (max-width: 480px) {
-            .seat {
-                width: 32px;
-                height: 32px;
-                font-size: 9px;
-            }
-            .seat i {
-                font-size: 12px;
-            }
+            .seat { width: 32px; height: 32px; font-size: 9px; }
+            .seat i { font-size: 12px; }
+        }
+
+        /* Estilos do Checkout */
+        .checkout-title { text-align: center; font-size: 20px; font-weight: 800; color: #1e3a8a; margin-bottom: 4px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .timer-subtitle { text-align: center; font-size: 13px; color: #475569; margin-bottom: 20px; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 6px; }
+        .timer-subtitle i { color: #1e3a8a; }
+        .card-buyer { background: #fff; border-radius: 16px; padding: 20px; max-width: 620px; margin: 0 auto; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border: 1px solid #e2e8f0; }
+        .form-grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
+        .form-group label { display: block; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 6px; }
+        .form-group input { width: 100%; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px 14px; font-size: 15px; outline: none; transition: border-color 0.2s; background: #fff; }
+        .form-group input:focus { border-color: #1e3a8a; }
+        .checkbox-group { display: flex; align-items: flex-start; gap: 10px; margin-top: 14px; font-size: 13px; color: #334155; line-height: 1.4; }
+        .checkbox-group input { margin-top: 2px; width: 18px; height: 18px; accent-color: #1e3a8a; cursor: pointer; flex-shrink: 0; }
+        .checkbox-group a { color: #1e3a8a; text-decoration: underline; font-weight: 600; }
+        .save-card-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; margin: 20px 0; font-size: 13px; font-weight: 700; color: #1e3a8a; }
+        .save-card-box div { display: flex; align-items: center; gap: 8px; }
+        .switch { position: relative; display: inline-block; width: 44px; height: 24px; flex-shrink: 0; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; inset: 0; background-color: #cbd5e1; transition: .3s; border-radius: 24px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
+        input:checked + .slider { background-color: #1e3a8a; }
+        input:checked + .slider:before { transform: translateX(20px); }
+        .btn-submit { width: 100%; background: #1e3a8a; color: #fff; border: none; padding: 16px; border-radius: 10px; font-size: 16px; font-weight: 700; cursor: pointer; transition: background 0.2s; min-height: 52px; }
+        .btn-submit:hover { background: #1a2f6a; }
+        .checkout-layout { display: grid; grid-template-columns: 1fr; gap: 16px; align-items: start; }
+        .summary-card { background: #fff; border-radius: 16px; border: 1px solid #e2e8f0; overflow: hidden; }
+        .summary-banner { background: #1e3a8a; color: #fff; padding: 16px; display: flex; justify-content: space-between; align-items: center; }
+        .summary-banner .title { font-size: 12px; font-weight: 700; text-transform: uppercase; opacity: 0.9; }
+        .summary-banner .total-price { font-size: 24px; font-weight: 800; }
+        .trip-detail-box { background: #f8fafc; padding: 14px 16px; border-bottom: 1px solid #e2e8f0; font-size: 12px; }
+        .trip-header { display: flex; justify-content: space-between; font-weight: 700; color: #334155; margin-bottom: 8px; }
+        .route-line { display: flex; justify-content: space-between; align-items: center; font-weight: 700; color: #1e293b; margin-bottom: 6px; font-size: 13px; }
+        .breakdown-box { padding: 16px; font-size: 13px; }
+        .breakdown-title { font-weight: 800; font-size: 15px; color: #1e293b; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+        .breakdown-row { display: flex; justify-content: space-between; margin-bottom: 8px; color: #475569; }
+        .breakdown-row.discount { color: #16a34a; font-weight: 600; }
+        .breakdown-row.points { color: #16a34a; font-weight: 700; margin-top: 12px; border-top: 1px dashed #e2e8f0; padding-top: 10px; }
+        .coupon-box { display: flex; gap: 8px; margin-top: 15px; }
+        .coupon-box input { flex: 1; border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px 12px; font-size: 13px; outline: none; }
+        .coupon-box button { background: #fff; border: 1px solid #1e3a8a; color: #1e3a8a; border-radius: 8px; padding: 0 16px; font-weight: 700; font-size: 13px; cursor: pointer; white-space: nowrap; }
+        .coupon-box button:hover { background: #f8fafc; }
+        .passenger-info-card { background: #fff; border-radius: 16px; padding: 16px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; }
+        .passenger-info-card .name { font-weight: 700; font-size: 14px; color: #1e293b; }
+        .passenger-info-card .email { font-size: 12px; color: #64748b; word-break: break-all; }
+        .seat-badge { background: #1e3a8a; color: #fff; padding: 8px 12px; border-radius: 8px; text-align: center; font-size: 11px; font-weight: 800; min-width: 65px; }
+        .insurance-card { background: #fff; border-radius: 16px; padding: 16px; border: 1px solid #e2e8f0; }
+        .insurance-title { font-weight: 800; font-size: 15px; color: #1e293b; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+        .insurance-desc { font-size: 12px; color: #64748b; margin-bottom: 12px; line-height: 1.4; }
+        .insurance-list { font-size: 12px; color: #334155; font-weight: 600; display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+        .insurance-list div { display: flex; align-items: center; gap: 8px; }
+        .insurance-list i { color: #16a34a; font-size: 14px; }
+        .insurance-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #f1f5f9; padding-top: 12px; }
+        .insurance-price { font-size: 18px; font-weight: 800; color: #1e3a8a; text-align: right; }
+        .insurance-price span { font-size: 10px; font-weight: 600; color: #64748b; display: block; }
+        .payment-methods-card { background: #fff; border-radius: 16px; padding: 16px; border: 1px solid #e2e8f0; }
+        .payment-option { border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px 16px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: all 0.2s; }
+        .payment-option:hover, .payment-option:active { border-color: #1e3a8a; background: #f8fafc; }
+        .payment-option-info { display: flex; align-items: center; gap: 12px; }
+        .payment-option-info i { font-size: 20px; color: #1e3a8a; width: 24px; text-align: center; }
+        .payment-option-info .title { font-size: 14px; font-weight: 700; color: #1e293b; }
+        .payment-option-info .sub { font-size: 11px; color: #64748b; }
+        .footer-text { text-align: center; font-size: 12px; color: #64748b; margin-top: 30px; }
+        @media (min-width: 768px) {
+            .form-grid { grid-template-columns: 1fr 1fr; }
+            .form-group.full { grid-column: span 2; }
+            .checkout-layout { grid-template-columns: 1fr 1.2fr; gap: 20px; }
+            .card-buyer { padding: 32px; }
+            .insurance-card, .payment-methods-card, .passenger-info-card { padding: 20px; }
         }
     </style>
 </head>
@@ -198,11 +143,13 @@
     <div id="root"></div>
 
     <script type="text/babel">
+        const { useState, useEffect } = React;
+
         // ===========================
-        // CONFIGURAÇÃO E FALLBACK (Capitais)
+        // CONFIGURAÇÃO
         // ===========================
         const API_URL = window.location.origin + '/api';
-
+        
         const FALLBACK_LOCATIONS = [
             { city: 'Rio de Janeiro', state: 'RJ', terminal: 'Rodoviária Novo Rio', lat: -22.9068, lng: -43.1975 },
             { city: 'São Paulo', state: 'SP', terminal: 'Terminal Tietê', lat: -23.5156, lng: -46.6204 },
@@ -217,12 +164,8 @@
             { city: 'Belém', state: 'PA', terminal: 'Rodoviária de Belém', lat: -1.4558, lng: -48.4798 },
         ];
 
-        // Cache de cidades
         let cityCache = {};
 
-        // ===========================
-        // UTILITÁRIOS
-        // ===========================
         const formatCurrency = (value) => {
             return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
         };
@@ -233,21 +176,6 @@
             return `${d}/${m}/${y}`;
         };
 
-        const apiCall = async (endpoint, method = 'GET', data = null) => {
-            const headers = { 'Content-Type': 'application/json' };
-            const token = localStorage.getItem('token');
-            if (token) headers['Authorization'] = 'Bearer ' + token;
-            const options = { method, headers };
-            if (data) options.body = JSON.stringify(data);
-            const res = await fetch(API_URL + endpoint, options);
-            const json = await res.json();
-            if (!res.ok) throw new Error(json.error || 'Erro na requisição');
-            return json;
-        };
-
-        // ===========================
-        // BUSCA DE CIDADES (2s de timeout)
-        // ===========================
         const searchCities = async (term) => {
             if (term.length < 2) return [];
             if (cityCache[term]) return cityCache[term];
@@ -259,7 +187,7 @@
                 const res = await fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/municipios?nome=${encodeURIComponent(term)}`, { signal: controller.signal });
                 clearTimeout(timeout);
                 const data = await res.json();
-
+                
                 if (!data || data.length === 0) throw new Error('Vazio');
 
                 const results = await Promise.all(
@@ -285,9 +213,8 @@
                 return valid;
 
             } catch (error) {
-                // Fallback caso demore ou falhe
-                const fallback = FALLBACK_LOCATIONS.filter(l =>
-                    l.city.toLowerCase().includes(term.toLowerCase()) ||
+                const fallback = FALLBACK_LOCATIONS.filter(l => 
+                    l.city.toLowerCase().includes(term.toLowerCase()) || 
                     l.state.toLowerCase().includes(term.toLowerCase())
                 );
                 cityCache[term] = fallback;
@@ -299,7 +226,6 @@
         // COMPONENTES
         // ===========================
 
-        // 1. HEADER
         const Header = ({ showBack, onBack }) => (
             <header className="sticky top-0 z-30 bg-white shadow-sm border-b border-gray-100 px-4 py-3 flex justify-between items-center">
                 <div className="flex items-center gap-3">
@@ -308,7 +234,7 @@
                             <i className="fas fa-arrow-left"></i> Voltar
                         </button>
                     ) : (
-                        <img src="/img/logo.webp" alt="Guanabara" className="h-8 object-contain" onError={(e) => e.target.style.display = 'none'} />
+                        <img src="/img/logo.webp" alt="Guanabara" className="h-8 object-contain" onError={(e) => e.target.style.display='none'} />
                     )}
                 </div>
                 <div className="flex items-center gap-2">
@@ -323,7 +249,6 @@
             </header>
         );
 
-        // 2. HOME (Busca)
         const SearchScreen = ({ onSearch }) => {
             const [origin, setOrigin] = useState('');
             const [dest, setDest] = useState('');
@@ -346,8 +271,8 @@
                 const R = 6371;
                 const dLat = (lat2 - lat1) * Math.PI / 180;
                 const dLon = (lon2 - lon1) * Math.PI / 180;
-                const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
-                return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+                const a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon/2) * Math.sin(dLon/2);
+                return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
             };
 
             const handleInput = async (type, value) => {
@@ -373,25 +298,22 @@
 
             const selectCity = (type, city) => {
                 const display = `${city.city} - ${city.state}`;
-                if (type === 'origin') { setOrigin(display);
-                    setOriginSuggest([]); } else { setDest(display);
-                    setDestSuggest([]); }
+                if (type === 'origin') { setOrigin(display); setOriginSuggest([]); }
+                else { setDest(display); setDestSuggest([]); }
             };
 
             const submit = async (e) => {
                 e.preventDefault();
                 if (!origin || !dest || !date) return alert('Preencha todos os campos');
                 setLoading(true);
-                try {
-                    await apiCall('/busca', 'POST', { origem: origin, destino: dest, data: date, passageiros: pass });
+                setTimeout(() => {
                     onSearch({ origin, dest, date, pass });
-                } catch (err) { alert('Erro: ' + err.message); }
-                setLoading(false);
+                    setLoading(false);
+                }, 800);
             };
 
             return (
                 <div className="relative max-w-xl mx-auto px-4 pb-8 fade-in">
-                    {/* Banner */}
                     <div className="bg-gradient-to-b from-gb-blue to-gb-blue-hover text-white pt-6 pb-14 rounded-b-3xl relative overflow-hidden">
                         <div className="relative z-10 px-2">
                             <div className="flex justify-between items-start">
@@ -402,7 +324,7 @@
                                 </div>
                                 <div className="bg-gb-yellow text-gb-blue text-center px-3 py-1.5 rounded-lg shadow-md">
                                     <div className="text-[9px] uppercase tracking-wider font-black">Exclusivo</div>
-                                    <div className="text-[10px] font-black leading-tight">PARA SITE<br />E APP!</div>
+                                    <div className="text-[10px] font-black leading-tight">PARA SITE<br/>E APP!</div>
                                 </div>
                             </div>
                         </div>
@@ -412,10 +334,8 @@
                         </div>
                     </div>
 
-                    {/* Formulário */}
                     <div className="bg-white rounded-2xl shadow-xl -mt-10 relative z-20 px-5 pt-5 pb-6 border border-gray-100">
                         <form onSubmit={submit} className="space-y-3">
-
                             <div className="relative">
                                 <label className="text-xs font-semibold text-gray-400 block mb-1">Saindo de</label>
                                 <div className="flex items-center border-b border-gray-200 pb-1">
@@ -436,8 +356,7 @@
                             </div>
 
                             <div className="flex justify-end -my-1">
-                                <button type="button" onClick={() => { setOrigin(dest);
-                                    setDest(origin); }} className="bg-gray-100 text-gb-blue p-2 rounded-lg hover:bg-gray-200">
+                                <button type="button" onClick={() => { setOrigin(dest); setDest(origin); }} className="bg-gray-100 text-gb-blue p-2 rounded-lg hover:bg-gray-200">
                                     <i className="fas fa-exchange-alt"></i>
                                 </button>
                             </div>
@@ -489,7 +408,6 @@
             );
         };
 
-        // 3. TELA DE RESULTADOS (Tickets)
         const TicketsScreen = ({ data, onSelect }) => {
             const [tickets, setTickets] = useState([]);
             const [loading, setLoading] = useState(true);
@@ -514,11 +432,11 @@
                         <h2 className="text-xl font-bold text-gb-blue">Viagens encontradas</h2>
                         <span className="text-xl">🚍</span>
                     </div>
-
+                    
                     {tickets.map(t => (
                         <div key={t.id} className={`bg-white rounded-xl border mb-3 overflow-hidden shadow-sm ${t.rec ? 'border-2 border-gb-blue' : 'border-gray-200'}`}>
                             {t.rec && <div className="bg-gb-blue text-white text-[10px] font-bold text-center py-1"><i className="fas fa-gem mr-1"></i> A gente recomenda</div>}
-
+                            
                             <div className="p-4 flex flex-col gap-3">
                                 <div className="flex justify-between items-start">
                                     <div>
@@ -551,7 +469,6 @@
             );
         };
 
-        // 4. DRAWER DE ASSENTOS
         const SeatDrawer = ({ ticket, close, confirm }) => {
             const [selected, setSelected] = useState(null);
             const [step, setStep] = useState('upgrade');
@@ -589,10 +506,8 @@
                                         <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=600&q=80" className="h-32 w-full object-cover" />
                                         <div className="p-2 text-xs font-bold flex items-center gap-2"><i className="fas fa-couch"></i> 140° de reclinação</div>
                                     </div>
-                                    <button onClick={() => { setUpgraded(true);
-                                        setStep('seats'); }} className="w-full bg-gb-blue text-white font-bold py-3 rounded-lg mb-2">Upgrade + R$ 40,00</button>
-                                    <button onClick={() => { setUpgraded(false);
-                                        setStep('seats'); }} className="w-full bg-white text-gb-blue border-2 border-gb-blue font-bold py-3 rounded-lg">Manter classe</button>
+                                    <button onClick={() => { setUpgraded(true); setStep('seats'); }} className="w-full bg-gb-blue text-white font-bold py-3 rounded-lg mb-2">Upgrade + R$ 40,00</button>
+                                    <button onClick={() => { setUpgraded(false); setStep('seats'); }} className="w-full bg-white text-gb-blue border-2 border-gb-blue font-bold py-3 rounded-lg">Manter classe</button>
                                 </div>
                             ) : (
                                 <div className="bg-white rounded-xl p-4 border border-gray-200 slide-up">
@@ -636,134 +551,296 @@
             );
         };
 
-        // 5. TELA DE DADOS DO PASSAGEIRO
-        const PassengerScreen = ({ ticket, next }) => {
+        const CheckoutBuyerScreen = ({ ticket, next }) => {
             const [nome, setNome] = useState('');
-            const [cpf, setCpf] = useState('');
-            const [tel, setTel] = useState('');
             const [email, setEmail] = useState('');
-            const [loading, setLoading] = useState(false);
+            const [telefone, setTelefone] = useState('');
+            const [cpf, setCpf] = useState('');
+            const [nascimento, setNascimento] = useState('');
+            const [isPassenger, setIsPassenger] = useState(true);
+            const [promoOptIn, setPromoOptIn] = useState(true);
+            const [saveData, setSaveData] = useState(false);
+            const [timer, setTimer] = useState('09:13');
 
-            const submit = (e) => {
+            useEffect(() => {
+                let seconds = 553;
+                const interval = setInterval(() => {
+                    seconds--;
+                    const mins = String(Math.floor(seconds / 60)).padStart(2, '0');
+                    const secs = String(seconds % 60).padStart(2, '0');
+                    setTimer(`${mins}:${secs}`);
+                    if (seconds <= 0) {
+                        clearInterval(interval);
+                        alert('Tempo expirado! Por favor, refaça a sua reserva.');
+                        window.location.href = '/';
+                    }
+                }, 1000);
+                return () => clearInterval(interval);
+            }, []);
+
+            const handleSubmit = (e) => {
                 e.preventDefault();
-                if (!nome || !cpf || !tel || !email) return alert('Preencha todos os dados');
-                setLoading(true);
+                if (!nome || !email || !telefone || !cpf || !nascimento) {
+                    alert('Preencha todos os campos');
+                    return;
+                }
                 localStorage.setItem('cliente_nome', nome);
-                localStorage.setItem('cliente_cpf', cpf);
-                localStorage.setItem('cliente_telefone', tel);
                 localStorage.setItem('cliente_email', email);
-                setTimeout(() => { setLoading(false);
-                    next(); }, 1500);
+                localStorage.setItem('cliente_telefone', telefone);
+                localStorage.setItem('cliente_cpf', cpf);
+                localStorage.setItem('cliente_nascimento', nascimento);
+                localStorage.setItem('checkout_ticket', JSON.stringify(ticket));
+                next();
             };
 
             return (
-                <div className="max-w-xl mx-auto px-4 pt-4 fade-in">
-                    <h2 className="text-xl font-bold text-gb-blue mb-4">Dados do Passageiro</h2>
-                    <div className="bg-white p-5 rounded-xl shadow border border-gray-100">
-                        <form onSubmit={submit} className="space-y-3">
-                            <div><label className="text-xs font-semibold text-gray-500">Nome completo</label><input type="text" value={nome} onChange={e => setNome(e.target.value)} className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-gb-blue outline-none" required /></div>
-                            <div><label className="text-xs font-semibold text-gray-500">CPF</label><input type="text" value={cpf} onChange={e => setCpf(e.target.value)} className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-gb-blue outline-none" required /></div>
-                            <div><label className="text-xs font-semibold text-gray-500">Telefone</label><input type="text" value={tel} onChange={e => setTel(e.target.value)} className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-gb-blue outline-none" required /></div>
-                            <div><label className="text-xs font-semibold text-gray-500">E-mail</label><input type="email" value={email} onChange={e => setEmail(e.target.value)} className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-gb-blue outline-none" required /></div>
-                            <button type="submit" disabled={loading} className="w-full bg-gb-blue text-white font-bold py-3 rounded-lg mt-2 hover:bg-gb-blue-hover disabled:opacity-50 flex justify-center items-center">
-                                {loading ? <div className="spinner w-5 h-5 border-2 border-white border-t-transparent"></div> : 'Ir para o pagamento'}
-                            </button>
+                <div className="max-w-xl mx-auto px-4 pt-4 pb-8 fade-in">
+                    <div className="checkout-title">Informações do comprador</div>
+                    <div className="timer-subtitle">
+                        <span>Conclua a compra e garanta a sua viagem</span>
+                        <i className="far fa-clock"></i>
+                        <span style={{ fontWeight: 700 }}>{timer}</span>
+                    </div>
+
+                    <div className="card-buyer">
+                        <form onSubmit={handleSubmit}>
+                            <div className="form-grid">
+                                <div className="form-group full">
+                                    <label>Nome Completo *</label>
+                                    <input type="text" value={nome} onChange={e => setNome(e.target.value)} placeholder="Informe aqui" required />
+                                </div>
+                                <div className="form-group">
+                                    <label>E-mail *</label>
+                                    <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Informe aqui" required />
+                                </div>
+                                <div className="form-group">
+                                    <label>Celular *</label>
+                                    <input type="tel" value={telefone} onChange={e => setTelefone(e.target.value)} placeholder="Informe aqui" required />
+                                </div>
+                                <div className="form-group">
+                                    <label>CPF *</label>
+                                    <input type="text" value={cpf} onChange={e => setCpf(e.target.value)} placeholder="Informe aqui" required />
+                                </div>
+                                <div className="form-group">
+                                    <label>Data de Nascimento *</label>
+                                    <input type="text" value={nascimento} onChange={e => setNascimento(e.target.value)} placeholder="DD/MM/AAAA" required />
+                                </div>
+                            </div>
+
+                            <div className="checkbox-group">
+                                <input type="checkbox" checked={isPassenger} onChange={e => setIsPassenger(e.target.checked)} />
+                                <label>Sou o passageiro que irá viajar</label>
+                            </div>
+
+                            <div className="checkbox-group">
+                                <input type="checkbox" checked={promoOptIn} onChange={e => setPromoOptIn(e.target.checked)} />
+                                <label>Quero receber informações e promoções da Guanabara e do <strong>Viva Fidelidade</strong>. Confira a nossa <a href="#">Política de Privacidade</a>.</label>
+                            </div>
+
+                            <div className="save-card-box">
+                                <div><i className="far fa-address-card"></i> Salvar meus dados para compras futuras</div>
+                                <label className="switch">
+                                    <input type="checkbox" checked={saveData} onChange={e => setSaveData(e.target.checked)} />
+                                    <span className="slider"></span>
+                                </label>
+                            </div>
+
+                            <button type="submit" className="btn-submit">Prosseguir com a reserva</button>
                         </form>
                     </div>
                 </div>
             );
         };
 
-        // 6. CHECKOUT
-        const CheckoutScreen = ({ ticket, finish }) => {
-            const [metodo, setMetodo] = useState('pix');
-            const [loading, setLoading] = useState(false);
-            const [pixCode, setPixCode] = useState('');
-            const [qr, setQr] = useState(null);
-            const [status, setStatus] = useState('pending');
-
-            const nome = localStorage.getItem('cliente_nome') || '';
-            const cpf = localStorage.getItem('cliente_cpf') || '';
-            const tel = localStorage.getItem('cliente_telefone') || '';
-
-            const handlePay = async () => {
-                setLoading(true);
-                try {
-                    const cliente = await apiCall('/cliente', 'POST', { nome, cpf, telefone: tel, email: localStorage.getItem('cliente_email'), qtdCriancas: 0 });
-                    const codigo = 'GV' + new Date().toISOString().slice(0, 10).replace(/-/g, '') + String(Math.floor(Math.random() * 1000)).padStart(3, '0');
-                    await apiCall('/compra', 'POST', {
-                        origem: ticket.origem,
-                        destino: ticket.destino,
-                        passageiro: nome,
-                        data: ticket.data,
-                        valor: ticket.precoFinal,
-                        metodoPagamento: metodo === 'pix' ? 'PIX' : 'Cartão',
-                        codigo: codigo
-                    });
-                    localStorage.setItem('ticket_codigo', codigo);
-                    finish(codigo);
-                } catch (err) { alert('Erro: ' + err.message); }
-                setLoading(false);
-            };
-
-            const gerarPix = async () => {
-                if (pixCode) return;
-                try {
-                    const res = await apiCall('/create-payment', 'POST', { amount: ticket.precoFinal, customer_name: nome, customer_cpf: cpf, customer_phone: tel });
-                    if (res.success) {
-                        setPixCode(res.payment.pix_code);
-                        setTimeout(() => setStatus('paid'), 4000);
-                    }
-                } catch (err) { alert('Erro PIX'); }
-            };
+        const CheckoutPaymentScreen = ({ ticket, finish }) => {
+            const [insurance, setInsurance] = useState(false);
+            const [timer, setTimer] = useState('07:38');
+            const [finalTotal, setFinalTotal] = useState(ticket.precoFinal || 179.99);
+            
+            const nome = localStorage.getItem('cliente_nome') || 'Nome do Passageiro';
+            const email = localStorage.getItem('cliente_email') || 'email@exemplo.com';
+            const assento = ticket.assento || '08';
 
             useEffect(() => {
-                if (pixCode && !qr) {
-                    const qrcode = new QRCode(document.getElementById('qrcode'), { text: pixCode, width: 160, height: 160 });
-                    setQr(qrcode);
+                let seconds = 458;
+                const interval = setInterval(() => {
+                    seconds--;
+                    const mins = String(Math.floor(seconds / 60)).padStart(2, '0');
+                    const secs = String(seconds % 60).padStart(2, '0');
+                    setTimer(`${mins}:${secs}`);
+                    if (seconds <= 0) {
+                        clearInterval(interval);
+                        alert('Tempo expirado! Por favor, refaça a sua reserva.');
+                        window.location.href = '/';
+                    }
+                }, 1000);
+                return () => clearInterval(interval);
+            }, []);
+
+            const toggleInsurance = () => {
+                setInsurance(!insurance);
+                if (!insurance) {
+                    setFinalTotal(prev => prev + 10);
+                } else {
+                    setFinalTotal(prev => prev - 10);
                 }
-            }, [pixCode]);
+            };
+
+            const processarPagamento = (metodo) => {
+                alert(`Iniciando pagamento via ${metodo}...`);
+                setTimeout(() => {
+                    const codigo = 'GV' + new Date().toISOString().slice(0,10).replace(/-/g,'') + String(Math.floor(Math.random()*1000)).padStart(3,'0');
+                    localStorage.setItem('ticket_codigo', codigo);
+                    finish(codigo);
+                }, 1500);
+            };
+
+            const basePrice = finalTotal + 63.76;
+            const discount = 63.76;
 
             return (
-                <div className="max-w-xl mx-auto px-4 pt-4 fade-in">
-                    <h2 className="text-xl font-bold text-gb-blue mb-4">Finalizar Compra</h2>
-
-                    <div className="bg-white p-4 rounded-xl shadow border border-gray-100 mb-4">
-                        <div className="grid grid-cols-2 text-sm gap-2">
-                            <div className="text-gray-500">Origem:</div><div className="font-bold">{ticket.origem}</div>
-                            <div className="text-gray-500">Destino:</div><div className="font-bold">{ticket.destino}</div>
-                            <div className="text-gray-500">Assento:</div><div className="font-bold">{ticket.assento}</div>
-                            <div className="text-gray-500">Total:</div><div className="font-bold text-gb-blue">{formatCurrency(ticket.precoFinal)}</div>
-                        </div>
+                <div className="max-w-4xl mx-auto px-4 pt-4 pb-8 fade-in">
+                    <div className="checkout-title">Pagamento</div>
+                    <div className="timer-subtitle">
+                        <span>Conclua a compra e garanta a sua viagem</span>
+                        <i className="far fa-clock"></i>
+                        <span style={{ fontWeight: 700 }}>{timer}</span>
                     </div>
 
-                    <div className="flex gap-2 mb-4">
-                        <button onClick={() => setMetodo('pix')} className={`flex-1 py-2 rounded-lg font-bold text-sm ${metodo === 'pix' ? 'bg-gb-blue text-white' : 'bg-gray-100'}`}>PIX</button>
-                        <button onClick={() => setMetodo('cartao')} className={`flex-1 py-2 rounded-lg font-bold text-sm ${metodo === 'cartao' ? 'bg-gb-blue text-white' : 'bg-gray-100'}`}>Cartão</button>
-                    </div>
+                    <div className="checkout-layout">
+                        <div>
+                            <div className="summary-card">
+                                <div className="summary-banner">
+                                    <div className="title">Sua Compra</div>
+                                    <div className="total-price">R$ <span>{finalTotal.toFixed(2).replace('.', ',')}</span> <small style={{ fontSize: '12px', fontWeight: 400 }}>total</small></div>
+                                </div>
 
-                    {metodo === 'pix' && (
-                        <div className="bg-white p-4 rounded-lg shadow border border-gray-100 text-center">
-                            {!pixCode ? (
-                                <button onClick={gerarPix} className="bg-gb-yellow text-white font-bold py-2 px-6 rounded-lg text-sm">Gerar PIX</button>
-                            ) : (
-                                <>
-                                    <div id="qrcode" className="flex justify-center mb-2"></div>
-                                    <div className="text-xs text-gray-500 mb-2">Escaneie o QR Code</div>
-                                    {status === 'paid' ? <div className="text-green-600 font-bold text-sm">✅ Confirmado!</div> : <div className="text-gb-yellow font-bold text-sm animate-pulse">⏳ Aguardando...</div>}
-                                </>
-                            )}
+                                <div className="trip-detail-box">
+                                    <div className="trip-header">
+                                        <span><i className="fas fa-bus"></i> Viagem de ida</span>
+                                        <span>{ticket.data ? formatDate(ticket.data) : '13 ago, qui 23:00'}</span>
+                                    </div>
+                                    <div className="route-line">
+                                        <span>{ticket.origem || 'BRASILIA - DF'}</span>
+                                        <i className="fas fa-arrow-right" style={{ fontSize: '11px', color: '#94a3b8' }}></i>
+                                        <span>{ticket.destino || 'CORRENTINA - BA'}</span>
+                                    </div>
+                                    <div style={{ fontSize: '11px', color: '#64748b', marginTop: '4px' }}>Classe <strong>{ticket.tipo || 'EXECUTIVO'}</strong></div>
+                                </div>
+
+                                <div className="breakdown-box">
+                                    <div className="breakdown-title"><i className="fas fa-receipt"></i> Resumo do pagamento</div>
+                                    <div className="breakdown-row">
+                                        <span>Passagem</span>
+                                        <span>R$ {basePrice.toFixed(2).replace('.', ',')}</span>
+                                    </div>
+                                    <div className="breakdown-row discount">
+                                        <span>Desconto - Passagem</span>
+                                        <span>- R$ {discount.toFixed(2).replace('.', ',')}</span>
+                                    </div>
+                                    <div className="breakdown-row">
+                                        <span>Taxa de serviço</span>
+                                        <span>R$ 9,79</span>
+                                    </div>
+                                    <div className="breakdown-row">
+                                        <span>Taxa de embarque</span>
+                                        <span>R$ 8,38</span>
+                                    </div>
+                                    {insurance && (
+                                        <div className="breakdown-row">
+                                            <span>Seguro Viagem</span>
+                                            <span>R$ 10,00</span>
+                                        </div>
+                                    )}
+                                    <div className="breakdown-row points">
+                                        <span><i className="fas fa-star"></i> Pontuação Viva</span>
+                                        <span>+ 150 pontos</span>
+                                    </div>
+
+                                    <div className="coupon-box">
+                                        <input type="text" placeholder="Cupom de desconto" />
+                                        <button type="button">Aplicar</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    )}
 
-                    <button onClick={handlePay} disabled={loading || (metodo === 'pix' && status !== 'paid')} className="w-full mt-4 bg-gb-blue text-white font-bold py-3 rounded-xl text-base uppercase tracking-wider hover:bg-gb-blue-hover disabled:opacity-50">
-                        {loading ? <div className="spinner w-5 h-5 border-2 border-white border-t-transparent mx-auto"></div> : 'Confirmar Pagamento'}
-                    </button>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                            <div className="passenger-info-card">
+                                <div>
+                                    <div style={{ fontSize: '13px', fontWeight: 800, color: '#1e293b', marginBottom: '4px' }}>Passageiros nesta viagem</div>
+                                    <div className="name">{nome}</div>
+                                    <div className="email">{email}</div>
+                                </div>
+                                <div className="seat-badge">
+                                    Assento<br />
+                                    <span style={{ fontSize: '16px' }}>{String(assento).padStart(2, '0')}</span>
+                                </div>
+                            </div>
+
+                            <div className="insurance-card">
+                                <div className="insurance-title"><i className="fas fa-shield-alt" style={{ color: '#1e3a8a' }}></i> Seguro viagem opcional</div>
+                                <div className="insurance-desc">O seguro adicional oferece uma cobertura extra em caso de danos, extravio e saúde. <a href="#" style={{ color: '#1e3a8a', fontWeight: 600 }}>Ver detalhes</a></div>
+                                
+                                <div className="insurance-list">
+                                    <div><i className="fas fa-check-circle"></i> Cabe no bolso</div>
+                                    <div><i className="fas fa-check-circle"></i> Cobertura nacional</div>
+                                    <div><i className="fas fa-check-circle"></i> Pagamento em até 30 dias</div>
+                                </div>
+
+                                <div className="insurance-footer">
+                                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', fontWeight: 700, cursor: 'pointer' }}>
+                                        <input type="checkbox" checked={insurance} onChange={toggleInsurance} style={{ width: '18px', height: '18px', accentColor: '#1e3a8a' }} /> Sim, quero viajar tranquilo
+                                    </label>
+                                    <div className="insurance-price">
+                                        R$ 10,00
+                                        <span>por passageiro</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="payment-methods-card">
+                                <div className="insurance-title" style={{ marginBottom: '14px' }}><i className="fas fa-wallet" style={{ color: '#1e3a8a' }}></i> Selecione o pagamento</div>
+
+                                <div className="payment-option" onClick={() => processarPagamento('PIX')}>
+                                    <div className="payment-option-info">
+                                        <i className="fa-brands fa-pix" style={{ color: '#00bdae' }}></i>
+                                        <div>
+                                            <div className="title">PIX</div>
+                                            <div className="sub">Confirmação imediata</div>
+                                        </div>
+                                    </div>
+                                    <i className="fas fa-chevron-right" style={{ color: '#cbd5e1', fontSize: '12px' }}></i>
+                                </div>
+
+                                <div className="payment-option" onClick={() => processarPagamento('Cartao')}>
+                                    <div className="payment-option-info">
+                                        <i className="far fa-credit-card"></i>
+                                        <div>
+                                            <div className="title">Cartão de crédito</div>
+                                            <div className="sub">Visa, Mastercard, Elo, Amex</div>
+                                        </div>
+                                    </div>
+                                    <i className="fas fa-chevron-right" style={{ color: '#cbd5e1', fontSize: '12px' }}></i>
+                                </div>
+
+                                <div className="payment-option" onClick={() => processarPagamento('Transferencia')}>
+                                    <div className="payment-option-info">
+                                        <i className="fas fa-university"></i>
+                                        <div>
+                                            <div className="title">Transferência Bancária</div>
+                                            <div className="sub">Até 3h para compensar</div>
+                                        </div>
+                                    </div>
+                                    <i className="fas fa-chevron-right" style={{ color: '#cbd5e1', fontSize: '12px' }}></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             );
         };
 
-        // 7. COMPROVANTE
         const ReceiptScreen = ({ codigo }) => {
             const nome = localStorage.getItem('cliente_nome') || 'Passageiro';
             return (
@@ -783,7 +860,6 @@
             );
         };
 
-        // 8. BOTTOM NAV
         const BottomNav = ({ current }) => (
             <nav className="fixed bottom-0 left-0 right-0 z-30 bg-white border-t border-gray-200 shadow-lg flex justify-around items-center py-2 max-w-xl mx-auto">
                 <button className={`flex flex-col items-center gap-0.5 ${current === 'home' ? 'text-gb-blue' : 'text-gray-400'}`}>
@@ -805,30 +881,22 @@
             </nav>
         );
 
-        // ===========================
-        // APP PRINCIPAL
-        // ===========================
         const App = () => {
             const [screen, setScreen] = useState('home');
             const [searchData, setSearchData] = useState(null);
             const [selectedTicket, setSelectedTicket] = useState(null);
             const [receiptCode, setReceiptCode] = useState(null);
 
-            const goHome = () => { setScreen('home');
-                setSearchData(null);
-                setSelectedTicket(null);
-                setReceiptCode(null); };
+            const goHome = () => { setScreen('home'); setSearchData(null); setSelectedTicket(null); setReceiptCode(null); };
 
             return (
                 <div className="pb-20 min-h-screen flex flex-col">
                     <Header showBack={screen !== 'home'} onBack={goHome} />
                     <main className="flex-1">
-                        {screen === 'home' && <SearchScreen onSearch={(d) => { setSearchData(d);
-                                setScreen('tickets'); }} />}
+                        {screen === 'home' && <SearchScreen onSearch={(d) => { setSearchData(d); setScreen('tickets'); }} />}
                         {screen === 'tickets' && searchData && <TicketsScreen data={searchData} onSelect={(t) => setSelectedTicket(t)} />}
-                        {screen === 'passenger' && selectedTicket && <PassengerScreen ticket={selectedTicket} next={() => setScreen('checkout')} />}
-                        {screen === 'checkout' && selectedTicket && <CheckoutScreen ticket={selectedTicket} finish={(c) => { setReceiptCode(c);
-                                setScreen('receipt'); }} />}
+                        {screen === 'checkout_buyer' && selectedTicket && <CheckoutBuyerScreen ticket={selectedTicket} next={() => setScreen('checkout_payment')} />}
+                        {screen === 'checkout_payment' && selectedTicket && <CheckoutPaymentScreen ticket={selectedTicket} finish={(c) => { setReceiptCode(c); setScreen('receipt'); }} />}
                         {screen === 'receipt' && receiptCode && <ReceiptScreen codigo={receiptCode} />}
                         {['services', 'account', 'help'].includes(screen) && (
                             <div className="max-w-xl mx-auto px-4 pt-6 text-center text-gray-500">
@@ -838,14 +906,17 @@
                         )}
                     </main>
                     <BottomNav current={screen} />
-                    <SeatDrawer ticket={selectedTicket} close={() => setSelectedTicket(null)} confirm={(t) => { setSelectedTicket(t);
-                            setScreen('passenger'); }} />
+                    <SeatDrawer ticket={selectedTicket} close={() => setSelectedTicket(null)} confirm={(t) => { 
+                        setSelectedTicket(t); 
+                        setScreen('checkout_buyer');
+                    }} />
                     <a href="https://wa.me/" className="fixed bottom-20 right-4 z-20 bg-gb-whatsapp text-white p-3 rounded-full shadow-xl"><i className="fab fa-whatsapp text-2xl"></i></a>
                 </div>
             );
         };
 
-        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
     </script>
 </body>
 </html>
