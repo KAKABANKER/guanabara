@@ -31,7 +31,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; background: #F4F7FA; }
         
-        .slider-container { position: relative; width: 100%; height: 220px; overflow: hidden; border-radius: 16px; }
+        .slider-container { position: relative; width: 100%; height: 200px; overflow: hidden; border-radius: 16px; }
         .slider-slide { position: absolute; width: 100%; height: 100%; opacity: 0; transition: opacity 1s ease-in-out; object-fit: cover; }
         .slider-slide.active { opacity: 1; }
         .slider-dots { position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; z-index: 10; }
@@ -83,31 +83,11 @@
             cursor: pointer;
             padding: 4px;
         }
-        input[type="date"]::-webkit-datetime-edit {
-            color: #123481 !important;
-        }
-        input[type="date"]::-webkit-datetime-edit-fields-wrapper {
-            color: #123481 !important;
-        }
-        input[type="date"]::-webkit-datetime-edit-text {
-            color: #123481 !important;
-        }
-        input[type="date"]::-webkit-datetime-edit-month-field {
-            color: #123481 !important;
-        }
-        input[type="date"]::-webkit-datetime-edit-day-field {
-            color: #123481 !important;
-        }
-        input[type="date"]::-webkit-datetime-edit-year-field {
-            color: #123481 !important;
-        }
         input[type="date"]:hover {
             transform: scale(1.02);
             box-shadow: 0 4px 12px rgba(18, 52, 129, 0.15);
         }
-        input[type="date"]:active {
-            transform: scale(0.98);
-        }
+        input[type="date"]:active { transform: scale(0.98); }
         
         .date-label {
             font-size: 11px;
@@ -119,25 +99,70 @@
             text-transform: uppercase;
         }
 
-        /* INPUT DE TEXTO COM SUGESTÃO */
-        input[list] {
-            background: white !important;
-            border: 2px solid #e2e8f0 !important;
-            border-radius: 10px !important;
-            padding: 12px 16px !important;
-            font-size: 15px !important;
-            font-weight: 500 !important;
-            transition: all 0.3s ease !important;
-            width: 100% !important;
+        /* INPUT DE TEXTO COM SUGESTÃO - MELHORADO */
+        .input-group {
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 0 12px;
+            transition: all 0.3s ease;
         }
-        input[list]:focus {
-            outline: none !important;
-            border-color: #123481 !important;
-            box-shadow: 0 0 0 4px rgba(18, 52, 129, 0.1) !important;
+        .input-group:focus-within {
+            border-color: #123481;
+            box-shadow: 0 0 0 4px rgba(18, 52, 129, 0.1);
+        }
+        .input-group .icon-left {
+            color: #123481;
+            font-size: 16px;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+        .input-group input {
+            flex: 1;
+            border: none;
+            padding: 14px 0;
+            font-size: 15px;
+            font-weight: 500;
+            outline: none;
+            background: transparent;
+            min-width: 0;
+            color: #1a2a4a;
+        }
+        .input-group input::placeholder {
+            color: #94a3b8;
+            font-weight: 400;
+        }
+        .input-group .btn-swap {
+            background: #123481;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 10px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+            margin-left: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 36px;
+            min-height: 36px;
+        }
+        .input-group .btn-swap:hover {
+            background: #1a4a9e;
+            transform: scale(1.05);
+        }
+        .input-group .btn-swap:active {
+            transform: scale(0.95);
         }
         input[list]::-webkit-calendar-picker-indicator {
-            opacity: 0.6;
+            opacity: 0.5;
             cursor: pointer;
+            padding: 4px;
         }
         input[list]:hover::-webkit-calendar-picker-indicator {
             opacity: 1;
@@ -153,10 +178,12 @@
         
         @media (max-width: 480px) { 
             .seat { width: 34px; height: 34px; font-size: 9px; } 
-            .seat i { font-size: 11px; } 
+            .seat i { font-size: 11px; }
+            .input-group { padding: 0 10px; }
+            .input-group input { padding: 12px 0; font-size: 14px; }
+            .input-group .btn-swap { padding: 6px 8px; min-width: 32px; min-height: 32px; font-size: 12px; }
         }
 
-        /* Outros estilos */
         .checkout-title { text-align: center; font-size: 20px; font-weight: 800; color: #123481; margin-bottom: 4px; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .timer-subtitle { text-align: center; font-size: 13px; color: #475569; margin-bottom: 20px; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 6px; }
         .card-buyer { background: #fff; border-radius: 16px; padding: 20px; max-width: 620px; margin: 0 auto; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border: 1px solid #e2e8f0; }
@@ -246,6 +273,71 @@
                 right: 16px;
             }
         }
+
+        /* VIAGEM EM DESTAQUE - ESTILO LISTA */
+        .viagem-destaque {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: white;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+        .viagem-destaque:hover {
+            transform: translateX(6px);
+            box-shadow: 0 4px 16px rgba(18, 52, 129, 0.1);
+            border-color: #123481;
+        }
+        .viagem-destaque .icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            background: #f0f4ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #123481;
+            flex-shrink: 0;
+        }
+        .viagem-destaque .info {
+            flex: 1;
+            min-width: 0;
+        }
+        .viagem-destaque .info .rota {
+            font-weight: 700;
+            font-size: 14px;
+            color: #1a2a4a;
+        }
+        .viagem-destaque .info .detalhes {
+            font-size: 12px;
+            color: #64748b;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .viagem-destaque .info .detalhes span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .viagem-destaque .preco {
+            font-weight: 800;
+            font-size: 16px;
+            color: #123481;
+            white-space: nowrap;
+        }
+        @media (max-width: 480px) {
+            .viagem-destaque { padding: 10px 12px; gap: 12px; }
+            .viagem-destaque .icon { width: 40px; height: 40px; font-size: 16px; }
+            .viagem-destaque .info .rota { font-size: 13px; }
+            .viagem-destaque .info .detalhes { font-size: 11px; gap: 8px; }
+            .viagem-destaque .preco { font-size: 14px; }
+        }
     </style>
 </head>
 <body>
@@ -301,7 +393,9 @@
         <div id="page-home" class="page active fade-in">
             <!-- SLIDER PRINCIPAL -->
             <div class="slider-container mt-4">
-                <img src="https://viajeguanabara.com.br/_next/image/?url=https%3A%2F%2Fprod-sn-assets.us-east-2.viajeguanabara.com.br%2Fimg%2Fcampanhadesk2026ago.jpg&w=1920&q=90" />
+                <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=1200&h=400&fit=crop" class="slider-slide active" />
+                <img src="https://images.unsplash.com/photo-1570125909232-eb263c188f7e?w=1200&h=400&fit=crop" class="slider-slide" />
+                <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=1200&h=400&fit=crop" class="slider-slide" />
                 <div class="slider-dots">
                     <div class="slider-dot active" onclick="goToSlide(0)"></div>
                     <div class="slider-dot" onclick="goToSlide(1)"></div>
@@ -314,22 +408,20 @@
                 <form id="searchForm" class="space-y-3" onsubmit="buscarViagens(event)">
                     <div>
                         <label class="text-xs font-semibold text-gray-400 block mb-1">Saindo de</label>
-                        <div class="flex items-center gap-2">
-                            <i class="fas fa-map-marker-alt text-gb-blue"></i>
-                            <input type="text" id="origin" placeholder="Digite a cidade" class="w-full" required list="cidadesSugestao" />
+                        <div class="input-group">
+                            <i class="fas fa-map-marker-alt icon-left"></i>
+                            <input type="text" id="origin" placeholder="Digite a cidade" required list="cidadesSugestao" />
+                            <button type="button" class="btn-swap" onclick="trocarOrigemDestino()" title="Trocar origem e destino">
+                                <i class="fas fa-arrows-alt-h"></i>
+                            </button>
                             <datalist id="cidadesSugestao"></datalist>
                         </div>
                     </div>
-                    <div class="flex justify-center -my-1">
-                        <button type="button" onclick="trocarOrigemDestino()" class="bg-gb-blue/10 text-gb-blue p-2 rounded-full hover:bg-gb-blue/20 transition w-10 h-10 flex items-center justify-center">
-                            <i class="fas fa-exchange-alt"></i>
-                        </button>
-                    </div>
                     <div>
                         <label class="text-xs font-semibold text-gray-400 block mb-1">Indo para</label>
-                        <div class="flex items-center gap-2">
-                            <i class="fas fa-map-pin text-gb-blue"></i>
-                            <input type="text" id="destino" placeholder="Digite a cidade" class="w-full" required list="cidadesSugestao2" />
+                        <div class="input-group">
+                            <i class="fas fa-map-pin icon-left"></i>
+                            <input type="text" id="destino" placeholder="Digite a cidade" required list="cidadesSugestao2" />
                             <datalist id="cidadesSugestao2"></datalist>
                         </div>
                     </div>
@@ -339,7 +431,7 @@
                             <input type="date" id="dataIda" required />
                         </div>
                         <div>
-                            <label class="date-label">Data de Volta ( opcional )</label>
+                            <label class="date-label">Data de Volta</label>
                             <input type="date" id="dataVolta" />
                         </div>
                     </div>
@@ -378,48 +470,13 @@
                 </div>
             </div>
 
-            <!-- SLIDER DE VIAGENS -->
+            <!-- VIAGENS EM DESTAQUE - LISTA VERTICAL -->
             <div class="mt-8">
                 <h3 class="text-lg font-bold text-gb-blue mb-4 flex items-center gap-2">
                     <i class="fas fa-bus text-gb-blue"></i> Viagens em Destaque
                 </h3>
-                <div class="grid grid-cols-2 gap-3" id="viagensDestaque">
-                    <div class="dest-card bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100">
-                        <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=400&h=200&fit=crop" class="w-full h-20 object-cover" />
-                        <div class="p-3">
-                            <div class="font-bold text-sm">Rio → São Paulo</div>
-                            <div class="text-xs text-gray-500">Executivo</div>
-                            <div class="text-gb-blue font-bold text-sm mt-1">R$ 89,90</div>
-                            <div class="text-[10px] text-gray-400">Saída: 22:30</div>
-                        </div>
-                    </div>
-                    <div class="dest-card bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100">
-                        <img src="https://images.unsplash.com/photo-1570125909232-eb263c188f7e?w=400&h=200&fit=crop" class="w-full h-20 object-cover" />
-                        <div class="p-3">
-                            <div class="font-bold text-sm">Brasília → Salvador</div>
-                            <div class="text-xs text-gray-500">Leito</div>
-                            <div class="text-gb-blue font-bold text-sm mt-1">R$ 149,90</div>
-                            <div class="text-[10px] text-gray-400">Saída: 20:15</div>
-                        </div>
-                    </div>
-                    <div class="dest-card bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100">
-                        <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=400&h=200&fit=crop" class="w-full h-20 object-cover" />
-                        <div class="p-3">
-                            <div class="font-bold text-sm">BH → Rio de Janeiro</div>
-                            <div class="text-xs text-gray-500">Executivo</div>
-                            <div class="text-gb-blue font-bold text-sm mt-1">R$ 79,90</div>
-                            <div class="text-[10px] text-gray-400">Saída: 23:00</div>
-                        </div>
-                    </div>
-                    <div class="dest-card bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100">
-                        <img src="https://images.unsplash.com/photo-1570125909232-eb263c188f7e?w=400&h=200&fit=crop" class="w-full h-20 object-cover" />
-                        <div class="p-3">
-                            <div class="font-bold text-sm">Curitiba → Porto Alegre</div>
-                            <div class="text-xs text-gray-500">Leito</div>
-                            <div class="text-gb-blue font-bold text-sm mt-1">R$ 119,90</div>
-                            <div class="text-[10px] text-gray-400">Saída: 21:30</div>
-                        </div>
-                    </div>
+                <div id="viagensDestaqueLista">
+                    <!-- Gerado via JS -->
                 </div>
             </div>
 
@@ -882,12 +939,11 @@
     
     <!-- SCRIPT PRINCIPAL -->
     <script>
-        // PREENCHER DATALISTS COM TODAS AS CIDADES
+        // PREENCHER DATALISTS
         function preencherDatalists() {
             const datalist1 = document.getElementById('cidadesSugestao');
             const datalist2 = document.getElementById('cidadesSugestao2');
             
-            // Usa a função do cidades.js
             if (typeof getCidades !== 'undefined') {
                 const cidades = getCidades();
                 cidades.forEach(cidade => {
@@ -901,10 +957,54 @@
                 });
                 console.log('✅ ' + cidades.length + ' cidades carregadas!');
             } else {
-                console.log('⚠️ Aguardando carregamento do cidades.js...');
-                // Tenta novamente depois
                 setTimeout(preencherDatalists, 500);
             }
+        }
+
+        // VIAGENS EM DESTAQUE - LISTA VERTICAL
+        function carregarViagensDestaque() {
+            const viagens = [
+                { origem: 'Rio de Janeiro', destino: 'São Paulo', preco: '89,90', horario: '22:30', tipo: 'Executivo' },
+                { origem: 'Brasília', destino: 'Salvador', preco: '149,90', horario: '20:15', tipo: 'Leito' },
+                { origem: 'Belo Horizonte', destino: 'Rio de Janeiro', preco: '79,90', horario: '23:00', tipo: 'Executivo' },
+                { origem: 'Curitiba', destino: 'Porto Alegre', preco: '119,90', horario: '21:30', tipo: 'Leito' },
+                { origem: 'São Paulo', destino: 'Belo Horizonte', preco: '99,90', horario: '19:45', tipo: 'Executivo' },
+                { origem: 'Fortaleza', destino: 'Recife', preco: '89,90', horario: '18:00', tipo: 'Semileito' },
+            ];
+
+            const container = document.getElementById('viagensDestaqueLista');
+            container.innerHTML = viagens.map(v => `
+                <div class="viagem-destaque" onclick="buscarRota('${v.origem}', '${v.destino}')">
+                    <div class="icon">
+                        <i class="fas fa-bus"></i>
+                    </div>
+                    <div class="info">
+                        <div class="rota">${v.origem} → ${v.destino}</div>
+                        <div class="detalhes">
+                            <span><i class="far fa-clock"></i> ${v.horario}</span>
+                            <span><i class="fas fa-tag"></i> ${v.tipo}</span>
+                        </div>
+                    </div>
+                    <div class="preco">R$ ${v.preco}</div>
+                </div>
+            `).join('');
+        }
+
+        function buscarRota(origem, destino) {
+            document.getElementById('origin').value = origem + ' - ' + (origem === 'Rio de Janeiro' ? 'RJ' : origem === 'São Paulo' ? 'SP' : origem === 'Brasília' ? 'DF' : origem === 'Salvador' ? 'BA' : origem === 'Belo Horizonte' ? 'MG' : origem === 'Curitiba' ? 'PR' : origem === 'Porto Alegre' ? 'RS' : origem === 'Fortaleza' ? 'CE' : origem === 'Recife' ? 'PE' : '');
+            document.getElementById('destino').value = destino + ' - ' + (destino === 'Rio de Janeiro' ? 'RJ' : destino === 'São Paulo' ? 'SP' : destino === 'Brasília' ? 'DF' : destino === 'Salvador' ? 'BA' : destino === 'Belo Horizonte' ? 'MG' : destino === 'Curitiba' ? 'PR' : destino === 'Porto Alegre' ? 'RS' : destino === 'Fortaleza' ? 'CE' : destino === 'Recife' ? 'PE' : '');
+            
+            // Rola para o formulário
+            document.querySelector('#searchForm').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // Destaca o botão
+            const btn = document.querySelector('#searchForm button[type="submit"]');
+            btn.style.transform = 'scale(1.05)';
+            btn.style.boxShadow = '0 0 0 4px rgba(18,52,129,0.3)';
+            setTimeout(() => {
+                btn.style.transform = '';
+                btn.style.boxShadow = '';
+            }, 1000);
         }
 
         // SLIDER
@@ -1013,6 +1113,11 @@
             const temp = origin.value;
             origin.value = destino.value;
             destino.value = temp;
+            
+            // Efeito visual
+            const btn = document.querySelector('.btn-swap');
+            btn.style.transform = 'rotate(180deg)';
+            setTimeout(() => { btn.style.transform = ''; }, 300);
         }
 
         function gerarHorarioAleatorio() {
@@ -1336,11 +1441,10 @@
         }
 
         // INICIALIZAÇÃO
-        // Aguarda o carregamento do cidades.js
         setTimeout(preencherDatalists, 300);
         carregarDestinos();
+        carregarViagensDestaque();
 
-        // Seta data mínima para hoje
         const hoje = new Date().toISOString().split('T')[0];
         document.getElementById('dataIda').min = hoje;
         document.getElementById('dataVolta').min = hoje;
