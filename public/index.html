@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Viaje Guanabara - Passagens de Ônibus</title>
     
-    <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -18,10 +17,7 @@
                             yellow: '#E79F01',
                             whatsapp: '#00C853',
                             red: '#9A3026',
-                            text: '#333333',
-                            muted: '#888888',
-                            bg: '#F4F7FA',
-                            input: '#F5F5F5'
+                            dark: '#0a1a3a'
                         }
                     }
                 }
@@ -29,67 +25,55 @@
         }
     </script>
 
-    <!-- Fontes e Libs -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
+    
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'Inter', sans-serif; background: #F4F7FA; color: #333; -webkit-font-smoothing: antialiased; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #F4F7FA; }
         
-        .spinner { width: 30px; height: 30px; border: 3px solid #e5e7eb; border-top: 3px solid #123481; border-radius: 50%; animation: spin 0.8s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
+        .slider-container { position: relative; width: 100%; height: 220px; overflow: hidden; border-radius: 16px; }
+        .slider-slide { position: absolute; width: 100%; height: 100%; opacity: 0; transition: opacity 1s ease-in-out; object-fit: cover; }
+        .slider-slide.active { opacity: 1; }
+        .slider-dots { position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; z-index: 10; }
+        .slider-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.5); cursor: pointer; transition: all 0.3s; }
+        .slider-dot.active { background: #fff; width: 24px; border-radius: 4px; }
+        
+        .dest-card { transition: all 0.3s ease; cursor: pointer; }
+        .dest-card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,0.1); }
+        
+        .bottom-nav { backdrop-filter: blur(10px); background: rgba(255,255,255,0.95); }
+        .fade-in { animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .page { display: none; }
+        .page.active { display: block; }
+        
         .seat-wrapper { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
-        .seat { width: 38px; height: 38px; border-radius: 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 700; font-size: 10px; cursor: pointer; transition: all 0.15s; border: 2px solid #d1d5db; background: #fff; color: #374151; }
+        .seat { width: 38px; height: 38px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 700; font-size: 10px; cursor: pointer; transition: all 0.2s; border: 2px solid #d1d5db; background: #fff; color: #374151; }
         .seat.available { border-color: #22c55e; color: #15803d; }
-        .seat.available:active { transform: scale(0.95); }
-        .seat.selected { border-color: #E79F01; background: #E79F01; color: white; transform: scale(1.05); }
-        .seat.occupied { background: #f3f4f6; border-color: #e5e7eb; color: #9ca3af; cursor: not-allowed; }
+        .seat.available:hover { transform: scale(1.05); box-shadow: 0 4px 12px rgba(34,197,94,0.3); }
+        .seat.selected { border-color: #E79F01; background: #E79F01; color: white; transform: scale(1.08); box-shadow: 0 4px 16px rgba(231,159,1,0.4); }
+        .seat.occupied { background: #f3f4f6; border-color: #e5e7eb; color: #9ca3af; cursor: not-allowed; opacity: 0.6; }
         .seat i { font-size: 14px; margin-bottom: 1px; }
-
-        .fade-in { animation: fadeIn 0.3s ease-in-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-        .slide-up { animation: slideUp 0.3s ease-out; }
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-
-        .drawer-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 998; display: none; }
+        
+        .drawer-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 998; display: none; backdrop-filter: blur(4px); }
         .drawer-overlay.active { display: block; }
-        .drawer-panel { position: fixed; bottom: -100%; left: 0; right: 0; max-height: 95vh; background: white; z-index: 999; border-radius: 20px 20px 0 0; transition: bottom 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; box-shadow: 0 -10px 30px rgba(0,0,0,0.1); overflow: hidden; }
+        .drawer-panel { position: fixed; bottom: -100%; left: 0; right: 0; max-height: 92vh; background: white; z-index: 999; border-radius: 24px 24px 0 0; transition: bottom 0.4s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; box-shadow: 0 -20px 40px rgba(0,0,0,0.15); overflow: hidden; }
         .drawer-panel.active { bottom: 0; }
-
+        
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 8px; }
+        
+        @media (max-width: 480px) { .seat { width: 32px; height: 32px; font-size: 9px; } .seat i { font-size: 12px; } }
 
-        @media (max-width: 480px) {
-            .seat { width: 32px; height: 32px; font-size: 9px; }
-            .seat i { font-size: 12px; }
-        }
-
-        /* Estilos do Checkout */
         .checkout-title { text-align: center; font-size: 20px; font-weight: 800; color: #1e3a8a; margin-bottom: 4px; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .timer-subtitle { text-align: center; font-size: 13px; color: #475569; margin-bottom: 20px; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 6px; }
-        .timer-subtitle i { color: #1e3a8a; }
         .card-buyer { background: #fff; border-radius: 16px; padding: 20px; max-width: 620px; margin: 0 auto; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border: 1px solid #e2e8f0; }
         .form-grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
         .form-group label { display: block; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 6px; }
         .form-group input { width: 100%; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px 14px; font-size: 15px; outline: none; transition: border-color 0.2s; background: #fff; }
         .form-group input:focus { border-color: #1e3a8a; }
-        .checkbox-group { display: flex; align-items: flex-start; gap: 10px; margin-top: 14px; font-size: 13px; color: #334155; line-height: 1.4; }
-        .checkbox-group input { margin-top: 2px; width: 18px; height: 18px; accent-color: #1e3a8a; cursor: pointer; flex-shrink: 0; }
-        .checkbox-group a { color: #1e3a8a; text-decoration: underline; font-weight: 600; }
-        .save-card-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; margin: 20px 0; font-size: 13px; font-weight: 700; color: #1e3a8a; }
-        .save-card-box div { display: flex; align-items: center; gap: 8px; }
-        .switch { position: relative; display: inline-block; width: 44px; height: 24px; flex-shrink: 0; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; inset: 0; background-color: #cbd5e1; transition: .3s; border-radius: 24px; }
-        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
-        input:checked + .slider { background-color: #1e3a8a; }
-        input:checked + .slider:before { transform: translateX(20px); }
         .btn-submit { width: 100%; background: #1e3a8a; color: #fff; border: none; padding: 16px; border-radius: 10px; font-size: 16px; font-weight: 700; cursor: pointer; transition: background 0.2s; min-height: 52px; }
         .btn-submit:hover { background: #1a2f6a; }
         .checkout-layout { display: grid; grid-template-columns: 1fr; gap: 16px; align-items: start; }
@@ -105,10 +89,6 @@
         .breakdown-row { display: flex; justify-content: space-between; margin-bottom: 8px; color: #475569; }
         .breakdown-row.discount { color: #16a34a; font-weight: 600; }
         .breakdown-row.points { color: #16a34a; font-weight: 700; margin-top: 12px; border-top: 1px dashed #e2e8f0; padding-top: 10px; }
-        .coupon-box { display: flex; gap: 8px; margin-top: 15px; }
-        .coupon-box input { flex: 1; border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px 12px; font-size: 13px; outline: none; }
-        .coupon-box button { background: #fff; border: 1px solid #1e3a8a; color: #1e3a8a; border-radius: 8px; padding: 0 16px; font-weight: 700; font-size: 13px; cursor: pointer; white-space: nowrap; }
-        .coupon-box button:hover { background: #f8fafc; }
         .passenger-info-card { background: #fff; border-radius: 16px; padding: 16px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; }
         .passenger-info-card .name { font-weight: 700; font-size: 14px; color: #1e293b; }
         .passenger-info-card .email { font-size: 12px; color: #64748b; word-break: break-all; }
@@ -129,794 +109,1009 @@
         .payment-option-info i { font-size: 20px; color: #1e3a8a; width: 24px; text-align: center; }
         .payment-option-info .title { font-size: 14px; font-weight: 700; color: #1e293b; }
         .payment-option-info .sub { font-size: 11px; color: #64748b; }
-        .footer-text { text-align: center; font-size: 12px; color: #64748b; margin-top: 30px; }
         @media (min-width: 768px) {
             .form-grid { grid-template-columns: 1fr 1fr; }
             .form-group.full { grid-column: span 2; }
             .checkout-layout { grid-template-columns: 1fr 1.2fr; gap: 20px; }
             .card-buyer { padding: 32px; }
-            .insurance-card, .payment-methods-card, .passenger-info-card { padding: 20px; }
         }
+        
+        .spinner { width: 30px; height: 30px; border: 3px solid #e5e7eb; border-top: 3px solid #123481; border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .depoimento-card { transition: all 0.3s ease; }
+        .depoimento-card:hover { transform: scale(1.02); }
+        
+        .blog-card { transition: all 0.3s ease; }
+        .blog-card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,0.1); }
     </style>
 </head>
 <body>
-    <div id="root"></div>
+    <!-- HEADER -->
+    <header class="sticky top-0 z-30 bg-white shadow-sm border-b border-gray-100 px-4 py-3 flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <button id="btnVoltar" class="text-gb-blue text-sm font-bold flex items-center gap-1 hidden" onclick="voltarHome()">
+                <i class="fas fa-arrow-left"></i> Voltar
+            </button>
+            <img src="/img/logo.webp" alt="Guanabara" class="h-8 object-contain" onerror="this.style.display='none'" />
+        </div>
+        <div class="flex items-center gap-3">
+            <button onclick="navigateTo('account')" class="text-gb-blue text-sm font-bold hidden sm:block">Entrar</button>
+            <div class="w-8 h-8 bg-gb-red/10 rounded-full flex items-center justify-center text-gb-red text-sm cursor-pointer" onclick="navigateTo('account')">
+                <i class="fas fa-user"></i>
+            </div>
+        </div>
+    </header>
 
-    <script type="text/babel">
-        const { useState, useEffect } = React;
+    <!-- BOTTOM NAV -->
+    <nav class="fixed bottom-0 left-0 right-0 z-30 bg-white border-t border-gray-200 shadow-lg flex justify-around items-center py-2 max-w-xl mx-auto">
+        <button onclick="navigateTo('home')" class="nav-btn flex flex-col items-center gap-0.5 text-gb-blue" data-page="home">
+            <i class="fas fa-home text-lg"></i>
+            <span class="text-[10px] font-bold">Início</span>
+            <div class="w-1 h-1 bg-gb-blue rounded-full mt-0.5"></div>
+        </button>
+        <button onclick="navigateTo('destinos')" class="nav-btn flex flex-col items-center gap-0.5 text-gray-400" data-page="destinos">
+            <i class="fas fa-map-marked-alt text-lg"></i>
+            <span class="text-[10px] font-bold">Destinos</span>
+            <div class="w-1 h-1 bg-gb-blue rounded-full mt-0.5 hidden"></div>
+        </button>
+        <button onclick="navigateTo('services')" class="nav-btn flex flex-col items-center gap-0.5 text-gray-400" data-page="services">
+            <i class="fas fa-concierge-bell text-lg"></i>
+            <span class="text-[10px] font-bold">Serviços</span>
+            <div class="w-1 h-1 bg-gb-blue rounded-full mt-0.5 hidden"></div>
+        </button>
+        <button onclick="navigateTo('account')" class="nav-btn flex flex-col items-center gap-0.5 text-gray-400" data-page="account">
+            <i class="fas fa-user-circle text-lg"></i>
+            <span class="text-[10px] font-bold">Conta</span>
+            <div class="w-1 h-1 bg-gb-blue rounded-full mt-0.5 hidden"></div>
+        </button>
+        <button onclick="navigateTo('help')" class="nav-btn flex flex-col items-center gap-0.5 text-gray-400" data-page="help">
+            <i class="fas fa-question-circle text-lg"></i>
+            <span class="text-[10px] font-bold">Ajuda</span>
+            <div class="w-1 h-1 bg-gb-blue rounded-full mt-0.5 hidden"></div>
+        </button>
+    </nav>
 
-        // ===========================
-        // CONFIGURAÇÃO
-        // ===========================
-        const API_URL = window.location.origin + '/api';
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="pb-24 max-w-xl mx-auto px-4">
         
-        const FALLBACK_LOCATIONS = [
-            { city: 'Rio de Janeiro', state: 'RJ', terminal: 'Rodoviária Novo Rio', lat: -22.9068, lng: -43.1975 },
-            { city: 'São Paulo', state: 'SP', terminal: 'Terminal Tietê', lat: -23.5156, lng: -46.6204 },
-            { city: 'Brasília', state: 'DF', terminal: 'Rodoviária do Plano Piloto', lat: -15.7939, lng: -47.8829 },
-            { city: 'Salvador', state: 'BA', terminal: 'Rodoviária de Salvador', lat: -12.9781, lng: -38.5015 },
-            { city: 'Fortaleza', state: 'CE', terminal: 'Rodoviária de Fortaleza', lat: -3.7898, lng: -38.5716 },
-            { city: 'Belo Horizonte', state: 'MG', terminal: 'Rodoviária de BH', lat: -19.9167, lng: -43.9345 },
-            { city: 'Curitiba', state: 'PR', terminal: 'Rodoviária de Curitiba', lat: -25.4284, lng: -49.2733 },
-            { city: 'Porto Alegre', state: 'RS', terminal: 'Rodoviária de Porto Alegre', lat: -30.0346, lng: -51.2175 },
-            { city: 'Goiânia', state: 'GO', terminal: 'Rodoviária de Goiânia', lat: -16.6869, lng: -49.2648 },
-            { city: 'Recife', state: 'PE', terminal: 'Rodoviária de Recife', lat: -8.0543, lng: -34.8786 },
-            { city: 'Belém', state: 'PA', terminal: 'Rodoviária de Belém', lat: -1.4558, lng: -48.4798 },
-        ];
+        <!-- ===================== HOME ===================== -->
+        <div id="page-home" class="page active fade-in">
+            <!-- SLIDER PRINCIPAL -->
+            <div class="slider-container mt-4">
+                <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=1200&h=400&fit=crop" class="slider-slide active" />
+                <img src="https://images.unsplash.com/photo-1570125909232-eb263c188f7e?w=1200&h=400&fit=crop" class="slider-slide" />
+                <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=1200&h=400&fit=crop" class="slider-slide" />
+                <div class="slider-dots">
+                    <div class="slider-dot active" onclick="goToSlide(0)"></div>
+                    <div class="slider-dot" onclick="goToSlide(1)"></div>
+                    <div class="slider-dot" onclick="goToSlide(2)"></div>
+                </div>
+            </div>
 
-        let cityCache = {};
+            <!-- FORMULÁRIO DE BUSCA -->
+            <div class="bg-white rounded-2xl shadow-xl -mt-10 relative z-20 px-5 pt-5 pb-6 border border-gray-100">
+                <form id="searchForm" class="space-y-3" onsubmit="buscarViagens(event)">
+                    <div>
+                        <label class="text-xs font-semibold text-gray-400 block mb-1">Saindo de</label>
+                        <div class="flex items-center border-b border-gray-200 pb-1">
+                            <i class="fas fa-map-marker-alt text-gb-blue mr-2"></i>
+                            <input type="text" id="origin" placeholder="Digite a cidade" class="w-full text-base font-medium outline-none bg-transparent" required />
+                        </div>
+                    </div>
+                    <div class="flex justify-center -my-1">
+                        <button type="button" onclick="trocarOrigemDestino()" class="bg-gb-blue/10 text-gb-blue p-2 rounded-full hover:bg-gb-blue/20 transition w-10 h-10 flex items-center justify-center">
+                            <i class="fas fa-exchange-alt"></i>
+                        </button>
+                    </div>
+                    <div>
+                        <label class="text-xs font-semibold text-gray-400 block mb-1">Indo para</label>
+                        <div class="flex items-center border-b border-gray-200 pb-1">
+                            <i class="fas fa-map-pin text-gb-blue mr-2"></i>
+                            <input type="text" id="destino" placeholder="Digite a cidade" class="w-full text-base font-medium outline-none bg-transparent" required />
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3 pt-1">
+                        <div>
+                            <label class="text-xs font-semibold text-gray-400 block mb-1">Ida</label>
+                            <input type="date" id="dataIda" class="w-full text-sm font-medium outline-none bg-gray-50 rounded-lg p-2" required />
+                        </div>
+                        <div>
+                            <label class="text-xs font-semibold text-gray-400 block mb-1">Volta</label>
+                            <input type="date" id="dataVolta" class="w-full text-sm font-medium outline-none bg-gray-50 rounded-lg p-2" />
+                        </div>
+                    </div>
+                    <div>
+                        <label class="text-xs font-semibold text-gray-400 block mb-1">Passageiros</label>
+                        <div class="flex items-center bg-gray-50 rounded-lg p-2">
+                            <i class="fas fa-users text-gb-blue mr-3"></i>
+                            <input type="number" id="passageiros" min="1" value="1" class="w-full text-base font-medium outline-none bg-transparent" />
+                        </div>
+                    </div>
+                    <button type="submit" class="w-full bg-gb-blue hover:bg-gb-blue-hover text-white font-bold py-3.5 rounded-xl text-base uppercase tracking-wider shadow-lg transition">
+                        BUSCAR VIAGEM
+                    </button>
+                </form>
+            </div>
 
-        const formatCurrency = (value) => {
-            return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
-        };
+            <!-- DESTINOS EM DESTAQUE -->
+            <div class="mt-8">
+                <h3 class="text-lg font-bold text-gb-blue mb-4 flex items-center gap-2">
+                    <i class="fas fa-fire text-gb-yellow"></i> Destinos em Destaque
+                </h3>
+                <div class="grid grid-cols-2 gap-3" id="destinosPopulares"></div>
+            </div>
 
-        const formatDate = (str) => {
-            if (!str) return '';
-            const [y, m, d] = str.split('-');
-            return `${d}/${m}/${y}`;
-        };
+            <!-- OFERTAS ESPECIAIS -->
+            <div class="mt-6 bg-gradient-to-r from-gb-blue to-gb-blue-hover rounded-2xl p-4 text-white">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <div class="text-xs font-bold opacity-80">OFERTA ESPECIAL</div>
+                        <div class="text-2xl font-black">25% OFF</div>
+                        <div class="text-sm font-medium">em compras de ida e volta</div>
+                    </div>
+                    <div class="bg-gb-yellow text-gb-blue px-4 py-2 rounded-lg font-bold text-sm cursor-pointer hover:scale-105 transition">
+                        Ver ofertas
+                    </div>
+                </div>
+            </div>
 
-        const searchCities = async (term) => {
-            if (term.length < 2) return [];
-            if (cityCache[term]) return cityCache[term];
+            <!-- SLIDER DE VIAGENS -->
+            <div class="mt-8">
+                <h3 class="text-lg font-bold text-gb-blue mb-4 flex items-center gap-2">
+                    <i class="fas fa-bus text-gb-yellow"></i> Viagens em Destaque
+                </h3>
+                <div class="grid grid-cols-2 gap-3" id="viagensDestaque">
+                    <div class="dest-card bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100">
+                        <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=400&h=200&fit=crop" class="w-full h-20 object-cover" />
+                        <div class="p-3">
+                            <div class="font-bold text-sm">Rio → São Paulo</div>
+                            <div class="text-xs text-gray-500">Executivo</div>
+                            <div class="text-gb-blue font-bold text-sm mt-1">R$ 89,90</div>
+                            <div class="text-[10px] text-gray-400">Saída: 22:30</div>
+                        </div>
+                    </div>
+                    <div class="dest-card bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100">
+                        <img src="https://images.unsplash.com/photo-1570125909232-eb263c188f7e?w=400&h=200&fit=crop" class="w-full h-20 object-cover" />
+                        <div class="p-3">
+                            <div class="font-bold text-sm">Brasília → Salvador</div>
+                            <div class="text-xs text-gray-500">Leito</div>
+                            <div class="text-gb-blue font-bold text-sm mt-1">R$ 149,90</div>
+                            <div class="text-[10px] text-gray-400">Saída: 20:15</div>
+                        </div>
+                    </div>
+                    <div class="dest-card bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100">
+                        <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=400&h=200&fit=crop" class="w-full h-20 object-cover" />
+                        <div class="p-3">
+                            <div class="font-bold text-sm">BH → Rio de Janeiro</div>
+                            <div class="text-xs text-gray-500">Executivo</div>
+                            <div class="text-gb-blue font-bold text-sm mt-1">R$ 79,90</div>
+                            <div class="text-[10px] text-gray-400">Saída: 23:00</div>
+                        </div>
+                    </div>
+                    <div class="dest-card bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100">
+                        <img src="https://images.unsplash.com/photo-1570125909232-eb263c188f7e?w=400&h=200&fit=crop" class="w-full h-20 object-cover" />
+                        <div class="p-3">
+                            <div class="font-bold text-sm">Curitiba → Porto Alegre</div>
+                            <div class="text-xs text-gray-500">Leito</div>
+                            <div class="text-gb-blue font-bold text-sm mt-1">R$ 119,90</div>
+                            <div class="text-[10px] text-gray-400">Saída: 21:30</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-            const controller = new AbortController();
-            const timeout = setTimeout(() => controller.abort(), 2000);
+            <!-- DEPOIMENTOS -->
+            <div class="mt-8">
+                <h3 class="text-lg font-bold text-gb-blue mb-4 flex items-center gap-2">
+                    <i class="fas fa-star text-gb-yellow"></i> O que nossos clientes dizem
+                </h3>
+                <div class="space-y-3">
+                    <div class="depoimento-card bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                        <div class="flex items-center gap-2 mb-2">
+                            <div class="w-8 h-8 bg-gb-blue/10 rounded-full flex items-center justify-center">
+                                <i class="fas fa-user text-gb-blue"></i>
+                            </div>
+                            <div>
+                                <div class="font-bold text-sm">Ana Silva</div>
+                                <div class="text-[10px] text-gb-yellow">★★★★★</div>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-600">"Excelente viagem! Conforto impecável e pontualidade. Recomendo!"</p>
+                    </div>
+                    <div class="depoimento-card bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                        <div class="flex items-center gap-2 mb-2">
+                            <div class="w-8 h-8 bg-gb-blue/10 rounded-full flex items-center justify-center">
+                                <i class="fas fa-user text-gb-blue"></i>
+                            </div>
+                            <div>
+                                <div class="font-bold text-sm">Carlos Santos</div>
+                                <div class="text-[10px] text-gb-yellow">★★★★★</div>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-600">"Viajo sempre com a Guanabara. Atendimento de primeira qualidade!"</p>
+                    </div>
+                    <div class="depoimento-card bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                        <div class="flex items-center gap-2 mb-2">
+                            <div class="w-8 h-8 bg-gb-blue/10 rounded-full flex items-center justify-center">
+                                <i class="fas fa-user text-gb-blue"></i>
+                            </div>
+                            <div>
+                                <div class="font-bold text-sm">Mariana Oliveira</div>
+                                <div class="text-[10px] text-gb-yellow">★★★★★</div>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-600">"Conforto, segurança e preço justo. Melhor empresa de ônibus!"</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BLOG / DICAS -->
+            <div class="mt-8">
+                <h3 class="text-lg font-bold text-gb-blue mb-4 flex items-center gap-2">
+                    <i class="fas fa-newspaper text-gb-yellow"></i> Dicas de Viagem
+                </h3>
+                <div class="space-y-3">
+                    <div class="blog-card bg-white p-4 rounded-xl shadow-sm border border-gray-100 cursor-pointer">
+                        <div class="flex items-center gap-3">
+                            <div class="w-16 h-16 bg-gb-blue/10 rounded-lg flex items-center justify-center text-2xl">✈️</div>
+                            <div>
+                                <div class="font-bold text-sm">Como viajar com conforto</div>
+                                <div class="text-xs text-gray-500">Dicas para aproveitar sua viagem</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="blog-card bg-white p-4 rounded-xl shadow-sm border border-gray-100 cursor-pointer">
+                        <div class="flex items-center gap-3">
+                            <div class="w-16 h-16 bg-gb-blue/10 rounded-lg flex items-center justify-center text-2xl">🧳</div>
+                            <div>
+                                <div class="font-bold text-sm">O que levar na mala</div>
+                                <div class="text-xs text-gray-500">Lista completa para sua viagem</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="blog-card bg-white p-4 rounded-xl shadow-sm border border-gray-100 cursor-pointer">
+                        <div class="flex items-center gap-3">
+                            <div class="w-16 h-16 bg-gb-blue/10 rounded-lg flex items-center justify-center text-2xl">🌅</div>
+                            <div>
+                                <div class="font-bold text-sm">Destinos imperdíveis</div>
+                                <div class="text-xs text-gray-500">Os melhores lugares para conhecer</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RODAPÉ INFORMAÇÕES -->
+            <div class="mt-8 bg-white rounded-xl p-4 border border-gray-100">
+                <div class="grid grid-cols-2 gap-4 text-center">
+                    <div>
+                        <div class="text-2xl font-black text-gb-blue">50+</div>
+                        <div class="text-xs text-gray-500">Destinos disponíveis</div>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-black text-gb-blue">12.000+</div>
+                        <div class="text-xs text-gray-500">Clientes satisfeitos</div>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-black text-gb-blue">98%</div>
+                        <div class="text-xs text-gray-500">Pontualidade</div>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-black text-gb-blue">24h</div>
+                        <div class="text-xs text-gray-500">Atendimento SAC</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NEWSLETTER -->
+            <div class="mt-6 bg-gb-dark rounded-2xl p-4 text-white">
+                <h4 class="font-bold text-lg">📬 Receba ofertas exclusivas</h4>
+                <p class="text-sm opacity-80 mt-1">Cadastre-se e receba promoções especiais</p>
+                <div class="flex gap-2 mt-3">
+                    <input type="email" placeholder="Seu e-mail" class="flex-1 p-2 rounded-lg text-sm text-gray-800 outline-none" />
+                    <button class="bg-gb-yellow text-gb-dark font-bold px-4 py-2 rounded-lg text-sm whitespace-nowrap">Cadastrar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================== DESTINOS ===================== -->
+        <div id="page-destinos" class="page fade-in">
+            <h2 class="text-xl font-bold text-gb-blue mb-4 flex items-center gap-2">
+                <i class="fas fa-map-marked-alt"></i> Todos os Destinos
+            </h2>
+            <div class="grid grid-cols-2 gap-3" id="todosDestinos"></div>
+        </div>
+
+        <!-- ===================== TICKETS ===================== -->
+        <div id="page-tickets" class="page fade-in">
+            <div class="flex items-center gap-2 mb-4">
+                <h2 class="text-xl font-bold text-gb-blue">Viagens encontradas</h2>
+                <span class="text-xl">🚍</span>
+                <span id="totalResultados" class="text-sm font-normal text-gray-500"></span>
+            </div>
+            <div id="ticketsList"></div>
+        </div>
+
+        <!-- ===================== CHECKOUT BUYER ===================== -->
+        <div id="page-checkout-buyer" class="page fade-in">
+            <div class="checkout-title">Informações do comprador</div>
+            <div class="timer-subtitle">
+                <span>Conclua a compra e garanta a sua viagem</span>
+                <i class="far fa-clock"></i>
+                <span id="timerBuyer" style="font-weight:700;">09:13</span>
+            </div>
+            <div class="card-buyer">
+                <form id="formBuyer" onsubmit="prosseguirPagamento(event)">
+                    <div class="form-grid">
+                        <div class="form-group full"><label>Nome Completo *</label><input type="text" id="buyerName" placeholder="Informe aqui" required /></div>
+                        <div class="form-group"><label>E-mail *</label><input type="email" id="buyerEmail" placeholder="Informe aqui" required /></div>
+                        <div class="form-group"><label>Celular *</label><input type="tel" id="buyerPhone" placeholder="Informe aqui" required /></div>
+                        <div class="form-group"><label>CPF *</label><input type="text" id="buyerCpf" placeholder="Informe aqui" required /></div>
+                        <div class="form-group"><label>Data de Nascimento *</label><input type="text" id="buyerBirth" placeholder="DD/MM/AAAA" required /></div>
+                    </div>
+                    <button type="submit" class="btn-submit mt-4">Prosseguir com a reserva</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- ===================== CHECKOUT PAYMENT ===================== -->
+        <div id="page-checkout-payment" class="page fade-in">
+            <div class="checkout-title">Pagamento</div>
+            <div class="timer-subtitle">
+                <span>Conclua a compra e garanta a sua viagem</span>
+                <i class="far fa-clock"></i>
+                <span id="timerPayment" style="font-weight:700;">07:38</span>
+            </div>
+            <div class="checkout-layout">
+                <div>
+                    <div class="summary-card">
+                        <div class="summary-banner">
+                            <div class="title">Sua Compra</div>
+                            <div class="total-price">R$ <span id="finalTotal">179,99</span> <small style="font-size:12px; font-weight:400;">total</small></div>
+                        </div>
+                        <div class="trip-detail-box">
+                            <div class="trip-header"><span><i class="fas fa-bus"></i> Viagem de ida</span><span id="tripDate">13 ago, qui 23:00</span></div>
+                            <div class="route-line"><span id="tripOrigin">BRASILIA - DF</span><i class="fas fa-arrow-right" style="font-size:11px; color:#94a3b8;"></i><span id="tripDest">CORRENTINA - BA</span></div>
+                            <div style="font-size:11px; color:#64748b; margin-top:4px;">Classe <strong id="tripClass">EXECUTIVO</strong></div>
+                        </div>
+                        <div class="breakdown-box">
+                            <div class="breakdown-title"><i class="fas fa-receipt"></i> Resumo do pagamento</div>
+                            <div class="breakdown-row"><span>Passagem</span><span id="basePrice">R$ 243,75</span></div>
+                            <div class="breakdown-row discount"><span>Desconto - Passagem</span><span id="discountPrice">- R$ 63,76</span></div>
+                            <div class="breakdown-row"><span>Taxa de serviço</span><span>R$ 9,79</span></div>
+                            <div class="breakdown-row"><span>Taxa de embarque</span><span>R$ 8,38</span></div>
+                            <div class="breakdown-row points"><span><i class="fas fa-star"></i> Pontuação Viva</span><span>+ 150 pontos</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:16px;">
+                    <div class="passenger-info-card">
+                        <div>
+                            <div style="font-size:13px; font-weight:800; color:#1e293b; margin-bottom:4px;">Passageiros nesta viagem</div>
+                            <div class="name" id="displayPassengerName">Nome do Passageiro</div>
+                            <div class="email" id="displayPassengerEmail">email@exemplo.com</div>
+                        </div>
+                        <div class="seat-badge">Assento<br><span style="font-size:16px;" id="displaySeat">08</span></div>
+                    </div>
+                    <div class="insurance-card">
+                        <div class="insurance-title"><i class="fas fa-shield-alt" style="color:#1e3a8a;"></i> Seguro viagem opcional</div>
+                        <div class="insurance-desc">O seguro adicional oferece uma cobertura extra em caso de danos, extravio e saúde.</div>
+                        <div class="insurance-list">
+                            <div><i class="fas fa-check-circle"></i> Cabe no bolso</div>
+                            <div><i class="fas fa-check-circle"></i> Cobertura nacional</div>
+                            <div><i class="fas fa-check-circle"></i> Pagamento em até 30 dias</div>
+                        </div>
+                        <div class="insurance-footer">
+                            <label style="display:flex; align-items:center; gap:8px; font-size:13px; font-weight:700; cursor:pointer;">
+                                <input type="checkbox" id="insuranceCheckbox" style="width:18px; height:18px; accent-color:#1e3a8a;" onchange="toggleInsurance()"> Sim, quero viajar tranquilo
+                            </label>
+                            <div class="insurance-price">R$ 10,00<span>por passageiro</span></div>
+                        </div>
+                    </div>
+                    <div class="payment-methods-card">
+                        <div class="insurance-title" style="margin-bottom:14px;"><i class="fas fa-wallet" style="color:#1e3a8a;"></i> Selecione o pagamento</div>
+                        <div class="payment-option" onclick="processarPagamento('PIX')">
+                            <div class="payment-option-info">
+                                <i class="fa-brands fa-pix" style="color:#00bdae;"></i>
+                                <div><div class="title">PIX</div><div class="sub">Confirmação imediata</div></div>
+                            </div>
+                            <i class="fas fa-chevron-right" style="color:#cbd5e1; font-size:12px;"></i>
+                        </div>
+                        <div class="payment-option" onclick="processarPagamento('Cartao')">
+                            <div class="payment-option-info">
+                                <i class="far fa-credit-card"></i>
+                                <div><div class="title">Cartão de crédito</div><div class="sub">Visa, Mastercard, Elo, Amex</div></div>
+                            </div>
+                            <i class="fas fa-chevron-right" style="color:#cbd5e1; font-size:12px;"></i>
+                        </div>
+                        <div class="payment-option" onclick="processarPagamento('Transferencia')">
+                            <div class="payment-option-info">
+                                <i class="fas fa-university"></i>
+                                <div><div class="title">Transferência Bancária</div><div class="sub">Até 3h para compensar</div></div>
+                            </div>
+                            <i class="fas fa-chevron-right" style="color:#cbd5e1; font-size:12px;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================== RECEIPT ===================== -->
+        <div id="page-receipt" class="page fade-in">
+            <div class="text-center py-8">
+                <div class="bg-green-100 text-green-700 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 text-4xl">
+                    <i class="fas fa-check"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-green-700 mb-2">Pagamento Confirmado!</h2>
+                <p class="text-gray-500 text-sm mb-6">Sua passagem foi emitida com sucesso.</p>
+                <div class="bg-white p-6 rounded-xl shadow text-left border border-gray-100 max-w-md mx-auto">
+                    <div class="flex justify-between py-2 border-b border-gray-100 text-sm">
+                        <span class="font-bold text-gray-500">Código:</span>
+                        <span class="font-mono font-bold" id="receiptCode">GV20260812001</span>
+                    </div>
+                    <div class="flex justify-between py-2 border-b border-gray-100 text-sm">
+                        <span class="font-bold text-gray-500">Passageiro:</span>
+                        <span class="font-bold" id="receiptPassenger">Nome do Passageiro</span>
+                    </div>
+                    <div class="flex justify-between py-2 text-sm">
+                        <span class="font-bold text-gray-500">Status:</span>
+                        <span class="text-green-600 font-bold">CONFIRMADO</span>
+                    </div>
+                </div>
+                <button onclick="voltarHome()" class="mt-6 bg-gb-blue text-white font-bold py-3 px-8 rounded-lg">Nova compra</button>
+            </div>
+        </div>
+
+        <!-- ===================== SERVICES ===================== -->
+        <div id="page-services" class="page fade-in">
+            <h2 class="text-xl font-bold text-gb-blue mb-4 flex items-center gap-2">
+                <i class="fas fa-concierge-bell"></i> Nossos Serviços
+            </h2>
+            <div class="grid grid-cols-2 gap-3">
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-center">
+                    <i class="fas fa-wifi text-3xl text-gb-blue mb-2"></i>
+                    <div class="font-bold text-sm">Wi-Fi</div>
+                    <div class="text-xs text-gray-500">Internet a bordo</div>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-center">
+                    <i class="fas fa-snowflake text-3xl text-gb-blue mb-2"></i>
+                    <div class="font-bold text-sm">Ar Condicionado</div>
+                    <div class="text-xs text-gray-500">Climatização</div>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-center">
+                    <i class="fas fa-restroom text-3xl text-gb-blue mb-2"></i>
+                    <div class="font-bold text-sm">Banheiro</div>
+                    <div class="text-xs text-gray-500">Higiene a bordo</div>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-center">
+                    <i class="fas fa-usb text-3xl text-gb-blue mb-2"></i>
+                    <div class="font-bold text-sm">Tomada USB</div>
+                    <div class="text-xs text-gray-500">Carregue seus dispositivos</div>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-center">
+                    <i class="fas fa-couch text-3xl text-gb-blue mb-2"></i>
+                    <div class="font-bold text-sm">Poltrona Reclinável</div>
+                    <div class="text-xs text-gray-500">Máximo conforto</div>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-center">
+                    <i class="fas fa-tv text-3xl text-gb-blue mb-2"></i>
+                    <div class="font-bold text-sm">TV a Bordo</div>
+                    <div class="text-xs text-gray-500">Entretenimento</div>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-center">
+                    <i class="fas fa-coffee text-3xl text-gb-blue mb-2"></i>
+                    <div class="font-bold text-sm">Café da manhã</div>
+                    <div class="text-xs text-gray-500">Em viagens longas</div>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-center">
+                    <i class="fas fa-wheelchair text-3xl text-gb-blue mb-2"></i>
+                    <div class="font-bold text-sm">Acessibilidade</div>
+                    <div class="text-xs text-gray-500">Para todos os públicos</div>
+                </div>
+            </div>
+            <div class="mt-6 bg-gradient-to-r from-gb-blue to-gb-blue-hover rounded-2xl p-4 text-white">
+                <h3 class="font-bold text-lg">🛡️ Segurança em primeiro lugar</h3>
+                <p class="text-sm opacity-90">Todos os nossos ônibus passam por manutenção rigorosa e nossos motoristas são altamente qualificados.</p>
+            </div>
+        </div>
+
+        <!-- ===================== ACCOUNT ===================== -->
+        <div id="page-account" class="page fade-in">
+            <h2 class="text-xl font-bold text-gb-blue mb-4 flex items-center gap-2">
+                <i class="fas fa-user-circle"></i> Minha Conta
+            </h2>
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 text-center">
+                <div class="w-24 h-24 bg-gb-blue/10 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <i class="fas fa-user text-4xl text-gb-blue"></i>
+                </div>
+                <div class="font-bold text-lg text-gb-blue">Faça login</div>
+                <div class="text-sm text-gray-500 mb-4">Acesse sua conta para ver suas viagens, pontos e muito mais</div>
+                <form class="space-y-3 text-left">
+                    <div>
+                        <label class="text-sm font-semibold text-gray-600 block mb-1">E-mail</label>
+                        <input type="email" placeholder="seu@email.com" class="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gb-blue outline-none" />
+                    </div>
+                    <div>
+                        <label class="text-sm font-semibold text-gray-600 block mb-1">Senha</label>
+                        <input type="password" placeholder="••••••••" class="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gb-blue outline-none" />
+                    </div>
+                    <button class="w-full bg-gb-blue text-white font-bold py-3 rounded-lg hover:bg-gb-blue-hover transition">Entrar</button>
+                </form>
+                <div class="mt-4 text-sm">
+                    <a href="#" class="text-gb-blue font-medium">Esqueceu sua senha?</a>
+                    <span class="text-gray-400 mx-2">|</span>
+                    <a href="#" class="text-gb-blue font-medium">Criar conta</a>
+                </div>
+            </div>
+            <div class="mt-4 bg-gray-50 rounded-xl p-4 border border-gray-200">
+                <div class="flex items-center gap-3">
+                    <i class="fas fa-star text-gb-yellow text-xl"></i>
+                    <div>
+                        <div class="font-bold text-sm">Viva Fidelidade</div>
+                        <div class="text-xs text-gray-500">Acumule pontos e ganhe descontos</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================== HELP ===================== -->
+        <div id="page-help" class="page fade-in">
+            <h2 class="text-xl font-bold text-gb-blue mb-4 flex items-center gap-2">
+                <i class="fas fa-question-circle"></i> Central de Ajuda
+            </h2>
+            <div class="space-y-3">
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex justify-between items-center hover:shadow-md transition cursor-pointer">
+                    <span class="font-medium">Como comprar passagem?</span>
+                    <i class="fas fa-chevron-right text-gray-400"></i>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex justify-between items-center hover:shadow-md transition cursor-pointer">
+                    <span class="font-medium">Cancelamento e reembolso</span>
+                    <i class="fas fa-chevron-right text-gray-400"></i>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex justify-between items-center hover:shadow-md transition cursor-pointer">
+                    <span class="font-medium">Bagagem</span>
+                    <i class="fas fa-chevron-right text-gray-400"></i>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex justify-between items-center hover:shadow-md transition cursor-pointer">
+                    <span class="font-medium">Política de privacidade</span>
+                    <i class="fas fa-chevron-right text-gray-400"></i>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex justify-between items-center hover:shadow-md transition cursor-pointer">
+                    <span class="font-medium">Contato</span>
+                    <i class="fas fa-chevron-right text-gray-400"></i>
+                </div>
+            </div>
+            <div class="mt-6 bg-gb-blue rounded-2xl p-4 text-white text-center">
+                <div class="text-2xl font-bold">📞 SAC 0800 728 1992</div>
+                <div class="text-sm opacity-80 mt-1">Atendimento 24h</div>
+            </div>
+        </div>
+    </main>
+
+    <!-- DRAWER -->
+    <div class="drawer-overlay" id="drawerOverlay" onclick="fecharDrawer()"></div>
+    <div class="drawer-panel" id="drawerPanel">
+        <div class="p-4 border-b border-gray-200 flex justify-between items-center bg-white sticky top-0 z-10">
+            <div><div class="text-xs text-gray-500">Escolha seu assento</div><div class="text-lg font-extrabold text-gb-blue" id="drawerDestino">Destino</div></div>
+            <button onclick="fecharDrawer()" class="text-gray-500 text-xl hover:bg-gray-100 w-10 h-10 rounded-full flex items-center justify-center transition"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="flex-1 overflow-y-auto p-4 bg-gray-50">
+            <div class="bg-white rounded-xl p-4 border border-gray-200">
+                <div class="flex justify-between text-xs border-b border-gray-100 pb-3 mb-3">
+                    <div><div class="font-bold" id="drawerOrigem">Origem</div><div class="text-gray-500" id="drawerHorario">Horário</div></div>
+                    <div class="text-center text-gray-400"><i class="fas fa-arrow-right"></i></div>
+                    <div class="text-right"><div class="font-bold" id="drawerDestino2">Destino</div><div class="text-gray-500" id="drawerChegada">Chegada</div></div>
+                </div>
+                <div class="border-2 border-gray-200 rounded-2xl p-4 max-w-xs mx-auto relative bg-white">
+                    <div class="text-center text-gray-400 text-2xl mb-3"><i class="fas fa-steering-wheel"></i></div>
+                    <div class="seat-wrapper" id="seatWrapper"></div>
+                </div>
+                <div class="flex justify-around mt-4 text-[10px] font-medium text-gray-500 border-t border-gray-100 pt-4">
+                    <div class="flex flex-col items-center gap-1"><div class="w-4 h-4 border border-green-500 rounded bg-white"></div> Livre</div>
+                    <div class="flex flex-col items-center gap-1"><div class="w-4 h-4 bg-gray-200 border-gray-300 rounded border"></div> Ocupado</div>
+                    <div class="flex flex-col items-center gap-1"><div class="w-4 h-4 bg-gb-yellow rounded border-gb-yellow border"></div> Escolhido</div>
+                </div>
+            </div>
+        </div>
+        <div class="p-4 border-t border-gray-200 bg-white flex justify-between items-center sticky bottom-0">
+            <div><div class="text-xs text-gray-500">Assento selecionado</div><div class="text-xl font-black text-gb-blue" id="assentoSelecionado">Nenhum</div></div>
+            <button onclick="confirmarAssento()" disabled class="font-bold py-3 px-8 rounded-xl transition bg-gray-300 text-white cursor-not-allowed" id="btnConfirmarAssento">
+                Confirmar <i class="fas fa-arrow-right ml-1"></i>
+            </button>
+        </div>
+    </div>
+
+    <a href="https://wa.me/" class="fixed bottom-20 right-4 z-20 bg-gb-whatsapp text-white p-3 rounded-full shadow-xl hover:scale-110 transition">
+        <i class="fab fa-whatsapp text-2xl"></i>
+    </a>
+
+    <script>
+        // SLIDER
+        let slideIndex = 0;
+        const slides = document.querySelectorAll('.slider-slide');
+        const dots = document.querySelectorAll('.slider-dot');
+
+        function goToSlide(n) {
+            slides.forEach(s => s.classList.remove('active'));
+            dots.forEach(d => d.classList.remove('active'));
+            slideIndex = n;
+            slides[n].classList.add('active');
+            dots[n].classList.add('active');
+        }
+
+        setInterval(() => {
+            slideIndex = (slideIndex + 1) % slides.length;
+            goToSlide(slideIndex);
+        }, 4000);
+
+        // NAVEGAÇÃO
+        let currentPage = 'home';
+        let selectedTicket = null;
+        let assentoSelecionado = null;
+
+        function navigateTo(page) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            const target = document.getElementById('page-' + page);
+            if (target) target.classList.add('active');
+            
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('text-gb-blue');
+                btn.classList.add('text-gray-400');
+                const dot = btn.querySelector('.w-1');
+                if (dot) dot.classList.add('hidden');
+            });
+            const activeBtn = document.querySelector(`.nav-btn[data-page="${page}"]`);
+            if (activeBtn) {
+                activeBtn.classList.remove('text-gray-400');
+                activeBtn.classList.add('text-gb-blue');
+                const dot = activeBtn.querySelector('.w-1');
+                if (dot) dot.classList.remove('hidden');
+            }
+            
+            const voltarBtn = document.getElementById('btnVoltar');
+            if (page === 'home' || page === 'destinos' || page === 'services' || page === 'account' || page === 'help') {
+                voltarBtn.classList.add('hidden');
+            } else {
+                voltarBtn.classList.remove('hidden');
+            }
+            
+            currentPage = page;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function voltarHome() {
+            navigateTo('home');
+            document.getElementById('ticketsList').innerHTML = '';
+            document.getElementById('totalResultados').textContent = '';
+        }
+
+        // DESTINOS
+        async function carregarDestinos() {
+            try {
+                const response = await fetch('/api/admin/destinos');
+                const destinos = await response.json();
+                
+                // Destinos em destaque (home)
+                const container = document.getElementById('destinosPopulares');
+                container.innerHTML = destinos.slice(0, 4).map(d => `
+                    <div class="dest-card bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100" onclick="buscarDestino('${d.cidade}')">
+                        <img src="https://images.unsplash.com/photo-1580910051074-3eb694886c5f?w=400&h=300&fit=crop" class="w-full h-24 object-cover" />
+                        <div class="p-3">
+                            <div class="font-bold text-sm">${d.cidade}</div>
+                            <div class="text-xs text-gray-500">${d.estado || 'BR'}</div>
+                            <div class="text-gb-blue font-bold text-sm mt-1">R$ ${(Math.random() * 100 + 50).toFixed(2)}</div>
+                        </div>
+                    </div>
+                `).join('');
+
+                // Todos os destinos (página destinos)
+                const todosContainer = document.getElementById('todosDestinos');
+                todosContainer.innerHTML = destinos.map(d => `
+                    <div class="dest-card bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100" onclick="buscarDestino('${d.cidade}')">
+                        <img src="https://images.unsplash.com/photo-1580910051074-3eb694886c5f?w=400&h=200&fit=crop" class="w-full h-20 object-cover" />
+                        <div class="p-3">
+                            <div class="font-bold text-sm">${d.cidade}</div>
+                            <div class="text-xs text-gray-500">${d.estado || 'BR'}</div>
+                            <div class="text-gb-blue font-bold text-sm mt-1">R$ ${(Math.random() * 100 + 50).toFixed(2)}</div>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.log('Erro ao carregar destinos');
+            }
+        }
+
+        function buscarDestino(cidade) {
+            document.getElementById('destino').value = cidade;
+            navigateTo('home');
+            document.getElementById('destino').focus();
+        }
+
+        // BUSCAR VIAGENS
+        function trocarOrigemDestino() {
+            const origin = document.getElementById('origin');
+            const destino = document.getElementById('destino');
+            const temp = origin.value;
+            origin.value = destino.value;
+            destino.value = temp;
+        }
+
+        async function buscarViagens(e) {
+            e.preventDefault();
+            const origin = document.getElementById('origin').value;
+            const destino = document.getElementById('destino').value;
+            const data = document.getElementById('dataIda').value;
+            const passageiros = document.getElementById('passageiros').value;
+            
+            if (!origin || !destino || !data) {
+                alert('Preencha todos os campos');
+                return;
+            }
 
             try {
-                const res = await fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/municipios?nome=${encodeURIComponent(term)}`, { signal: controller.signal });
-                clearTimeout(timeout);
-                const data = await res.json();
-                
-                if (!data || data.length === 0) throw new Error('Vazio');
+                await fetch('/api/busca', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ origem: origin, destino, data, passageiros })
+                });
+            } catch (error) {}
 
-                const results = await Promise.all(
-                    data.slice(0, 6).map(async (c) => {
-                        try {
-                            const geo = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(c.nome + ', ' + c.microrregiao.mesorregiao.UF.sigla + ', Brasil')}&limit=1`);
-                            const geoData = await geo.json();
-                            if (geoData && geoData[0]) {
-                                return {
-                                    city: c.nome,
-                                    state: c.microrregiao.mesorregiao.UF.sigla,
-                                    terminal: `Rodoviária de ${c.nome}`,
-                                    lat: parseFloat(geoData[0].lat),
-                                    lng: parseFloat(geoData[0].lon)
-                                };
-                            }
-                            return null;
-                        } catch { return null; }
-                    })
-                );
-                const valid = results.filter(r => r !== null);
-                cityCache[term] = valid;
-                return valid;
+            const tickets = [
+                { id: 1, origem: origin, destino: destino, data: data, valor: 179.99, valorOriginal: 258.64, horario: '22:46', chegada: '07:35 (+1)', duracao: '8:49', empresa: 'GUANABARA', tipo: 'Executivo', terminal: 'Rodoviária de Brasília', pontos: 450, rec: true },
+                { id: 2, origem: origin, destino: destino, data: data, valor: 219.99, valorOriginal: 308.64, horario: '22:46', chegada: '07:35', duracao: '8:49', empresa: 'GUANABARA', tipo: 'Leito', terminal: 'Rodoviária de Brasília', pontos: 550, rec: false },
+            ];
 
-            } catch (error) {
-                const fallback = FALLBACK_LOCATIONS.filter(l => 
-                    l.city.toLowerCase().includes(term.toLowerCase()) || 
-                    l.state.toLowerCase().includes(term.toLowerCase())
-                );
-                cityCache[term] = fallback;
-                return fallback;
-            }
-        };
+            localStorage.setItem('busca_origem', origin);
+            localStorage.setItem('busca_destino', destino);
+            localStorage.setItem('busca_data', data);
+            localStorage.setItem('busca_passageiros', passageiros);
 
-        // ===========================
-        // COMPONENTES
-        // ===========================
+            renderTickets(tickets);
+            navigateTo('tickets');
+        }
 
-        const Header = ({ showBack, onBack }) => (
-            <header className="sticky top-0 z-30 bg-white shadow-sm border-b border-gray-100 px-4 py-3 flex justify-between items-center">
-                <div className="flex items-center gap-3">
-                    {showBack ? (
-                        <button onClick={onBack} className="text-gb-blue text-sm font-bold flex items-center gap-1">
-                            <i className="fas fa-arrow-left"></i> Voltar
-                        </button>
-                    ) : (
-                        <img src="/img/logo.webp" alt="Guanabara" className="h-8 object-contain" onError={(e) => e.target.style.display='none'} />
-                    )}
-                </div>
-                <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 bg-gb-red/10 rounded-full flex items-center justify-center text-gb-red text-sm">
-                        <i className="fas fa-user"></i>
-                    </div>
-                    <div className="text-right hidden sm:block">
-                        <div className="text-xs font-bold text-gb-blue">Acesse sua conta</div>
-                        <div className="text-[10px] text-gray-400">ou cadastre-se</div>
-                    </div>
-                </div>
-            </header>
-        );
-
-        const SearchScreen = ({ onSearch }) => {
-            const [origin, setOrigin] = useState('');
-            const [dest, setDest] = useState('');
-            const [date, setDate] = useState('');
-            const [pass, setPass] = useState(1);
-            const [loading, setLoading] = useState(false);
-            const [originSuggest, setOriginSuggest] = useState([]);
-            const [destSuggest, setDestSuggest] = useState([]);
-            const [searching, setSearching] = useState({ origin: false, dest: false });
-            const [userLoc, setUserLoc] = useState(null);
-
-            useEffect(() => {
-                navigator.geolocation.getCurrentPosition(
-                    (p) => setUserLoc({ lat: p.coords.latitude, lng: p.coords.longitude }),
-                    () => {}
-                );
-            }, []);
-
-            const haversine = (lat1, lon1, lat2, lon2) => {
-                const R = 6371;
-                const dLat = (lat2 - lat1) * Math.PI / 180;
-                const dLon = (lon2 - lon1) * Math.PI / 180;
-                const a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon/2) * Math.sin(dLon/2);
-                return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-            };
-
-            const handleInput = async (type, value) => {
-                if (type === 'origin') setOrigin(value);
-                else setDest(value);
-
-                if (value.length < 2) {
-                    if (type === 'origin') setOriginSuggest([]);
-                    else setDestSuggest([]);
-                    return;
-                }
-
-                setSearching(prev => ({ ...prev, [type]: true }));
-                let results = await searchCities(value);
-                if (userLoc) {
-                    results = results.map(r => ({ ...r, dist: haversine(userLoc.lat, userLoc.lng, r.lat, r.lng) }));
-                    results.sort((a, b) => a.dist - b.dist);
-                }
-                if (type === 'origin') setOriginSuggest(results.slice(0, 5));
-                else setDestSuggest(results.slice(0, 5));
-                setSearching(prev => ({ ...prev, [type]: false }));
-            };
-
-            const selectCity = (type, city) => {
-                const display = `${city.city} - ${city.state}`;
-                if (type === 'origin') { setOrigin(display); setOriginSuggest([]); }
-                else { setDest(display); setDestSuggest([]); }
-            };
-
-            const submit = async (e) => {
-                e.preventDefault();
-                if (!origin || !dest || !date) return alert('Preencha todos os campos');
-                setLoading(true);
-                setTimeout(() => {
-                    onSearch({ origin, dest, date, pass });
-                    setLoading(false);
-                }, 800);
-            };
-
-            return (
-                <div className="relative max-w-xl mx-auto px-4 pb-8 fade-in">
-                    <div className="bg-gradient-to-b from-gb-blue to-gb-blue-hover text-white pt-6 pb-14 rounded-b-3xl relative overflow-hidden">
-                        <div className="relative z-10 px-2">
-                            <div className="flex justify-between items-start">
-                                <div>
-                                    <div className="text-5xl font-black tracking-tight leading-none mb-1">10<span className="text-3xl">%</span></div>
-                                    <div className="text-2xl font-black tracking-tight leading-none mb-1">OFF</div>
-                                    <div className="text-xs font-bold uppercase max-w-[150px]">EM VIAGENS DE IDA E VOLTA</div>
-                                </div>
-                                <div className="bg-gb-yellow text-gb-blue text-center px-3 py-1.5 rounded-lg shadow-md">
-                                    <div className="text-[9px] uppercase tracking-wider font-black">Exclusivo</div>
-                                    <div className="text-[10px] font-black leading-tight">PARA SITE<br/>E APP!</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="flex justify-center gap-1 mt-4 relative z-10">
-                            <span className="w-2 h-2 rounded-full bg-white"></span>
-                            <span className="w-2 h-2 rounded-full bg-white/40"></span>
-                        </div>
-                    </div>
-
-                    <div className="bg-white rounded-2xl shadow-xl -mt-10 relative z-20 px-5 pt-5 pb-6 border border-gray-100">
-                        <form onSubmit={submit} className="space-y-3">
-                            <div className="relative">
-                                <label className="text-xs font-semibold text-gray-400 block mb-1">Saindo de</label>
-                                <div className="flex items-center border-b border-gray-200 pb-1">
-                                    <i className="fas fa-map-marker-alt text-gray-400 mr-2"></i>
-                                    <input type="text" placeholder="Digite a cidade" value={origin} onChange={e => handleInput('origin', e.target.value)} className="w-full text-base font-medium outline-none bg-transparent" required />
-                                    {searching.origin && <div className="spinner w-4 h-4 border-2 ml-auto"></div>}
-                                </div>
-                                {originSuggest.length > 0 && (
-                                    <div className="absolute top-full left-0 right-0 bg-white shadow-lg rounded-lg mt-1 z-50 border border-gray-200 max-h-48 overflow-y-auto">
-                                        {originSuggest.map((l, i) => (
-                                            <div key={i} onClick={() => selectCity('origin', l)} className="p-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100 flex justify-between items-center">
-                                                <div><div className="font-medium text-sm">{l.city} - {l.state}</div><div className="text-xs text-gray-400">{l.terminal}</div></div>
-                                                {l.dist && <div className="text-xs text-gb-blue font-bold">{Math.round(l.dist)}km</div>}
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
-
-                            <div className="flex justify-end -my-1">
-                                <button type="button" onClick={() => { setOrigin(dest); setDest(origin); }} className="bg-gray-100 text-gb-blue p-2 rounded-lg hover:bg-gray-200">
-                                    <i className="fas fa-exchange-alt"></i>
-                                </button>
-                            </div>
-
-                            <div className="relative">
-                                <label className="text-xs font-semibold text-gray-400 block mb-1">Indo para</label>
-                                <div className="flex items-center border-b border-gray-200 pb-1">
-                                    <i className="fas fa-map-pin text-gray-400 mr-2"></i>
-                                    <input type="text" placeholder="Digite a cidade" value={dest} onChange={e => handleInput('dest', e.target.value)} className="w-full text-base font-medium outline-none bg-transparent" required />
-                                    {searching.dest && <div className="spinner w-4 h-4 border-2 ml-auto"></div>}
-                                </div>
-                                {destSuggest.length > 0 && (
-                                    <div className="absolute top-full left-0 right-0 bg-white shadow-lg rounded-lg mt-1 z-50 border border-gray-200 max-h-48 overflow-y-auto">
-                                        {destSuggest.map((l, i) => (
-                                            <div key={i} onClick={() => selectCity('dest', l)} className="p-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100 flex justify-between items-center">
-                                                <div><div className="font-medium text-sm">{l.city} - {l.state}</div><div className="text-xs text-gray-400">{l.terminal}</div></div>
-                                                {l.dist && <div className="text-xs text-gb-blue font-bold">{Math.round(l.dist)}km</div>}
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
-
-                            <div className="grid grid-cols-2 gap-3 pt-1">
-                                <div>
-                                    <label className="text-xs font-semibold text-gray-400 block mb-1">Ida</label>
-                                    <input type="date" value={date} onChange={e => setDate(e.target.value)} className="w-full text-sm font-medium outline-none bg-gray-50 rounded p-2" required />
-                                </div>
-                                <div>
-                                    <label className="text-xs font-semibold text-gray-400 block mb-1">Volta</label>
-                                    <input type="date" className="w-full text-sm font-medium outline-none bg-gray-50 rounded p-2" />
-                                </div>
-                            </div>
-
-                            <div className="pt-1">
-                                <label className="text-xs font-semibold text-gray-400 block mb-1">Passageiros</label>
-                                <div className="flex items-center bg-gray-50 rounded p-2">
-                                    <i className="fas fa-users text-gray-400 mr-3"></i>
-                                    <input type="number" min="1" value={pass} onChange={e => setPass(parseInt(e.target.value))} className="w-full text-base font-medium outline-none bg-transparent" />
-                                </div>
-                            </div>
-
-                            <button type="submit" disabled={loading} className="w-full bg-gb-blue hover:bg-gb-blue-hover text-white font-bold py-3.5 rounded-xl text-base uppercase tracking-wider shadow-md transition disabled:opacity-50">
-                                {loading ? <div className="spinner w-5 h-5 border-2 mx-auto border-white border-t-transparent"></div> : 'BUSCAR VIAGEM'}
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            );
-        };
-
-        const TicketsScreen = ({ data, onSelect }) => {
-            const [tickets, setTickets] = useState([]);
-            const [loading, setLoading] = useState(true);
-
-            useEffect(() => {
-                setLoading(true);
-                setTimeout(() => {
-                    const mock = [
-                        { id: 1, origem: data.origin, destino: data.dest, data: data.date, valor: 179.99, valorOriginal: 258.64, horario: '22:46', chegada: '07:35 (+1)', duracao: '8:49', empresa: 'GUANABARA', tipo: 'Executivo', terminal: 'Rodoviária de Brasília', pontos: 450, rec: true },
-                        { id: 2, origem: data.origin, destino: data.dest, data: data.date, valor: 219.99, valorOriginal: 308.64, horario: '22:46', chegada: '07:35', duracao: '8:49', empresa: 'GUANABARA', tipo: 'Leito', terminal: 'Rodoviária de Brasília', pontos: 550, rec: false },
-                    ];
-                    setTickets(mock);
-                    setLoading(false);
-                }, 500);
-            }, [data]);
-
-            if (loading) return <div className="flex justify-center py-12"><div className="spinner"></div></div>;
-
-            return (
-                <div className="max-w-xl mx-auto px-4 pb-24 fade-in">
-                    <div className="flex items-center gap-2 mb-4">
-                        <h2 className="text-xl font-bold text-gb-blue">Viagens encontradas</h2>
-                        <span className="text-xl">🚍</span>
-                    </div>
-                    
-                    {tickets.map(t => (
-                        <div key={t.id} className={`bg-white rounded-xl border mb-3 overflow-hidden shadow-sm ${t.rec ? 'border-2 border-gb-blue' : 'border-gray-200'}`}>
-                            {t.rec && <div className="bg-gb-blue text-white text-[10px] font-bold text-center py-1"><i className="fas fa-gem mr-1"></i> A gente recomenda</div>}
-                            
-                            <div className="p-4 flex flex-col gap-3">
-                                <div className="flex justify-between items-start">
-                                    <div>
-                                        <div className="font-extrabold text-gb-blue text-base"><i className="fas fa-bus mr-1"></i> {t.empresa}</div>
-                                        <div className="text-[9px] text-yellow-600 font-bold uppercase tracking-wider">{t.tipo}</div>
-                                    </div>
-                                    <div className="text-right">
-                                        <div className="text-xs text-gray-400 line-through">{formatCurrency(t.valorOriginal)}</div>
-                                        <div className="text-xl font-black text-gb-blue">{formatCurrency(t.valor)}</div>
-                                    </div>
-                                </div>
-
-                                <div className="flex justify-between items-center bg-gray-50 rounded-lg p-2">
-                                    <div className="text-center"><div className="text-lg font-bold">{t.horario}</div><div className="text-[9px] font-bold text-gray-500 uppercase">{t.origem}</div></div>
-                                    <div className="text-xs text-gray-400 flex flex-col items-center"><span>{t.duracao}</span><i className="far fa-clock"></i></div>
-                                    <div className="text-center"><div className="text-lg font-bold">{t.chegada}</div><div className="text-[9px] font-bold text-gray-500 uppercase">{t.destino}</div></div>
-                                </div>
-
-                                <div className="flex justify-between items-center border-t border-gray-100 pt-3 mt-1">
-                                    <div className="text-xs text-gray-500 flex items-center gap-2"><i className="fas fa-map-marker-alt text-gb-blue"></i> {t.terminal}</div>
-                                    <div className="flex items-center gap-3">
-                                        <div className="border border-pink-400 text-pink-600 text-[10px] font-bold px-2 py-1 rounded-full bg-white">+{t.pontos} <i className="fas fa-gift"></i></div>
-                                        <button onClick={() => onSelect(t)} className="bg-gb-blue text-white font-bold px-4 py-1.5 rounded-lg text-sm hover:bg-gb-blue-hover">Escolher</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            );
-        };
-
-        const SeatDrawer = ({ ticket, close, confirm }) => {
-            const [selected, setSelected] = useState(null);
-            const [step, setStep] = useState('upgrade');
-            const [upgraded, setUpgraded] = useState(false);
-            const occupied = [3, 7, 12, 15, 18, 22, 28, 33, 37];
-
-            const handleConfirm = () => {
-                if (!selected) return;
-                let finalPrice = ticket.valor;
-                if (upgraded) finalPrice += 40;
-                confirm({ ...ticket, assento: selected, precoFinal: finalPrice });
-            };
-
-            if (!ticket) return null;
-
-            return (
-                <>
-                    <div className={`drawer-overlay ${ticket ? 'active' : ''}`} onClick={close}></div>
-                    <div className={`drawer-panel ${ticket ? 'active' : ''}`}>
-                        <div className="p-4 border-b border-gray-200 flex justify-between items-center bg-white sticky top-0 z-10">
-                            <div><div className="text-sm text-gb-blue font-bold">Indo para</div><div className="text-lg font-extrabold">{ticket.destino}</div></div>
-                            <button onClick={close} className="text-gray-500 text-xl"><i className="fas fa-times"></i></button>
-                        </div>
-
-                        <div className="flex-1 overflow-y-auto p-4 bg-gray-50">
-                            {step === 'upgrade' ? (
-                                <div className="bg-white rounded-xl p-4 border border-gray-200 slide-up">
-                                    <div className="flex justify-between text-xs border-b border-gray-100 pb-3 mb-3">
-                                        <div><div className="font-bold">{ticket.origem}</div><div className="text-gray-500">{ticket.horario}</div></div>
-                                        <div className="text-center text-gray-400"><i className="fas fa-arrow-right"></i></div>
-                                        <div className="text-right"><div className="font-bold">{ticket.destino}</div><div className="text-gray-500">{ticket.chegada}</div></div>
-                                    </div>
-                                    <div className="font-bold text-gb-blue text-sm mb-3">Confira o Leito</div>
-                                    <div className="bg-gb-blue rounded-xl overflow-hidden text-white mb-4">
-                                        <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=600&q=80" className="h-32 w-full object-cover" />
-                                        <div className="p-2 text-xs font-bold flex items-center gap-2"><i className="fas fa-couch"></i> 140° de reclinação</div>
-                                    </div>
-                                    <button onClick={() => { setUpgraded(true); setStep('seats'); }} className="w-full bg-gb-blue text-white font-bold py-3 rounded-lg mb-2">Upgrade + R$ 40,00</button>
-                                    <button onClick={() => { setUpgraded(false); setStep('seats'); }} className="w-full bg-white text-gb-blue border-2 border-gb-blue font-bold py-3 rounded-lg">Manter classe</button>
-                                </div>
-                            ) : (
-                                <div className="bg-white rounded-xl p-4 border border-gray-200 slide-up">
-                                    <div className="border-2 border-gray-200 rounded-2xl p-4 max-w-xs mx-auto relative bg-white">
-                                        <div className="text-center text-gray-400 text-2xl mb-3"><i className="fas fa-steering-wheel"></i></div>
-                                        <div className="seat-wrapper">
-                                            {Array.from({ length: 44 }).map((_, i) => {
-                                                const num = i + 1;
-                                                const isOcc = occupied.includes(num);
-                                                return (
-                                                    <div key={num} className={`seat ${isOcc ? 'occupied' : 'available'} ${selected === num ? 'selected' : ''}`} onClick={() => !isOcc && setSelected(num)}>
-                                                        <i className={`fas fa-couch ${isOcc ? 'text-gray-300' : 'text-green-500'}`}></i>
-                                                        <span>{num}</span>
-                                                    </div>
-                                                );
-                                            })}
-                                        </div>
-                                    </div>
-                                    <div className="flex justify-around mt-4 text-[10px] font-medium text-gray-500 border-t border-gray-100 pt-4">
-                                        <div className="flex flex-col items-center gap-1"><div className="w-4 h-4 border border-green-500 rounded bg-white"></div> Livre</div>
-                                        <div className="flex flex-col items-center gap-1"><div className="w-4 h-4 bg-gray-200 border-gray-300 rounded border"></div> Ocupado</div>
-                                        <div className="flex flex-col items-center gap-1"><div className="w-4 h-4 bg-gb-yellow rounded border-gb-yellow border"></div> Escolhido</div>
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-
-                        {step === 'seats' && (
-                            <div className="p-4 border-t border-gray-200 bg-white flex justify-between items-center sticky bottom-0">
-                                <div>
-                                    <div className="text-sm font-bold text-gb-blue">{selected ? '1 de 1' : '0 de 1'}</div>
-                                    <div className="text-xl font-black text-gb-blue">{formatCurrency(ticket.valor + (upgraded ? 40 : 0))}</div>
-                                </div>
-                                <button onClick={handleConfirm} disabled={!selected} className={`font-bold py-3 px-6 rounded-lg transition ${selected ? 'bg-gb-blue text-white hover:bg-gb-blue-hover' : 'bg-gray-300 text-white cursor-not-allowed'}`}>
-                                    Confirmar
-                                </button>
-                            </div>
-                        )}
-                    </div>
-                </>
-            );
-        };
-
-        const CheckoutBuyerScreen = ({ ticket, next }) => {
-            const [nome, setNome] = useState('');
-            const [email, setEmail] = useState('');
-            const [telefone, setTelefone] = useState('');
-            const [cpf, setCpf] = useState('');
-            const [nascimento, setNascimento] = useState('');
-            const [isPassenger, setIsPassenger] = useState(true);
-            const [promoOptIn, setPromoOptIn] = useState(true);
-            const [saveData, setSaveData] = useState(false);
-            const [timer, setTimer] = useState('09:13');
-
-            useEffect(() => {
-                let seconds = 553;
-                const interval = setInterval(() => {
-                    seconds--;
-                    const mins = String(Math.floor(seconds / 60)).padStart(2, '0');
-                    const secs = String(seconds % 60).padStart(2, '0');
-                    setTimer(`${mins}:${secs}`);
-                    if (seconds <= 0) {
-                        clearInterval(interval);
-                        alert('Tempo expirado! Por favor, refaça a sua reserva.');
-                        window.location.href = '/';
-                    }
-                }, 1000);
-                return () => clearInterval(interval);
-            }, []);
-
-            const handleSubmit = (e) => {
-                e.preventDefault();
-                if (!nome || !email || !telefone || !cpf || !nascimento) {
-                    alert('Preencha todos os campos');
-                    return;
-                }
-                localStorage.setItem('cliente_nome', nome);
-                localStorage.setItem('cliente_email', email);
-                localStorage.setItem('cliente_telefone', telefone);
-                localStorage.setItem('cliente_cpf', cpf);
-                localStorage.setItem('cliente_nascimento', nascimento);
-                localStorage.setItem('checkout_ticket', JSON.stringify(ticket));
-                next();
-            };
-
-            return (
-                <div className="max-w-xl mx-auto px-4 pt-4 pb-8 fade-in">
-                    <div className="checkout-title">Informações do comprador</div>
-                    <div className="timer-subtitle">
-                        <span>Conclua a compra e garanta a sua viagem</span>
-                        <i className="far fa-clock"></i>
-                        <span style={{ fontWeight: 700 }}>{timer}</span>
-                    </div>
-
-                    <div className="card-buyer">
-                        <form onSubmit={handleSubmit}>
-                            <div className="form-grid">
-                                <div className="form-group full">
-                                    <label>Nome Completo *</label>
-                                    <input type="text" value={nome} onChange={e => setNome(e.target.value)} placeholder="Informe aqui" required />
-                                </div>
-                                <div className="form-group">
-                                    <label>E-mail *</label>
-                                    <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Informe aqui" required />
-                                </div>
-                                <div className="form-group">
-                                    <label>Celular *</label>
-                                    <input type="tel" value={telefone} onChange={e => setTelefone(e.target.value)} placeholder="Informe aqui" required />
-                                </div>
-                                <div className="form-group">
-                                    <label>CPF *</label>
-                                    <input type="text" value={cpf} onChange={e => setCpf(e.target.value)} placeholder="Informe aqui" required />
-                                </div>
-                                <div className="form-group">
-                                    <label>Data de Nascimento *</label>
-                                    <input type="text" value={nascimento} onChange={e => setNascimento(e.target.value)} placeholder="DD/MM/AAAA" required />
-                                </div>
-                            </div>
-
-                            <div className="checkbox-group">
-                                <input type="checkbox" checked={isPassenger} onChange={e => setIsPassenger(e.target.checked)} />
-                                <label>Sou o passageiro que irá viajar</label>
-                            </div>
-
-                            <div className="checkbox-group">
-                                <input type="checkbox" checked={promoOptIn} onChange={e => setPromoOptIn(e.target.checked)} />
-                                <label>Quero receber informações e promoções da Guanabara e do <strong>Viva Fidelidade</strong>. Confira a nossa <a href="#">Política de Privacidade</a>.</label>
-                            </div>
-
-                            <div className="save-card-box">
-                                <div><i className="far fa-address-card"></i> Salvar meus dados para compras futuras</div>
-                                <label className="switch">
-                                    <input type="checkbox" checked={saveData} onChange={e => setSaveData(e.target.checked)} />
-                                    <span className="slider"></span>
-                                </label>
-                            </div>
-
-                            <button type="submit" className="btn-submit">Prosseguir com a reserva</button>
-                        </form>
-                    </div>
-                </div>
-            );
-        };
-
-        const CheckoutPaymentScreen = ({ ticket, finish }) => {
-            const [insurance, setInsurance] = useState(false);
-            const [timer, setTimer] = useState('07:38');
-            const [finalTotal, setFinalTotal] = useState(ticket.precoFinal || 179.99);
+        function renderTickets(tickets) {
+            const container = document.getElementById('ticketsList');
+            document.getElementById('totalResultados').textContent = `(${tickets.length} resultados)`;
             
-            const nome = localStorage.getItem('cliente_nome') || 'Nome do Passageiro';
-            const email = localStorage.getItem('cliente_email') || 'email@exemplo.com';
-            const assento = ticket.assento || '08';
+            container.innerHTML = tickets.map(t => `
+                <div class="bg-white rounded-xl border ${t.rec ? 'border-2 border-gb-blue' : 'border-gray-200'} mb-3 overflow-hidden shadow-sm">
+                    ${t.rec ? '<div class="bg-gb-blue text-white text-[10px] font-bold text-center py-1"><i class="fas fa-gem mr-1"></i> A gente recomenda</div>' : ''}
+                    <div class="p-4">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <div class="font-extrabold text-gb-blue text-base"><i class="fas fa-bus mr-1"></i> ${t.empresa}</div>
+                                <div class="text-[9px] text-yellow-600 font-bold uppercase tracking-wider">${t.tipo}</div>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-xs text-gray-400 line-through">R$ ${t.valorOriginal.toFixed(2)}</div>
+                                <div class="text-xl font-black text-gb-blue">R$ ${t.valor.toFixed(2)}</div>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center bg-gray-50 rounded-lg p-2 mt-2">
+                            <div class="text-center"><div class="text-lg font-bold">${t.horario}</div><div class="text-[9px] font-bold text-gray-500 uppercase">${t.origem}</div></div>
+                            <div class="text-xs text-gray-400 flex flex-col items-center"><span>${t.duracao}</span><i class="far fa-clock"></i></div>
+                            <div class="text-center"><div class="text-lg font-bold">${t.chegada}</div><div class="text-[9px] font-bold text-gray-500 uppercase">${t.destino}</div></div>
+                        </div>
+                        <div class="flex justify-between items-center border-t border-gray-100 pt-3 mt-3">
+                            <div class="text-xs text-gray-500 flex items-center gap-2"><i class="fas fa-map-marker-alt text-gb-blue"></i> ${t.terminal}</div>
+                            <div class="flex items-center gap-3">
+                                <div class="border border-pink-400 text-pink-600 text-[10px] font-bold px-2 py-1 rounded-full bg-white">+${t.pontos} <i class="fas fa-gift"></i></div>
+                                <button onclick="abrirDrawer(${JSON.stringify(t).replace(/"/g, '&quot;')})" class="bg-gb-blue text-white font-bold px-4 py-1.5 rounded-lg text-sm hover:bg-gb-blue-hover transition">Escolher</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
 
-            useEffect(() => {
-                let seconds = 458;
-                const interval = setInterval(() => {
-                    seconds--;
-                    const mins = String(Math.floor(seconds / 60)).padStart(2, '0');
-                    const secs = String(seconds % 60).padStart(2, '0');
-                    setTimer(`${mins}:${secs}`);
-                    if (seconds <= 0) {
-                        clearInterval(interval);
-                        alert('Tempo expirado! Por favor, refaça a sua reserva.');
-                        window.location.href = '/';
-                    }
-                }, 1000);
-                return () => clearInterval(interval);
-            }, []);
+        // DRAWER
+        function abrirDrawer(ticket) {
+            selectedTicket = ticket;
+            document.getElementById('drawerOrigem').textContent = ticket.origem;
+            document.getElementById('drawerDestino').textContent = ticket.destino;
+            document.getElementById('drawerDestino2').textContent = ticket.destino;
+            document.getElementById('drawerHorario').textContent = ticket.horario;
+            document.getElementById('drawerChegada').textContent = ticket.chegada;
+            
+            gerarAssentos();
+            assentoSelecionado = null;
+            document.getElementById('assentoSelecionado').textContent = 'Nenhum';
+            document.getElementById('btnConfirmarAssento').disabled = true;
+            document.getElementById('btnConfirmarAssento').className = 'font-bold py-3 px-8 rounded-xl transition bg-gray-300 text-white cursor-not-allowed';
+            
+            document.getElementById('drawerOverlay').classList.add('active');
+            document.getElementById('drawerPanel').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
 
-            const toggleInsurance = () => {
-                setInsurance(!insurance);
-                if (!insurance) {
-                    setFinalTotal(prev => prev + 10);
-                } else {
-                    setFinalTotal(prev => prev - 10);
+        function fecharDrawer() {
+            document.getElementById('drawerOverlay').classList.remove('active');
+            document.getElementById('drawerPanel').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function gerarAssentos() {
+            const occupied = [3, 7, 12, 15, 18, 22, 28, 33, 37];
+            const wrapper = document.getElementById('seatWrapper');
+            wrapper.innerHTML = '';
+            
+            for (let i = 1; i <= 44; i++) {
+                const isOcc = occupied.includes(i);
+                const div = document.createElement('div');
+                div.className = `seat ${isOcc ? 'occupied' : 'available'}`;
+                div.innerHTML = `<i class="fas fa-couch ${isOcc ? 'text-gray-300' : 'text-green-500'}"></i><span>${i}</span>`;
+                if (!isOcc) {
+                    div.onclick = () => selecionarAssento(i);
                 }
-            };
+                wrapper.appendChild(div);
+            }
+        }
 
-            const processarPagamento = (metodo) => {
-                alert(`Iniciando pagamento via ${metodo}...`);
-                setTimeout(() => {
-                    const codigo = 'GV' + new Date().toISOString().slice(0,10).replace(/-/g,'') + String(Math.floor(Math.random()*1000)).padStart(3,'0');
-                    localStorage.setItem('ticket_codigo', codigo);
-                    finish(codigo);
-                }, 1500);
-            };
+        function selecionarAssento(num) {
+            assentoSelecionado = num;
+            document.getElementById('assentoSelecionado').textContent = `Poltrona ${num}`;
+            
+            document.querySelectorAll('.seat').forEach(el => {
+                el.classList.remove('selected');
+                if (el.querySelector('span').textContent == num) {
+                    el.classList.add('selected');
+                }
+            });
+            
+            document.getElementById('btnConfirmarAssento').disabled = false;
+            document.getElementById('btnConfirmarAssento').className = 'font-bold py-3 px-8 rounded-xl transition bg-gb-blue text-white hover:bg-gb-blue-hover shadow-lg';
+        }
 
-            const basePrice = finalTotal + 63.76;
-            const discount = 63.76;
+        function confirmarAssento() {
+            if (!assentoSelecionado || !selectedTicket) return;
+            
+            const ticket = { ...selectedTicket, assento: assentoSelecionado };
+            
+            localStorage.setItem('produto_origem', ticket.origem);
+            localStorage.setItem('produto_destino', ticket.destino);
+            localStorage.setItem('produto_preco', ticket.valor);
+            localStorage.setItem('produto_assento', ticket.assento);
+            localStorage.setItem('produto_categoria', ticket.tipo);
+            localStorage.setItem('produto_data', ticket.data);
+            localStorage.setItem('produto_horario', ticket.horario);
+            localStorage.setItem('produto_chegada', ticket.chegada);
+            
+            fecharDrawer();
+            irParaCheckout();
+        }
 
-            return (
-                <div className="max-w-4xl mx-auto px-4 pt-4 pb-8 fade-in">
-                    <div className="checkout-title">Pagamento</div>
-                    <div className="timer-subtitle">
-                        <span>Conclua a compra e garanta a sua viagem</span>
-                        <i className="far fa-clock"></i>
-                        <span style={{ fontWeight: 700 }}>{timer}</span>
-                    </div>
+        // CHECKOUT
+        function irParaCheckout() {
+            const origem = localStorage.getItem('produto_origem') || 'BRASILIA - DF';
+            const destino = localStorage.getItem('produto_destino') || 'CORRENTINA - BA';
+            const preco = parseFloat(localStorage.getItem('produto_preco')) || 179.99;
+            const assento = localStorage.getItem('produto_assento') || '08';
+            const categoria = localStorage.getItem('produto_categoria') || 'EXECUTIVO';
+            const data = localStorage.getItem('produto_data') || new Date().toISOString().split('T')[0];
+            const horario = localStorage.getItem('produto_horario') || '22:46';
+            const chegada = localStorage.getItem('produto_chegada') || '07:35';
 
-                    <div className="checkout-layout">
-                        <div>
-                            <div className="summary-card">
-                                <div className="summary-banner">
-                                    <div className="title">Sua Compra</div>
-                                    <div className="total-price">R$ <span>{finalTotal.toFixed(2).replace('.', ',')}</span> <small style={{ fontSize: '12px', fontWeight: 400 }}>total</small></div>
-                                </div>
+            document.getElementById('tripOrigin').textContent = origem;
+            document.getElementById('tripDest').textContent = destino;
+            document.getElementById('tripClass').textContent = categoria;
+            document.getElementById('displaySeat').textContent = String(assento).padStart(2, '0');
+            
+            const dataFormatada = new Date(data + 'T00:00:00').toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', weekday: 'short' });
+            document.getElementById('tripDate').textContent = `${dataFormatada} ${horario}`;
+            
+            let total = preco;
+            document.getElementById('finalTotal').textContent = total.toFixed(2).replace('.', ',');
+            document.getElementById('basePrice').textContent = `R$ ${(total + 63.76).toFixed(2).replace('.', ',')}`;
 
-                                <div className="trip-detail-box">
-                                    <div className="trip-header">
-                                        <span><i className="fas fa-bus"></i> Viagem de ida</span>
-                                        <span>{ticket.data ? formatDate(ticket.data) : '13 ago, qui 23:00'}</span>
-                                    </div>
-                                    <div className="route-line">
-                                        <span>{ticket.origem || 'BRASILIA - DF'}</span>
-                                        <i className="fas fa-arrow-right" style={{ fontSize: '11px', color: '#94a3b8' }}></i>
-                                        <span>{ticket.destino || 'CORRENTINA - BA'}</span>
-                                    </div>
-                                    <div style={{ fontSize: '11px', color: '#64748b', marginTop: '4px' }}>Classe <strong>{ticket.tipo || 'EXECUTIVO'}</strong></div>
-                                </div>
+            navigateTo('checkout-buyer');
+            iniciarCronometro(553, 'timerBuyer');
+        }
 
-                                <div className="breakdown-box">
-                                    <div className="breakdown-title"><i className="fas fa-receipt"></i> Resumo do pagamento</div>
-                                    <div className="breakdown-row">
-                                        <span>Passagem</span>
-                                        <span>R$ {basePrice.toFixed(2).replace('.', ',')}</span>
-                                    </div>
-                                    <div className="breakdown-row discount">
-                                        <span>Desconto - Passagem</span>
-                                        <span>- R$ {discount.toFixed(2).replace('.', ',')}</span>
-                                    </div>
-                                    <div className="breakdown-row">
-                                        <span>Taxa de serviço</span>
-                                        <span>R$ 9,79</span>
-                                    </div>
-                                    <div className="breakdown-row">
-                                        <span>Taxa de embarque</span>
-                                        <span>R$ 8,38</span>
-                                    </div>
-                                    {insurance && (
-                                        <div className="breakdown-row">
-                                            <span>Seguro Viagem</span>
-                                            <span>R$ 10,00</span>
-                                        </div>
-                                    )}
-                                    <div className="breakdown-row points">
-                                        <span><i className="fas fa-star"></i> Pontuação Viva</span>
-                                        <span>+ 150 pontos</span>
-                                    </div>
+        function prosseguirPagamento(e) {
+            e.preventDefault();
+            const name = document.getElementById('buyerName').value;
+            const email = document.getElementById('buyerEmail').value;
+            const phone = document.getElementById('buyerPhone').value;
+            const cpf = document.getElementById('buyerCpf').value;
+            const birth = document.getElementById('buyerBirth').value;
 
-                                    <div className="coupon-box">
-                                        <input type="text" placeholder="Cupom de desconto" />
-                                        <button type="button">Aplicar</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+            if (!name || !email || !phone || !cpf || !birth) {
+                alert('Preencha todos os campos');
+                return;
+            }
 
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                            <div className="passenger-info-card">
-                                <div>
-                                    <div style={{ fontSize: '13px', fontWeight: 800, color: '#1e293b', marginBottom: '4px' }}>Passageiros nesta viagem</div>
-                                    <div className="name">{nome}</div>
-                                    <div className="email">{email}</div>
-                                </div>
-                                <div className="seat-badge">
-                                    Assento<br />
-                                    <span style={{ fontSize: '16px' }}>{String(assento).padStart(2, '0')}</span>
-                                </div>
-                            </div>
+            localStorage.setItem('cliente_nome', name);
+            localStorage.setItem('cliente_email', email);
+            localStorage.setItem('cliente_telefone', phone);
+            localStorage.setItem('cliente_cpf', cpf);
 
-                            <div className="insurance-card">
-                                <div className="insurance-title"><i className="fas fa-shield-alt" style={{ color: '#1e3a8a' }}></i> Seguro viagem opcional</div>
-                                <div className="insurance-desc">O seguro adicional oferece uma cobertura extra em caso de danos, extravio e saúde. <a href="#" style={{ color: '#1e3a8a', fontWeight: 600 }}>Ver detalhes</a></div>
-                                
-                                <div className="insurance-list">
-                                    <div><i className="fas fa-check-circle"></i> Cabe no bolso</div>
-                                    <div><i className="fas fa-check-circle"></i> Cobertura nacional</div>
-                                    <div><i className="fas fa-check-circle"></i> Pagamento em até 30 dias</div>
-                                </div>
+            fetch('/api/cliente', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ nome: name, cpf, telefone: phone, email, qtdCriancas: 0 })
+            }).catch(() => {});
 
-                                <div className="insurance-footer">
-                                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', fontWeight: 700, cursor: 'pointer' }}>
-                                        <input type="checkbox" checked={insurance} onChange={toggleInsurance} style={{ width: '18px', height: '18px', accentColor: '#1e3a8a' }} /> Sim, quero viajar tranquilo
-                                    </label>
-                                    <div className="insurance-price">
-                                        R$ 10,00
-                                        <span>por passageiro</span>
-                                    </div>
-                                </div>
-                            </div>
+            document.getElementById('displayPassengerName').textContent = name;
+            document.getElementById('displayPassengerEmail').textContent = email;
+            
+            navigateTo('checkout-payment');
+            iniciarCronometro(458, 'timerPayment');
+        }
 
-                            <div className="payment-methods-card">
-                                <div className="insurance-title" style={{ marginBottom: '14px' }}><i className="fas fa-wallet" style={{ color: '#1e3a8a' }}></i> Selecione o pagamento</div>
+        let insuranceAdded = false;
 
-                                <div className="payment-option" onClick={() => processarPagamento('PIX')}>
-                                    <div className="payment-option-info">
-                                        <i className="fa-brands fa-pix" style={{ color: '#00bdae' }}></i>
-                                        <div>
-                                            <div className="title">PIX</div>
-                                            <div className="sub">Confirmação imediata</div>
-                                        </div>
-                                    </div>
-                                    <i className="fas fa-chevron-right" style={{ color: '#cbd5e1', fontSize: '12px' }}></i>
-                                </div>
+        function toggleInsurance() {
+            insuranceAdded = document.getElementById('insuranceCheckbox').checked;
+            let total = parseFloat(localStorage.getItem('produto_preco')) || 179.99;
+            if (insuranceAdded) total += 10;
+            document.getElementById('finalTotal').textContent = total.toFixed(2).replace('.', ',');
+        }
 
-                                <div className="payment-option" onClick={() => processarPagamento('Cartao')}>
-                                    <div className="payment-option-info">
-                                        <i className="far fa-credit-card"></i>
-                                        <div>
-                                            <div className="title">Cartão de crédito</div>
-                                            <div className="sub">Visa, Mastercard, Elo, Amex</div>
-                                        </div>
-                                    </div>
-                                    <i className="fas fa-chevron-right" style={{ color: '#cbd5e1', fontSize: '12px' }}></i>
-                                </div>
-
-                                <div className="payment-option" onClick={() => processarPagamento('Transferencia')}>
-                                    <div className="payment-option-info">
-                                        <i className="fas fa-university"></i>
-                                        <div>
-                                            <div className="title">Transferência Bancária</div>
-                                            <div className="sub">Até 3h para compensar</div>
-                                        </div>
-                                    </div>
-                                    <i className="fas fa-chevron-right" style={{ color: '#cbd5e1', fontSize: '12px' }}></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            );
-        };
-
-        const ReceiptScreen = ({ codigo }) => {
+        async function processarPagamento(metodo) {
             const nome = localStorage.getItem('cliente_nome') || 'Passageiro';
-            return (
-                <div className="max-w-xl mx-auto px-4 py-8 text-center fade-in">
-                    <div className="bg-green-100 text-green-700 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 text-4xl">
-                        <i className="fas fa-check"></i>
-                    </div>
-                    <h2 className="text-2xl font-bold text-green-700 mb-2">Pagamento Confirmado!</h2>
-                    <p className="text-gray-500 text-sm mb-6">Sua passagem foi emitida com sucesso.</p>
-                    <div className="bg-white p-6 rounded-xl shadow text-left border border-gray-100">
-                        <div className="flex justify-between py-2 border-b border-gray-100 text-sm"><span className="font-bold text-gray-500">Código:</span><span className="font-mono font-bold">{codigo}</span></div>
-                        <div className="flex justify-between py-2 border-b border-gray-100 text-sm"><span className="font-bold text-gray-500">Passageiro:</span><span className="font-bold">{nome}</span></div>
-                        <div className="flex justify-between py-2 text-sm"><span className="font-bold text-gray-500">Status:</span><span className="text-green-600 font-bold">CONFIRMADO</span></div>
-                    </div>
-                    <button onClick={() => window.location.reload()} className="mt-6 bg-gb-blue text-white font-bold py-3 px-8 rounded-lg">Nova compra</button>
-                </div>
-            );
-        };
+            const origem = localStorage.getItem('produto_origem') || 'Origem';
+            const destino = localStorage.getItem('produto_destino') || 'Destino';
+            const data = localStorage.getItem('produto_data') || new Date().toISOString().split('T')[0];
+            const valor = parseFloat(document.getElementById('finalTotal').textContent.replace(',', '.')) || 179.99;
 
-        const BottomNav = ({ current }) => (
-            <nav className="fixed bottom-0 left-0 right-0 z-30 bg-white border-t border-gray-200 shadow-lg flex justify-around items-center py-2 max-w-xl mx-auto">
-                <button className={`flex flex-col items-center gap-0.5 ${current === 'home' ? 'text-gb-blue' : 'text-gray-400'}`}>
-                    <i className="fas fa-search text-lg"></i>
-                    <span className="text-[10px] font-bold">Busca</span>
-                </button>
-                <button className={`flex flex-col items-center gap-0.5 ${current === 'services' ? 'text-gb-blue' : 'text-gray-400'}`}>
-                    <i className="fas fa-concierge-bell text-lg"></i>
-                    <span className="text-[10px] font-bold">Serviços</span>
-                </button>
-                <button className={`flex flex-col items-center gap-0.5 ${current === 'account' ? 'text-gb-blue' : 'text-gray-400'}`}>
-                    <i className="fas fa-user-circle text-lg"></i>
-                    <span className="text-[10px] font-bold">Conta</span>
-                </button>
-                <button className={`flex flex-col items-center gap-0.5 ${current === 'help' ? 'text-gb-blue' : 'text-gray-400'}`}>
-                    <i className="fas fa-question-circle text-lg"></i>
-                    <span className="text-[10px] font-bold">Ajuda</span>
-                </button>
-            </nav>
-        );
+            try {
+                const response = await fetch('/api/compra', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        origem,
+                        destino,
+                        passageiro: nome,
+                        data,
+                        valor,
+                        metodoPagamento: metodo
+                    })
+                });
+                const result = await response.json();
+                
+                if (result.success) {
+                    document.getElementById('receiptCode').textContent = result.ticket?.codigo || 'GV' + Date.now();
+                    document.getElementById('receiptPassenger').textContent = nome;
+                    navigateTo('receipt');
+                } else {
+                    alert('Erro ao processar pagamento');
+                }
+            } catch (error) {
+                document.getElementById('receiptCode').textContent = 'GV' + Date.now();
+                document.getElementById('receiptPassenger').textContent = nome;
+                navigateTo('receipt');
+            }
+        }
 
-        const App = () => {
-            const [screen, setScreen] = useState('home');
-            const [searchData, setSearchData] = useState(null);
-            const [selectedTicket, setSelectedTicket] = useState(null);
-            const [receiptCode, setReceiptCode] = useState(null);
+        // TIMER
+        function iniciarCronometro(duracao, elementId) {
+            let timer = duracao;
+            const display = document.getElementById(elementId);
+            if (!display) return;
+            
+            const interval = setInterval(() => {
+                const minutos = String(Math.floor(timer / 60)).padStart(2, '0');
+                const segundos = String(timer % 60).padStart(2, '0');
+                display.textContent = minutos + ":" + segundos;
+                
+                if (--timer < 0) {
+                    clearInterval(interval);
+                    alert("Tempo expirado! Por favor, refaça a sua reserva.");
+                    voltarHome();
+                }
+            }, 1000);
+        }
 
-            const goHome = () => { setScreen('home'); setSearchData(null); setSelectedTicket(null); setReceiptCode(null); };
+        // INICIALIZAÇÃO
+        carregarDestinos();
 
-            return (
-                <div className="pb-20 min-h-screen flex flex-col">
-                    <Header showBack={screen !== 'home'} onBack={goHome} />
-                    <main className="flex-1">
-                        {screen === 'home' && <SearchScreen onSearch={(d) => { setSearchData(d); setScreen('tickets'); }} />}
-                        {screen === 'tickets' && searchData && <TicketsScreen data={searchData} onSelect={(t) => setSelectedTicket(t)} />}
-                        {screen === 'checkout_buyer' && selectedTicket && <CheckoutBuyerScreen ticket={selectedTicket} next={() => setScreen('checkout_payment')} />}
-                        {screen === 'checkout_payment' && selectedTicket && <CheckoutPaymentScreen ticket={selectedTicket} finish={(c) => { setReceiptCode(c); setScreen('receipt'); }} />}
-                        {screen === 'receipt' && receiptCode && <ReceiptScreen codigo={receiptCode} />}
-                        {['services', 'account', 'help'].includes(screen) && (
-                            <div className="max-w-xl mx-auto px-4 pt-6 text-center text-gray-500">
-                                <i className="fas fa-tools text-4xl text-gb-blue mb-2"></i>
-                                <p className="font-medium text-gb-blue">Funcionalidade em construção</p>
-                            </div>
-                        )}
-                    </main>
-                    <BottomNav current={screen} />
-                    <SeatDrawer ticket={selectedTicket} close={() => setSelectedTicket(null)} confirm={(t) => { 
-                        setSelectedTicket(t); 
-                        setScreen('checkout_buyer');
-                    }} />
-                    <a href="https://wa.me/" className="fixed bottom-20 right-4 z-20 bg-gb-whatsapp text-white p-3 rounded-full shadow-xl"><i className="fab fa-whatsapp text-2xl"></i></a>
-                </div>
-            );
-        };
-
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
+        fetch('/api/visitante', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ screen: window.innerWidth + 'x' + window.innerHeight, pagina: 'index' })
+        }).catch(() => {});
     </script>
 </body>
 </html>
