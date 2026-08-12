@@ -639,88 +639,178 @@
             </div>
         </div>
 
-        <!-- ===================== CHECKOUT PAYMENT ===================== -->
-        <div id="page-checkout-payment" class="page fade-in">
-            <div class="checkout-title">Pagamento</div>
-            <div class="timer-subtitle">
-                <span>Conclua a compra e garanta a sua viagem</span>
-                <i class="far fa-clock"></i>
-                <span id="timerPayment" style="font-weight:700;">07:38</span>
-            </div>
-            <div class="checkout-layout">
-                <div>
-                    <div class="summary-card">
-                        <div class="summary-banner">
-                            <div class="title">Sua Compra</div>
-                            <div class="total-price">R$ <span id="finalTotal">179,99</span> <small style="font-size:12px; font-weight:400;">total</small></div>
-                        </div>
-                        <div class="trip-detail-box">
-                            <div class="trip-header"><span><i class="fas fa-bus"></i> Viagem de ida</span><span id="tripDate">13 ago, qui 23:00</span></div>
-                            <div class="route-line"><span id="tripOrigin">BRASILIA - DF</span><i class="fas fa-arrow-right" style="font-size:11px; color:#94a3b8;"></i><span id="tripDest">CORRENTINA - BA</span></div>
-                            <div style="font-size:11px; color:#64748b; margin-top:4px;">Classe <strong id="tripClass">EXECUTIVO</strong></div>
-                        </div>
-                        <div class="breakdown-box">
-                            <div class="breakdown-title"><i class="fas fa-receipt"></i> Resumo do pagamento</div>
-                            <div class="breakdown-row"><span>Passagem</span><span id="basePrice">R$ 243,75</span></div>
-                            <div class="breakdown-row discount"><span>Desconto - Passagem</span><span id="discountPrice">- R$ 63,76</span></div>
-                            <div class="breakdown-row"><span>Taxa de serviço</span><span>R$ 9,79</span></div>
-                            <div class="breakdown-row"><span>Taxa de embarque</span><span>R$ 8,38</span></div>
-                            <div class="breakdown-row points"><span><i class="fas fa-star"></i> Pontuação Viva</span><span>+ 150 pontos</span></div>
-                        </div>
-                    </div>
+       <!-- ===================== CHECKOUT PAYMENT ===================== -->
+<div id="page-checkout-payment" class="page fade-in">
+    <div class="checkout-title">Pagamento</div>
+    <div class="timer-subtitle">
+        <span>Conclua a compra e garanta a sua viagem</span>
+        <i class="far fa-clock"></i>
+        <span id="timerPayment" style="font-weight:700;">07:38</span>
+    </div>
+
+    <div class="checkout-layout">
+        <!-- RESUMO DA COMPRA -->
+        <div>
+            <div class="summary-card">
+                <div class="summary-banner">
+                    <div class="title">Sua Compra</div>
+                    <div class="total-price">R$ <span id="finalTotal">179,99</span> <small style="font-size:12px; font-weight:400;">total</small></div>
                 </div>
-                <div style="display:flex; flex-direction:column; gap:16px;">
-                    <div class="passenger-info-card">
-                        <div>
-                            <div style="font-size:13px; font-weight:800; color:#1e293b; margin-bottom:4px;">Passageiros nesta viagem</div>
-                            <div class="name" id="displayPassengerName">Nome do Passageiro</div>
-                            <div class="email" id="displayPassengerEmail">email@exemplo.com</div>
-                        </div>
-                        <div class="seat-badge">Assento<br><span style="font-size:16px;" id="displaySeat">08</span></div>
+                <div class="trip-detail-box">
+                    <div class="trip-header">
+                        <span><i class="fas fa-bus"></i> Viagem de ida</span>
+                        <span id="tripDate">13 ago, qui 23:00</span>
                     </div>
-                    <div class="insurance-card">
-                        <div class="insurance-title"><i class="fas fa-shield-alt" style="color:#123481;"></i> Seguro viagem opcional</div>
-                        <div class="insurance-desc">O seguro adicional oferece uma cobertura extra em caso de danos, extravio e saúde.</div>
-                        <div class="insurance-list">
-                            <div><i class="fas fa-check-circle"></i> Cabe no bolso</div>
-                            <div><i class="fas fa-check-circle"></i> Cobertura nacional</div>
-                            <div><i class="fas fa-check-circle"></i> Pagamento em até 30 dias</div>
-                        </div>
-                        <div class="insurance-footer">
-                            <label style="display:flex; align-items:center; gap:8px; font-size:13px; font-weight:700; cursor:pointer;">
-                                <input type="checkbox" id="insuranceCheckbox" style="width:18px; height:18px; accent-color:#123481;" onchange="toggleInsurance()"> Sim, quero viajar tranquilo
-                            </label>
-                            <div class="insurance-price">R$ 10,00<span>por passageiro</span></div>
-                        </div>
+                    <div class="route-line">
+                        <span id="tripOrigin">BRASILIA - DF</span>
+                        <i class="fas fa-arrow-right" style="font-size:11px; color:#94a3b8;"></i>
+                        <span id="tripDest">CORRENTINA - BA</span>
                     </div>
-                    <div class="payment-methods-card">
-                        <div class="insurance-title" style="margin-bottom:14px;"><i class="fas fa-wallet" style="color:#123481;"></i> Selecione o pagamento</div>
-                        <div class="payment-option" onclick="processarPagamento('PIX')">
-                            <div class="payment-option-info">
-                                <i class="fa-brands fa-pix" style="color:#00bdae;"></i>
-                                <div><div class="title">PIX</div><div class="sub">Confirmação imediata</div></div>
-                            </div>
-                            <i class="fas fa-chevron-right" style="color:#cbd5e1; font-size:12px;"></i>
-                        </div>
-                        <div class="payment-option" onclick="processarPagamento('Cartao')">
-                            <div class="payment-option-info">
-                                <i class="far fa-credit-card"></i>
-                                <div><div class="title">Cartão de crédito</div><div class="sub">Visa, Mastercard, Elo, Amex</div></div>
-                            </div>
-                            <i class="fas fa-chevron-right" style="color:#cbd5e1; font-size:12px;"></i>
-                        </div>
-                        <div class="payment-option" onclick="processarPagamento('Transferencia')">
-                            <div class="payment-option-info">
-                                <i class="fas fa-university"></i>
-                                <div><div class="title">Transferência Bancária</div><div class="sub">Até 3h para compensar</div></div>
-                            </div>
-                            <i class="fas fa-chevron-right" style="color:#cbd5e1; font-size:12px;"></i>
-                        </div>
-                    </div>
+                    <div style="font-size:11px; color:#64748b; margin-top:4px;">Classe <strong id="tripClass">EXECUTIVO</strong></div>
+                    <div style="font-size:11px; color:#64748b;">Assento <strong id="displaySeat2">08</strong></div>
+                </div>
+                <div class="breakdown-box">
+                    <div class="breakdown-title"><i class="fas fa-receipt"></i> Resumo do pagamento</div>
+                    <div class="breakdown-row"><span>Passagem</span><span id="basePrice">R$ 243,75</span></div>
+                    <div class="breakdown-row discount"><span>Desconto - Passagem</span><span id="discountPrice">- R$ 63,76</span></div>
+                    <div class="breakdown-row"><span>Taxa de serviço</span><span>R$ 9,79</span></div>
+                    <div class="breakdown-row"><span>Taxa de embarque</span><span>R$ 8,38</span></div>
+                    <div class="breakdown-row points"><span><i class="fas fa-star"></i> Pontuação Viva</span><span>+ 150 pontos</span></div>
                 </div>
             </div>
         </div>
 
+        <!-- FORMULÁRIO DE PAGAMENTO -->
+        <div style="display:flex; flex-direction:column; gap:16px;">
+            <!-- DADOS DO PASSAGEIRO -->
+            <div class="passenger-info-card">
+                <div>
+                    <div style="font-size:13px; font-weight:800; color:#1e293b; margin-bottom:4px;">Passageiro</div>
+                    <div class="name" id="displayPassengerName">Nome do Passageiro</div>
+                    <div class="email" id="displayPassengerEmail">email@exemplo.com</div>
+                </div>
+                <div class="seat-badge">
+                    Assento<br>
+                    <span style="font-size:16px;" id="displaySeat">08</span>
+                </div>
+            </div>
+
+            <!-- SELECIONAR MÉTODO DE PAGAMENTO -->
+            <div class="payment-methods-card">
+                <div class="insurance-title" style="margin-bottom:14px;">
+                    <i class="fas fa-wallet" style="color:#123481;"></i> Selecione o pagamento
+                </div>
+                
+                <!-- PIX -->
+                <div class="payment-option" onclick="selecionarMetodo('pix')" id="optPix">
+                    <div class="payment-option-info">
+                        <i class="fa-brands fa-pix" style="color:#00bdae;"></i>
+                        <div>
+                            <div class="title">PIX</div>
+                            <div class="sub">Confirmação imediata</div>
+                        </div>
+                    </div>
+                    <i class="fas fa-chevron-right" style="color:#cbd5e1; font-size:12px;"></i>
+                </div>
+
+                <!-- CARTÃO DE CRÉDITO -->
+                <div class="payment-option" onclick="selecionarMetodo('cartao')" id="optCartao">
+                    <div class="payment-option-info">
+                        <i class="far fa-credit-card"></i>
+                        <div>
+                            <div class="title">Cartão de crédito</div>
+                            <div class="sub">Visa, Mastercard, Elo, Amex</div>
+                        </div>
+                    </div>
+                    <i class="fas fa-chevron-right" style="color:#cbd5e1; font-size:12px;"></i>
+                </div>
+
+                <!-- TRANSFERÊNCIA -->
+                <div class="payment-option" onclick="selecionarMetodo('transferencia')" id="optTransferencia">
+                    <div class="payment-option-info">
+                        <i class="fas fa-university"></i>
+                        <div>
+                            <div class="title">Transferência Bancária</div>
+                            <div class="sub">Até 3h para compensar</div>
+                        </div>
+                    </div>
+                    <i class="fas fa-chevron-right" style="color:#cbd5e1; font-size:12px;"></i>
+                </div>
+            </div>
+
+            <!-- FORMULÁRIO CARTÃO DE CRÉDITO -->
+            <div id="formCartao" style="display:none;" class="bg-white rounded-xl p-4 border border-gray-200">
+                <h4 class="font-bold text-sm text-gb-blue mb-3"><i class="fas fa-credit-card mr-2"></i>Dados do Cartão</h4>
+                <div class="space-y-3">
+                    <div>
+                        <label class="text-xs font-semibold text-gray-500 block mb-1">Nome no cartão</label>
+                        <input type="text" id="cartaoNome" placeholder="Como está no cartão" class="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gb-blue outline-none" />
+                    </div>
+                    <div>
+                        <label class="text-xs font-semibold text-gray-500 block mb-1">Número do cartão</label>
+                        <input type="text" id="cartaoNumero" placeholder="0000 0000 0000 0000" maxlength="19" class="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gb-blue outline-none" oninput="formatarCartao(this)" />
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="text-xs font-semibold text-gray-500 block mb-1">Validade</label>
+                            <input type="text" id="cartaoValidade" placeholder="MM/AA" maxlength="5" class="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gb-blue outline-none" oninput="formatarValidade(this)" />
+                        </div>
+                        <div>
+                            <label class="text-xs font-semibold text-gray-500 block mb-1">CVV</label>
+                            <input type="password" id="cartaoCvv" placeholder="***" maxlength="4" class="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gb-blue outline-none" />
+                        </div>
+                    </div>
+                    <div>
+                        <label class="text-xs font-semibold text-gray-500 block mb-1">CPF do titular</label>
+                        <input type="text" id="cartaoCpf" placeholder="000.000.000-00" class="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gb-blue outline-none" />
+                    </div>
+                    <button onclick="pagarComCartao()" class="w-full bg-gb-blue text-white font-bold py-3 rounded-lg hover:bg-gb-blue-hover transition">
+                        <i class="fas fa-lock mr-2"></i> Pagar com Cartão
+                    </button>
+                </div>
+            </div>
+
+            <!-- ÁREA PIX -->
+            <div id="areaPix" style="display:none;" class="bg-white rounded-xl p-4 border border-gray-200 text-center">
+                <div id="pixLoader" style="display:none;">
+                    <div class="spinner mx-auto"></div>
+                    <p class="text-sm text-gray-500 mt-2">Gerando PIX...</p>
+                </div>
+                <div id="pixContent" style="display:none;">
+                    <img id="pixQR" src="" alt="QR Code PIX" class="mx-auto w-48 h-48" />
+                    <p class="text-sm font-bold text-gb-blue mt-2">Escaneie o QR Code</p>
+                    <p class="text-xs text-gray-500">ou copie o código abaixo</p>
+                    <div class="flex gap-2 mt-2">
+                        <input type="text" id="pixCode" readonly class="flex-1 p-2 border rounded-lg text-xs" />
+                        <button onclick="copiarPix()" class="bg-gb-blue text-white px-3 py-2 rounded-lg text-sm"><i class="fas fa-copy"></i> Copiar</button>
+                    </div>
+                    <div id="pixStatus" class="mt-3 text-sm font-bold text-yellow-600 animate-pulse">Aguardando pagamento...</div>
+                    <button onclick="verificarPix()" class="mt-3 bg-green-600 text-white px-4 py-2 rounded-lg text-sm"><i class="fas fa-refresh"></i> Verificar pagamento</button>
+                </div>
+                <button onclick="gerarPix()" id="btnGerarPix" class="w-full bg-green-600 text-white font-bold py-3 rounded-lg hover:bg-green-700 transition">
+                    <i class="fa-brands fa-pix mr-2"></i> Gerar PIX
+                </button>
+            </div>
+
+            <!-- SEGURO OPCIONAL -->
+            <div class="insurance-card">
+                <div class="insurance-title"><i class="fas fa-shield-alt" style="color:#123481;"></i> Seguro viagem opcional</div>
+                <div class="insurance-desc">O seguro adicional oferece uma cobertura extra em caso de danos, extravio e saúde.</div>
+                <div class="insurance-list">
+                    <div><i class="fas fa-check-circle"></i> Cabe no bolso</div>
+                    <div><i class="fas fa-check-circle"></i> Cobertura nacional</div>
+                    <div><i class="fas fa-check-circle"></i> Pagamento em até 30 dias</div>
+                </div>
+                <div class="insurance-footer">
+                    <label style="display:flex; align-items:center; gap:8px; font-size:13px; font-weight:700; cursor:pointer;">
+                        <input type="checkbox" id="insuranceCheckbox" style="width:18px; height:18px; accent-color:#123481;" onchange="toggleInsurance()"> Sim, quero viajar tranquilo
+                    </label>
+                    <div class="insurance-price">R$ 10,00<span>por passageiro</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
         <!-- ===================== RECEIPT ===================== -->
         <div id="page-receipt" class="page fade-in">
             <div class="text-center py-8">
