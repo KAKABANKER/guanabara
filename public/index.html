@@ -59,44 +59,13 @@
 
   <script type="text/babel">
     // ===========================
-    // BANCO DE DADOS DE CIDADES E RODOVIÁRIAS DA GUANABARA
-    // ===========================
-    const LOCATIONS = [
-      // Sudeste
-      { id: 1, city: 'Rio de Janeiro', state: 'RJ', terminal: 'Rodoviária Novo Rio', lat: -22.9068, lng: -43.1975 },
-      { id: 2, city: 'São Paulo', state: 'SP', terminal: 'Terminal Tietê', lat: -23.5156, lng: -46.6204 },
-      { id: 3, city: 'Belo Horizonte', state: 'MG', terminal: 'Rodoviária de Belo Horizonte', lat: -19.9167, lng: -43.9345 },
-      { id: 4, city: 'Vitória', state: 'ES', terminal: 'Rodoviária de Vitória', lat: -20.3155, lng: -40.3128 },
-      // Centro-Oeste
-      { id: 5, city: 'Brasília', state: 'DF', terminal: 'Rodoviária do Plano Piloto', lat: -15.7939, lng: -47.8829 },
-      { id: 6, city: 'Goiânia', state: 'GO', terminal: 'Rodoviária de Goiânia', lat: -16.6869, lng: -49.2648 },
-      { id: 7, city: 'Cuiabá', state: 'MT', terminal: 'Rodoviária de Cuiabá', lat: -15.6010, lng: -56.0974 },
-      { id: 8, city: 'Campo Grande', state: 'MS', terminal: 'Rodoviária de Campo Grande', lat: -20.4640, lng: -54.6166 },
-      // Nordeste
-      { id: 9, city: 'Fortaleza', state: 'CE', terminal: 'Rodoviária de Fortaleza', lat: -3.7898, lng: -38.5716 },
-      { id: 10, city: 'Salvador', state: 'BA', terminal: 'Rodoviária de Salvador', lat: -12.9781, lng: -38.5015 },
-      { id: 11, city: 'Recife', state: 'PE', terminal: 'Rodoviária de Recife', lat: -8.0543, lng: -34.8786 },
-      { id: 12, city: 'Natal', state: 'RN', terminal: 'Rodoviária de Natal', lat: -5.7945, lng: -35.2110 },
-      { id: 13, city: 'João Pessoa', state: 'PB', terminal: 'Rodoviária de João Pessoa', lat: -7.1153, lng: -34.8610 },
-      { id: 14, city: 'Maceió', state: 'AL', terminal: 'Rodoviária de Maceió', lat: -9.6654, lng: -35.7350 },
-      { id: 15, city: 'Aracaju', state: 'SE', terminal: 'Rodoviária de Aracaju', lat: -10.9472, lng: -37.0731 },
-      { id: 16, city: 'Teresina', state: 'PI', terminal: 'Rodoviária de Teresina', lat: -5.0896, lng: -42.8016 },
-      { id: 17, city: 'São Luís', state: 'MA', terminal: 'Rodoviária de São Luís', lat: -2.5387, lng: -44.2825 },
-      // Sul
-      { id: 18, city: 'Curitiba', state: 'PR', terminal: 'Rodoviária de Curitiba', lat: -25.4284, lng: -49.2733 },
-      { id: 19, city: 'Porto Alegre', state: 'RS', terminal: 'Rodoviária de Porto Alegre', lat: -30.0346, lng: -51.2175 },
-      { id: 20, city: 'Florianópolis', state: 'SC', terminal: 'Rodoviária de Florianópolis', lat: -27.5969, lng: -48.5495 },
-      // Norte
-      { id: 21, city: 'Belém', state: 'PA', terminal: 'Rodoviária de Belém', lat: -1.4558, lng: -48.4798 },
-      { id: 22, city: 'Manaus', state: 'AM', terminal: 'Rodoviária de Manaus', lat: -3.1190, lng: -60.0217 },
-      { id: 23, city: 'Palmas', state: 'TO', terminal: 'Rodoviária de Palmas', lat: -10.2400, lng: -48.3310 },
-    ];
-
-    // ===========================
     // CONFIGURAÇÃO
     // ===========================
     const API_URL = window.location.origin + '/api';
     let token = localStorage.getItem('token') || '';
+
+    // Cache para evitar chamadas repetidas à API do IBGE
+    let locationCache = {};
 
     // ===========================
     // UTILITÁRIOS
@@ -120,6 +89,59 @@
       const result = await response.json();
       if (!response.ok) throw new Error(result.error || 'Erro na requisição');
       return result;
+    };
+
+    // ===========================
+    // BUSCA DE CIDADES VIA API IBGE + OPENSTREETMAP
+    // ===========================
+    const fetchCitiesFromIBGE = async (term) => {
+      if (!term || term.length < 2) return [];
+
+      // Verifica cache
+      if (locationCache[term]) return locationCache[term];
+
+      try {
+        // 1. Busca cidades na API do IBGE
+        const response = await fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/municipios?nome=${encodeURIComponent(term)}`);
+        const data = await response.json();
+
+        if (!data || data.length === 0) return [];
+
+        // 2. Para cada cidade, busca coordenadas no OpenStreetMap (com limitação)
+        const citiesWithCoords = await Promise.all(
+          data.slice(0, 15).map(async (city, index) => {
+            try {
+              const geoRes = await fetch(
+                `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(city.nome + ', ' + city.microrregiao.mesorregiao.UF.sigla + ', Brasil')}&limit=1`
+              );
+              const geoData = await geoRes.json();
+              
+              if (geoData && geoData.length > 0) {
+                return {
+                  id: city.id,
+                  city: city.nome,
+                  state: city.microrregiao.mesorregiao.UF.sigla,
+                  terminal: `Rodoviária de ${city.nome}`,
+                  lat: parseFloat(geoData[0].lat),
+                  lng: parseFloat(geoData[0].lon)
+                };
+              }
+              return null;
+            } catch (err) {
+              return null;
+            }
+          })
+        );
+
+        const results = citiesWithCoords.filter(c => c !== null);
+        
+        // Salva no cache
+        locationCache[term] = results;
+        return results;
+      } catch (error) {
+        console.error('Erro ao buscar cidades:', error);
+        return [];
+      }
     };
 
     // ===========================
@@ -147,7 +169,7 @@
                 src="/img/logo.webp" 
                 alt="Guanabara" 
                 className="h-10 object-contain"
-                onError={(e) => { e.target.style.display = 'none'; }} // Fallback caso a imagem não exista
+                onError={(e) => { e.target.style.display = 'none'; }} 
               />
             </div>
             <div className="flex items-center gap-2">
@@ -166,7 +188,7 @@
       );
     };
 
-    // 2. BUSCA COM SUGESTÕES E GEOLOCALIZAÇÃO
+    // 2. BUSCA COM SUGESTÕES VIA API E GEOLOCALIZAÇÃO
     const SearchFormSection = ({ onSearch }) => {
       const [origin, setOrigin] = React.useState('');
       const [destination, setDestination] = React.useState('');
@@ -176,6 +198,8 @@
       const [originSuggestions, setOriginSuggestions] = React.useState([]);
       const [destSuggestions, setDestSuggestions] = React.useState([]);
       const [userLocation, setUserLocation] = React.useState(null);
+      const [searchingOrigin, setSearchingOrigin] = React.useState(false);
+      const [searchingDest, setSearchingDest] = React.useState(false);
 
       // Detecta localização do usuário
       React.useEffect(() => {
@@ -196,7 +220,7 @@
 
       // Calcula distância (fórmula de Haversine)
       const haversineDistance = (lat1, lon1, lat2, lon2) => {
-        const R = 6371; // Raio da Terra em km
+        const R = 6371;
         const dLat = (lat2 - lat1) * Math.PI / 180;
         const dLon = (lon2 - lon1) * Math.PI / 180;
         const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
@@ -206,39 +230,46 @@
         return R * c;
       };
 
-      // Filtra e ordena sugestões por proximidade
-      const getSuggestions = (input) => {
+      // Busca sugestões via API
+      const getSuggestionsFromAPI = async (input) => {
         if (!input || input.length < 2) return [];
-        const term = input.toLowerCase();
-        
-        let results = LOCATIONS.filter(loc => 
-          loc.city.toLowerCase().includes(term) || 
-          loc.state.toLowerCase().includes(term) ||
-          loc.terminal.toLowerCase().includes(term)
-        );
+        const results = await fetchCitiesFromIBGE(input);
 
         // Se tiver localização do usuário, ordena por proximidade
         if (userLocation) {
-          results = results.map(loc => ({
-            ...loc,
-            distance: haversineDistance(userLocation.lat, userLocation.lng, loc.lat, loc.lng)
-          }));
+          results.forEach(loc => {
+            loc.distance = haversineDistance(userLocation.lat, userLocation.lng, loc.lat, loc.lng);
+          });
           results.sort((a, b) => a.distance - b.distance);
         }
 
-        return results.slice(0, 6);
+        return results.slice(0, 8);
       };
 
-      const handleOriginChange = (e) => {
+      const handleOriginChange = async (e) => {
         const val = e.target.value;
         setOrigin(val);
-        setOriginSuggestions(getSuggestions(val));
+        if (val.length >= 2) {
+          setSearchingOrigin(true);
+          const suggestions = await getSuggestionsFromAPI(val);
+          setOriginSuggestions(suggestions);
+          setSearchingOrigin(false);
+        } else {
+          setOriginSuggestions([]);
+        }
       };
 
-      const handleDestChange = (e) => {
+      const handleDestChange = async (e) => {
         const val = e.target.value;
         setDestination(val);
-        setDestSuggestions(getSuggestions(val));
+        if (val.length >= 2) {
+          setSearchingDest(true);
+          const suggestions = await getSuggestionsFromAPI(val);
+          setDestSuggestions(suggestions);
+          setSearchingDest(false);
+        } else {
+          setDestSuggestions([]);
+        }
       };
 
       const selectLocation = (type, loc) => {
@@ -316,6 +347,7 @@
                     className="w-full text-base font-medium outline-none placeholder:text-gb-muted bg-transparent" 
                     required 
                   />
+                  {searchingOrigin && <div className="absolute right-2 top-1/2 -translate-y-1/2"><div className="spinner w-5 h-5 border-2"></div></div>}
                 </div>
                 {originSuggestions.length > 0 && (
                   <div className="absolute top-full left-0 right-0 bg-white shadow-lg rounded-lg mt-1 z-40 suggestions-list border border-gray-200">
@@ -327,7 +359,7 @@
                       >
                         <div className="font-medium">{loc.city} - {loc.state}</div>
                         <div className="text-xs text-gb-muted">{loc.terminal}</div>
-                        {loc.distance && <div className="text-xs text-gb-blue mt-1">{Math.round(loc.distance)} km de você</div>}
+                        {loc.distance !== undefined && <div className="text-xs text-gb-blue mt-1">{Math.round(loc.distance)} km de você</div>}
                       </div>
                     ))}
                   </div>
@@ -356,6 +388,7 @@
                     className="w-full text-base font-medium outline-none placeholder:text-gb-muted bg-transparent" 
                     required 
                   />
+                  {searchingDest && <div className="absolute right-2 top-1/2 -translate-y-1/2"><div className="spinner w-5 h-5 border-2"></div></div>}
                 </div>
                 {destSuggestions.length > 0 && (
                   <div className="absolute top-full left-0 right-0 bg-white shadow-lg rounded-lg mt-1 z-40 suggestions-list border border-gray-200">
@@ -367,7 +400,7 @@
                       >
                         <div className="font-medium">{loc.city} - {loc.state}</div>
                         <div className="text-xs text-gb-muted">{loc.terminal}</div>
-                        {loc.distance && <div className="text-xs text-gb-blue mt-1">{Math.round(loc.distance)} km de você</div>}
+                        {loc.distance !== undefined && <div className="text-xs text-gb-blue mt-1">{Math.round(loc.distance)} km de você</div>}
                       </div>
                     ))}
                   </div>
@@ -487,7 +520,6 @@
       React.useEffect(() => {
         const fetchTickets = async () => {
           setLoading(true);
-          // Simula a busca de passagens no banco
           const mockTickets = Array.from({ length: 5 }).map((_, i) => ({
             id: i + 1,
             origem: searchData.origin,
