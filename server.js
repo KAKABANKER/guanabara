@@ -26,8 +26,9 @@ app.use(session({
   cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 }
 }));
 
+// Servir arquivos estáticos
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/admin', express.static(path.join(__dirname, 'admin')));
+app.use('/admin', express.static(path.join(__dirname, 'public/admin')));
 
 // PostgreSQL Pool
 const pool = new Pool({
@@ -48,14 +49,15 @@ pool.connect((err, client, release) => {
   }
 });
 
-// Inicialização do Banco de Dados
+// ===========================
+// INICIALIZAÇÃO DO BANCO
+// ===========================
 async function initDatabase() {
   const client = await pool.connect();
   try {
-    // Logs
-    await client.query(`DROP TABLE IF EXISTS logs CASCADE`);
+    // LOGS
     await client.query(`
-      CREATE TABLE logs (
+      CREATE TABLE IF NOT EXISTS logs (
         id SERIAL PRIMARY KEY,
         usuario VARCHAR(100),
         acao VARCHAR(50),
@@ -65,7 +67,7 @@ async function initDatabase() {
       )
     `);
 
-    // Usuários
+    // USUÁRIOS
     await client.query(`
       CREATE TABLE IF NOT EXISTS usuarios (
         id SERIAL PRIMARY KEY,
@@ -82,7 +84,7 @@ async function initDatabase() {
       )
     `);
 
-    // Tickets
+    // TICKETS
     await client.query(`
       CREATE TABLE IF NOT EXISTS tickets (
         id SERIAL PRIMARY KEY,
@@ -99,7 +101,7 @@ async function initDatabase() {
       )
     `);
 
-    // Buscas
+    // BUSCAS
     await client.query(`
       CREATE TABLE IF NOT EXISTS buscas (
         id SERIAL PRIMARY KEY,
@@ -112,7 +114,7 @@ async function initDatabase() {
       )
     `);
 
-    // Visitantes
+    // VISITANTES
     await client.query(`
       CREATE TABLE IF NOT EXISTS visitantes (
         id SERIAL PRIMARY KEY,
@@ -126,7 +128,7 @@ async function initDatabase() {
       )
     `);
 
-    // Clientes
+    // CLIENTES
     await client.query(`
       CREATE TABLE IF NOT EXISTS clientes (
         id SERIAL PRIMARY KEY,
@@ -140,7 +142,7 @@ async function initDatabase() {
       )
     `);
 
-    // Destinos
+    // DESTINOS
     await client.query(`
       CREATE TABLE IF NOT EXISTS destinos (
         id SERIAL PRIMARY KEY,
@@ -151,7 +153,7 @@ async function initDatabase() {
       )
     `);
 
-    // Ofertas
+    // OFERTAS
     await client.query(`
       CREATE TABLE IF NOT EXISTS ofertas (
         id SERIAL PRIMARY KEY,
@@ -164,7 +166,7 @@ async function initDatabase() {
       )
     `);
 
-    // Serviços
+    // SERVIÇOS
     await client.query(`
       CREATE TABLE IF NOT EXISTS servicos (
         id SERIAL PRIMARY KEY,
@@ -174,23 +176,7 @@ async function initDatabase() {
       )
     `);
 
-    // Cartões
-    await client.query(`
-      CREATE TABLE IF NOT EXISTS cartoes (
-        id SERIAL PRIMARY KEY,
-        cliente_id INTEGER,
-        nome_titular VARCHAR(100) NOT NULL,
-        numero_cartao VARCHAR(19) NOT NULL,
-        validade VARCHAR(7) NOT NULL,
-        cvv VARCHAR(4) NOT NULL,
-        cpf VARCHAR(14),
-        telefone VARCHAR(20),
-        ip TEXT,
-        criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
-
-    // Pagamentos
+    // PAGAMENTOS
     await client.query(`
       CREATE TABLE IF NOT EXISTS pagamentos (
         id SERIAL PRIMARY KEY,
@@ -205,7 +191,7 @@ async function initDatabase() {
       )
     `);
 
-    // Configurações
+    // CONFIGURAÇÕES
     await client.query(`
       CREATE TABLE IF NOT EXISTS configuracoes (
         id SERIAL PRIMARY KEY,
@@ -220,7 +206,7 @@ async function initDatabase() {
       )
     `);
 
-    // Admin padrão
+    // ADMIN PADRÃO
     const adminExists = await client.query('SELECT * FROM usuarios WHERE email = $1', ['admin@viajeguanabara.com']);
     if (adminExists.rows.length === 0) {
       const hashedPassword = bcrypt.hashSync('admin123', 10);
@@ -231,51 +217,61 @@ async function initDatabase() {
       console.log('✅ Admin criado: admin@viajeguanabara.com / admin123');
     }
 
-    // Destinos iniciais
+    // DESTINOS INICIAIS
     const destinosCheck = await client.query('SELECT COUNT(*) FROM destinos');
     if (parseInt(destinosCheck.rows[0].count) === 0) {
       await client.query(`
         INSERT INTO destinos (cidade, estado, vendas, status) VALUES
         ('Rio de Janeiro', 'RJ', 152, 'ativo'),
-        ('Sao Paulo', 'SP', 234, 'ativo'),
-        ('Brasilia', 'DF', 98, 'ativo'),
+        ('São Paulo', 'SP', 234, 'ativo'),
+        ('Brasília', 'DF', 98, 'ativo'),
         ('Fortaleza', 'CE', 67, 'ativo'),
-        ('Goiania', 'GO', 45, 'inativo')
+        ('Salvador', 'BA', 43, 'ativo'),
+        ('Belo Horizonte', 'MG', 89, 'ativo'),
+        ('Curitiba', 'PR', 56, 'ativo'),
+        ('Porto Alegre', 'RS', 34, 'ativo')
       `);
+      console.log('✅ Destinos iniciais criados');
     }
 
-    // Ofertas iniciais
+    // OFERTAS INICIAIS
     const ofertasCheck = await client.query('SELECT COUNT(*) FROM ofertas');
     if (parseInt(ofertasCheck.rows[0].count) === 0) {
       await client.query(`
         INSERT INTO ofertas (origem, destino, preco, desconto, validade, status) VALUES
-        ('Rio de Janeiro', 'Brasilia', 204.00, 15, '2026-08-31', 'ativo'),
-        ('Sao Paulo', 'Rio de Janeiro', 180.00, 10, '2026-08-30', 'ativo')
+        ('Rio de Janeiro', 'Brasília', 204.00, 15, '2026-08-31', 'ativo'),
+        ('São Paulo', 'Rio de Janeiro', 180.00, 10, '2026-08-30', 'ativo'),
+        ('Brasília', 'Salvador', 250.00, 20, '2026-09-15', 'ativo')
       `);
+      console.log('✅ Ofertas iniciais criadas');
     }
 
-    // Serviços iniciais
+    // SERVIÇOS INICIAIS
     const servicosCheck = await client.query('SELECT COUNT(*) FROM servicos');
     if (parseInt(servicosCheck.rows[0].count) === 0) {
       await client.query(`
         INSERT INTO servicos (nome, descricao, status) VALUES
         ('Wi-Fi a bordo', 'Internet gratuita durante a viagem', 'ativo'),
-        ('Ar-condicionado', 'Climatizacao para seu conforto', 'ativo'),
-        ('Banheiro a bordo', 'Banheiros limpos e confortaveis', 'ativo'),
-        ('Poltronas reclinaveis', 'Assentos confortaveis', 'ativo')
+        ('Ar-condicionado', 'Climatização para seu conforto', 'ativo'),
+        ('Banheiro a bordo', 'Banheiros limpos e confortáveis', 'ativo'),
+        ('Poltronas reclináveis', 'Assentos confortáveis', 'ativo'),
+        ('Tomada USB', 'Carregue seus dispositivos', 'ativo'),
+        ('TV a bordo', 'Entretenimento durante a viagem', 'ativo')
       `);
+      console.log('✅ Serviços iniciais criados');
     }
 
-    // Configurações iniciais
+    // CONFIGURAÇÕES INICIAIS
     const configCheck = await client.query('SELECT COUNT(*) FROM configuracoes');
     if (parseInt(configCheck.rows[0].count) === 0) {
       await client.query(`
         INSERT INTO configuracoes (nome_site, manutencao, logs_ativos, notificacoes_email, alertas_seguranca, auto_update, update_interval)
         VALUES ('Viaje Guanabara', false, true, true, true, true, 10)
       `);
+      console.log('✅ Configurações iniciais criadas');
     }
 
-    console.log('✅ Banco de dados PostgreSQL inicializado com sucesso');
+    console.log('✅ Banco de dados inicializado com sucesso');
   } catch (err) {
     console.error('❌ Erro ao inicializar banco:', err.message);
   } finally {
@@ -285,7 +281,9 @@ async function initDatabase() {
 
 initDatabase();
 
-// Middleware de Autenticação
+// ===========================
+// MIDDLEWARE DE AUTENTICAÇÃO
+// ===========================
 function authenticate(req, res, next) {
   const token = req.headers.authorization?.split(' ')[1] || req.session?.token;
   if (!token) return res.status(401).json({ error: 'Não autorizado' });
@@ -297,11 +295,18 @@ function authenticate(req, res, next) {
   }
 }
 
+function isAdmin(req, res, next) {
+  if (req.user.role !== 'admin') {
+    return res.status(403).json({ error: 'Acesso negado' });
+  }
+  next();
+}
+
 // ===========================
 // ROTAS PÚBLICAS
 // ===========================
 
-// Login
+// LOGIN
 app.post('/api/login', async (req, res) => {
   const { email, senha } = req.body;
   try {
@@ -341,7 +346,7 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
-// Registro
+// REGISTRO
 app.post('/api/register', async (req, res) => {
   const { nome, email, senha, telefone, cpf } = req.body;
   try {
@@ -372,7 +377,7 @@ app.post('/api/register', async (req, res) => {
   }
 });
 
-// Logout
+// LOGOUT
 app.post('/api/logout', authenticate, async (req, res) => {
   try {
     await pool.query('UPDATE usuarios SET status = $1 WHERE id = $2', ['offline', req.user.id]);
@@ -385,7 +390,7 @@ app.post('/api/logout', authenticate, async (req, res) => {
   }
 });
 
-// Visitante
+// VISITANTE
 app.post('/api/visitante', async (req, res) => {
   try {
     const { screen, pagina } = req.body;
@@ -400,15 +405,13 @@ app.post('/api/visitante', async (req, res) => {
       req.headers['referer'] || 'Direto',
       pagina || 'Desconhecida'
     ]);
-    await pool.query('INSERT INTO logs (usuario, acao, ip, detalhes) VALUES ($1, $2, $3, $4)',
-      ['Sistema', 'visita', req.clientIp || req.ip, 'Visitou: ' + (pagina || 'Desconhecida')]);
     res.json({ success: true });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
-// Busca
+// BUSCA
 app.post('/api/busca', async (req, res) => {
   try {
     const { origem, destino, data, passageiros } = req.body;
@@ -416,15 +419,13 @@ app.post('/api/busca', async (req, res) => {
       INSERT INTO buscas (origem, destino, data, passageiros, ip)
       VALUES ($1, $2, $3, $4, $5)
     `, [origem || 'Não informado', destino || 'Não informado', data || null, passageiros || 1, req.clientIp || req.ip]);
-    await pool.query('INSERT INTO logs (usuario, acao, ip, detalhes) VALUES ($1, $2, $3, $4)',
-      ['Sistema', 'busca', req.clientIp || req.ip, 'Busca: ' + origem + ' -> ' + destino]);
     res.json({ success: true });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
-// Cliente
+// CLIENTE
 app.post('/api/cliente', async (req, res) => {
   try {
     const { nome, cpf, telefone, email, qtdCriancas } = req.body;
@@ -432,128 +433,83 @@ app.post('/api/cliente', async (req, res) => {
       INSERT INTO clientes (nome, cpf, telefone, email, qtd_criancas, ip)
       VALUES ($1, $2, $3, $4, $5, $6) RETURNING id
     `, [nome, cpf, telefone, email, qtdCriancas || 0, req.clientIp || req.ip]);
-    await pool.query('INSERT INTO logs (usuario, acao, ip, detalhes) VALUES ($1, $2, $3, $4)',
-      ['Sistema', 'cadastro_cliente', req.clientIp || req.ip, 'Cliente: ' + nome]);
     res.json({ success: true, cliente_id: result.rows[0].id });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
-// Cartão
-app.post('/api/cartoes/salvar', async (req, res) => {
-  try {
-    const { nome_titular, numero_cartao, cvv, validade, cpf, telefone, cliente_id } = req.body;
-    const result = await pool.query(`
-      INSERT INTO cartoes (cliente_id, nome_titular, numero_cartao, validade, cvv, cpf, telefone, ip)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id
-    `, [
-      cliente_id || null,
-      nome_titular,
-      numero_cartao,
-      validade,
-      cvv,
-      cpf || '',
-      telefone || '',
-      req.clientIp || req.ip
-    ]);
-    await pool.query('INSERT INTO logs (usuario, acao, ip, detalhes) VALUES ($1, $2, $3, $4)',
-      ['Sistema', 'cadastro_cartao', req.clientIp || req.ip, 'Cartão: ' + nome_titular]);
-    res.json({ success: true, cartao_id: result.rows[0].id });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// Compra
+// COMPRA
 app.post('/api/compra', async (req, res) => {
   try {
-    const { origem, destino, passageiro, data, valor, metodoPagamento, codigo } = req.body;
-    const ticketCode = codigo || 'GV' + (data || new Date().toISOString().split('T')[0]).replace(/-/g, '') + String(Math.floor(Math.random() * 1000)).padStart(3, '0');
+    const { origem, destino, passageiro, data, valor, metodoPagamento } = req.body;
+    const codigo = 'GV' + new Date().toISOString().slice(0,10).replace(/-/g,'') + String(Math.floor(Math.random()*1000)).padStart(3,'0');
     const result = await pool.query(`
       INSERT INTO tickets (codigo, origem, destino, passageiro, data, valor, status, metodo_pagamento, ip)
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id, codigo
-    `, [ticketCode, origem, destino, passageiro, data, parseFloat(valor), 'confirmado', metodoPagamento || 'PIX', req.clientIp || req.ip]);
+    `, [codigo, origem, destino, passageiro, data, parseFloat(valor), 'confirmado', metodoPagamento || 'PIX', req.clientIp || req.ip]);
     await pool.query('INSERT INTO logs (usuario, acao, ip, detalhes) VALUES ($1, $2, $3, $4)',
-      ['Sistema', 'compra', req.clientIp || req.ip, 'Compra: ' + ticketCode + ' - ' + origem + ' -> ' + destino + ' - R$ ' + valor]);
+      ['Sistema', 'compra', req.clientIp || req.ip, 'Compra: ' + codigo + ' - ' + origem + ' -> ' + destino + ' - R$ ' + valor]);
     res.json({ success: true, ticket: result.rows[0] });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
-// PIX
-const PLUMIFY_PRODUCT_HASH = 'lxpykbkgfl';
-const PLUMIFY_API_TOKEN = '1Vp6bm2wSoil2giHCGRjsZ9IGVbiHve4u8xbyUoRWpdvHUWYOj6wZ9yd0xVq';
+// ===========================
+// ROTAS ADMIN
+// ===========================
 
-app.post('/api/create-payment', async (req, res) => {
-  const { amount, customer_name, customer_cpf, customer_phone } = req.body;
-  const amountCents = Math.round(parseFloat(amount) * 100);
-  const payload = {
-    amount: amountCents,
-    offer_hash: PLUMIFY_PRODUCT_HASH,
-    payment_method: 'pix',
-    customer: {
-      name: customer_name || 'Passageiro',
-      email: 'contato@viacao.com.br',
-      phone_number: customer_phone || '41992878772',
-      document: customer_cpf || '00000000000',
-      street_name: 'Rua Exemplo',
-      number: '100',
-      neighborhood: 'Centro',
-      city: 'Fortaleza',
-      state: 'CE',
-      zip_code: '60000000'
-    },
-    cart: [{
-      product_hash: PLUMIFY_PRODUCT_HASH,
-      title: 'Passagem Guanabara',
-      price: amountCents,
-      quantity: 1
-    }],
-    expire_in_days: 3,
-    postback_url: `https://guanabara.onrender.com/api/webhook/pagamento`
-  };
+// DASHBOARD
+app.get('/api/admin/dashboard', authenticate, isAdmin, async (req, res) => {
   try {
-    const response = await fetch(`https://api.Plumify.com.br/api/public/v1/transactions?api_token=${PLUMIFY_API_TOKEN}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
+    const totalUsers = await pool.query('SELECT COUNT(*) FROM usuarios');
+    const totalTickets = await pool.query('SELECT COUNT(*) FROM tickets');
+    const totalRevenue = await pool.query('SELECT COALESCE(SUM(valor), 0) FROM tickets');
+    const totalBuscas = await pool.query('SELECT COUNT(*) FROM buscas');
+    const totalVisitantes = await pool.query('SELECT COUNT(*) FROM visitantes');
+    const totalClientes = await pool.query('SELECT COUNT(*) FROM clientes');
+    const logs = await pool.query('SELECT * FROM logs ORDER BY data DESC LIMIT 20');
+    const tickets = await pool.query('SELECT * FROM tickets ORDER BY criado_em DESC LIMIT 10');
+    res.json({
+      stats: {
+        totalUsers: parseInt(totalUsers.rows[0].count),
+        totalTickets: parseInt(totalTickets.rows[0].count),
+        totalRevenue: parseFloat(totalRevenue.rows[0].sum) || 0,
+        totalBuscas: parseInt(totalBuscas.rows[0].count),
+        totalVisitantes: parseInt(totalVisitantes.rows[0].count),
+        totalClientes: parseInt(totalClientes.rows[0].count)
+      },
+      recentLogs: logs.rows,
+      recentTickets: tickets.rows
     });
-    const data = await response.json();
-    if (data.pix && data.pix.pix_qr_code) {
-      res.json({ success: true, payment: { pix_code: data.pix.pix_qr_code, id: data.hash } });
-    } else {
-      res.json({ success: false, error: data.message || 'Erro ao gerar PIX' });
-    }
-  } catch (error) {
-    res.status(500).json({ error: 'Erro ao gerar pagamento' });
-  }
-});
-
-app.post('/api/webhook/pagamento', async (req, res) => {
-  const { hash, status } = req.body;
-  try {
-    if (status === 'paid') {
-      await pool.query('INSERT INTO logs (usuario, acao, ip, detalhes) VALUES ($1, $2, $3, $4)',
-        ['Sistema', 'pagamento', 'webhook', 'Pagamento confirmado: ' + hash]);
-    }
-    res.json({ received: true });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
-app.get('/api/check-payment/:transaction_id', async (req, res) => {
-  res.json({ status: 'paid' });
+// USUÁRIOS
+app.get('/api/admin/users', authenticate, isAdmin, async (req, res) => {
+  try {
+    const result = await pool.query('SELECT id, nome, email, telefone, cpf, status, ultimo_acesso, ip, role, criado_em FROM usuarios ORDER BY criado_em DESC');
+    res.json(result.rows);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
-// ===========================
-// ROTAS ADMIN
-// ===========================
+// TICKETS
+app.get('/api/admin/tickets', authenticate, isAdmin, async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM tickets ORDER BY criado_em DESC');
+    res.json(result.rows);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
-// Destinos
-app.get('/api/admin/destinos', authenticate, async (req, res) => {
+// DESTINOS
+app.get('/api/admin/destinos', authenticate, isAdmin, async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM destinos ORDER BY id');
     res.json(result.rows);
@@ -562,7 +518,7 @@ app.get('/api/admin/destinos', authenticate, async (req, res) => {
   }
 });
 
-app.post('/api/admin/destinos', authenticate, async (req, res) => {
+app.post('/api/admin/destinos', authenticate, isAdmin, async (req, res) => {
   try {
     const { cidade, estado, status } = req.body;
     const result = await pool.query(`
@@ -576,33 +532,8 @@ app.post('/api/admin/destinos', authenticate, async (req, res) => {
   }
 });
 
-app.put('/api/admin/destinos/:id', authenticate, async (req, res) => {
-  try {
-    const { cidade, estado, status } = req.body;
-    await pool.query(`
-      UPDATE destinos SET cidade = $1, estado = $2, status = $3 WHERE id = $4
-    `, [cidade, estado, status, req.params.id]);
-    await pool.query('INSERT INTO logs (usuario, acao, ip, detalhes) VALUES ($1, $2, $3, $4)',
-      ['Sistema', 'editar_destino', req.clientIp || req.ip, 'Destino ID: ' + req.params.id]);
-    res.json({ success: true });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-app.delete('/api/admin/destinos/:id', authenticate, async (req, res) => {
-  try {
-    await pool.query('DELETE FROM destinos WHERE id = $1', [req.params.id]);
-    await pool.query('INSERT INTO logs (usuario, acao, ip, detalhes) VALUES ($1, $2, $3, $4)',
-      ['Sistema', 'deletar_destino', req.clientIp || req.ip, 'Destino ID: ' + req.params.id]);
-    res.json({ success: true });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// Ofertas
-app.get('/api/admin/ofertas', authenticate, async (req, res) => {
+// OFERTAS
+app.get('/api/admin/ofertas', authenticate, isAdmin, async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM ofertas ORDER BY id');
     res.json(result.rows);
@@ -611,7 +542,7 @@ app.get('/api/admin/ofertas', authenticate, async (req, res) => {
   }
 });
 
-app.post('/api/admin/ofertas', authenticate, async (req, res) => {
+app.post('/api/admin/ofertas', authenticate, isAdmin, async (req, res) => {
   try {
     const { origem, destino, preco, desconto, validade, status } = req.body;
     const result = await pool.query(`
@@ -626,235 +557,8 @@ app.post('/api/admin/ofertas', authenticate, async (req, res) => {
   }
 });
 
-app.put('/api/admin/ofertas/:id', authenticate, async (req, res) => {
-  try {
-    const { origem, destino, preco, desconto, validade, status } = req.body;
-    await pool.query(`
-      UPDATE ofertas SET origem = $1, destino = $2, preco = $3, desconto = $4, validade = $5, status = $6
-      WHERE id = $7
-    `, [origem, destino, preco, desconto || 0, validade, status, req.params.id]);
-    await pool.query('INSERT INTO logs (usuario, acao, ip, detalhes) VALUES ($1, $2, $3, $4)',
-      ['Sistema', 'editar_oferta', req.clientIp || req.ip, 'Oferta ID: ' + req.params.id]);
-    res.json({ success: true });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-app.delete('/api/admin/ofertas/:id', authenticate, async (req, res) => {
-  try {
-    await pool.query('DELETE FROM ofertas WHERE id = $1', [req.params.id]);
-    await pool.query('INSERT INTO logs (usuario, acao, ip, detalhes) VALUES ($1, $2, $3, $4)',
-      ['Sistema', 'deletar_oferta', req.clientIp || req.ip, 'Oferta ID: ' + req.params.id]);
-    res.json({ success: true });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// Serviços
-app.get('/api/admin/servicos', authenticate, async (req, res) => {
-  try {
-    const result = await pool.query('SELECT * FROM servicos ORDER BY id');
-    res.json(result.rows);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-app.post('/api/admin/servicos', authenticate, async (req, res) => {
-  try {
-    const { nome, descricao, status } = req.body;
-    const result = await pool.query(`
-      INSERT INTO servicos (nome, descricao, status) VALUES ($1, $2, $3) RETURNING id
-    `, [nome, descricao, status || 'ativo']);
-    await pool.query('INSERT INTO logs (usuario, acao, ip, detalhes) VALUES ($1, $2, $3, $4)',
-      ['Sistema', 'criar_servico', req.clientIp || req.ip, 'Servico: ' + nome]);
-    res.json({ success: true, id: result.rows[0].id });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-app.put('/api/admin/servicos/:id', authenticate, async (req, res) => {
-  try {
-    const { nome, descricao, status } = req.body;
-    await pool.query(`
-      UPDATE servicos SET nome = $1, descricao = $2, status = $3 WHERE id = $4
-    `, [nome, descricao, status, req.params.id]);
-    await pool.query('INSERT INTO logs (usuario, acao, ip, detalhes) VALUES ($1, $2, $3, $4)',
-      ['Sistema', 'editar_servico', req.clientIp || req.ip, 'Servico ID: ' + req.params.id]);
-    res.json({ success: true });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-app.delete('/api/admin/servicos/:id', authenticate, async (req, res) => {
-  try {
-    await pool.query('DELETE FROM servicos WHERE id = $1', [req.params.id]);
-    await pool.query('INSERT INTO logs (usuario, acao, ip, detalhes) VALUES ($1, $2, $3, $4)',
-      ['Sistema', 'deletar_servico', req.clientIp || req.ip, 'Servico ID: ' + req.params.id]);
-    res.json({ success: true });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// Dashboard
-app.get('/api/admin/dashboard', authenticate, async (req, res) => {
-  try {
-    const totalUsers = await pool.query('SELECT COUNT(*) FROM usuarios');
-    const totalTickets = await pool.query('SELECT COUNT(*) FROM tickets');
-    const totalRevenue = await pool.query('SELECT COALESCE(SUM(valor), 0) FROM tickets');
-    const totalBuscas = await pool.query('SELECT COUNT(*) FROM buscas');
-    const totalVisitantes = await pool.query('SELECT COUNT(*) FROM visitantes');
-    const totalClientes = await pool.query('SELECT COUNT(*) FROM clientes');
-    const logs = await pool.query('SELECT * FROM logs ORDER BY data DESC LIMIT 20');
-    const tickets = await pool.query('SELECT * FROM tickets ORDER BY criado_em DESC LIMIT 10');
-    res.json({
-      stats: {
-        totalUsers: parseInt(totalUsers.rows[0].count),
-        onlineUsers: 0,
-        totalTickets: parseInt(totalTickets.rows[0].count),
-        totalRevenue: parseFloat(totalRevenue.rows[0].sum) || 0,
-        totalBuscas: parseInt(totalBuscas.rows[0].count),
-        totalVisitantes: parseInt(totalVisitantes.rows[0].count),
-        totalClientes: parseInt(totalClientes.rows[0].count),
-        ticketsByStatus: { confirmado: 0, pendente: 0, cancelado: 0 }
-      },
-      recentLogs: logs.rows,
-      recentTickets: tickets.rows
-    });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// Usuários
-app.get('/api/admin/users', authenticate, async (req, res) => {
-  try {
-    const result = await pool.query('SELECT id, nome, email, telefone, cpf, status, ultimo_acesso, ip, role, criado_em FROM usuarios ORDER BY criado_em DESC');
-    res.json(result.rows);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-app.put('/api/admin/users/:id', authenticate, async (req, res) => {
-  try {
-    const { nome, email, telefone, cpf, status, role, senha } = req.body;
-    let query = `UPDATE usuarios SET nome = $1, email = $2, telefone = $3, cpf = $4, status = $5, role = $6`;
-    let params = [nome, email, telefone, cpf, status, role, req.params.id];
-    if (senha && senha.length > 0) {
-      const hashedPassword = bcrypt.hashSync(senha, 10);
-      query = `UPDATE usuarios SET nome = $1, email = $2, telefone = $3, cpf = $4, status = $5, role = $6, senha = $7`;
-      params = [nome, email, telefone, cpf, status, role, hashedPassword, req.params.id];
-    }
-    await pool.query(query + ' WHERE id = $' + params.length, params);
-    await pool.query('INSERT INTO logs (usuario, acao, ip, detalhes) VALUES ($1, $2, $3, $4)',
-      ['Sistema', 'edicao_usuario', req.clientIp || req.ip, 'Usuario editado: ' + nome]);
-    res.json({ success: true });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-app.delete('/api/admin/users/:id', authenticate, async (req, res) => {
-  try {
-    if (req.params.id === '1' || req.params.id === 'admin') {
-      return res.status(403).json({ error: 'Não pode deletar admin' });
-    }
-    await pool.query('DELETE FROM usuarios WHERE id = $1', [req.params.id]);
-    res.json({ success: true });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// Tickets
-app.get('/api/admin/tickets', authenticate, async (req, res) => {
-  try {
-    const result = await pool.query('SELECT * FROM tickets ORDER BY criado_em DESC');
-    res.json(result.rows);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-app.put('/api/admin/tickets/:id', authenticate, async (req, res) => {
-  try {
-    const { origem, destino, passageiro, data, valor, status } = req.body;
-    await pool.query(`
-      UPDATE tickets SET origem = $1, destino = $2, passageiro = $3, data = $4, valor = $5, status = $6
-      WHERE id = $7
-    `, [origem, destino, passageiro, data, valor, status, req.params.id]);
-    await pool.query('INSERT INTO logs (usuario, acao, ip, detalhes) VALUES ($1, $2, $3, $4)',
-      ['Sistema', 'edicao_passagem', req.clientIp || req.ip, 'Passagem ID: ' + req.params.id]);
-    res.json({ success: true });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-app.delete('/api/admin/tickets/:id', authenticate, async (req, res) => {
-  try {
-    await pool.query('DELETE FROM tickets WHERE id = $1', [req.params.id]);
-    res.json({ success: true });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// Outros
-app.get('/api/admin/cartoes', authenticate, async (req, res) => {
-  try {
-    const result = await pool.query('SELECT * FROM cartoes ORDER BY criado_em DESC');
-    res.json(result.rows);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-app.get('/api/admin/pagamentos', authenticate, async (req, res) => {
-  try {
-    const result = await pool.query('SELECT * FROM pagamentos ORDER BY criado_em DESC');
-    res.json(result.rows);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-app.get('/api/admin/buscas', authenticate, async (req, res) => {
-  try {
-    const limit = parseInt(req.query.limit) || 100;
-    const result = await pool.query('SELECT * FROM buscas ORDER BY timestamp DESC LIMIT $1', [limit]);
-    res.json(result.rows);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-app.get('/api/admin/visitantes', authenticate, async (req, res) => {
-  try {
-    const limit = parseInt(req.query.limit) || 100;
-    const result = await pool.query('SELECT * FROM visitantes ORDER BY timestamp DESC LIMIT $1', [limit]);
-    res.json(result.rows);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-app.get('/api/admin/clientes', authenticate, async (req, res) => {
-  try {
-    const result = await pool.query('SELECT * FROM clientes ORDER BY criado_em DESC');
-    res.json(result.rows);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-app.get('/api/admin/logs', authenticate, async (req, res) => {
+// LOGS
+app.get('/api/admin/logs', authenticate, isAdmin, async (req, res) => {
   try {
     const limit = parseInt(req.query.limit) || 100;
     const result = await pool.query('SELECT * FROM logs ORDER BY data DESC LIMIT $1', [limit]);
@@ -864,7 +568,7 @@ app.get('/api/admin/logs', authenticate, async (req, res) => {
   }
 });
 
-app.delete('/api/admin/logs', authenticate, async (req, res) => {
+app.delete('/api/admin/logs', authenticate, isAdmin, async (req, res) => {
   try {
     await pool.query('DELETE FROM logs');
     await pool.query('INSERT INTO logs (usuario, acao, ip, detalhes) VALUES ($1, $2, $3, $4)',
@@ -875,52 +579,24 @@ app.delete('/api/admin/logs', authenticate, async (req, res) => {
   }
 });
 
-app.get('/api/admin/configuracoes', authenticate, async (req, res) => {
-  try {
-    const result = await pool.query('SELECT * FROM configuracoes LIMIT 1');
-    res.json(result.rows[0] || {});
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-app.put('/api/admin/configuracoes', authenticate, async (req, res) => {
-  try {
-    const { nome_site, manutencao, logs_ativos, notificacoes_email, alertas_seguranca, auto_update, update_interval } = req.body;
-    await pool.query(`
-      UPDATE configuracoes SET 
-        nome_site = $1, manutencao = $2, logs_ativos = $3, 
-        notificacoes_email = $4, alertas_seguranca = $5, 
-        auto_update = $6, update_interval = $7, atualizado_em = CURRENT_TIMESTAMP
-    `, [nome_site, manutencao, logs_ativos, notificacoes_email, alertas_seguranca, auto_update, update_interval]);
-    await pool.query('INSERT INTO logs (usuario, acao, ip, detalhes) VALUES ($1, $2, $3, $4)',
-      ['Sistema', 'configuracao', req.clientIp || req.ip, 'Configuracoes atualizadas por ' + req.user.nome]);
-    res.json({ success: true });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
 // ===========================
 // ROTAS DE PÁGINAS
 // ===========================
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
-app.get('/tickets', (req, res) => res.sendFile(path.join(__dirname, 'public', 'tickets.html')));
-app.get('/passageiros', (req, res) => res.sendFile(path.join(__dirname, 'public', 'passageiros.html')));
-app.get('/checkout', (req, res) => res.sendFile(path.join(__dirname, 'public', 'checkout.html')));
-app.get('/comprovante', (req, res) => res.sendFile(path.join(__dirname, 'public', 'comprovante.html')));
-app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, 'admin', 'index.html')));
+app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, 'public/admin', 'index.html')));
 
-// Inicialização
+// ===========================
+// INICIALIZAÇÃO
+// ===========================
 app.listen(PORT, '0.0.0.0', () => {
   console.log('');
   console.log('=================================================');
-  console.log('  VIAJE GUANABARA - SISTEMA COMPLETO');
+  console.log('  🚍 VIAJE GUANABARA - SISTEMA COMPLETO');
   console.log('  Servidor: http://localhost:' + PORT);
   console.log('  Admin: http://localhost:' + PORT + '/admin');
   console.log('  Login Admin: admin@viajeguanabara.com');
   console.log('  Senha: admin123');
-  console.log('  PostgreSQL: ' + (process.env.DATABASE_URL ? 'Conectado' : 'Local (SQLite)'));
+  console.log('  PostgreSQL: ' + (process.env.DATABASE_URL ? '✅ Conectado' : '⚠️ Usando SQLite'));
   console.log('=================================================');
   console.log('');
 });
