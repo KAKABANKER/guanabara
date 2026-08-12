@@ -13,11 +13,10 @@
                     colors: {
                         gb: {
                             blue: '#123481',
-                            'blue-hover': '#1d4499',
-                            yellow: '#E79F01',
-                            whatsapp: '#00C853',
-                            red: '#9A3026',
-                            dark: '#0a1a3a'
+                            'blue-hover': '#1a4a9e',
+                            light: '#e8edf5',
+                            dark: '#0a1a3a',
+                            text: '#1a2a4a'
                         }
                     }
                 }
@@ -49,13 +48,54 @@
         .page { display: none; }
         .page.active { display: block; }
         
-        .seat-wrapper { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
-        .seat { width: 38px; height: 38px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 700; font-size: 10px; cursor: pointer; transition: all 0.2s; border: 2px solid #d1d5db; background: #fff; color: #374151; }
-        .seat.available { border-color: #22c55e; color: #15803d; }
-        .seat.available:hover { transform: scale(1.05); box-shadow: 0 4px 12px rgba(34,197,94,0.3); }
-        .seat.selected { border-color: #E79F01; background: #E79F01; color: white; transform: scale(1.08); box-shadow: 0 4px 16px rgba(231,159,1,0.4); }
-        .seat.occupied { background: #f3f4f6; border-color: #e5e7eb; color: #9ca3af; cursor: not-allowed; opacity: 0.6; }
-        .seat i { font-size: 14px; margin-bottom: 1px; }
+        /* ASSENTOS MELHORADOS */
+        .seat-wrapper { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; padding: 8px; }
+        .seat { 
+            width: 42px; 
+            height: 42px; 
+            border-radius: 10px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            font-weight: 700; 
+            font-size: 11px; 
+            cursor: pointer; 
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); 
+            border: 2px solid #cbd5e1; 
+            background: #fff; 
+            color: #4a5568; 
+            position: relative;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+        }
+        .seat.available { 
+            border-color: #123481; 
+            color: #123481; 
+            background: #f0f4ff;
+        }
+        .seat.available:hover { 
+            transform: translateY(-3px) scale(1.05); 
+            box-shadow: 0 6px 16px rgba(18, 52, 129, 0.25); 
+            background: #dce6ff;
+            border-color: #123481;
+        }
+        .seat.selected { 
+            border-color: #123481; 
+            background: #123481; 
+            color: white; 
+            transform: scale(1.08); 
+            box-shadow: 0 6px 20px rgba(18, 52, 129, 0.35); 
+        }
+        .seat.selected i { color: white !important; }
+        .seat.occupied { 
+            background: #e2e8f0; 
+            border-color: #cbd5e1; 
+            color: #a0aec0; 
+            cursor: not-allowed; 
+            opacity: 0.6; 
+        }
+        .seat i { font-size: 14px; margin-bottom: 2px; }
+        .seat.available i { color: #123481; }
         
         .drawer-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 998; display: none; backdrop-filter: blur(4px); }
         .drawer-overlay.active { display: block; }
@@ -65,20 +105,23 @@
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 8px; }
         
-        @media (max-width: 480px) { .seat { width: 32px; height: 32px; font-size: 9px; } .seat i { font-size: 12px; } }
+        @media (max-width: 480px) { 
+            .seat { width: 34px; height: 34px; font-size: 9px; } 
+            .seat i { font-size: 11px; } 
+        }
 
-        .checkout-title { text-align: center; font-size: 20px; font-weight: 800; color: #1e3a8a; margin-bottom: 4px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .checkout-title { text-align: center; font-size: 20px; font-weight: 800; color: #123481; margin-bottom: 4px; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .timer-subtitle { text-align: center; font-size: 13px; color: #475569; margin-bottom: 20px; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 6px; }
         .card-buyer { background: #fff; border-radius: 16px; padding: 20px; max-width: 620px; margin: 0 auto; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border: 1px solid #e2e8f0; }
         .form-grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
         .form-group label { display: block; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 6px; }
         .form-group input { width: 100%; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px 14px; font-size: 15px; outline: none; transition: border-color 0.2s; background: #fff; }
-        .form-group input:focus { border-color: #1e3a8a; }
-        .btn-submit { width: 100%; background: #1e3a8a; color: #fff; border: none; padding: 16px; border-radius: 10px; font-size: 16px; font-weight: 700; cursor: pointer; transition: background 0.2s; min-height: 52px; }
-        .btn-submit:hover { background: #1a2f6a; }
+        .form-group input:focus { border-color: #123481; }
+        .btn-submit { width: 100%; background: #123481; color: #fff; border: none; padding: 16px; border-radius: 10px; font-size: 16px; font-weight: 700; cursor: pointer; transition: background 0.2s; min-height: 52px; }
+        .btn-submit:hover { background: #1a4a9e; }
         .checkout-layout { display: grid; grid-template-columns: 1fr; gap: 16px; align-items: start; }
         .summary-card { background: #fff; border-radius: 16px; border: 1px solid #e2e8f0; overflow: hidden; }
-        .summary-banner { background: #1e3a8a; color: #fff; padding: 16px; display: flex; justify-content: space-between; align-items: center; }
+        .summary-banner { background: #123481; color: #fff; padding: 16px; display: flex; justify-content: space-between; items-center; }
         .summary-banner .title { font-size: 12px; font-weight: 700; text-transform: uppercase; opacity: 0.9; }
         .summary-banner .total-price { font-size: 24px; font-weight: 800; }
         .trip-detail-box { background: #f8fafc; padding: 14px 16px; border-bottom: 1px solid #e2e8f0; font-size: 12px; }
@@ -92,7 +135,7 @@
         .passenger-info-card { background: #fff; border-radius: 16px; padding: 16px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; }
         .passenger-info-card .name { font-weight: 700; font-size: 14px; color: #1e293b; }
         .passenger-info-card .email { font-size: 12px; color: #64748b; word-break: break-all; }
-        .seat-badge { background: #1e3a8a; color: #fff; padding: 8px 12px; border-radius: 8px; text-align: center; font-size: 11px; font-weight: 800; min-width: 65px; }
+        .seat-badge { background: #123481; color: #fff; padding: 8px 12px; border-radius: 8px; text-align: center; font-size: 11px; font-weight: 800; min-width: 65px; }
         .insurance-card { background: #fff; border-radius: 16px; padding: 16px; border: 1px solid #e2e8f0; }
         .insurance-title { font-weight: 800; font-size: 15px; color: #1e293b; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
         .insurance-desc { font-size: 12px; color: #64748b; margin-bottom: 12px; line-height: 1.4; }
@@ -100,13 +143,13 @@
         .insurance-list div { display: flex; align-items: center; gap: 8px; }
         .insurance-list i { color: #16a34a; font-size: 14px; }
         .insurance-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #f1f5f9; padding-top: 12px; }
-        .insurance-price { font-size: 18px; font-weight: 800; color: #1e3a8a; text-align: right; }
+        .insurance-price { font-size: 18px; font-weight: 800; color: #123481; text-align: right; }
         .insurance-price span { font-size: 10px; font-weight: 600; color: #64748b; display: block; }
         .payment-methods-card { background: #fff; border-radius: 16px; padding: 16px; border: 1px solid #e2e8f0; }
         .payment-option { border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px 16px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: all 0.2s; }
-        .payment-option:hover, .payment-option:active { border-color: #1e3a8a; background: #f8fafc; }
+        .payment-option:hover, .payment-option:active { border-color: #123481; background: #f0f4ff; }
         .payment-option-info { display: flex; align-items: center; gap: 12px; }
-        .payment-option-info i { font-size: 20px; color: #1e3a8a; width: 24px; text-align: center; }
+        .payment-option-info i { font-size: 20px; color: #123481; width: 24px; text-align: center; }
         .payment-option-info .title { font-size: 14px; font-weight: 700; color: #1e293b; }
         .payment-option-info .sub { font-size: 11px; color: #64748b; }
         @media (min-width: 768px) {
@@ -124,6 +167,51 @@
         
         .blog-card { transition: all 0.3s ease; }
         .blog-card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,0.1); }
+
+        .whatsapp-btn {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            z-index: 20;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #25D366;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 16px rgba(37, 211, 102, 0.4);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            font-size: 28px;
+        }
+        .whatsapp-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 24px rgba(37, 211, 102, 0.5);
+        }
+        @media (max-width: 480px) {
+            .whatsapp-btn {
+                width: 52px;
+                height: 52px;
+                font-size: 24px;
+                bottom: 80px;
+                right: 16px;
+            }
+        }
+
+        /* Cores azuis para tudo */
+        .text-gb-yellow { color: #123481 !important; }
+        .bg-gb-yellow { background: #123481 !important; }
+        .border-gb-yellow { border-color: #123481 !important; }
+        .hover\\:bg-gb-yellow:hover { background: #123481 !important; }
+        .hover\\:text-gb-yellow:hover { color: #123481 !important; }
+        
+        .btn-blue { background: #123481; color: white; }
+        .btn-blue:hover { background: #1a4a9e; }
+        
+        .bg-gradient-to-r.from-gb-blue { background: #123481; }
+        .bg-gradient-to-r.to-gb-blue-hover { background: #1a4a9e; }
     </style>
 </head>
 <body>
@@ -137,7 +225,7 @@
         </div>
         <div class="flex items-center gap-3">
             <button onclick="navigateTo('account')" class="text-gb-blue text-sm font-bold hidden sm:block">Entrar</button>
-            <div class="w-8 h-8 bg-gb-red/10 rounded-full flex items-center justify-center text-gb-red text-sm cursor-pointer" onclick="navigateTo('account')">
+            <div class="w-8 h-8 bg-gb-blue/10 rounded-full flex items-center justify-center text-gb-blue text-sm cursor-pointer" onclick="navigateTo('account')">
                 <i class="fas fa-user"></i>
             </div>
         </div>
@@ -179,7 +267,7 @@
         <div id="page-home" class="page active fade-in">
             <!-- SLIDER PRINCIPAL -->
             <div class="slider-container mt-4">
-                <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=1200&h=400&fit=crop" class="slider-slide active" />
+                <img src="https://viajeguanabara.com.br/_next/image/?url=https%3A%2F%2Fprod-sn-assets.us-east-2.viajeguanabara.com.br%2Fimg%2Fcampanhadesk2026ago.jpg&w=1920&q=90" class="slider-slide active" />
                 <img src="https://images.unsplash.com/photo-1570125909232-eb263c188f7e?w=1200&h=400&fit=crop" class="slider-slide" />
                 <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=1200&h=400&fit=crop" class="slider-slide" />
                 <div class="slider-dots">
@@ -196,7 +284,29 @@
                         <label class="text-xs font-semibold text-gray-400 block mb-1">Saindo de</label>
                         <div class="flex items-center border-b border-gray-200 pb-1">
                             <i class="fas fa-map-marker-alt text-gb-blue mr-2"></i>
-                            <input type="text" id="origin" placeholder="Digite a cidade" class="w-full text-base font-medium outline-none bg-transparent" required />
+                            <input type="text" id="origin" placeholder="Digite a cidade" class="w-full text-base font-medium outline-none bg-transparent" required list="cidadesSugestao" />
+                            <datalist id="cidadesSugestao">
+                                <option value="Rio de Janeiro - RJ" />
+                                <option value="São Paulo - SP" />
+                                <option value="Brasília - DF" />
+                                <option value="Salvador - BA" />
+                                <option value="Fortaleza - CE" />
+                                <option value="Belo Horizonte - MG" />
+                                <option value="Curitiba - PR" />
+                                <option value="Porto Alegre - RS" />
+                                <option value="Recife - PE" />
+                                <option value="Goiânia - GO" />
+                                <option value="Belém - PA" />
+                                <option value="Manaus - AM" />
+                                <option value="Florianópolis - SC" />
+                                <option value="Vitória - ES" />
+                                <option value="Natal - RN" />
+                                <option value="Campo Grande - MS" />
+                                <option value="Cuiabá - MT" />
+                                <option value="João Pessoa - PB" />
+                                <option value="Aracaju - SE" />
+                                <option value="Maceió - AL" />
+                            </datalist>
                         </div>
                     </div>
                     <div class="flex justify-center -my-1">
@@ -208,7 +318,29 @@
                         <label class="text-xs font-semibold text-gray-400 block mb-1">Indo para</label>
                         <div class="flex items-center border-b border-gray-200 pb-1">
                             <i class="fas fa-map-pin text-gb-blue mr-2"></i>
-                            <input type="text" id="destino" placeholder="Digite a cidade" class="w-full text-base font-medium outline-none bg-transparent" required />
+                            <input type="text" id="destino" placeholder="Digite a cidade" class="w-full text-base font-medium outline-none bg-transparent" required list="cidadesSugestao2" />
+                            <datalist id="cidadesSugestao2">
+                                <option value="Rio de Janeiro - RJ" />
+                                <option value="São Paulo - SP" />
+                                <option value="Brasília - DF" />
+                                <option value="Salvador - BA" />
+                                <option value="Fortaleza - CE" />
+                                <option value="Belo Horizonte - MG" />
+                                <option value="Curitiba - PR" />
+                                <option value="Porto Alegre - RS" />
+                                <option value="Recife - PE" />
+                                <option value="Goiânia - GO" />
+                                <option value="Belém - PA" />
+                                <option value="Manaus - AM" />
+                                <option value="Florianópolis - SC" />
+                                <option value="Vitória - ES" />
+                                <option value="Natal - RN" />
+                                <option value="Campo Grande - MS" />
+                                <option value="Cuiabá - MT" />
+                                <option value="João Pessoa - PB" />
+                                <option value="Aracaju - SE" />
+                                <option value="Maceió - AL" />
+                            </datalist>
                         </div>
                     </div>
                     <div class="grid grid-cols-2 gap-3 pt-1">
@@ -237,7 +369,7 @@
             <!-- DESTINOS EM DESTAQUE -->
             <div class="mt-8">
                 <h3 class="text-lg font-bold text-gb-blue mb-4 flex items-center gap-2">
-                    <i class="fas fa-fire text-gb-yellow"></i> Destinos em Destaque
+                    <i class="fas fa-fire text-gb-blue"></i> Destinos em Destaque
                 </h3>
                 <div class="grid grid-cols-2 gap-3" id="destinosPopulares"></div>
             </div>
@@ -250,7 +382,7 @@
                         <div class="text-2xl font-black">25% OFF</div>
                         <div class="text-sm font-medium">em compras de ida e volta</div>
                     </div>
-                    <div class="bg-gb-yellow text-gb-blue px-4 py-2 rounded-lg font-bold text-sm cursor-pointer hover:scale-105 transition">
+                    <div class="bg-white text-gb-blue px-4 py-2 rounded-lg font-bold text-sm cursor-pointer hover:scale-105 transition">
                         Ver ofertas
                     </div>
                 </div>
@@ -259,7 +391,7 @@
             <!-- SLIDER DE VIAGENS -->
             <div class="mt-8">
                 <h3 class="text-lg font-bold text-gb-blue mb-4 flex items-center gap-2">
-                    <i class="fas fa-bus text-gb-yellow"></i> Viagens em Destaque
+                    <i class="fas fa-bus text-gb-blue"></i> Viagens em Destaque
                 </h3>
                 <div class="grid grid-cols-2 gap-3" id="viagensDestaque">
                     <div class="dest-card bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100">
@@ -304,7 +436,7 @@
             <!-- DEPOIMENTOS -->
             <div class="mt-8">
                 <h3 class="text-lg font-bold text-gb-blue mb-4 flex items-center gap-2">
-                    <i class="fas fa-star text-gb-yellow"></i> O que nossos clientes dizem
+                    <i class="fas fa-star text-gb-blue"></i> O que nossos clientes dizem
                 </h3>
                 <div class="space-y-3">
                     <div class="depoimento-card bg-white p-4 rounded-xl shadow-sm border border-gray-100">
@@ -314,7 +446,7 @@
                             </div>
                             <div>
                                 <div class="font-bold text-sm">Ana Silva</div>
-                                <div class="text-[10px] text-gb-yellow">★★★★★</div>
+                                <div class="text-[10px] text-gb-blue">★★★★★</div>
                             </div>
                         </div>
                         <p class="text-sm text-gray-600">"Excelente viagem! Conforto impecável e pontualidade. Recomendo!"</p>
@@ -326,7 +458,7 @@
                             </div>
                             <div>
                                 <div class="font-bold text-sm">Carlos Santos</div>
-                                <div class="text-[10px] text-gb-yellow">★★★★★</div>
+                                <div class="text-[10px] text-gb-blue">★★★★★</div>
                             </div>
                         </div>
                         <p class="text-sm text-gray-600">"Viajo sempre com a Guanabara. Atendimento de primeira qualidade!"</p>
@@ -338,7 +470,7 @@
                             </div>
                             <div>
                                 <div class="font-bold text-sm">Mariana Oliveira</div>
-                                <div class="text-[10px] text-gb-yellow">★★★★★</div>
+                                <div class="text-[10px] text-gb-blue">★★★★★</div>
                             </div>
                         </div>
                         <p class="text-sm text-gray-600">"Conforto, segurança e preço justo. Melhor empresa de ônibus!"</p>
@@ -349,12 +481,14 @@
             <!-- BLOG / DICAS -->
             <div class="mt-8">
                 <h3 class="text-lg font-bold text-gb-blue mb-4 flex items-center gap-2">
-                    <i class="fas fa-newspaper text-gb-yellow"></i> Dicas de Viagem
+                    <i class="fas fa-newspaper text-gb-blue"></i> Dicas de Viagem
                 </h3>
                 <div class="space-y-3">
                     <div class="blog-card bg-white p-4 rounded-xl shadow-sm border border-gray-100 cursor-pointer">
                         <div class="flex items-center gap-3">
-                            <div class="w-16 h-16 bg-gb-blue/10 rounded-lg flex items-center justify-center text-2xl">✈️</div>
+                            <div class="w-16 h-16 bg-gb-blue/10 rounded-lg flex items-center justify-center text-2xl">
+                                <i class="fas fa-plane text-gb-blue"></i>
+                            </div>
                             <div>
                                 <div class="font-bold text-sm">Como viajar com conforto</div>
                                 <div class="text-xs text-gray-500">Dicas para aproveitar sua viagem</div>
@@ -363,7 +497,9 @@
                     </div>
                     <div class="blog-card bg-white p-4 rounded-xl shadow-sm border border-gray-100 cursor-pointer">
                         <div class="flex items-center gap-3">
-                            <div class="w-16 h-16 bg-gb-blue/10 rounded-lg flex items-center justify-center text-2xl">🧳</div>
+                            <div class="w-16 h-16 bg-gb-blue/10 rounded-lg flex items-center justify-center text-2xl">
+                                <i class="fas fa-suitcase text-gb-blue"></i>
+                            </div>
                             <div>
                                 <div class="font-bold text-sm">O que levar na mala</div>
                                 <div class="text-xs text-gray-500">Lista completa para sua viagem</div>
@@ -372,7 +508,9 @@
                     </div>
                     <div class="blog-card bg-white p-4 rounded-xl shadow-sm border border-gray-100 cursor-pointer">
                         <div class="flex items-center gap-3">
-                            <div class="w-16 h-16 bg-gb-blue/10 rounded-lg flex items-center justify-center text-2xl">🌅</div>
+                            <div class="w-16 h-16 bg-gb-blue/10 rounded-lg flex items-center justify-center text-2xl">
+                                <i class="fas fa-sun text-gb-blue"></i>
+                            </div>
                             <div>
                                 <div class="font-bold text-sm">Destinos imperdíveis</div>
                                 <div class="text-xs text-gray-500">Os melhores lugares para conhecer</div>
@@ -405,12 +543,12 @@
             </div>
 
             <!-- NEWSLETTER -->
-            <div class="mt-6 bg-gb-dark rounded-2xl p-4 text-white">
-                <h4 class="font-bold text-lg">📬 Receba ofertas exclusivas</h4>
+            <div class="mt-6 bg-gb-blue rounded-2xl p-4 text-white">
+                <h4 class="font-bold text-lg">Receba ofertas exclusivas</h4>
                 <p class="text-sm opacity-80 mt-1">Cadastre-se e receba promoções especiais</p>
                 <div class="flex gap-2 mt-3">
                     <input type="email" placeholder="Seu e-mail" class="flex-1 p-2 rounded-lg text-sm text-gray-800 outline-none" />
-                    <button class="bg-gb-yellow text-gb-dark font-bold px-4 py-2 rounded-lg text-sm whitespace-nowrap">Cadastrar</button>
+                    <button class="bg-white text-gb-blue font-bold px-4 py-2 rounded-lg text-sm whitespace-nowrap hover:bg-gray-100 transition">Cadastrar</button>
                 </div>
             </div>
         </div>
@@ -427,7 +565,7 @@
         <div id="page-tickets" class="page fade-in">
             <div class="flex items-center gap-2 mb-4">
                 <h2 class="text-xl font-bold text-gb-blue">Viagens encontradas</h2>
-                <span class="text-xl">🚍</span>
+                <span class="text-xl"></span>
                 <span id="totalResultados" class="text-sm font-normal text-gray-500"></span>
             </div>
             <div id="ticketsList"></div>
@@ -495,7 +633,7 @@
                         <div class="seat-badge">Assento<br><span style="font-size:16px;" id="displaySeat">08</span></div>
                     </div>
                     <div class="insurance-card">
-                        <div class="insurance-title"><i class="fas fa-shield-alt" style="color:#1e3a8a;"></i> Seguro viagem opcional</div>
+                        <div class="insurance-title"><i class="fas fa-shield-alt" style="color:#123481;"></i> Seguro viagem opcional</div>
                         <div class="insurance-desc">O seguro adicional oferece uma cobertura extra em caso de danos, extravio e saúde.</div>
                         <div class="insurance-list">
                             <div><i class="fas fa-check-circle"></i> Cabe no bolso</div>
@@ -504,13 +642,13 @@
                         </div>
                         <div class="insurance-footer">
                             <label style="display:flex; align-items:center; gap:8px; font-size:13px; font-weight:700; cursor:pointer;">
-                                <input type="checkbox" id="insuranceCheckbox" style="width:18px; height:18px; accent-color:#1e3a8a;" onchange="toggleInsurance()"> Sim, quero viajar tranquilo
+                                <input type="checkbox" id="insuranceCheckbox" style="width:18px; height:18px; accent-color:#123481;" onchange="toggleInsurance()"> Sim, quero viajar tranquilo
                             </label>
                             <div class="insurance-price">R$ 10,00<span>por passageiro</span></div>
                         </div>
                     </div>
                     <div class="payment-methods-card">
-                        <div class="insurance-title" style="margin-bottom:14px;"><i class="fas fa-wallet" style="color:#1e3a8a;"></i> Selecione o pagamento</div>
+                        <div class="insurance-title" style="margin-bottom:14px;"><i class="fas fa-wallet" style="color:#123481;"></i> Selecione o pagamento</div>
                         <div class="payment-option" onclick="processarPagamento('PIX')">
                             <div class="payment-option-info">
                                 <i class="fa-brands fa-pix" style="color:#00bdae;"></i>
@@ -611,7 +749,7 @@
                 </div>
             </div>
             <div class="mt-6 bg-gradient-to-r from-gb-blue to-gb-blue-hover rounded-2xl p-4 text-white">
-                <h3 class="font-bold text-lg">🛡️ Segurança em primeiro lugar</h3>
+                <h3 class="font-bold text-lg">Segurança em primeiro lugar</h3>
                 <p class="text-sm opacity-90">Todos os nossos ônibus passam por manutenção rigorosa e nossos motoristas são altamente qualificados.</p>
             </div>
         </div>
@@ -646,7 +784,7 @@
             </div>
             <div class="mt-4 bg-gray-50 rounded-xl p-4 border border-gray-200">
                 <div class="flex items-center gap-3">
-                    <i class="fas fa-star text-gb-yellow text-xl"></i>
+                    <i class="fas fa-star text-gb-blue text-xl"></i>
                     <div>
                         <div class="font-bold text-sm">Viva Fidelidade</div>
                         <div class="text-xs text-gray-500">Acumule pontos e ganhe descontos</div>
@@ -683,47 +821,71 @@
                 </div>
             </div>
             <div class="mt-6 bg-gb-blue rounded-2xl p-4 text-white text-center">
-                <div class="text-2xl font-bold">📞 SAC 0800 728 1992</div>
+                <div class="text-2xl font-bold">SAC 0800 728 1992</div>
                 <div class="text-sm opacity-80 mt-1">Atendimento 24h</div>
             </div>
         </div>
     </main>
 
-    <!-- DRAWER -->
+    <!-- DRAWER DE ASSENTOS -->
     <div class="drawer-overlay" id="drawerOverlay" onclick="fecharDrawer()"></div>
     <div class="drawer-panel" id="drawerPanel">
         <div class="p-4 border-b border-gray-200 flex justify-between items-center bg-white sticky top-0 z-10">
-            <div><div class="text-xs text-gray-500">Escolha seu assento</div><div class="text-lg font-extrabold text-gb-blue" id="drawerDestino">Destino</div></div>
-            <button onclick="fecharDrawer()" class="text-gray-500 text-xl hover:bg-gray-100 w-10 h-10 rounded-full flex items-center justify-center transition"><i class="fas fa-times"></i></button>
+            <div>
+                <div class="text-xs text-gray-500">Escolha seu assento</div>
+                <div class="text-lg font-extrabold text-gb-blue" id="drawerDestino">Destino</div>
+            </div>
+            <button onclick="fecharDrawer()" class="text-gray-500 text-xl hover:bg-gray-100 w-10 h-10 rounded-full flex items-center justify-center transition">
+                <i class="fas fa-times"></i>
+            </button>
         </div>
         <div class="flex-1 overflow-y-auto p-4 bg-gray-50">
             <div class="bg-white rounded-xl p-4 border border-gray-200">
                 <div class="flex justify-between text-xs border-b border-gray-100 pb-3 mb-3">
-                    <div><div class="font-bold" id="drawerOrigem">Origem</div><div class="text-gray-500" id="drawerHorario">Horário</div></div>
+                    <div>
+                        <div class="font-bold" id="drawerOrigem">Origem</div>
+                        <div class="text-gray-500" id="drawerHorario">Horário</div>
+                    </div>
                     <div class="text-center text-gray-400"><i class="fas fa-arrow-right"></i></div>
-                    <div class="text-right"><div class="font-bold" id="drawerDestino2">Destino</div><div class="text-gray-500" id="drawerChegada">Chegada</div></div>
+                    <div class="text-right">
+                        <div class="font-bold" id="drawerDestino2">Destino</div>
+                        <div class="text-gray-500" id="drawerChegada">Chegada</div>
+                    </div>
                 </div>
                 <div class="border-2 border-gray-200 rounded-2xl p-4 max-w-xs mx-auto relative bg-white">
                     <div class="text-center text-gray-400 text-2xl mb-3"><i class="fas fa-steering-wheel"></i></div>
                     <div class="seat-wrapper" id="seatWrapper"></div>
                 </div>
                 <div class="flex justify-around mt-4 text-[10px] font-medium text-gray-500 border-t border-gray-100 pt-4">
-                    <div class="flex flex-col items-center gap-1"><div class="w-4 h-4 border border-green-500 rounded bg-white"></div> Livre</div>
-                    <div class="flex flex-col items-center gap-1"><div class="w-4 h-4 bg-gray-200 border-gray-300 rounded border"></div> Ocupado</div>
-                    <div class="flex flex-col items-center gap-1"><div class="w-4 h-4 bg-gb-yellow rounded border-gb-yellow border"></div> Escolhido</div>
+                    <div class="flex flex-col items-center gap-1">
+                        <div class="w-4 h-4 border border-gb-blue rounded bg-white"></div>
+                        <span>Livre</span>
+                    </div>
+                    <div class="flex flex-col items-center gap-1">
+                        <div class="w-4 h-4 bg-gray-200 border-gray-300 rounded border"></div>
+                        <span>Ocupado</span>
+                    </div>
+                    <div class="flex flex-col items-center gap-1">
+                        <div class="w-4 h-4 bg-gb-blue rounded border-gb-blue border"></div>
+                        <span>Escolhido</span>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="p-4 border-t border-gray-200 bg-white flex justify-between items-center sticky bottom-0">
-            <div><div class="text-xs text-gray-500">Assento selecionado</div><div class="text-xl font-black text-gb-blue" id="assentoSelecionado">Nenhum</div></div>
+            <div>
+                <div class="text-xs text-gray-500">Assento selecionado</div>
+                <div class="text-xl font-black text-gb-blue" id="assentoSelecionado">Nenhum</div>
+            </div>
             <button onclick="confirmarAssento()" disabled class="font-bold py-3 px-8 rounded-xl transition bg-gray-300 text-white cursor-not-allowed" id="btnConfirmarAssento">
                 Confirmar <i class="fas fa-arrow-right ml-1"></i>
             </button>
         </div>
     </div>
 
-    <a href="https://wa.me/" class="fixed bottom-20 right-4 z-20 bg-gb-whatsapp text-white p-3 rounded-full shadow-xl hover:scale-110 transition">
-        <i class="fab fa-whatsapp text-2xl"></i>
+    <!-- WHATSAPP -->
+    <a href="https://wa.me/5511999999999" target="_blank" class="whatsapp-btn">
+        <i class="fab fa-whatsapp"></i>
     </a>
 
     <script>
@@ -792,7 +954,6 @@
                 const response = await fetch('/api/admin/destinos');
                 const destinos = await response.json();
                 
-                // Destinos em destaque (home)
                 const container = document.getElementById('destinosPopulares');
                 container.innerHTML = destinos.slice(0, 4).map(d => `
                     <div class="dest-card bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100" onclick="buscarDestino('${d.cidade}')">
@@ -805,7 +966,6 @@
                     </div>
                 `).join('');
 
-                // Todos os destinos (página destinos)
                 const todosContainer = document.getElementById('todosDestinos');
                 todosContainer.innerHTML = destinos.map(d => `
                     <div class="dest-card bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100" onclick="buscarDestino('${d.cidade}')">
@@ -837,6 +997,19 @@
             destino.value = temp;
         }
 
+        // GERAR HORÁRIOS ALEATÓRIOS
+        function gerarHorarioAleatorio() {
+            const horas = Math.floor(Math.random() * 12) + 6;
+            const minutos = Math.floor(Math.random() * 60);
+            return `${String(horas).padStart(2, '0')}:${String(minutos).padStart(2, '0')}`;
+        }
+
+        function gerarDuracaoAleatoria() {
+            const horas = Math.floor(Math.random() * 8) + 4;
+            const minutos = Math.floor(Math.random() * 60);
+            return `${horas}h${String(minutos).padStart(2, '0')}min`;
+        }
+
         async function buscarViagens(e) {
             e.preventDefault();
             const origin = document.getElementById('origin').value;
@@ -857,10 +1030,50 @@
                 });
             } catch (error) {}
 
-            const tickets = [
-                { id: 1, origem: origin, destino: destino, data: data, valor: 179.99, valorOriginal: 258.64, horario: '22:46', chegada: '07:35 (+1)', duracao: '8:49', empresa: 'GUANABARA', tipo: 'Executivo', terminal: 'Rodoviária de Brasília', pontos: 450, rec: true },
-                { id: 2, origem: origin, destino: destino, data: data, valor: 219.99, valorOriginal: 308.64, horario: '22:46', chegada: '07:35', duracao: '8:49', empresa: 'GUANABARA', tipo: 'Leito', terminal: 'Rodoviária de Brasília', pontos: 550, rec: false },
+            // Gerar 8 viagens com horários aleatórios
+            const tipos = ['Executivo', 'Leito', 'Semileito', 'Convencional'];
+            const empresas = ['GUANABARA', 'GUANABARA EXPRESS', 'VIAÇÃO GUANABARA'];
+            const terminais = [
+                'Rodoviária do Plano Piloto',
+                'Rodoviária Novo Rio',
+                'Terminal Tietê',
+                'Rodoviária de Salvador',
+                'Rodoviária de Fortaleza'
             ];
+            
+            const tickets = [];
+            for (let i = 0; i < 8; i++) {
+                const horario = gerarHorarioAleatorio();
+                const duracao = gerarDuracaoAleatoria();
+                const horaChegada = new Date();
+                const [h, m] = horario.split(':').map(Number);
+                horaChegada.setHours(h + Math.floor(Math.random() * 6) + 4);
+                horaChegada.setMinutes(m + Math.floor(Math.random() * 50));
+                const chegada = `${String(horaChegada.getHours()).padStart(2, '0')}:${String(horaChegada.getMinutes()).padStart(2, '0')}`;
+                const tipo = tipos[Math.floor(Math.random() * tipos.length)];
+                const preco = (Math.random() * 150 + 80).toFixed(2);
+                const precoOriginal = (parseFloat(preco) + Math.random() * 80 + 20).toFixed(2);
+                
+                tickets.push({
+                    id: i + 1,
+                    origem: origin,
+                    destino: destino,
+                    data: data,
+                    valor: parseFloat(preco),
+                    valorOriginal: parseFloat(precoOriginal),
+                    horario: horario,
+                    chegada: chegada + ' (+1)',
+                    duracao: duracao,
+                    empresa: empresas[Math.floor(Math.random() * empresas.length)],
+                    tipo: tipo,
+                    terminal: terminais[Math.floor(Math.random() * terminais.length)],
+                    pontos: Math.floor(Math.random() * 400) + 200,
+                    rec: i < 2
+                });
+            }
+
+            // Ordena por preço
+            tickets.sort((a, b) => a.valor - b.valor);
 
             localStorage.setItem('busca_origem', origin);
             localStorage.setItem('busca_destino', destino);
@@ -877,12 +1090,12 @@
             
             container.innerHTML = tickets.map(t => `
                 <div class="bg-white rounded-xl border ${t.rec ? 'border-2 border-gb-blue' : 'border-gray-200'} mb-3 overflow-hidden shadow-sm">
-                    ${t.rec ? '<div class="bg-gb-blue text-white text-[10px] font-bold text-center py-1"><i class="fas fa-gem mr-1"></i> A gente recomenda</div>' : ''}
+                    ${t.rec ? '<div class="bg-gb-blue text-white text-[10px] font-bold text-center py-1"><i class="fas fa-gem mr-1"></i> Melhor opção</div>' : ''}
                     <div class="p-4">
                         <div class="flex justify-between items-start">
                             <div>
                                 <div class="font-extrabold text-gb-blue text-base"><i class="fas fa-bus mr-1"></i> ${t.empresa}</div>
-                                <div class="text-[9px] text-yellow-600 font-bold uppercase tracking-wider">${t.tipo}</div>
+                                <div class="text-[9px] text-gb-blue font-bold uppercase tracking-wider">${t.tipo}</div>
                             </div>
                             <div class="text-right">
                                 <div class="text-xs text-gray-400 line-through">R$ ${t.valorOriginal.toFixed(2)}</div>
@@ -897,7 +1110,7 @@
                         <div class="flex justify-between items-center border-t border-gray-100 pt-3 mt-3">
                             <div class="text-xs text-gray-500 flex items-center gap-2"><i class="fas fa-map-marker-alt text-gb-blue"></i> ${t.terminal}</div>
                             <div class="flex items-center gap-3">
-                                <div class="border border-pink-400 text-pink-600 text-[10px] font-bold px-2 py-1 rounded-full bg-white">+${t.pontos} <i class="fas fa-gift"></i></div>
+                                <div class="border border-gb-blue text-gb-blue text-[10px] font-bold px-2 py-1 rounded-full bg-white">+${t.pontos} <i class="fas fa-gift"></i></div>
                                 <button onclick="abrirDrawer(${JSON.stringify(t).replace(/"/g, '&quot;')})" class="bg-gb-blue text-white font-bold px-4 py-1.5 rounded-lg text-sm hover:bg-gb-blue-hover transition">Escolher</button>
                             </div>
                         </div>
@@ -941,7 +1154,7 @@
                 const isOcc = occupied.includes(i);
                 const div = document.createElement('div');
                 div.className = `seat ${isOcc ? 'occupied' : 'available'}`;
-                div.innerHTML = `<i class="fas fa-couch ${isOcc ? 'text-gray-300' : 'text-green-500'}"></i><span>${i}</span>`;
+                div.innerHTML = `<i class="fas fa-couch ${isOcc ? 'text-gray-300' : ''}"></i><span>${i}</span>`;
                 if (!isOcc) {
                     div.onclick = () => selecionarAssento(i);
                 }
