@@ -6,10 +6,6 @@ const jwt = require('jsonwebtoken');
 const bodyParser = require('body-parser');
 const requestIp = require('request-ip');
 const path = require('path');
-const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
-const xss = require('xss');
-const validator = require('validator');
 require('dotenv').config();
 
 const app = express();
@@ -21,64 +17,15 @@ const JWT_EXPIRES = '24h';
 const PLUMIFY_PRODUCT_HASH = 'lxpykbkgfl';
 const PLUMIFY_API_TOKEN = '1Vp6bm2wSoil2giHCGRjsZ9IGVbiHve4u8xbyUoRWpdvHUWYOj6wZ9yd0xVq';
 
-// ============ MIDDLEWARES DE SEGURANÇA ============
-
-// Helmet - Proteção contra ataques HTTP
-app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "'unsafe-inline'", "https://cdn.tailwindcss.com", "https://unpkg.com", "https://cdn.jsdelivr.net"],
-      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com"],
-      fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com"],
-      imgSrc: ["'self'", "data:", "https://images.unsplash.com"],
-      connectSrc: ["'self'", "https://api.Plumify.com.br"],
-    },
-  },
-}));
-
-// Rate Limiting - Proteção contra brute force
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutos
-  max: 100, // limite de 100 requisições por IP
-  message: { error: 'Muitas requisições, tente novamente mais tarde.' },
-  standardHeaders: true,
-  legacyHeaders: false,
-});
-
-// Rate Limiting específico para login
-const loginLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 5, // apenas 5 tentativas de login
-  message: { error: 'Muitas tentativas de login, tente novamente em 15 minutos.' },
-  skipSuccessfulRequests: true,
-});
-
-app.use('/api/', limiter);
-app.use('/api/admin/login', loginLimiter);
-
-// Cors configurado
-app.use(cors({
-  origin: process.env.FRONTEND_URL || '*',
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-}));
-
-// Body parser com limite
+// ============ MIDDLEWARES ============
+app.use(cors({ origin: '*', credentials: true }));
 app.use(bodyParser.json({ limit: '10mb' }));
 app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
 app.use(requestIp.mw());
 
 // Servir arquivos estáticos
-app.use(express.static(path.join(__dirname, 'public'), {
-  maxAge: '1d',
-  etag: true,
-}));
-app.use('/admin', express.static(path.join(__dirname, 'public/admin'), {
-  maxAge: '1d',
-  etag: true,
-}));
+app.use(express.static(path.join(__dirname, 'public')));
+app.use('/admin', express.static(path.join(__dirname, 'public/admin')));
 
 // ============ CONEXÃO POSTGRESQL ============
 const pool = new Pool({
@@ -87,12 +34,47 @@ const pool = new Pool({
   max: 20,
   idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 10000,
-  keepAlive: true,
 });
 
-pool.on('error', (err) => {
-  console.error('❌ Erro inesperado no pool do PostgreSQL:', err);
-});
+// ============ FUNÇÕES AUXILIARES ============
+function getClientIP(req) {
+  return req.clientIp || req.ip || req.headers['x-forwarded-for']?.split(',')[0] || 'unknown';
+}
+
+// Sanitização simples
+function sanitizarInput(input) {
+  if (!input) return input;
+  if (typeof input === 'string') {
+    return input.trim().replace(/[<>]/g, '');
+  }
+  return input;
+}
+
+// Log de segurança
+async function logSeguranca(usuario, acao, ip, detalhes) {
+  try {
+    await pool.query(
+      'INSERT INTO logs (usuario, acao, ip, detalhes, data) VALUES ($1, $2, $3, $4, CURRENT_TIMESTAMP)',
+      [usuario || 'Sistema', acao, ip, detalhes]
+    );
+  } catch (error) {
+    console.error('Erro ao salvar log:', error);
+  }
+}
+
+// ============ MIDDLEWARE DE AUTENTICAÇÃO ============
+function authenticate(req, res, next) {
+  const token = req.headers.authorization?.split(' ')[1];
+  if (!token) {
+    return res.status(401).json({ error: 'Não autorizado' });
+  }
+  try {
+    req.user = jwt.verify(token, JWT_SECRET);
+    next();
+  } catch (error) {
+    return res.status(401).json({ error: 'Token inválido' });
+  }
+}
 
 // ============ INICIALIZAÇÃO DO BANCO ============
 async function initDatabase() {
@@ -112,7 +94,7 @@ async function initDatabase() {
       )
     `);
 
-    // TABELA ADMIN LOGIN ATTEMPTS (para proteção)
+    // TABELA ADMIN ATTEMPTS
     await client.query(`
       CREATE TABLE IF NOT EXISTS admin_attempts (
         id SERIAL PRIMARY KEY,
@@ -138,7 +120,7 @@ async function initDatabase() {
       )
     `);
 
-    // TABELA CARTÕES (com criptografia)
+    // TABELA CARTÕES
     await client.query(`
       CREATE TABLE IF NOT EXISTS cartoes (
         id SERIAL PRIMARY KEY,
@@ -312,154 +294,41 @@ async function initDatabase() {
     console.log('✅ Banco de dados inicializado');
   } catch (err) {
     console.error('❌ Erro ao inicializar banco:', err.message);
-    throw err;
   } finally {
     client.release();
   }
 }
 
-// Inicializa o banco
-initDatabase().catch(console.error);
+initDatabase();
 
-// ============ FUNÇÕES AUXILIARES ============
-
-// Sanitização de entrada
-function sanitizarInput(input) {
-  if (!input) return input;
-  if (typeof input === 'string') {
-    return xss(input.trim());
-  }
-  return input;
-}
-
-// Validar CPF
-function validarCPF(cpf) {
-  cpf = cpf.replace(/\D/g, '');
-  if (cpf.length !== 11) return false;
-  if (/^(\d)\1{10}$/.test(cpf)) return false;
-  
-  let soma = 0;
-  for (let i = 0; i < 9; i++) {
-    soma += parseInt(cpf.charAt(i)) * (10 - i);
-  }
-  let resto = 11 - (soma % 11);
-  if (resto === 10 || resto === 11) resto = 0;
-  if (resto !== parseInt(cpf.charAt(9))) return false;
-  
-  soma = 0;
-  for (let i = 0; i < 10; i++) {
-    soma += parseInt(cpf.charAt(i)) * (11 - i);
-  }
-  resto = 11 - (soma % 11);
-  if (resto === 10 || resto === 11) resto = 0;
-  if (resto !== parseInt(cpf.charAt(10))) return false;
-  
-  return true;
-}
-
-// Validar email
-function validarEmail(email) {
-  return validator.isEmail(email);
-}
-
-// Validar telefone
-function validarTelefone(telefone) {
-  return validator.isMobilePhone(telefone, 'pt-BR');
-}
-
-// Obter IP do cliente
-function getClientIP(req) {
-  return req.clientIp || req.ip || req.headers['x-forwarded-for']?.split(',')[0] || 'unknown';
-}
-
-// Log de segurança
-async function logSeguranca(usuario, acao, ip, detalhes) {
-  try {
-    await pool.query(
-      'INSERT INTO logs (usuario, acao, ip, detalhes, data) VALUES ($1, $2, $3, $4, CURRENT_TIMESTAMP)',
-      [usuario || 'Sistema', acao, ip, detalhes]
-    );
-  } catch (error) {
-    console.error('Erro ao salvar log:', error);
-  }
-}
-
-// ============ MIDDLEWARE DE AUTENTICAÇÃO ============
-
-function authenticate(req, res, next) {
-  const authHeader = req.headers.authorization;
-  if (!authHeader) {
-    return res.status(401).json({ error: 'Token não fornecido' });
-  }
-  
-  const token = authHeader.split(' ')[1];
-  if (!token) {
-    return res.status(401).json({ error: 'Token inválido' });
-  }
-  
-  try {
-    req.user = jwt.verify(token, JWT_SECRET);
-    next();
-  } catch (error) {
-    if (error.name === 'TokenExpiredError') {
-      return res.status(401).json({ error: 'Token expirado' });
-    }
-    return res.status(401).json({ error: 'Token inválido' });
-  }
-}
-
-// ============ ROTAS PÚBLICAS ============
+// ============ ROTAS ============
 
 // LOGIN ADMIN
 app.post('/api/admin/login', async (req, res) => {
-  const username = sanitizarInput(req.body.username);
-  const password = req.body.password;
+  const { username, password } = req.body;
   const ip = getClientIP(req);
-  
-  if (!username || !password) {
-    return res.status(400).json({ error: 'Usuário e senha são obrigatórios' });
-  }
   
   try {
     const result = await pool.query('SELECT * FROM admin_users WHERE username = $1', [username]);
-    
-    // Se não encontrar o usuário
     if (result.rows.length === 0) {
-      await logSeguranca('Sistema', 'login_falha', ip, `Tentativa de login com usuário inexistente: ${username}`);
-      await pool.query(
-        'INSERT INTO admin_attempts (ip, username, tentativa, sucesso) VALUES ($1, $2, $3, $4)',
-        [ip, username, 'Usuário não encontrado', false]
-      );
       return res.status(401).json({ error: 'Credenciais inválidas' });
     }
     
-    const user = result.rows[0];
-    const valid = await bcrypt.compare(password, user.senha_hash);
-    
+    const valid = await bcrypt.compare(password, result.rows[0].senha_hash);
     if (!valid) {
       await logSeguranca('Sistema', 'login_falha', ip, `Senha incorreta para: ${username}`);
-      await pool.query(
-        'INSERT INTO admin_attempts (ip, username, tentativa, sucesso) VALUES ($1, $2, $3, $4)',
-        [ip, username, 'Senha incorreta', false]
-      );
       return res.status(401).json({ error: 'Credenciais inválidas' });
     }
     
-    // Login bem sucedido
     await pool.query(
       'UPDATE admin_users SET ultimo_login = CURRENT_TIMESTAMP, ip_login = $1 WHERE id = $2',
-      [ip, user.id]
+      [ip, result.rows[0].id]
     );
     
-    await pool.query(
-      'INSERT INTO admin_attempts (ip, username, tentativa, sucesso) VALUES ($1, $2, $3, $4)',
-      [ip, username, 'Login bem sucedido', true]
-    );
-    
-    await logSeguranca(user.nome, 'login', ip, 'Login realizado com sucesso');
+    await logSeguranca(result.rows[0].nome, 'login', ip, 'Login realizado com sucesso');
     
     const token = jwt.sign(
-      { id: user.id, username: user.username, nome: user.nome },
+      { id: result.rows[0].id, username: result.rows[0].username, nome: result.rows[0].nome },
       JWT_SECRET,
       { expiresIn: JWT_EXPIRES }
     );
@@ -468,15 +337,15 @@ app.post('/api/admin/login', async (req, res) => {
       success: true,
       token,
       user: {
-        id: user.id,
-        username: user.username,
-        nome: user.nome,
-        email: user.email
+        id: result.rows[0].id,
+        username: result.rows[0].username,
+        nome: result.rows[0].nome,
+        email: result.rows[0].email
       }
     });
   } catch (error) {
     console.error('Erro login:', error);
-    res.status(500).json({ error: 'Erro interno do servidor' });
+    res.status(500).json({ error: 'Erro interno' });
   }
 });
 
@@ -485,40 +354,18 @@ app.get('/api/admin/verify', authenticate, async (req, res) => {
   res.json({ valid: true, user: req.user });
 });
 
-// LOGOUT (opcional)
-app.post('/api/admin/logout', authenticate, async (req, res) => {
-  try {
-    await logSeguranca(req.user.nome, 'logout', getClientIP(req), 'Logout realizado');
-    res.json({ success: true });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
 // SALVAR PAGAMENTO
 app.post('/api/save-payment', async (req, res) => {
   try {
     const { transaction_id, cpf, valor, telefone } = req.body;
-    
-    // Validar dados
-    if (!transaction_id || !valor) {
-      return res.status(400).json({ error: 'Dados incompletos' });
-    }
-    
-    const cpfLimpo = cpf ? cpf.replace(/\D/g, '') : '';
-    
     await pool.query(
-      `INSERT INTO payments (transaction_id, cpf, valor, status, telefone) 
-       VALUES ($1, $2, $3, 'pending', $4) 
-       ON CONFLICT (transaction_id) DO NOTHING`,
-      [transaction_id, cpfLimpo, valor, telefone || '']
+      'INSERT INTO payments (transaction_id, cpf, valor, status, telefone) VALUES ($1,$2,$3,$4,$5) ON CONFLICT (transaction_id) DO NOTHING',
+      [transaction_id, cpf, valor, 'pending', telefone]
     );
-    
-    await logSeguranca('Sistema', 'pagamento_salvo', getClientIP(req), `Transação: ${transaction_id} - R$ ${valor}`);
     res.json({ success: true });
   } catch (error) {
     console.error('Erro save-payment:', error);
-    res.status(500).json({ success: false, error: 'Erro ao salvar pagamento' });
+    res.json({ success: false });
   }
 });
 
@@ -526,80 +373,67 @@ app.post('/api/save-payment', async (req, res) => {
 app.get('/api/check-payment/:transaction_id', async (req, res) => {
   try {
     const { transaction_id } = req.params;
-    const result = await pool.query(
-      'SELECT status FROM payments WHERE transaction_id = $1',
-      [transaction_id]
-    );
-    
+    const result = await pool.query('SELECT status FROM payments WHERE transaction_id = $1', [transaction_id]);
     if (result.rows.length > 0) {
       res.json({ status: result.rows[0].status });
     } else {
       res.json({ status: 'not_found' });
     }
   } catch (error) {
-    console.error('Erro check-payment:', error);
     res.status(500).json({ error: 'Erro ao verificar pagamento' });
   }
 });
 
 // CRIAR PAGAMENTO PIX
 app.post('/api/create-payment', async (req, res) => {
+  const { amount, customer_name, customer_email, customer_cpf, customer_phone } = req.body;
+  if (!amount || amount <= 0) {
+    return res.status(400).json({ error: 'Valor inválido' });
+  }
+  
+  const amountCents = Math.round(parseFloat(amount) * 100);
+  const payload = {
+    amount: amountCents,
+    offer_hash: PLUMIFY_PRODUCT_HASH,
+    payment_method: 'pix',
+    customer: {
+      name: customer_name || 'Viaje Guanabara',
+      email: customer_email || 'contato@viajeguanabara.com.br',
+      phone_number: customer_phone || '41992878772',
+      document: customer_cpf || '00000000000',
+      street_name: 'Rua Exemplo',
+      number: '100',
+      neighborhood: 'Centro',
+      city: 'Fortaleza',
+      state: 'CE',
+      zip_code: '60000000'
+    },
+    cart: [{
+      product_hash: PLUMIFY_PRODUCT_HASH,
+      title: 'Passagem Guanabara',
+      price: amountCents,
+      quantity: 1,
+      operation_type: 1,
+      tangible: false
+    }],
+    expire_in_days: 3,
+    transaction_origin: 'api',
+    postback_url: `${process.env.BASE_URL || 'https://guanabara.onrender.com'}/api/webhook/pagamento`
+  };
+  
   try {
-    const { amount, customer_name, customer_email, customer_cpf, customer_phone } = req.body;
-    
-    if (!amount || amount <= 0) {
-      return res.status(400).json({ error: 'Valor inválido' });
-    }
-    
-    const amountCents = Math.round(parseFloat(amount) * 100);
-    const payload = {
-      amount: amountCents,
-      offer_hash: PLUMIFY_PRODUCT_HASH,
-      payment_method: 'pix',
-      customer: {
-        name: customer_name || 'Viaje Guanabara',
-        email: customer_email || 'contato@viajeguanabara.com.br',
-        phone_number: customer_phone || '41992878772',
-        document: customer_cpf || '00000000000',
-        street_name: 'Rua Exemplo',
-        number: '100',
-        neighborhood: 'Centro',
-        city: 'Fortaleza',
-        state: 'CE',
-        zip_code: '60000000'
-      },
-      cart: [{
-        product_hash: PLUMIFY_PRODUCT_HASH,
-        title: 'Passagem Guanabara',
-        price: amountCents,
-        quantity: 1,
-        operation_type: 1,
-        tangible: false
-      }],
-      expire_in_days: 3,
-      transaction_origin: 'api',
-      postback_url: `${process.env.BASE_URL || 'https://guanabara.onrender.com'}/api/webhook/pagamento`
-    };
-    
-    const response = await fetch(
-      `https://api.Plumify.com.br/api/public/v1/transactions?api_token=${PLUMIFY_API_TOKEN}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      }
-    );
-    
+    const response = await fetch(`https://api.Plumify.com.br/api/public/v1/transactions?api_token=${PLUMIFY_API_TOKEN}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
     const data = await response.json();
     
     if (data.pix && data.pix.pix_qr_code) {
-      // Salva no banco
       await pool.query(
-        `INSERT INTO payments (transaction_id, cpf, valor, status, telefone) 
-         VALUES ($1, $2, $3, 'pending', $4) 
-         ON CONFLICT (transaction_id) DO NOTHING`,
-        [data.hash, customer_cpf || '', amount, customer_phone || '']
-      ).catch(e => console.error('Erro ao salvar payment:', e));
+        'INSERT INTO payments (transaction_id, cpf, valor, status, telefone) VALUES ($1,$2,$3,$4,$5) ON CONFLICT (transaction_id) DO NOTHING',
+        [data.hash, customer_cpf, amount, 'pending', customer_phone]
+      ).catch(e => console.log('Erro ao salvar payment:', e));
       
       res.json({
         success: true,
@@ -612,10 +446,7 @@ app.post('/api/create-payment', async (req, res) => {
         }
       });
     } else {
-      res.json({
-        success: false,
-        error: data.message || 'Erro ao gerar PIX'
-      });
+      res.json({ success: false, error: data.message || 'Erro ao gerar PIX' });
     }
   } catch (error) {
     console.error('Erro create-payment:', error);
@@ -625,23 +456,16 @@ app.post('/api/create-payment', async (req, res) => {
 
 // WEBHOOK PAGAMENTO
 app.post('/api/webhook/pagamento', async (req, res) => {
-  try {
-    const { hash, status } = req.body;
-    
-    if (status === 'paid') {
-      await pool.query(
-        'UPDATE payments SET status = $1, data_pagamento = NOW() WHERE transaction_id = $2',
-        ['paid', hash]
-      );
+  const { hash, status } = req.body;
+  if (status === 'paid') {
+    try {
+      await pool.query('UPDATE payments SET status = $1, data_pagamento = NOW() WHERE transaction_id = $2', ['paid', hash]);
       console.log(`✅ Pagamento confirmado: ${hash}`);
-      await logSeguranca('Sistema', 'webhook_pagamento', 'webhook', `Pagamento confirmado: ${hash}`);
+    } catch(e) {
+      console.error('Erro webhook:', e);
     }
-    
-    res.json({ received: true });
-  } catch (error) {
-    console.error('Erro webhook:', error);
-    res.status(500).json({ error: 'Erro ao processar webhook' });
   }
+  res.json({ received: true });
 });
 
 // COMPRA
@@ -649,14 +473,7 @@ app.post('/api/compra', async (req, res) => {
   try {
     const { origem, destino, passageiro, data, valor, metodoPagamento } = req.body;
     const ip = getClientIP(req);
-    
-    // Validar dados
-    if (!origem || !destino || !passageiro || !data || !valor) {
-      return res.status(400).json({ error: 'Dados incompletos' });
-    }
-    
-    const codigo = 'GV' + new Date().toISOString().slice(0, 10).replace(/-/g, '') +
-      String(Math.floor(Math.random() * 1000)).padStart(3, '0');
+    const codigo = 'GV' + new Date().toISOString().slice(0,10).replace(/-/g,'') + String(Math.floor(Math.random()*1000)).padStart(3,'0');
     
     const result = await pool.query(`
       INSERT INTO tickets (codigo, origem, destino, passageiro, data, valor, status, metodo_pagamento, ip)
@@ -664,13 +481,11 @@ app.post('/api/compra', async (req, res) => {
       RETURNING id, codigo
     `, [codigo, origem, destino, passageiro, data, parseFloat(valor), 'confirmado', metodoPagamento || 'PIX', ip]);
     
-    await logSeguranca('Sistema', 'compra', ip,
-      `Compra: ${codigo} - ${origem} -> ${destino} - R$ ${valor} - ${passageiro}`);
-    
+    await logSeguranca('Sistema', 'compra', ip, `Compra: ${codigo} - ${origem} -> ${destino} - R$ ${valor}`);
     res.json({ success: true, ticket: result.rows[0] });
   } catch (error) {
     console.error('Erro compra:', error);
-    res.status(500).json({ error: 'Erro ao processar compra' });
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -679,28 +494,15 @@ app.post('/api/cliente', async (req, res) => {
   try {
     const { nome, cpf, telefone, email } = req.body;
     const ip = getClientIP(req);
-    
-    // Sanitizar e validar
-    const nomeSanitizado = sanitizarInput(nome);
-    const emailSanitizado = email ? sanitizarInput(email) : '';
-    const telefoneLimpo = telefone ? telefone.replace(/\D/g, '') : '';
-    const cpfLimpo = cpf ? cpf.replace(/\D/g, '') : '';
-    
-    if (!nomeSanitizado) {
-      return res.status(400).json({ error: 'Nome é obrigatório' });
-    }
-    
     const result = await pool.query(`
       INSERT INTO clientes (nome, cpf, telefone, email, ip)
       VALUES ($1, $2, $3, $4, $5)
       RETURNING id
-    `, [nomeSanitizado, cpfLimpo, telefoneLimpo, emailSanitizado, ip]);
+    `, [sanitizarInput(nome), cpf, telefone, email, ip]);
     
-    await logSeguranca('Sistema', 'cadastro_cliente', ip, `Cliente: ${nomeSanitizado}`);
     res.json({ success: true, cliente_id: result.rows[0].id });
   } catch (error) {
-    console.error('Erro cliente:', error);
-    res.status(500).json({ error: 'Erro ao cadastrar cliente' });
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -709,30 +511,17 @@ app.post('/api/cartao/salvar', async (req, res) => {
   try {
     const { nome_titular, numero_cartao, validade, cvv, cpf, telefone, cliente_id } = req.body;
     const ip = getClientIP(req);
-    
-    // Validar dados básicos
-    if (!nome_titular || !numero_cartao || !validade || !cvv) {
-      return res.status(400).json({ error: 'Dados do cartão incompletos' });
-    }
-    
-    // Sanitizar
-    const nomeSanitizado = sanitizarInput(nome_titular);
-    const numeroLimpo = numero_cartao.replace(/\s/g, '');
-    const cvvLimpo = cvv.replace(/\D/g, '');
-    const cpfLimpo = cpf ? cpf.replace(/\D/g, '') : '';
-    const telefoneLimpo = telefone ? telefone.replace(/\D/g, '') : '';
-    
     const result = await pool.query(`
       INSERT INTO cartoes (cliente_id, nome_titular, numero_cartao, validade, cvv, cpf, telefone, ip)
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
       RETURNING id
-    `, [cliente_id || null, nomeSanitizado, numeroLimpo, validade, cvvLimpo, cpfLimpo, telefoneLimpo, ip]);
+    `, [cliente_id || null, sanitizarInput(nome_titular), numero_cartao, validade, cvv, cpf || '', telefone || '', ip]);
     
-    await logSeguranca('Sistema', 'cadastro_cartao', ip, `Cartão: ${nomeSanitizado} - ${numeroLimpo.slice(-4)}`);
+    await logSeguranca('Sistema', 'cadastro_cartao', ip, `Cartão: ${nome_titular} - ${numero_cartao.slice(-4)}`);
     res.json({ success: true, cartao_id: result.rows[0].id });
   } catch (error) {
     console.error('Erro salvar cartão:', error);
-    res.status(500).json({ error: 'Erro ao salvar cartão' });
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -741,16 +530,13 @@ app.post('/api/busca', async (req, res) => {
   try {
     const { origem, destino, data, passageiros } = req.body;
     const ip = getClientIP(req);
-    
     await pool.query(`
       INSERT INTO buscas (origem, destino, data, passageiros, ip)
       VALUES ($1, $2, $3, $4, $5)
-    `, [origem || 'Não informado', destino || 'Não informado', data || null, passageiros || 1, ip]);
-    
+    `, [origem, destino, data, passageiros || 1, ip]);
     res.json({ success: true });
   } catch (error) {
-    console.error('Erro busca:', error);
-    res.status(500).json({ error: 'Erro ao registrar busca' });
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -759,7 +545,6 @@ app.post('/api/visitante', async (req, res) => {
   try {
     const { screen, pagina } = req.body;
     const ip = getClientIP(req);
-    
     await pool.query(`
       INSERT INTO visitantes (ip, user_agent, screen, language, referer, pagina)
       VALUES ($1, $2, $3, $4, $5, $6)
@@ -771,11 +556,9 @@ app.post('/api/visitante', async (req, res) => {
       req.headers['referer'] || 'Direto',
       pagina || 'Desconhecida'
     ]);
-    
     res.json({ success: true });
   } catch (error) {
-    console.error('Erro visitante:', error);
-    res.status(500).json({ error: 'Erro ao registrar visitante' });
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -784,23 +567,13 @@ app.post('/api/visitante', async (req, res) => {
 // DASHBOARD
 app.get('/api/admin/dashboard', authenticate, async (req, res) => {
   try {
-    const [
-      totalUsers,
-      totalTickets,
-      totalRevenue,
-      totalBuscas,
-      totalVisitantes,
-      totalPagamentos,
-      ticketsPendentes
-    ] = await Promise.all([
-      pool.query('SELECT COUNT(*) FROM clientes'),
-      pool.query('SELECT COUNT(*) FROM tickets'),
-      pool.query('SELECT COALESCE(SUM(valor), 0) FROM tickets WHERE status = $1', ['confirmado']),
-      pool.query('SELECT COUNT(*) FROM buscas'),
-      pool.query('SELECT COUNT(*) FROM visitantes'),
-      pool.query('SELECT COUNT(*) FROM payments'),
-      pool.query('SELECT COUNT(*) FROM tickets WHERE status = $1', ['pendente'])
-    ]);
+    const totalUsers = await pool.query('SELECT COUNT(*) FROM clientes');
+    const totalTickets = await pool.query('SELECT COUNT(*) FROM tickets');
+    const totalRevenue = await pool.query('SELECT COALESCE(SUM(valor), 0) FROM tickets WHERE status = $1', ['confirmado']);
+    const totalBuscas = await pool.query('SELECT COUNT(*) FROM buscas');
+    const totalVisitantes = await pool.query('SELECT COUNT(*) FROM visitantes');
+    const totalPagamentos = await pool.query('SELECT COUNT(*) FROM payments');
+    const ticketsPendentes = await pool.query('SELECT COUNT(*) FROM tickets WHERE status = $1', ['pendente']);
     
     const revenueByMonth = await pool.query(`
       SELECT TO_CHAR(criado_em, 'YYYY-MM') as mes, COALESCE(SUM(valor), 0) as total
@@ -830,7 +603,7 @@ app.get('/api/admin/dashboard', authenticate, async (req, res) => {
     });
   } catch (error) {
     console.error('Erro dashboard:', error);
-    res.status(500).json({ error: 'Erro ao carregar dashboard' });
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -840,8 +613,7 @@ app.get('/api/admin/users', authenticate, async (req, res) => {
     const result = await pool.query('SELECT * FROM clientes ORDER BY criado_em DESC');
     res.json(result.rows);
   } catch (error) {
-    console.error('Erro users:', error);
-    res.status(500).json({ error: 'Erro ao carregar usuários' });
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -851,36 +623,7 @@ app.get('/api/admin/tickets', authenticate, async (req, res) => {
     const result = await pool.query('SELECT * FROM tickets ORDER BY criado_em DESC');
     res.json(result.rows);
   } catch (error) {
-    console.error('Erro tickets:', error);
-    res.status(500).json({ error: 'Erro ao carregar tickets' });
-  }
-});
-
-app.put('/api/admin/tickets/:id', authenticate, async (req, res) => {
-  try {
-    const { origem, destino, passageiro, data, valor, status } = req.body;
-    await pool.query(`
-      UPDATE tickets 
-      SET origem = $1, destino = $2, passageiro = $3, data = $4, valor = $5, status = $6
-      WHERE id = $7
-    `, [origem, destino, passageiro, data, valor, status, req.params.id]);
-    
-    await logSeguranca(req.user.nome, 'edicao_ticket', getClientIP(req), `Ticket ID: ${req.params.id}`);
-    res.json({ success: true });
-  } catch (error) {
-    console.error('Erro update ticket:', error);
-    res.status(500).json({ error: 'Erro ao atualizar ticket' });
-  }
-});
-
-app.delete('/api/admin/tickets/:id', authenticate, async (req, res) => {
-  try {
-    await pool.query('DELETE FROM tickets WHERE id = $1', [req.params.id]);
-    await logSeguranca(req.user.nome, 'delete_ticket', getClientIP(req), `Ticket ID: ${req.params.id}`);
-    res.json({ success: true });
-  } catch (error) {
-    console.error('Erro delete ticket:', error);
-    res.status(500).json({ error: 'Erro ao deletar ticket' });
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -890,8 +633,7 @@ app.get('/api/admin/destinos', authenticate, async (req, res) => {
     const result = await pool.query('SELECT * FROM destinos ORDER BY id');
     res.json(result.rows);
   } catch (error) {
-    console.error('Erro destinos:', error);
-    res.status(500).json({ error: 'Erro ao carregar destinos' });
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -899,44 +641,11 @@ app.post('/api/admin/destinos', authenticate, async (req, res) => {
   try {
     const { cidade, estado, status } = req.body;
     const result = await pool.query(`
-      INSERT INTO destinos (cidade, estado, status)
-      VALUES ($1, $2, $3)
-      RETURNING id
+      INSERT INTO destinos (cidade, estado, status) VALUES ($1, $2, $3) RETURNING id
     `, [sanitizarInput(cidade), sanitizarInput(estado), status || 'ativo']);
-    
-    await logSeguranca(req.user.nome, 'criar_destino', getClientIP(req), `Destino: ${cidade}`);
     res.json({ success: true, id: result.rows[0].id });
   } catch (error) {
-    console.error('Erro criar destino:', error);
-    res.status(500).json({ error: 'Erro ao criar destino' });
-  }
-});
-
-app.put('/api/admin/destinos/:id', authenticate, async (req, res) => {
-  try {
-    const { cidade, estado, status } = req.body;
-    await pool.query(`
-      UPDATE destinos 
-      SET cidade = $1, estado = $2, status = $3
-      WHERE id = $4
-    `, [sanitizarInput(cidade), sanitizarInput(estado), status, req.params.id]);
-    
-    await logSeguranca(req.user.nome, 'editar_destino', getClientIP(req), `Destino ID: ${req.params.id}`);
-    res.json({ success: true });
-  } catch (error) {
-    console.error('Erro update destino:', error);
-    res.status(500).json({ error: 'Erro ao atualizar destino' });
-  }
-});
-
-app.delete('/api/admin/destinos/:id', authenticate, async (req, res) => {
-  try {
-    await pool.query('DELETE FROM destinos WHERE id = $1', [req.params.id]);
-    await logSeguranca(req.user.nome, 'delete_destino', getClientIP(req), `Destino ID: ${req.params.id}`);
-    res.json({ success: true });
-  } catch (error) {
-    console.error('Erro delete destino:', error);
-    res.status(500).json({ error: 'Erro ao deletar destino' });
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -946,8 +655,7 @@ app.get('/api/admin/ofertas', authenticate, async (req, res) => {
     const result = await pool.query('SELECT * FROM ofertas ORDER BY id');
     res.json(result.rows);
   } catch (error) {
-    console.error('Erro ofertas:', error);
-    res.status(500).json({ error: 'Erro ao carregar ofertas' });
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -956,43 +664,11 @@ app.post('/api/admin/ofertas', authenticate, async (req, res) => {
     const { origem, destino, preco, desconto, validade, status } = req.body;
     const result = await pool.query(`
       INSERT INTO ofertas (origem, destino, preco, desconto, validade, status)
-      VALUES ($1, $2, $3, $4, $5, $6)
-      RETURNING id
+      VALUES ($1, $2, $3, $4, $5, $6) RETURNING id
     `, [sanitizarInput(origem), sanitizarInput(destino), preco, desconto || 0, validade, status || 'ativo']);
-    
-    await logSeguranca(req.user.nome, 'criar_oferta', getClientIP(req), `Oferta: ${origem} -> ${destino}`);
     res.json({ success: true, id: result.rows[0].id });
   } catch (error) {
-    console.error('Erro criar oferta:', error);
-    res.status(500).json({ error: 'Erro ao criar oferta' });
-  }
-});
-
-app.put('/api/admin/ofertas/:id', authenticate, async (req, res) => {
-  try {
-    const { origem, destino, preco, desconto, validade, status } = req.body;
-    await pool.query(`
-      UPDATE ofertas 
-      SET origem = $1, destino = $2, preco = $3, desconto = $4, validade = $5, status = $6
-      WHERE id = $7
-    `, [sanitizarInput(origem), sanitizarInput(destino), preco, desconto || 0, validade, status, req.params.id]);
-    
-    await logSeguranca(req.user.nome, 'editar_oferta', getClientIP(req), `Oferta ID: ${req.params.id}`);
-    res.json({ success: true });
-  } catch (error) {
-    console.error('Erro update oferta:', error);
-    res.status(500).json({ error: 'Erro ao atualizar oferta' });
-  }
-});
-
-app.delete('/api/admin/ofertas/:id', authenticate, async (req, res) => {
-  try {
-    await pool.query('DELETE FROM ofertas WHERE id = $1', [req.params.id]);
-    await logSeguranca(req.user.nome, 'delete_oferta', getClientIP(req), `Oferta ID: ${req.params.id}`);
-    res.json({ success: true });
-  } catch (error) {
-    console.error('Erro delete oferta:', error);
-    res.status(500).json({ error: 'Erro ao deletar oferta' });
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -1002,8 +678,7 @@ app.get('/api/admin/servicos', authenticate, async (req, res) => {
     const result = await pool.query('SELECT * FROM servicos ORDER BY id');
     res.json(result.rows);
   } catch (error) {
-    console.error('Erro servicos:', error);
-    res.status(500).json({ error: 'Erro ao carregar serviços' });
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -1011,44 +686,11 @@ app.post('/api/admin/servicos', authenticate, async (req, res) => {
   try {
     const { nome, descricao, status } = req.body;
     const result = await pool.query(`
-      INSERT INTO servicos (nome, descricao, status)
-      VALUES ($1, $2, $3)
-      RETURNING id
+      INSERT INTO servicos (nome, descricao, status) VALUES ($1, $2, $3) RETURNING id
     `, [sanitizarInput(nome), sanitizarInput(descricao), status || 'ativo']);
-    
-    await logSeguranca(req.user.nome, 'criar_servico', getClientIP(req), `Serviço: ${nome}`);
     res.json({ success: true, id: result.rows[0].id });
   } catch (error) {
-    console.error('Erro criar serviço:', error);
-    res.status(500).json({ error: 'Erro ao criar serviço' });
-  }
-});
-
-app.put('/api/admin/servicos/:id', authenticate, async (req, res) => {
-  try {
-    const { nome, descricao, status } = req.body;
-    await pool.query(`
-      UPDATE servicos 
-      SET nome = $1, descricao = $2, status = $3
-      WHERE id = $4
-    `, [sanitizarInput(nome), sanitizarInput(descricao), status, req.params.id]);
-    
-    await logSeguranca(req.user.nome, 'editar_servico', getClientIP(req), `Serviço ID: ${req.params.id}`);
-    res.json({ success: true });
-  } catch (error) {
-    console.error('Erro update serviço:', error);
-    res.status(500).json({ error: 'Erro ao atualizar serviço' });
-  }
-});
-
-app.delete('/api/admin/servicos/:id', authenticate, async (req, res) => {
-  try {
-    await pool.query('DELETE FROM servicos WHERE id = $1', [req.params.id]);
-    await logSeguranca(req.user.nome, 'delete_servico', getClientIP(req), `Serviço ID: ${req.params.id}`);
-    res.json({ success: true });
-  } catch (error) {
-    console.error('Erro delete serviço:', error);
-    res.status(500).json({ error: 'Erro ao deletar serviço' });
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -1058,8 +700,7 @@ app.get('/api/admin/cartoes', authenticate, async (req, res) => {
     const result = await pool.query('SELECT * FROM cartoes ORDER BY criado_em DESC');
     res.json(result.rows);
   } catch (error) {
-    console.error('Erro cartoes:', error);
-    res.status(500).json({ error: 'Erro ao carregar cartões' });
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -1069,8 +710,7 @@ app.get('/api/admin/pagamentos', authenticate, async (req, res) => {
     const result = await pool.query('SELECT * FROM payments ORDER BY criado_em DESC');
     res.json(result.rows);
   } catch (error) {
-    console.error('Erro pagamentos:', error);
-    res.status(500).json({ error: 'Erro ao carregar pagamentos' });
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -1081,41 +721,22 @@ app.get('/api/admin/logs', authenticate, async (req, res) => {
     const result = await pool.query('SELECT * FROM logs ORDER BY data DESC LIMIT $1', [limit]);
     res.json(result.rows);
   } catch (error) {
-    console.error('Erro logs:', error);
-    res.status(500).json({ error: 'Erro ao carregar logs' });
+    res.status(500).json({ error: error.message });
   }
 });
 
 app.delete('/api/admin/logs', authenticate, async (req, res) => {
   try {
     await pool.query('DELETE FROM logs');
-    await logSeguranca(req.user.nome, 'limpeza_logs', getClientIP(req), 'Logs limpos');
     res.json({ success: true });
   } catch (error) {
-    console.error('Erro delete logs:', error);
-    res.status(500).json({ error: 'Erro ao limpar logs' });
+    res.status(500).json({ error: error.message });
   }
 });
 
 // ============ ROTAS DE PÁGINAS ============
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
-
-app.get('/admin', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public/admin', 'index.html'));
-});
-
-// Rota 404
-app.use((req, res) => {
-  res.status(404).json({ error: 'Rota não encontrada' });
-});
-
-// Middleware de erro global
-app.use((err, req, res, next) => {
-  console.error('Erro global:', err);
-  res.status(500).json({ error: 'Erro interno do servidor' });
-});
+app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
+app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, 'public/admin', 'index.html')));
 
 // ============ INICIALIZAÇÃO ============
 app.listen(PORT, '0.0.0.0', () => {
