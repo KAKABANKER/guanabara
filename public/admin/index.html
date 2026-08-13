@@ -5,253 +5,185 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin - Viaje Guanabara</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* ============================================
-           RESET E BASE
-           ============================================ */
+        /* ========== RESET E BASE ========== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
-            font-family: 'Inter', sans-serif; 
-            background: #f1f5f9; 
-            transition: background 0.4s ease, color 0.4s ease;
+            font-family: 'Outfit', sans-serif; 
+            background: #000; 
+            color: #fff;
             min-height: 100vh;
+            overflow-x: hidden;
         }
-        
-        /* ============================================
-           SCROLLBAR PERSONALIZADA
-           ============================================ */
+
+        /* ========== CANVAS 3D (ESTRELAS) ========== */
+        #bgCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ========== SCROLLBAR ========== */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 8px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-        
-        /* ============================================
-           TEMA CLARO (PADRÃO)
-           ============================================ */
-        :root {
-            --bg-primary: #f1f5f9;
-            --bg-secondary: #ffffff;
-            --bg-card: #ffffff;
-            --bg-sidebar: #0a1a3a;
-            --bg-input: #ffffff;
-            --bg-hover: #f8fafc;
-            --bg-table-header: #f8fafc;
-            
-            --text-primary: #0a1a3a;
-            --text-secondary: #475569;
-            --text-muted: #94a3b8;
-            --text-white: #ffffff;
-            
-            --border-color: #e2e8f0;
-            --border-hover: #123481;
-            
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
-            --shadow-md: 0 4px 16px rgba(0,0,0,0.06);
-            --shadow-lg: 0 12px 32px rgba(0,0,0,0.08);
-            
-            --gb-blue: #123481;
-            --gb-blue-hover: #1a4a9e;
-            --gb-blue-light: #e8edf5;
-            --gb-gold: #E79F01;
-            
-            --success: #16a34a;
-            --warning: #d97706;
-            --danger: #dc2626;
-            --info: #7c3aed;
-            
-            --radius-sm: 8px;
-            --radius-md: 12px;
-            --radius-lg: 16px;
-            --radius-xl: 20px;
-        }
-        
-        /* ============================================
-           TEMA ESCURO
-           ============================================ */
-        body.dark-theme {
-            --bg-primary: #0f172a;
-            --bg-secondary: #1e293b;
-            --bg-card: #1e293b;
-            --bg-input: #0f172a;
-            --bg-hover: #0f172a;
-            --bg-table-header: #0f172a;
-            
-            --text-primary: #e2e8f0;
-            --text-secondary: #94a3b8;
-            --text-muted: #64748b;
-            
-            --border-color: #334155;
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.2);
-            --shadow-md: 0 4px 16px rgba(0,0,0,0.3);
-            --shadow-lg: 0 12px 32px rgba(0,0,0,0.4);
-            
-            --gb-blue-light: #1a2a4a;
-        }
-        
-        /* ============================================
-           LOGIN
-           ============================================ */
+        ::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.3); }
+
+        /* ========== LOGIN ========== */
         .login-container {
-            min-height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 1;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(135deg, #0a1a3a 0%, #123481 50%, #1a4a9e 100%);
             padding: 20px;
-            position: relative;
-            overflow: hidden;
-        }
-        .login-container::before {
-            content: '';
-            position: absolute;
-            width: 600px;
-            height: 600px;
-            background: rgba(255,255,255,0.03);
-            border-radius: 50%;
-            top: -200px;
-            right: -200px;
-        }
-        .login-container::after {
-            content: '';
-            position: absolute;
-            width: 400px;
-            height: 400px;
-            background: rgba(255,255,255,0.02);
-            border-radius: 50%;
-            bottom: -100px;
-            left: -100px;
         }
         .login-card {
-            background: rgba(255,255,255,0.95);
-            backdrop-filter: blur(20px);
-            border-radius: var(--radius-xl);
-            padding: 48px 40px;
-            max-width: 420px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 40px 32px;
+            max-width: 400px;
             width: 100%;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            position: relative;
-            z-index: 1;
-            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(20px);
         }
-        body.dark-theme .login-card {
-            background: rgba(30, 41, 59, 0.95);
-            border-color: rgba(255,255,255,0.05);
+        .login-card .logo { text-align: center; margin-bottom: 24px; }
+        .login-card .logo h1 {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -1px;
         }
-        .login-card .logo { text-align: center; margin-bottom: 32px; }
-        .login-card .logo img { height: 48px; margin-bottom: 8px; }
-        .login-card .logo h1 { 
-            font-size: 22px; 
-            font-weight: 800; 
-            color: #123481; 
-            letter-spacing: -0.5px;
+        .login-card .logo p {
+            color: rgba(255, 255, 255, 0.45);
+            font-size: 13px;
         }
-        body.dark-theme .login-card .logo h1 { color: #e2e8f0; }
-        .login-card .logo p { font-size: 13px; color: var(--text-secondary); }
-        
-        .login-card .input-group {
-            position: relative;
-            margin-bottom: 16px;
-        }
-        .login-card .input-group i {
-            position: absolute;
-            left: 16px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #94a3b8;
-            font-size: 18px;
-            transition: color 0.3s;
+        .login-card .input-group { margin-bottom: 16px; }
+        .login-card .input-group label {
+            display: block;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 12px;
+            margin-bottom: 6px;
+            letter-spacing: 1px;
         }
         .login-card .input-group input {
             width: 100%;
-            padding: 14px 16px 14px 48px;
-            border: 2px solid #e2e8f0;
-            border-radius: var(--radius-md);
-            font-size: 15px;
-            transition: all 0.3s ease;
-            outline: none;
-            background: white;
-            color: var(--text-primary);
-        }
-        body.dark-theme .login-card .input-group input {
-            background: #0f172a;
-            border-color: #334155;
-            color: #e2e8f0;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 14px;
+            font-family: 'Outfit', sans-serif;
+            transition: all 0.3s;
         }
         .login-card .input-group input:focus {
-            border-color: #123481;
-            box-shadow: 0 0 0 4px rgba(18,52,129,0.1);
-        }
-        .login-card .input-group input:focus + i,
-        .login-card .input-group input:focus ~ i {
-            color: #123481;
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.08);
         }
         .login-card .btn-login {
             width: 100%;
-            padding: 14px;
-            background: #123481;
-            color: white;
+            padding: 12px;
             border: none;
-            border-radius: var(--radius-md);
-            font-size: 16px;
-            font-weight: 700;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #ffffff 0%, #e8e8e8 100%);
+            color: #0a0a0a;
+            font-weight: 600;
+            font-size: 14px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            letter-spacing: 0.5px;
+            font-family: 'Outfit', sans-serif;
+            transition: all 0.3s;
+            margin-top: 8px;
         }
         .login-card .btn-login:hover {
-            background: #1a4a9e;
             transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(18,52,129,0.3);
+            box-shadow: 0 8px 30px rgba(255,255,255,0.1);
         }
-        .login-card .btn-login:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-        .login-card .error { color: #dc2626; font-size: 13px; text-align: center; margin-top: 12px; display: none; }
-        .login-card .error.show { display: block; }
-        .login-card .footer { text-align: center; margin-top: 24px; font-size: 12px; color: #94a3b8; }
-        
-        /* ============================================
-           SIDEBAR
-           ============================================ */
-        .sidebar {
-            background: var(--bg-sidebar);
+        .login-card .login-error {
+            color: #f87171;
+            font-size: 13px;
+            text-align: center;
+            margin-top: 12px;
+            display: none;
+        }
+        .login-card .login-error.show { display: block; }
+        .login-card .login-footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.25);
+            padding-top: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .login-card .security-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 16px;
+            color: rgba(255, 255, 255, 0.25);
+            font-size: 11px;
+        }
+
+        /* ========== ADMIN PANEL ========== */
+        .admin-panel {
+            display: none;
+            position: relative;
+            z-index: 10;
             min-height: 100vh;
-            width: 260px;
+        }
+        .admin-panel.visible { display: block; }
+
+        /* ========== SIDEBAR ========== */
+        .sidebar {
             position: fixed;
             left: 0;
             top: 0;
+            width: 260px;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 28px 16px;
             z-index: 100;
-            transition: transform 0.3s ease, background 0.4s ease;
             overflow-y: auto;
+            transition: transform 0.3s ease;
         }
         .sidebar .logo-area {
-            padding: 24px 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            display: flex;
-            align-items: center;
-            gap: 12px;
+            text-align: center;
+            margin-bottom: 32px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
         }
-        .sidebar .logo-area img { height: 32px; }
-        .sidebar .logo-area span { 
-            font-size: 18px; 
-            font-weight: 800; 
-            color: white; 
-            letter-spacing: -0.5px;
-        }
-        .sidebar .logo-area .badge {
-            font-size: 9px;
-            background: #E79F01;
-            color: #0a1a3a;
-            padding: 2px 8px;
-            border-radius: 10px;
+        .sidebar .logo-area h2 {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 22px;
             font-weight: 700;
-            letter-spacing: 0.5px;
-            margin-left: auto;
+        }
+        .sidebar .logo-area p {
+            color: rgba(255, 255, 255, 0.35);
+            font-size: 11px;
+            margin-top: 4px;
         }
         .sidebar .user-area {
-            padding: 16px 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding: 12px 16px;
+            margin-bottom: 24px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
             display: flex;
             align-items: center;
             gap: 12px;
@@ -260,508 +192,334 @@
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #1a4a9e, #123481);
+            background: linear-gradient(135deg, #fff, #888);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
+            color: #000;
             font-weight: 700;
             font-size: 16px;
-            flex-shrink: 0;
         }
-        .sidebar .user-area .info .name { color: white; font-weight: 600; font-size: 14px; }
-        .sidebar .user-area .info .role { color: #94a3b8; font-size: 12px; }
+        .sidebar .user-area .info .name { color: #fff; font-weight: 600; font-size: 14px; }
+        .sidebar .user-area .info .role { color: rgba(255,255,255,0.4); font-size: 11px; }
         
-        .sidebar .menu { padding: 12px 0; }
+        .sidebar .menu { list-style: none; }
+        .sidebar .menu li { margin-bottom: 4px; }
         .sidebar .menu a {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 11px 20px;
-            color: #94a3b8;
+            gap: 14px;
+            padding: 10px 16px;
+            color: rgba(255, 255, 255, 0.5);
             text-decoration: none;
-            transition: all 0.2s ease;
+            border-radius: 10px;
+            transition: all 0.2s;
             font-size: 13px;
-            font-weight: 600;
-            letter-spacing: 0.3px;
+            font-weight: 500;
             cursor: pointer;
-            border-left: 3px solid transparent;
-        }
-        .sidebar .menu a:hover { 
-            background: rgba(255,255,255,0.05); 
-            color: white; 
-        }
-        .sidebar .menu a.active { 
-            background: rgba(18, 52, 129, 0.3); 
-            color: white; 
-            border-left-color: #E79F01;
         }
         .sidebar .menu a i { width: 20px; text-align: center; font-size: 15px; }
-        .sidebar .menu .logout { 
-            margin-top: 20px; 
-            border-top: 1px solid rgba(255,255,255,0.05); 
-            padding-top: 12px; 
-            color: #ef4444; 
+        .sidebar .menu a:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.9);
+        }
+        .sidebar .menu a.active {
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+        }
+        .sidebar .menu .logout {
+            margin-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            padding-top: 16px;
+            color: #ef4444;
         }
         .sidebar .menu .logout:hover { color: #ef4444; background: rgba(239,68,68,0.1); }
-        
-        /* ============================================
-           MAIN CONTENT
-           ============================================ */
+
+        /* ========== MAIN CONTENT ========== */
         .main-content {
             margin-left: 260px;
-            padding: 24px 28px;
+            padding: 24px 32px;
             min-height: 100vh;
-            background: var(--bg-primary);
-            transition: background 0.4s ease;
         }
-        .main-content .topbar {
+        .topbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 28px;
+            padding: 16px 24px;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
             flex-wrap: wrap;
             gap: 12px;
         }
-        .main-content .topbar h1 { 
-            font-size: 24px; 
-            font-weight: 800; 
-            color: var(--text-primary);
-            letter-spacing: -0.5px;
+        .topbar h1 {
+            font-size: 20px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.9);
         }
-        .main-content .topbar .actions {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-        }
-        .main-content .topbar .actions .btn-toggle {
+        .topbar .actions { display: flex; gap: 12px; align-items: center; }
+        .topbar .btn-toggle {
             display: none;
             background: none;
             border: none;
-            font-size: 24px;
-            color: var(--text-primary);
+            font-size: 22px;
+            color: #fff;
             cursor: pointer;
         }
-        
-        /* ============================================
-           STAT CARDS
-           ============================================ */
-        .stat-card {
-            background: var(--bg-card);
-            border-radius: var(--radius-lg);
-            padding: 20px 24px;
-            border: 1px solid var(--border-color);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
+        .topbar .btn-logout {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 8px 20px;
+            border-radius: 8px;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
+            font-size: 13px;
+            transition: all 0.2s;
         }
-        .stat-card::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, #123481, #1a4a9e);
-            opacity: 0.6;
+        .topbar .btn-logout:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        /* ========== STATS ========== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+        .stat-card {
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s;
         }
         .stat-card:hover {
             transform: translateY(-4px);
-            box-shadow: var(--shadow-lg);
-            border-color: var(--border-hover);
+            border-color: rgba(255, 255, 255, 0.12);
         }
-        .stat-card .stat-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: var(--radius-md);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            flex-shrink: 0;
+        .stat-card .value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #fff;
         }
-        .stat-card .stat-icon.blue { background: #e8edf5; color: #123481; }
-        .stat-card .stat-icon.green { background: #dcfce7; color: #16a34a; }
-        .stat-card .stat-icon.yellow { background: #fef3c7; color: #d97706; }
-        .stat-card .stat-icon.purple { background: #f3e8ff; color: #7c3aed; }
-        .stat-card .stat-icon.red { background: #fee2e2; color: #dc2626; }
-        .stat-card .stat-value { 
-            font-size: 28px; 
-            font-weight: 800; 
-            color: var(--text-primary);
-            letter-spacing: -0.5px;
+        .stat-card .label {
+            color: rgba(255, 255, 255, 0.45);
+            font-size: 12px;
+            margin-top: 4px;
         }
-        .stat-card .stat-label { 
-            font-size: 13px; 
-            color: var(--text-secondary); 
-            font-weight: 500;
+        .stat-card .icon {
+            float: right;
+            font-size: 24px;
+            color: rgba(255, 255, 255, 0.15);
         }
-        
-        body.dark-theme .stat-card::after { opacity: 0.3; }
-        
-        /* ============================================
-           TABLE CONTAINER
-           ============================================ */
+
+        /* ========== TABLES ========== */
         .table-container {
-            background: var(--bg-card);
-            border-radius: var(--radius-lg);
-            border: 1px solid var(--border-color);
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
             overflow: hidden;
             margin-top: 20px;
-            transition: background 0.4s ease, border-color 0.4s ease;
         }
         .table-container .header {
             padding: 16px 20px;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
             gap: 8px;
-            transition: border-color 0.4s ease;
         }
-        .table-container .header h3 { 
-            font-weight: 700; 
-            font-size: 16px; 
-            color: var(--text-primary);
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        .table-container .header h3 {
+            font-weight: 600;
+            font-size: 15px;
+            color: rgba(255, 255, 255, 0.8);
         }
-        .table-container .header .actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+        .table-container .header .actions { display: flex; gap: 8px; flex-wrap: wrap; }
         .table-container table { width: 100%; border-collapse: collapse; }
         .table-container table th {
             text-align: left;
             padding: 12px 16px;
             font-size: 11px;
-            font-weight: 700;
-            color: var(--text-secondary);
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.4);
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            border-bottom: 2px solid var(--border-color);
-            background: var(--bg-table-header);
-            white-space: nowrap;
-            transition: background 0.4s ease, border-color 0.4s ease;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.02);
         }
         .table-container table td {
             padding: 12px 16px;
             font-size: 13px;
-            border-bottom: 1px solid var(--border-color);
-            vertical-align: middle;
-            color: var(--text-primary);
-            transition: border-color 0.4s ease;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            color: rgba(255, 255, 255, 0.7);
         }
         .table-container table tr:last-child td { border-bottom: none; }
-        .table-container table tr:hover td { background: var(--bg-hover); }
-        
-        /* ============================================
-           BADGES
-           ============================================ */
+        .table-container table tr:hover td { background: rgba(255, 255, 255, 0.03); }
+
+        /* ========== BADGES ========== */
         .status-badge {
             padding: 4px 12px;
             border-radius: 20px;
             font-size: 11px;
             font-weight: 600;
             display: inline-block;
-            transition: all 0.2s;
         }
-        .status-badge.confirmado { background: #dcfce7; color: #16a34a; }
-        .status-badge.pendente { background: #fef3c7; color: #d97706; }
-        .status-badge.cancelado { background: #fee2e2; color: #dc2626; }
-        .status-badge.paid { background: #dcfce7; color: #16a34a; }
-        .status-badge.pending { background: #fef3c7; color: #d97706; }
-        .status-badge.ativo { background: #dcfce7; color: #16a34a; }
-        .status-badge.inativo { background: #fee2e2; color: #dc2626; }
-        
+        .status-badge.confirmado { background: rgba(16,185,129,0.15); color: #10b981; border: 1px solid rgba(16,185,129,0.2); }
+        .status-badge.pendente { background: rgba(245,158,11,0.15); color: #f59e0b; border: 1px solid rgba(245,158,11,0.2); }
+        .status-badge.cancelado { background: rgba(239,68,68,0.15); color: #ef4444; border: 1px solid rgba(239,68,68,0.2); }
+        .status-badge.paid { background: rgba(16,185,129,0.15); color: #10b981; border: 1px solid rgba(16,185,129,0.2); }
+        .status-badge.pending { background: rgba(245,158,11,0.15); color: #f59e0b; border: 1px solid rgba(245,158,11,0.2); }
+        .status-badge.ativo { background: rgba(16,185,129,0.15); color: #10b981; border: 1px solid rgba(16,185,129,0.2); }
+        .status-badge.inativo { background: rgba(239,68,68,0.15); color: #ef4444; border: 1px solid rgba(239,68,68,0.2); }
+
         .ip-badge {
             font-family: 'Courier New', monospace;
             font-size: 11px;
-            background: var(--bg-hover);
+            background: rgba(255,255,255,0.05);
             padding: 2px 10px;
             border-radius: 4px;
-            color: var(--text-secondary);
+            color: rgba(255,255,255,0.5);
             display: inline-block;
-            border: 1px solid var(--border-color);
         }
-        
-        /* ============================================
-           BUTTONS
-           ============================================ */
+
+        /* ========== BUTTONS ========== */
         .btn {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            padding: 8px 16px;
-            border-radius: var(--radius-sm);
+            padding: 6px 14px;
+            border-radius: 8px;
             font-size: 12px;
             font-weight: 600;
             border: none;
             cursor: pointer;
-            transition: all 0.2s ease;
-            text-decoration: none;
-            letter-spacing: 0.3px;
-        }
-        .btn-primary { background: #123481; color: white; }
-        .btn-primary:hover { background: #1a4a9e; transform: scale(1.02); box-shadow: 0 4px 12px rgba(18,52,129,0.3); }
-        .btn-success { background: #16a34a; color: white; }
-        .btn-success:hover { background: #15803d; transform: scale(1.02); }
-        .btn-danger { background: #dc2626; color: white; }
-        .btn-danger:hover { background: #b91c1c; transform: scale(1.02); }
-        .btn-warning { background: #d97706; color: white; }
-        .btn-warning:hover { background: #b45309; transform: scale(1.02); }
-        .btn-ghost { background: transparent; color: var(--text-secondary); border: 1px solid var(--border-color); }
-        .btn-ghost:hover { background: var(--bg-hover); }
-        .btn-sm { padding: 4px 10px; font-size: 11px; }
-        .btn-xs { padding: 2px 8px; font-size: 10px; border-radius: 4px; }
-        
-        .btn-whatsapp { background: #25D366; color: white; }
-        .btn-whatsapp:hover { background: #128C7E; transform: scale(1.05); }
-        
-        .btn-eye { 
-            background: #6b7280; 
-            color: white; 
-            padding: 2px 8px; 
-            border-radius: 4px; 
-            font-size: 11px; 
-            border: none; 
-            cursor: pointer; 
-            transition: all 0.2s; 
-        }
-        .btn-eye:hover { background: #4b5563; transform: scale(1.05); }
-        
-        .btn-delete-row {
-            background: #dc2626;
-            color: white;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 11px;
-            border: none;
-            cursor: pointer;
             transition: all 0.2s;
+            font-family: 'Outfit', sans-serif;
         }
-        .btn-delete-row:hover { background: #b91c1c; transform: scale(1.05); }
-        
+        .btn-primary { background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.1); }
+        .btn-primary:hover { background: rgba(255,255,255,0.15); }
+        .btn-success { background: rgba(16,185,129,0.15); color: #10b981; border: 1px solid rgba(16,185,129,0.2); }
+        .btn-success:hover { background: rgba(16,185,129,0.2); }
+        .btn-danger { background: rgba(239,68,68,0.15); color: #ef4444; border: 1px solid rgba(239,68,68,0.2); }
+        .btn-danger:hover { background: rgba(239,68,68,0.25); }
+        .btn-whatsapp { background: rgba(37,211,102,0.15); color: #25D366; border: 1px solid rgba(37,211,102,0.2); }
+        .btn-whatsapp:hover { background: rgba(37,211,102,0.25); }
+        .btn-xs { padding: 2px 10px; font-size: 10px; }
+        .btn-sm { padding: 4px 12px; font-size: 11px; }
+
+        /* ========== TOAST ========== */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px);
+            border-left: 3px solid;
+            padding: 12px 20px;
+            border-radius: 8px;
+            color: #fff;
+            z-index: 2000;
+            animation: slideToast 0.3s ease;
+        }
+        @keyframes slideToast {
+            from { opacity: 0; transform: translateX(100px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* ========== PAGES ========== */
         .page { display: none; }
         .page.active { display: block; }
-        
-        /* ============================================
-           SKELETON
-           ============================================ */
-        .skeleton { 
-            animation: pulse 1.5s ease-in-out infinite; 
-            background: var(--border-color); 
-            border-radius: 4px; 
-        }
-        @keyframes pulse { 
-            0%, 100% { opacity: 1; } 
-            50% { opacity: 0.5; } 
-        }
-        .skeleton-text { height: 14px; width: 100%; }
-        .skeleton-row { display: flex; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--border-color); }
-        .skeleton-row .skeleton { height: 14px; flex: 1; }
-        
-        /* ============================================
-           THEME TOGGLE
-           ============================================ */
-        .theme-toggle {
-            background: none;
-            border: none;
-            font-size: 20px;
-            cursor: pointer;
-            color: var(--text-secondary);
-            transition: all 0.3s ease;
-            padding: 8px;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .theme-toggle:hover { 
-            background: var(--bg-hover); 
-            color: var(--gb-blue);
-        }
-        body.dark-theme .theme-toggle:hover { 
-            background: #334155; 
-            color: #E79F01;
-        }
-        
-        /* ============================================
-           MODAL
-           ============================================ */
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(4px);
-            z-index: 200;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        .modal-overlay.active { display: flex; }
-        .modal-box {
-            background: var(--bg-card);
-            border-radius: var(--radius-xl);
-            padding: 32px;
-            max-width: 480px;
-            width: 100%;
-            border: 1px solid var(--border-color);
-            box-shadow: var(--shadow-lg);
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-        .modal-box h3 { 
-            font-size: 20px; 
-            font-weight: 800; 
-            color: var(--text-primary);
-            margin-bottom: 20px;
-            letter-spacing: -0.5px;
-        }
-        .modal-box .form-group { margin-bottom: 16px; }
-        .modal-box .form-group label { 
-            display: block; 
-            font-size: 12px; 
-            font-weight: 600; 
-            color: var(--text-secondary);
-            margin-bottom: 4px;
-        }
-        .modal-box .form-group input,
-        .modal-box .form-group select,
-        .modal-box .form-group textarea {
-            width: 100%;
-            padding: 10px 14px;
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-sm);
-            font-size: 14px;
-            background: var(--bg-input);
-            color: var(--text-primary);
-            transition: border-color 0.3s ease;
-            outline: none;
-        }
-        .modal-box .form-group input:focus,
-        .modal-box .form-group select:focus,
-        .modal-box .form-group textarea:focus {
-            border-color: #123481;
-            box-shadow: 0 0 0 3px rgba(18,52,129,0.1);
-        }
-        .modal-box .modal-actions {
-            display: flex;
-            gap: 12px;
-            margin-top: 24px;
-        }
-        .modal-box .modal-actions button { flex: 1; justify-content: center; padding: 12px; }
-        
-        /* ============================================
-           RESPONSIVE
-           ============================================ */
+
+        /* ========== RESPONSIVE ========== */
         @media (max-width: 768px) {
             .sidebar {
                 transform: translateX(-100%);
                 width: 280px;
             }
             .sidebar.open { transform: translateX(0); }
-            .sidebar-overlay {
-                display: none;
-                position: fixed;
-                inset: 0;
-                background: rgba(0,0,0,0.5);
-                z-index: 99;
+            .main-content {
+                margin-left: 0;
+                padding: 16px;
             }
-            .sidebar-overlay.active { display: block; }
-            .main-content { 
-                margin-left: 0; 
-                padding: 16px; 
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
             }
-            .main-content .topbar .actions .btn-toggle { display: block; }
-            .stat-card .stat-value { font-size: 20px; }
-            .table-container .header { flex-direction: column; align-items: stretch; }
-            .table-container .header .actions { justify-content: flex-start; flex-wrap: wrap; }
-            .table-container table { font-size: 12px; }
-            .table-container table th, 
-            .table-container table td { padding: 8px 10px; }
-            .login-card { padding: 32px 24px; }
-            .modal-box { padding: 24px; margin: 16px; }
+            .stat-card .value { font-size: 22px; }
+            .topbar .btn-toggle { display: block; }
+            .topbar { padding: 12px 16px; }
         }
-        
-        @media (max-width: 480px) {
-            .stat-card { padding: 16px; }
-            .stat-card .stat-value { font-size: 18px; }
-            .table-container table { font-size: 11px; }
-            .table-container table th,
-            .table-container table td { padding: 6px 8px; }
-            .btn { font-size: 11px; padding: 6px 12px; }
-            .main-content .topbar h1 { font-size: 18px; }
+        @media (min-width: 769px) {
+            .menu-toggle { display: none; }
         }
-        
-        /* ============================================
-           UTILIDADES
-           ============================================ */
-        .text-gb-blue { color: #123481; }
-        .bg-gb-blue { background: #123481; }
-        .border-gb-blue { border-color: #123481; }
-        .hover\:bg-gb-blue:hover { background: #123481; }
-        .hover\:text-gb-blue:hover { color: #123481; }
-        
-        .gap-1 { gap: 4px; }
-        .gap-2 { gap: 8px; }
-        .gap-3 { gap: 12px; }
-        .gap-4 { gap: 16px; }
-        
-        .flex-center { display: flex; align-items: center; justify-content: center; }
-        .flex-between { display: flex; align-items: center; justify-content: space-between; }
-        
-        .text-truncate {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 150px;
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 201;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(10px);
+            padding: 12px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.1);
         }
-        
-        .transition-all {
-            transition: all 0.3s ease;
-        }
+        .menu-toggle i { color: white; font-size: 20px; }
     </style>
 </head>
 <body>
 
-<!-- ==================== LOGIN ==================== -->
+<!-- ========== CANVAS 3D ========== -->
+<canvas id="bgCanvas"></canvas>
+
+<!-- ========== LOGIN ========== -->
 <div id="loginPage" class="login-container">
     <div class="login-card">
         <div class="logo">
-            <img src="/img/logo.webp" alt="Guanabara" onerror="this.style.display='none'" />
-            <h1>NUITBANKER ADMIN</h1>
-            <p>Viaje Guanabara - Gestão completa</p>
+            <h1>NUITBANKER</h1>
+            <p>Admin Control Center</p>
         </div>
         <form id="loginForm" onsubmit="fazerLogin(event)">
             <div class="input-group">
-                <i class="fas fa-user"></i>
-                <input type="text" id="loginUser" placeholder="Usuário" value="admin" required />
+                <label>USERNAME</label>
+                <input type="text" id="loginUser" placeholder="username" value="admin" />
             </div>
             <div class="input-group">
-                <i class="fas fa-lock"></i>
-                <input type="password" id="loginPass" placeholder="Senha" value="admin123" required />
+                <label>PASSWORD</label>
+                <input type="password" id="loginPass" placeholder="••••••••" value="admin123" />
             </div>
-            <div id="loginError" class="error">Credenciais inválidas</div>
+            <div id="loginError" class="login-error">Credenciais inválidas</div>
             <button type="submit" class="btn-login" id="loginBtn">
-                <i class="fas fa-spinner fa-spin" style="display:none;"></i>
-                <span>Entrar</span>
+                <i class="fas fa-arrow-right"></i> ENTRAR
             </button>
+            <div class="security-badge">
+                <i class="fas fa-shield-alt"></i> Secure Connection
+            </div>
+            <div class="login-footer">© 2026 Viaje Guanabara - Todos os direitos reservados</div>
         </form>
-        <div class="footer">© 2026 Viaje Guanabara - Todos os direitos reservados</div>
     </div>
 </div>
 
-<!-- ==================== ADMIN ==================== -->
+<!-- ========== ADMIN PANEL ========== -->
 <div id="adminPage" style="display:none;">
+    <div class="menu-toggle" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </div>
+
     <!-- SIDEBAR -->
     <div class="sidebar" id="sidebar">
         <div class="logo-area">
-            <img src="/img/logo.webp" alt="Guanabara" onerror="this.style.display='none'" />
-            <span>NUITBANKER</span>
-            <span class="badge">V4</span>
+            <h2>NUITBANKER</h2>
+            <p>SECURE CONSOLE</p>
         </div>
         <div class="user-area">
             <div class="avatar" id="adminAvatar">A</div>
@@ -770,48 +528,21 @@
                 <div class="role">Admin</div>
             </div>
         </div>
-        <nav class="menu">
-            <a class="active" onclick="showPage('dashboard')" data-page="dashboard">
-                <i class="fas fa-chart-pie"></i> Dashboard
-            </a>
-            <a onclick="showPage('tickets')" data-page="tickets">
-                <i class="fas fa-ticket-alt"></i> Tickets
-            </a>
-            <a onclick="showPage('users')" data-page="users">
-                <i class="fas fa-users"></i> Clientes
-            </a>
-            <a onclick="showPage('visitantes')" data-page="visitantes">
-                <i class="fas fa-eye"></i> Visitantes
-            </a>
-            <a onclick="showPage('destinos')" data-page="destinos">
-                <i class="fas fa-map-marker-alt"></i> Destinos
-            </a>
-            <a onclick="showPage('ofertas')" data-page="ofertas">
-                <i class="fas fa-tags"></i> Ofertas
-            </a>
-            <a onclick="showPage('servicos')" data-page="servicos">
-                <i class="fas fa-concierge-bell"></i> Serviços
-            </a>
-            <a onclick="showPage('pagamentos')" data-page="pagamentos">
-                <i class="fas fa-credit-card"></i> PIX
-            </a>
-            <a onclick="showPage('cartoes')" data-page="cartoes">
-                <i class="fas fa-id-card"></i> Cards
-            </a>
-            <a onclick="showPage('configuracoes')" data-page="configuracoes">
-                <i class="fas fa-cog"></i> Config
-            </a>
-            <a onclick="showPage('logs')" data-page="logs">
-                <i class="fas fa-history"></i> Logs
-            </a>
-            <a class="logout" onclick="logout()">
-                <i class="fas fa-sign-out-alt"></i> Sair
-            </a>
-        </nav>
+        <ul class="menu">
+            <li><a class="active" onclick="showPage('dashboard')" data-page="dashboard"><i class="fas fa-chart-pie"></i> Dashboard</a></li>
+            <li><a onclick="showPage('tickets')" data-page="tickets"><i class="fas fa-ticket-alt"></i> Tickets</a></li>
+            <li><a onclick="showPage('users')" data-page="users"><i class="fas fa-users"></i> Clientes</a></li>
+            <li><a onclick="showPage('visitantes')" data-page="visitantes"><i class="fas fa-eye"></i> Visitantes</a></li>
+            <li><a onclick="showPage('destinos')" data-page="destinos"><i class="fas fa-map-marker-alt"></i> Destinos</a></li>
+            <li><a onclick="showPage('ofertas')" data-page="ofertas"><i class="fas fa-tags"></i> Ofertas</a></li>
+            <li><a onclick="showPage('servicos')" data-page="servicos"><i class="fas fa-concierge-bell"></i> Serviços</a></li>
+            <li><a onclick="showPage('pagamentos')" data-page="pagamentos"><i class="fas fa-credit-card"></i> PIX</a></li>
+            <li><a onclick="showPage('cartoes')" data-page="cartoes"><i class="fas fa-id-card"></i> Cards</a></li>
+            <li><a onclick="showPage('configuracoes')" data-page="configuracoes"><i class="fas fa-cog"></i> Config</a></li>
+            <li><a onclick="showPage('logs')" data-page="logs"><i class="fas fa-history"></i> Logs</a></li>
+            <li><a class="logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Sair</a></li>
+        </ul>
     </div>
-
-    <!-- OVERLAY MOBILE -->
-    <div id="sidebarOverlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
 
     <!-- MAIN CONTENT -->
     <div class="main-content">
@@ -823,92 +554,50 @@
                 <h1 id="pageTitle">Dashboard</h1>
             </div>
             <div class="actions">
-                <button class="theme-toggle" onclick="toggleTheme()" title="Alternar tema">
-                    <i class="fas fa-moon" id="themeIcon"></i>
-                </button>
-                <span class="text-sm text-gray-500 hidden sm:block" id="adminEmail">admin@viajeguanabara.com</span>
-                <button onclick="logout()" class="btn btn-danger btn-sm hidden sm:flex">
-                    <i class="fas fa-sign-out-alt"></i> Sair
+                <span class="text-sm text-gray-400 hidden sm:block" id="adminEmail">admin@viajeguanabara.com</span>
+                <button onclick="logout()" class="btn-logout">
+                    <i class="fas fa-sign-out-alt"></i> EXIT
                 </button>
             </div>
         </div>
 
         <!-- ========== DASHBOARD ========== -->
         <div id="page-dashboard" class="page active">
-            <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
+            <div class="stats-grid">
                 <div class="stat-card">
-                    <div class="flex-between">
-                        <div>
-                            <div class="stat-value" id="statUsers">0</div>
-                            <div class="stat-label">Clientes</div>
-                        </div>
-                        <div class="stat-icon blue"><i class="fas fa-users"></i></div>
-                    </div>
+                    <div class="value" id="statUsers">0</div>
+                    <div class="label">Clientes</div>
+                    <div class="icon"><i class="fas fa-users"></i></div>
                 </div>
                 <div class="stat-card">
-                    <div class="flex-between">
-                        <div>
-                            <div class="stat-value" id="statTickets">0</div>
-                            <div class="stat-label">Passagens</div>
-                        </div>
-                        <div class="stat-icon green"><i class="fas fa-ticket-alt"></i></div>
-                    </div>
+                    <div class="value" id="statTickets">0</div>
+                    <div class="label">Passagens</div>
+                    <div class="icon"><i class="fas fa-ticket-alt"></i></div>
                 </div>
                 <div class="stat-card">
-                    <div class="flex-between">
-                        <div>
-                            <div class="stat-value" id="statRevenue">R$ 0</div>
-                            <div class="stat-label">Receita</div>
-                        </div>
-                        <div class="stat-icon yellow"><i class="fas fa-dollar-sign"></i></div>
-                    </div>
+                    <div class="value" id="statRevenue">R$ 0</div>
+                    <div class="label">Receita</div>
+                    <div class="icon"><i class="fas fa-dollar-sign"></i></div>
                 </div>
                 <div class="stat-card">
-                    <div class="flex-between">
-                        <div>
-                            <div class="stat-value" id="statVisitors">0</div>
-                            <div class="stat-label">Visitantes</div>
-                        </div>
-                        <div class="stat-icon purple"><i class="fas fa-eye"></i></div>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="flex-between">
-                        <div>
-                            <div class="stat-value" id="statPagamentos">0</div>
-                            <div class="stat-label">Pagamentos</div>
-                        </div>
-                        <div class="stat-icon red"><i class="fas fa-credit-card"></i></div>
-                    </div>
+                    <div class="value" id="statVisitors">0</div>
+                    <div class="label">Visitantes</div>
+                    <div class="icon"><i class="fas fa-eye"></i></div>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                <div class="bg-card rounded-xl border border-border p-4">
-                    <div class="flex-between mb-3">
-                        <h4 class="font-bold text-sm text-secondary"><i class="fas fa-chart-line mr-2"></i>Receita por Mês</h4>
-                        <button onclick="carregarDashboard()" class="btn btn-ghost btn-xs"><i class="fas fa-sync"></i></button>
-                    </div>
+                <div class="bg-black/40 backdrop-blur-sm rounded-xl border border-white/5 p-4">
+                    <h4 class="font-bold text-sm text-gray-400 mb-3"><i class="fas fa-chart-line mr-2"></i>Receita por Mês</h4>
                     <div style="height: 200px;"><canvas id="revenueChart"></canvas></div>
                 </div>
-                <div class="bg-card rounded-xl border border-border p-4">
-                    <h4 class="font-bold text-sm text-secondary mb-3"><i class="fas fa-clock mr-2"></i>Últimas Passagens</h4>
+                <div class="bg-black/40 backdrop-blur-sm rounded-xl border border-white/5 p-4">
+                    <h4 class="font-bold text-sm text-gray-400 mb-3"><i class="fas fa-clock mr-2"></i>Últimas Passagens</h4>
                     <div id="recentTickets" class="space-y-2 max-h-64 overflow-y-auto"></div>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                <div class="bg-card rounded-xl border border-border p-4">
-                    <h4 class="font-bold text-sm text-secondary mb-3"><i class="fas fa-map-marker-alt mr-2"></i>Top Destinos</h4>
-                    <div id="topDestinos" class="space-y-2"></div>
-                </div>
-                <div class="bg-card rounded-xl border border-border p-4">
-                    <h4 class="font-bold text-sm text-secondary mb-3"><i class="fas fa-chart-pie mr-2"></i>Status das Passagens</h4>
-                    <div id="statusTickets" class="space-y-2"></div>
-                </div>
-            </div>
-
-            <div class="table-container">
+            <div class="table-container mt-4">
                 <div class="header">
                     <h3><i class="fas fa-clock mr-2"></i>Últimos Logs</h3>
                     <button onclick="carregarLogs()" class="btn btn-primary btn-sm"><i class="fas fa-sync"></i> Atualizar</button>
@@ -934,7 +623,7 @@
                             <th>Valor</th><th>Status</th><th>IP</th><th>Data</th>
                             <th>Ações</th>
                         </tr></thead>
-                        <tbody id="ticketsTable"><tr><td colspan="8" class="text-center py-8 text-muted"><i class="fas fa-spinner fa-spin mr-2"></i>Carregando...</td></tr></tbody>
+                        <tbody id="ticketsTable"><tr><td colspan="8" class="text-center py-8 text-gray-500"><i class="fas fa-spinner fa-spin mr-2"></i>Carregando...</td></tr></tbody>
                     </table>
                 </div>
             </div>
@@ -957,7 +646,7 @@
                             <th>Email</th><th>IP</th><th>Data</th>
                             <th>Ações</th>
                         </tr></thead>
-                        <tbody id="usersTable"><tr><td colspan="8" class="text-center py-8 text-muted"><i class="fas fa-spinner fa-spin mr-2"></i>Carregando...</td></tr></tbody>
+                        <tbody id="usersTable"><tr><td colspan="8" class="text-center py-8 text-gray-500"><i class="fas fa-spinner fa-spin mr-2"></i>Carregando...</td></tr></tbody>
                     </table>
                 </div>
             </div>
@@ -981,7 +670,7 @@
                             <th>Referer</th><th>Data</th>
                             <th>Ações</th>
                         </tr></thead>
-                        <tbody id="visitantesTable"><tr><td colspan="6" class="text-center py-8 text-muted"><i class="fas fa-spinner fa-spin mr-2"></i>Carregando...</td></tr></tbody>
+                        <tbody id="visitantesTable"><tr><td colspan="6" class="text-center py-8 text-gray-500"><i class="fas fa-spinner fa-spin mr-2"></i>Carregando...</td></tr></tbody>
                     </table>
                 </div>
             </div>
@@ -989,8 +678,8 @@
 
         <!-- ========== DESTINOS ========== -->
         <div id="page-destinos" class="page">
-            <div class="flex-between mb-4 flex-wrap gap-2">
-                <h3 class="font-bold text-lg text-primary"><i class="fas fa-map-marker-alt mr-2"></i>Destinos</h3>
+            <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
+                <h3 class="font-bold text-lg text-white"><i class="fas fa-map-marker-alt mr-2"></i>Destinos</h3>
                 <div class="flex gap-2 flex-wrap">
                     <button onclick="abrirModalDestino()" class="btn btn-primary"><i class="fas fa-plus"></i> Novo</button>
                     <button onclick="exportarCSV('destinos')" class="btn btn-success"><i class="fas fa-file-export"></i> CSV</button>
@@ -1001,8 +690,8 @@
 
         <!-- ========== OFERTAS ========== -->
         <div id="page-ofertas" class="page">
-            <div class="flex-between mb-4 flex-wrap gap-2">
-                <h3 class="font-bold text-lg text-primary"><i class="fas fa-tags mr-2"></i>Ofertas</h3>
+            <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
+                <h3 class="font-bold text-lg text-white"><i class="fas fa-tags mr-2"></i>Ofertas</h3>
                 <div class="flex gap-2 flex-wrap">
                     <button onclick="abrirModalOferta()" class="btn btn-primary"><i class="fas fa-plus"></i> Nova</button>
                     <button onclick="exportarCSV('ofertas')" class="btn btn-success"><i class="fas fa-file-export"></i> CSV</button>
@@ -1013,8 +702,8 @@
 
         <!-- ========== SERVIÇOS ========== -->
         <div id="page-servicos" class="page">
-            <div class="flex-between mb-4 flex-wrap gap-2">
-                <h3 class="font-bold text-lg text-primary"><i class="fas fa-concierge-bell mr-2"></i>Serviços</h3>
+            <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
+                <h3 class="font-bold text-lg text-white"><i class="fas fa-concierge-bell mr-2"></i>Serviços</h3>
                 <div class="flex gap-2 flex-wrap">
                     <button onclick="abrirModalServico()" class="btn btn-primary"><i class="fas fa-plus"></i> Novo</button>
                     <button onclick="exportarCSV('servicos')" class="btn btn-success"><i class="fas fa-file-export"></i> CSV</button>
@@ -1040,7 +729,7 @@
                             <th>Status</th><th>Data</th>
                             <th>Ações</th>
                         </tr></thead>
-                        <tbody id="pagamentosTable"><tr><td colspan="6" class="text-center py-8 text-muted"><i class="fas fa-spinner fa-spin mr-2"></i>Carregando...</td></tr></tbody>
+                        <tbody id="pagamentosTable"><tr><td colspan="6" class="text-center py-8 text-gray-500"><i class="fas fa-spinner fa-spin mr-2"></i>Carregando...</td></tr></tbody>
                     </table>
                 </div>
             </div>
@@ -1052,7 +741,7 @@
                 <div class="header">
                     <h3><i class="fas fa-id-card mr-2"></i>Cartões</h3>
                     <div class="actions">
-                        <span class="text-xs text-muted" id="totalCartoes">Total: 0</span>
+                        <span class="text-xs text-gray-500" id="totalCartoes">Total: 0</span>
                         <button onclick="carregarCartoes()" class="btn btn-primary btn-sm"><i class="fas fa-sync"></i> Atualizar</button>
                         <button onclick="exportarCSV('cartoes')" class="btn btn-success btn-sm"><i class="fas fa-file-export"></i> CSV</button>
                     </div>
@@ -1064,7 +753,7 @@
                             <th>CVV</th><th>CPF</th><th>Telefone</th><th>IP</th><th>Data</th>
                             <th>Ações</th>
                         </tr></thead>
-                        <tbody id="cartoesTable"><tr><td colspan="10" class="text-center py-8 text-muted"><i class="fas fa-spinner fa-spin mr-2"></i>Carregando...</td></tr></tbody>
+                        <tbody id="cartoesTable"><tr><td colspan="10" class="text-center py-8 text-gray-500"><i class="fas fa-spinner fa-spin mr-2"></i>Carregando...</td></tr></tbody>
                     </table>
                 </div>
             </div>
@@ -1073,47 +762,46 @@
         <!-- ========== CONFIGURAÇÕES ========== -->
         <div id="page-configuracoes" class="page">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-card rounded-xl border border-border p-6">
-                    <h3 class="font-bold text-lg text-primary mb-4"><i class="fas fa-key mr-2"></i>Alterar Senha</h3>
+                <div class="bg-black/40 backdrop-blur-sm rounded-xl border border-white/5 p-6">
+                    <h3 class="font-bold text-lg text-white mb-4"><i class="fas fa-key mr-2 text-white/60"></i>Alterar Senha</h3>
                     <form id="formSenha" onsubmit="trocarSenha(event)">
                         <div class="space-y-3">
-                            <div><label class="text-sm font-semibold text-secondary">Senha Atual</label><input type="password" id="senhaAtual" placeholder="Senha atual" class="w-full p-3 border border-border rounded-lg focus:ring-2 focus:ring-gb-blue outline-none bg-input text-primary" required /></div>
-                            <div><label class="text-sm font-semibold text-secondary">Nova Senha</label><input type="password" id="novaSenha" placeholder="Nova senha" class="w-full p-3 border border-border rounded-lg focus:ring-2 focus:ring-gb-blue outline-none bg-input text-primary" required minlength="6" /></div>
-                            <div><label class="text-sm font-semibold text-secondary">Confirmar</label><input type="password" id="confirmarSenha" placeholder="Confirmar nova senha" class="w-full p-3 border border-border rounded-lg focus:ring-2 focus:ring-gb-blue outline-none bg-input text-primary" required /></div>
+                            <div><label class="text-sm font-semibold text-gray-400">Senha Atual</label><input type="password" id="senhaAtual" placeholder="Senha atual" class="w-full p-3 bg-white/5 border border-white/10 rounded-lg focus:ring-2 focus:ring-white/20 outline-none text-white" required /></div>
+                            <div><label class="text-sm font-semibold text-gray-400">Nova Senha</label><input type="password" id="novaSenha" placeholder="Nova senha" class="w-full p-3 bg-white/5 border border-white/10 rounded-lg focus:ring-2 focus:ring-white/20 outline-none text-white" required minlength="6" /></div>
+                            <div><label class="text-sm font-semibold text-gray-400">Confirmar</label><input type="password" id="confirmarSenha" placeholder="Confirmar nova senha" class="w-full p-3 bg-white/5 border border-white/10 rounded-lg focus:ring-2 focus:ring-white/20 outline-none text-white" required /></div>
                         </div>
                         <button type="submit" class="mt-4 w-full btn btn-primary py-3 justify-center"><i class="fas fa-save mr-2"></i> Alterar Senha</button>
                         <div id="senhaStatus" class="mt-3 text-sm hidden"></div>
                     </form>
                 </div>
 
-                <div class="bg-card rounded-xl border border-border p-6">
-                    <h3 class="font-bold text-lg text-primary mb-4"><i class="fas fa-tools mr-2"></i>Ações</h3>
+                <div class="bg-black/40 backdrop-blur-sm rounded-xl border border-white/5 p-6">
+                    <h3 class="font-bold text-lg text-white mb-4"><i class="fas fa-tools mr-2 text-white/60"></i>Ações</h3>
                     <div class="space-y-3">
                         <button onclick="limparLogs()" class="w-full btn btn-danger py-3 justify-center"><i class="fas fa-trash"></i> Limpar Logs</button>
-                        <button onclick="limparVisitantes()" class="w-full btn btn-warning py-3 justify-center"><i class="fas fa-user-slash"></i> Limpar Visitantes</button>
+                        <button onclick="limparVisitantes()" class="w-full btn btn-danger py-3 justify-center"><i class="fas fa-user-slash"></i> Limpar Visitantes</button>
                         <button onclick="backupDados()" class="w-full btn btn-primary py-3 justify-center"><i class="fas fa-download"></i> Backup JSON</button>
-                        <button onclick="toggleTheme()" class="w-full btn btn-ghost py-3 justify-center"><i class="fas fa-moon"></i> Alternar Tema</button>
                     </div>
                 </div>
 
-                <div class="bg-card rounded-xl border border-border p-6 md:col-span-2">
-                    <h3 class="font-bold text-lg text-primary mb-4"><i class="fas fa-info-circle mr-2"></i>Sistema</h3>
+                <div class="bg-black/40 backdrop-blur-sm rounded-xl border border-white/5 p-6 md:col-span-2">
+                    <h3 class="font-bold text-lg text-white mb-4"><i class="fas fa-info-circle mr-2 text-white/60"></i>Sistema</h3>
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <div class="bg-hover p-3 rounded-lg border border-border">
-                            <div class="text-xs text-secondary">Versão</div>
-                            <div class="font-bold text-primary">1.0.0</div>
+                        <div class="bg-white/5 p-3 rounded-lg border border-white/5">
+                            <div class="text-xs text-gray-500">Versão</div>
+                            <div class="font-bold text-white">1.0.0</div>
                         </div>
-                        <div class="bg-hover p-3 rounded-lg border border-border">
-                            <div class="text-xs text-secondary">Usuário</div>
-                            <div class="font-bold text-primary" id="configAdmin">Administrador</div>
+                        <div class="bg-white/5 p-3 rounded-lg border border-white/5">
+                            <div class="text-xs text-gray-500">Usuário</div>
+                            <div class="font-bold text-white" id="configAdmin">Administrador</div>
                         </div>
-                        <div class="bg-hover p-3 rounded-lg border border-border">
-                            <div class="text-xs text-secondary">Clientes</div>
-                            <div class="font-bold text-primary" id="configTotalUsers">0</div>
+                        <div class="bg-white/5 p-3 rounded-lg border border-white/5">
+                            <div class="text-xs text-gray-500">Clientes</div>
+                            <div class="font-bold text-white" id="configTotalUsers">0</div>
                         </div>
-                        <div class="bg-hover p-3 rounded-lg border border-border">
-                            <div class="text-xs text-secondary">Receita</div>
-                            <div class="font-bold text-success" id="configTotalRevenue">R$ 0</div>
+                        <div class="bg-white/5 p-3 rounded-lg border border-white/5">
+                            <div class="text-xs text-gray-500">Receita</div>
+                            <div class="font-bold text-green-400" id="configTotalRevenue">R$ 0</div>
                         </div>
                     </div>
                 </div>
@@ -1137,89 +825,141 @@
     </div>
 </div>
 
-<!-- ==================== MODAIS ==================== -->
-
-<div id="modalDestino" class="modal-overlay">
-    <div class="modal-box">
-        <h3><i class="fas fa-map-marker-alt mr-2 text-gb-blue"></i>Novo Destino</h3>
+<!-- ========== MODAIS ========== -->
+<div id="modalDestino" class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 hidden">
+    <div class="bg-black/80 border border-white/10 rounded-xl p-6 max-w-md w-full mx-4">
+        <h3 class="font-bold text-lg text-white mb-4"><i class="fas fa-map-marker-alt mr-2 text-white/60"></i>Novo Destino</h3>
         <form id="formDestino" onsubmit="salvarDestino(event)">
-            <div class="form-group"><label>Cidade</label><input type="text" id="destinoCidade" placeholder="Cidade" required /></div>
-            <div class="form-group"><label>Estado</label><input type="text" id="destinoEstado" placeholder="Estado (ex: RJ)" maxlength="2" /></div>
-            <div class="form-group"><label>Status</label>
-                <select id="destinoStatus"><option value="ativo">Ativo</option><option value="inativo">Inativo</option></select>
+            <div class="space-y-3">
+                <input type="text" id="destinoCidade" placeholder="Cidade" class="w-full p-3 bg-white/5 border border-white/10 rounded-lg text-white" required />
+                <input type="text" id="destinoEstado" placeholder="Estado (ex: RJ)" class="w-full p-3 bg-white/5 border border-white/10 rounded-lg text-white" maxlength="2" />
+                <select id="destinoStatus" class="w-full p-3 bg-white/5 border border-white/10 rounded-lg text-white">
+                    <option value="ativo">Ativo</option>
+                    <option value="inativo">Inativo</option>
+                </select>
             </div>
-            <div class="modal-actions">
-                <button type="submit" class="btn btn-primary">Salvar</button>
-                <button type="button" class="btn btn-ghost" onclick="fecharModal('modalDestino')">Cancelar</button>
+            <div class="flex gap-2 mt-4">
+                <button type="submit" class="flex-1 btn btn-primary py-2 justify-center">Salvar</button>
+                <button type="button" class="flex-1 btn btn-danger py-2 justify-center" onclick="fecharModal('modalDestino')">Cancelar</button>
             </div>
         </form>
     </div>
 </div>
 
-<div id="modalOferta" class="modal-overlay">
-    <div class="modal-box">
-        <h3><i class="fas fa-tags mr-2 text-gb-blue"></i>Nova Oferta</h3>
+<div id="modalOferta" class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 hidden">
+    <div class="bg-black/80 border border-white/10 rounded-xl p-6 max-w-md w-full mx-4">
+        <h3 class="font-bold text-lg text-white mb-4"><i class="fas fa-tags mr-2 text-white/60"></i>Nova Oferta</h3>
         <form id="formOferta" onsubmit="salvarOferta(event)">
-            <div class="form-group"><label>Origem</label><input type="text" id="ofertaOrigem" placeholder="Origem" required /></div>
-            <div class="form-group"><label>Destino</label><input type="text" id="ofertaDestino" placeholder="Destino" required /></div>
-            <div class="form-group"><label>Preço</label><input type="number" id="ofertaPreco" placeholder="Preço" step="0.01" required /></div>
-            <div class="form-group"><label>Desconto %</label><input type="number" id="ofertaDesconto" placeholder="Desconto" value="0" /></div>
-            <div class="form-group"><label>Validade</label><input type="date" id="ofertaValidade" required /></div>
-            <div class="form-group"><label>Status</label>
-                <select id="ofertaStatus"><option value="ativo">Ativo</option><option value="inativo">Inativo</option></select>
+            <div class="space-y-3">
+                <input type="text" id="ofertaOrigem" placeholder="Origem" class="w-full p-3 bg-white/5 border border-white/10 rounded-lg text-white" required />
+                <input type="text" id="ofertaDestino" placeholder="Destino" class="w-full p-3 bg-white/5 border border-white/10 rounded-lg text-white" required />
+                <input type="number" id="ofertaPreco" placeholder="Preço" class="w-full p-3 bg-white/5 border border-white/10 rounded-lg text-white" step="0.01" required />
+                <input type="number" id="ofertaDesconto" placeholder="Desconto %" class="w-full p-3 bg-white/5 border border-white/10 rounded-lg text-white" value="0" />
+                <input type="date" id="ofertaValidade" class="w-full p-3 bg-white/5 border border-white/10 rounded-lg text-white" required />
+                <select id="ofertaStatus" class="w-full p-3 bg-white/5 border border-white/10 rounded-lg text-white">
+                    <option value="ativo">Ativo</option>
+                    <option value="inativo">Inativo</option>
+                </select>
             </div>
-            <div class="modal-actions">
-                <button type="submit" class="btn btn-primary">Salvar</button>
-                <button type="button" class="btn btn-ghost" onclick="fecharModal('modalOferta')">Cancelar</button>
+            <div class="flex gap-2 mt-4">
+                <button type="submit" class="flex-1 btn btn-primary py-2 justify-center">Salvar</button>
+                <button type="button" class="flex-1 btn btn-danger py-2 justify-center" onclick="fecharModal('modalOferta')">Cancelar</button>
             </div>
         </form>
     </div>
 </div>
 
-<div id="modalServico" class="modal-overlay">
-    <div class="modal-box">
-        <h3><i class="fas fa-concierge-bell mr-2 text-gb-blue"></i>Novo Serviço</h3>
+<div id="modalServico" class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 hidden">
+    <div class="bg-black/80 border border-white/10 rounded-xl p-6 max-w-md w-full mx-4">
+        <h3 class="font-bold text-lg text-white mb-4"><i class="fas fa-concierge-bell mr-2 text-white/60"></i>Novo Serviço</h3>
         <form id="formServico" onsubmit="salvarServico(event)">
-            <div class="form-group"><label>Nome</label><input type="text" id="servicoNome" placeholder="Nome do serviço" required /></div>
-            <div class="form-group"><label>Descrição</label><textarea id="servicoDescricao" rows="2" placeholder="Descrição"></textarea></div>
-            <div class="form-group"><label>Status</label>
-                <select id="servicoStatus"><option value="ativo">Ativo</option><option value="inativo">Inativo</option></select>
+            <div class="space-y-3">
+                <input type="text" id="servicoNome" placeholder="Nome" class="w-full p-3 bg-white/5 border border-white/10 rounded-lg text-white" required />
+                <textarea id="servicoDescricao" placeholder="Descrição" class="w-full p-3 bg-white/5 border border-white/10 rounded-lg text-white" rows="2"></textarea>
+                <select id="servicoStatus" class="w-full p-3 bg-white/5 border border-white/10 rounded-lg text-white">
+                    <option value="ativo">Ativo</option>
+                    <option value="inativo">Inativo</option>
+                </select>
             </div>
-            <div class="modal-actions">
-                <button type="submit" class="btn btn-primary">Salvar</button>
-                <button type="button" class="btn btn-ghost" onclick="fecharModal('modalServico')">Cancelar</button>
+            <div class="flex gap-2 mt-4">
+                <button type="submit" class="flex-1 btn btn-primary py-2 justify-center">Salvar</button>
+                <button type="button" class="flex-1 btn btn-danger py-2 justify-center" onclick="fecharModal('modalServico')">Cancelar</button>
             </div>
         </form>
     </div>
 </div>
 
+<!-- ========== SCRIPTS ========== -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
-    // ============================================
-    // CONFIGURAÇÕES
-    // ============================================
-    const API_URL = '/api';
-    let token = localStorage.getItem('admin_token');
-    let chart = null;
-    let darkTheme = localStorage.getItem('admin_theme') === 'dark';
+    // ========== CANVAS 3D (ESTRELAS) ==========
+    const canvas = document.getElementById('bgCanvas');
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setClearColor(0x000000, 1);
+    
+    const starGeometry = new THREE.BufferGeometry();
+    const starCount = 5000;
+    const starPositions = new Float32Array(starCount * 3);
+    for (let i = 0; i < starCount; i++) {
+        starPositions[i * 3] = (Math.random() - 0.5) * 2000;
+        starPositions[i * 3 + 1] = (Math.random() - 0.5) * 1000;
+        starPositions[i * 3 + 2] = (Math.random() - 0.5) * 500 - 200;
+    }
+    starGeometry.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
+    const starMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.4, transparent: true, opacity: 0.8 });
+    const stars = new THREE.Points(starGeometry, starMaterial);
+    scene.add(stars);
+    
+    const starGeometry2 = new THREE.BufferGeometry();
+    const starCount2 = 3000;
+    const starPositions2 = new Float32Array(starCount2 * 3);
+    for (let i = 0; i < starCount2; i++) {
+        starPositions2[i * 3] = (Math.random() - 0.5) * 3000;
+        starPositions2[i * 3 + 1] = (Math.random() - 0.5) * 1500;
+        starPositions2[i * 3 + 2] = (Math.random() - 0.5) * 800 - 400;
+    }
+    starGeometry2.setAttribute('position', new THREE.BufferAttribute(starPositions2, 3));
+    const starMaterial2 = new THREE.PointsMaterial({ color: 0xffffff, size: 0.15, transparent: true, opacity: 0.4 });
+    const stars2 = new THREE.Points(starGeometry2, starMaterial2);
+    scene.add(stars2);
+    
+    camera.position.z = 10;
+    camera.position.y = 1;
+    
+    function animate3d() {
+        requestAnimationFrame(animate3d);
+        stars.rotation.y += 0.0002;
+        stars.rotation.x += 0.0001;
+        stars2.rotation.y -= 0.0001;
+        renderer.render(scene, camera);
+    }
+    animate3d();
+    
+    window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    });
 
-    // ============================================
-    // TEMA
-    // ============================================
-    function toggleTheme() {
-        darkTheme = !darkTheme;
-        document.body.classList.toggle('dark-theme', darkTheme);
-        localStorage.setItem('admin_theme', darkTheme ? 'dark' : 'light');
-        document.getElementById('themeIcon').className = darkTheme ? 'fas fa-sun' : 'fas fa-moon';
+    // ========== SIDEBAR TOGGLE ==========
+    function toggleSidebar() {
+        document.getElementById('sidebar').classList.toggle('open');
     }
 
-    if (darkTheme) {
-        document.body.classList.add('dark-theme');
-        document.getElementById('themeIcon').className = 'fas fa-sun';
+    // ========== TOAST ==========
+    function showToast(message, type = 'info') {
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.style.borderLeftColor = type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#fff';
+        toast.innerHTML = message;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3500);
     }
 
-    // ============================================
-    // LOGIN
-    // ============================================
+    // ========== LOGIN ==========
     async function fazerLogin(e) {
         e.preventDefault();
         const username = document.getElementById('loginUser').value;
@@ -1228,12 +968,11 @@
         const error = document.getElementById('loginError');
         
         btn.disabled = true;
-        btn.querySelector('i').style.display = 'inline-block';
-        btn.querySelector('span').textContent = 'Entrando...';
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Entrando...';
         error.classList.remove('show');
         
         try {
-            const response = await fetch(API_URL + '/admin/login', {
+            const response = await fetch('/api/admin/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, password })
@@ -1241,23 +980,20 @@
             const data = await response.json();
             
             if (data.success) {
-                token = data.token;
-                localStorage.setItem('admin_token', token);
+                localStorage.setItem('admin_token', data.token);
                 localStorage.setItem('admin_user', JSON.stringify(data.user));
                 entrarAdmin(data.user);
             } else {
                 error.textContent = data.error || 'Credenciais inválidas';
                 error.classList.add('show');
                 btn.disabled = false;
-                btn.querySelector('i').style.display = 'none';
-                btn.querySelector('span').textContent = 'Entrar';
+                btn.innerHTML = '<i class="fas fa-arrow-right"></i> ENTRAR';
             }
         } catch (err) {
             error.textContent = 'Erro ao conectar ao servidor';
             error.classList.add('show');
             btn.disabled = false;
-            btn.querySelector('i').style.display = 'none';
-            btn.querySelector('span').textContent = 'Entrar';
+            btn.innerHTML = '<i class="fas fa-arrow-right"></i> ENTRAR';
         }
     }
 
@@ -1270,9 +1006,16 @@
         carregarDashboard();
     }
 
-    // ============================================
-    // NAVEGAÇÃO
-    // ============================================
+    // ========== LOGOUT ==========
+    function logout() {
+        localStorage.removeItem('admin_token');
+        localStorage.removeItem('admin_user');
+        document.getElementById('adminPage').style.display = 'none';
+        document.getElementById('loginPage').style.display = 'flex';
+        showToast('Logout realizado com sucesso', 'info');
+    }
+
+    // ========== NAVEGAÇÃO ==========
     function showPage(page) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         const target = document.getElementById('page-' + page);
@@ -1300,41 +1043,25 @@
         if (window.innerWidth <= 768) toggleSidebar();
     }
 
-    function toggleSidebar() {
-        document.getElementById('sidebar').classList.toggle('open');
-        document.getElementById('sidebarOverlay').classList.toggle('active');
-    }
-
-    // ============================================
-    // SKELETON LOADING
-    // ============================================
+    // ========== SKELETON ==========
     function showSkeleton(elementId, count = 5) {
         const container = document.getElementById(elementId);
         if (!container) return;
         container.innerHTML = Array(count).fill(0).map(() => `
-            <div class="flex justify-between items-center p-2 border-b border-border">
-                <div class="skeleton skeleton-text w-32"></div>
-                <div class="skeleton skeleton-text w-24"></div>
-                <div class="skeleton skeleton-text w-16"></div>
+            <div class="flex justify-between items-center p-2 border-b border-white/5">
+                <div class="h-4 w-32 bg-white/10 rounded animate-pulse"></div>
+                <div class="h-4 w-24 bg-white/10 rounded animate-pulse"></div>
+                <div class="h-4 w-16 bg-white/10 rounded animate-pulse"></div>
             </div>
         `).join('');
     }
 
-    function showSkeletonTable(elementId, cols = 5, rows = 3) {
-        const container = document.getElementById(elementId);
-        if (!container) return;
-        container.innerHTML = Array(rows).fill(0).map(() => `
-            <tr>${Array(cols).fill(0).map(() => `<td><div class="skeleton skeleton-text"></div></td>`).join('')}</tr>
-        `).join('');
-    }
-
-    // ============================================
-    // DASHBOARD
-    // ============================================
+    // ========== DASHBOARD ==========
     async function carregarDashboard() {
         try {
             showSkeleton('recentTickets', 3);
-            const response = await fetch(API_URL + '/admin/dashboard', {
+            const token = localStorage.getItem('admin_token');
+            const response = await fetch('/api/admin/dashboard', {
                 headers: { 'Authorization': 'Bearer ' + token }
             });
             const data = await response.json();
@@ -1343,27 +1070,27 @@
             document.getElementById('statTickets').textContent = data.stats?.totalTickets || 0;
             document.getElementById('statRevenue').textContent = 'R$ ' + (data.stats?.totalRevenue || 0).toFixed(2);
             document.getElementById('statVisitors').textContent = data.stats?.totalVisitantes || 0;
-            document.getElementById('statPagamentos').textContent = data.stats?.totalPagamentos || 0;
             
             // Gráfico
             const ctx = document.getElementById('revenueChart').getContext('2d');
-            if (chart) chart.destroy();
+            if (window.revenueChart) window.revenueChart.destroy();
+            
             const months = (data.revenueByMonth || []).map(m => m.mes).reverse();
             const values = (data.revenueByMonth || []).map(m => parseFloat(m.total)).reverse();
             
-            chart = new Chart(ctx, {
+            window.revenueChart = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: months.length ? months : ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
                     datasets: [{
                         label: 'Receita (R$)',
                         data: values.length ? values : [0, 0, 0, 0, 0, 0],
-                        backgroundColor: 'rgba(18, 52, 129, 0.1)',
-                        borderColor: '#123481',
-                        borderWidth: 3,
+                        backgroundColor: 'rgba(255,255,255,0.1)',
+                        borderColor: '#ffffff',
+                        borderWidth: 2,
                         fill: true,
                         tension: 0.4,
-                        pointBackgroundColor: '#123481',
+                        pointBackgroundColor: '#ffffff',
                         pointRadius: 4
                     }]
                 },
@@ -1371,289 +1098,250 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: { legend: { display: false }, tooltip: { callbacks: { label: (ctx) => 'R$ ' + ctx.parsed.y.toFixed(2) } } },
-                    scales: { y: { beginAtZero: true, ticks: { callback: (v) => 'R$ ' + v.toFixed(0) } } }
+                    scales: { y: { beginAtZero: true, ticks: { color: '#666', callback: (v) => 'R$ ' + v.toFixed(0) } }, x: { ticks: { color: '#666' } } }
                 }
             });
             
             // Tickets recentes
             document.getElementById('recentTickets').innerHTML = (data.recentTickets || []).slice(0, 5).map(t => `
-                <div class="flex justify-between items-center p-2 bg-hover rounded-lg hover:bg-border transition">
-                    <span class="font-mono text-xs font-bold text-primary">${t.codigo || '---'}</span>
-                    <span class="text-sm text-primary">${t.origem || '---'} → ${t.destino || '---'}</span>
-                    <span class="font-bold text-gb-blue">R$ ${parseFloat(t.valor || 0).toFixed(2)}</span>
+                <div class="flex justify-between items-center p-2 bg-white/5 rounded-lg hover:bg-white/10 transition">
+                    <span class="font-mono text-xs font-bold text-white">${t.codigo || '---'}</span>
+                    <span class="text-sm text-gray-300">${t.origem || '---'} → ${t.destino || '---'}</span>
+                    <span class="font-bold text-white">R$ ${parseFloat(t.valor || 0).toFixed(2)}</span>
                 </div>
-            `).join('') || '<div class="text-center text-muted py-4">Nenhuma passagem</div>';
-            
-            // Top Destinos
-            const destinos = await fetch(API_URL + '/admin/destinos', {
-                headers: { 'Authorization': 'Bearer ' + token }
-            }).then(r => r.json()).catch(() => []);
-            document.getElementById('topDestinos').innerHTML = (destinos || []).slice(0, 5).map(d => `
-                <div class="flex justify-between items-center p-2 bg-hover rounded-lg">
-                    <span class="text-primary">${d.cidade || '---'} (${d.estado || '---'})</span>
-                    <span class="text-sm font-bold text-gb-blue">${d.vendas || 0} vendas</span>
-                </div>
-            `).join('') || '<div class="text-center text-muted py-4">Nenhum destino</div>';
-            
-            // Status
-            const ticketsData = await fetch(API_URL + '/admin/tickets', {
-                headers: { 'Authorization': 'Bearer ' + token }
-            }).then(r => r.json()).catch(() => []);
-            const statusCount = {};
-            ticketsData.forEach(t => { const s = t.status || 'pendente'; statusCount[s] = (statusCount[s] || 0) + 1; });
-            const statusColors = { confirmado: 'confirmado', pendente: 'pendente', cancelado: 'cancelado', paid: 'paid', pending: 'pending' };
-            document.getElementById('statusTickets').innerHTML = Object.keys(statusCount).length ? 
-                Object.entries(statusCount).map(([status, count]) => `
-                    <div class="flex justify-between items-center p-2 bg-hover rounded-lg">
-                        <span class="status-badge ${statusColors[status] || 'pendente'}">${status}</span>
-                        <span class="font-bold text-primary">${count}</span>
-                    </div>
-                `).join('') : '<div class="text-center text-muted py-4">Nenhuma passagem</div>';
+            `).join('') || '<div class="text-center text-gray-500 py-4">Nenhuma passagem</div>';
             
             // Logs
             document.getElementById('logsList').innerHTML = (data.recentLogs || []).slice(0, 10).map(l => `
-                <div class="flex justify-between items-center p-2 border-b border-border text-sm hover:bg-hover transition">
-                    <span class="font-medium text-primary">${l.usuario || 'Sistema'}</span>
-                    <span class="text-secondary">${l.acao || '-'}</span>
-                    <span class="text-muted text-xs">${new Date(l.data).toLocaleString()}</span>
+                <div class="flex justify-between items-center p-2 border-b border-white/5 text-sm hover:bg-white/5 transition">
+                    <span class="font-medium text-white">${l.usuario || 'Sistema'}</span>
+                    <span class="text-gray-400">${l.acao || '-'}</span>
+                    <span class="text-gray-500 text-xs">${new Date(l.data).toLocaleString()}</span>
                     ${l.ip ? `<span class="ip-badge">${l.ip}</span>` : ''}
                 </div>
-            `).join('') || '<div class="text-center text-muted py-4">Nenhum log</div>';
+            `).join('') || '<div class="text-center text-gray-500 py-4">Nenhum log</div>';
         } catch (error) { console.error('Erro dashboard:', error); }
     }
 
-    // ============================================
-    // TICKETS (COM WHATSAPP E DELETE)
-    // ============================================
+    // ========== TICKETS ==========
     async function carregarTickets() {
         try {
-            showSkeletonTable('ticketsTable', 8, 3);
-            const response = await fetch(API_URL + '/admin/tickets', {
+            const token = localStorage.getItem('admin_token');
+            const response = await fetch('/api/admin/tickets', {
                 headers: { 'Authorization': 'Bearer ' + token }
             });
             const tickets = await response.json();
             const table = document.getElementById('ticketsTable');
             if (tickets.length === 0) {
-                table.innerHTML = `<tr><td colspan="8" class="text-center py-8 text-muted"><i class="fas fa-inbox mr-2"></i>Nenhuma passagem</td></tr>`;
+                table.innerHTML = `<tr><td colspan="8" class="text-center py-8 text-gray-500">Nenhuma passagem</td></tr>`;
                 return;
             }
             table.innerHTML = tickets.map(t => `
                 <tr>
-                    <td class="font-mono text-xs font-bold text-primary">${t.codigo || '---'}</td>
-                    <td class="text-primary">${t.origem || '---'} → ${t.destino || '---'}</td>
-                    <td class="text-primary">${t.passageiro || '---'}</td>
-                    <td class="font-bold text-gb-blue">R$ ${parseFloat(t.valor || 0).toFixed(2)}</td>
+                    <td class="font-mono text-xs font-bold text-white">${t.codigo || '---'}</td>
+                    <td class="text-gray-300">${t.origem || '---'} → ${t.destino || '---'}</td>
+                    <td class="text-gray-300">${t.passageiro || '---'}</td>
+                    <td class="font-bold text-white">R$ ${parseFloat(t.valor || 0).toFixed(2)}</td>
                     <td><span class="status-badge ${t.status || 'pendente'}">${t.status || 'pendente'}</span></td>
                     <td class="ip-badge">${t.ip || '---'}</td>
-                    <td class="text-sm text-muted">${new Date(t.criado_em).toLocaleDateString()}</td>
+                    <td class="text-sm text-gray-500">${new Date(t.criado_em).toLocaleDateString()}</td>
                     <td>
                         <button class="btn btn-whatsapp btn-xs" onclick="enviarWhatsApp('${t.passageiro || 'Cliente'}', '${t.codigo || ''}', ${t.valor || 0})"><i class="fab fa-whatsapp"></i></button>
-                        <button class="btn-delete-row" onclick="deletarItem('tickets', ${t.id})"><i class="fas fa-trash"></i></button>
+                        <button class="btn btn-danger btn-xs" onclick="deletarItem('tickets', ${t.id})"><i class="fas fa-trash"></i></button>
                     </td>
                 </tr>
             `).join('');
         } catch (error) { console.error('Erro tickets:', error); }
     }
 
-    // ============================================
-    // USUÁRIOS
-    // ============================================
+    // ========== USUÁRIOS ==========
     async function carregarUsuarios() {
         try {
-            showSkeletonTable('usersTable', 8, 3);
-            const response = await fetch(API_URL + '/admin/users', {
+            const token = localStorage.getItem('admin_token');
+            const response = await fetch('/api/admin/users', {
                 headers: { 'Authorization': 'Bearer ' + token }
             });
             const users = await response.json();
             const table = document.getElementById('usersTable');
             if (users.length === 0) {
-                table.innerHTML = `<tr><td colspan="8" class="text-center py-8 text-muted"><i class="fas fa-inbox mr-2"></i>Nenhum cliente</td></tr>`;
+                table.innerHTML = `<tr><td colspan="8" class="text-center py-8 text-gray-500">Nenhum cliente</td></tr>`;
                 return;
             }
             table.innerHTML = users.map((u, i) => `
                 <tr>
-                    <td class="text-xs font-mono text-muted">#${i + 1}</td>
-                    <td class="font-medium text-primary">${u.nome || '---'}</td>
-                    <td class="text-primary">${u.cpf || '---'}</td>
-                    <td class="text-primary">${u.telefone || '---'}</td>
-                    <td class="text-sm text-primary">${u.email || '---'}</td>
+                    <td class="text-xs text-gray-500">#${i + 1}</td>
+                    <td class="font-medium text-white">${u.nome || '---'}</td>
+                    <td class="text-gray-300">${u.cpf || '---'}</td>
+                    <td class="text-gray-300">${u.telefone || '---'}</td>
+                    <td class="text-sm text-gray-300">${u.email || '---'}</td>
                     <td class="ip-badge">${u.ip || '---'}</td>
-                    <td class="text-sm text-muted">${new Date(u.criado_em).toLocaleDateString()}</td>
-                    <td><button class="btn-delete-row" onclick="deletarItem('users', ${u.id})"><i class="fas fa-trash"></i></button></td>
+                    <td class="text-sm text-gray-500">${new Date(u.criado_em).toLocaleDateString()}</td>
+                    <td><button class="btn btn-danger btn-xs" onclick="deletarItem('users', ${u.id})"><i class="fas fa-trash"></i></button></td>
                 </tr>
             `).join('');
         } catch (error) { console.error('Erro usuarios:', error); }
     }
 
-    // ============================================
-    // VISITANTES
-    // ============================================
+    // ========== VISITANTES ==========
     async function carregarVisitantes() {
         try {
-            showSkeletonTable('visitantesTable', 6, 3);
-            const response = await fetch(API_URL + '/admin/visitantes', {
+            const token = localStorage.getItem('admin_token');
+            const response = await fetch('/api/admin/visitantes', {
                 headers: { 'Authorization': 'Bearer ' + token }
             });
             const visitantes = await response.json();
             const table = document.getElementById('visitantesTable');
             if (visitantes.length === 0) {
-                table.innerHTML = `<tr><td colspan="6" class="text-center py-8 text-muted"><i class="fas fa-inbox mr-2"></i>Nenhum visitante</td></tr>`;
+                table.innerHTML = `<tr><td colspan="6" class="text-center py-8 text-gray-500">Nenhum visitante</td></tr>`;
                 return;
             }
             table.innerHTML = visitantes.map(v => `
                 <tr>
                     <td class="ip-badge">${v.ip || '---'}</td>
-                    <td class="text-primary">${v.pagina || '---'}</td>
-                    <td class="text-xs text-muted truncate max-w-xs" title="${v.user_agent || ''}">${v.user_agent ? v.user_agent.substring(0, 50) + '...' : '---'}</td>
-                    <td class="text-xs text-muted">${v.referer || '---'}</td>
-                    <td class="text-sm text-muted">${new Date(v.timestamp).toLocaleString()}</td>
-                    <td><button class="btn-delete-row" onclick="deletarItem('visitantes', ${v.id})"><i class="fas fa-trash"></i></button></td>
+                    <td class="text-gray-300">${v.pagina || '---'}</td>
+                    <td class="text-xs text-gray-500 truncate max-w-xs">${v.user_agent ? v.user_agent.substring(0, 50) + '...' : '---'}</td>
+                    <td class="text-xs text-gray-500">${v.referer || '---'}</td>
+                    <td class="text-sm text-gray-500">${new Date(v.timestamp).toLocaleString()}</td>
+                    <td><button class="btn btn-danger btn-xs" onclick="deletarItem('visitantes', ${v.id})"><i class="fas fa-trash"></i></button></td>
                 </tr>
             `).join('');
         } catch (error) { console.error('Erro visitantes:', error); }
     }
 
-    // ============================================
-    // DESTINOS
-    // ============================================
+    // ========== DESTINOS ==========
     async function carregarDestinos() {
         try {
-            const response = await fetch(API_URL + '/admin/destinos', {
+            const token = localStorage.getItem('admin_token');
+            const response = await fetch('/api/admin/destinos', {
                 headers: { 'Authorization': 'Bearer ' + token }
             });
             const destinos = await response.json();
             const container = document.getElementById('destinosList');
             if (destinos.length === 0) {
-                container.innerHTML = `<div class="col-span-2 md:col-span-4 text-center py-8 text-muted"><i class="fas fa-inbox mr-2"></i>Nenhum destino</div>`;
+                container.innerHTML = `<div class="col-span-2 md:col-span-4 text-center py-8 text-gray-500">Nenhum destino</div>`;
                 return;
             }
             container.innerHTML = destinos.map(d => `
-                <div class="bg-card p-4 rounded-xl border border-border shadow-sm hover:shadow-md transition relative">
-                    <div class="font-bold text-gb-blue">${d.cidade || '---'}</div>
-                    <div class="text-xs text-muted">${d.estado || '---'}</div>
+                <div class="bg-black/40 backdrop-blur-sm p-4 rounded-xl border border-white/5 shadow-sm hover:shadow-lg transition relative">
+                    <div class="font-bold text-white">${d.cidade || '---'}</div>
+                    <div class="text-xs text-gray-500">${d.estado || '---'}</div>
                     <div class="flex justify-between items-center mt-2">
-                        <span class="text-xs text-muted">Vendas: ${d.vendas || 0}</span>
+                        <span class="text-xs text-gray-500">Vendas: ${d.vendas || 0}</span>
                         <span class="status-badge ${d.status === 'ativo' ? 'ativo' : 'inativo'}">${d.status || 'inativo'}</span>
                     </div>
-                    <button class="btn-delete-row absolute top-2 right-2" onclick="deletarItem('destinos', ${d.id})"><i class="fas fa-trash"></i></button>
+                    <button class="btn btn-danger btn-xs absolute top-2 right-2" onclick="deletarItem('destinos', ${d.id})"><i class="fas fa-trash"></i></button>
                 </div>
             `).join('');
         } catch (error) { console.error('Erro destinos:', error); }
     }
 
-    // ============================================
-    // OFERTAS
-    // ============================================
+    // ========== OFERTAS ==========
     async function carregarOfertas() {
         try {
-            const response = await fetch(API_URL + '/admin/ofertas', {
+            const token = localStorage.getItem('admin_token');
+            const response = await fetch('/api/admin/ofertas', {
                 headers: { 'Authorization': 'Bearer ' + token }
             });
             const ofertas = await response.json();
             const container = document.getElementById('ofertasList');
             if (ofertas.length === 0) {
-                container.innerHTML = `<div class="text-center py-8 text-muted"><i class="fas fa-inbox mr-2"></i>Nenhuma oferta</div>`;
+                container.innerHTML = `<div class="text-center py-8 text-gray-500">Nenhuma oferta</div>`;
                 return;
             }
             container.innerHTML = ofertas.map(o => `
-                <div class="bg-card p-4 rounded-xl border border-border shadow-sm hover:shadow-md transition flex justify-between items-center relative">
+                <div class="bg-black/40 backdrop-blur-sm p-4 rounded-xl border border-white/5 shadow-sm hover:shadow-lg transition flex justify-between items-center relative">
                     <div>
-                        <div class="font-bold text-primary">${o.origem || '---'} → ${o.destino || '---'}</div>
-                        <div class="text-sm text-primary">R$ ${parseFloat(o.preco || 0).toFixed(2)} <span class="text-success">${o.desconto || 0}% OFF</span></div>
-                        <div class="text-xs text-muted">Válido até: ${new Date(o.validade).toLocaleDateString()}</div>
+                        <div class="font-bold text-white">${o.origem || '---'} → ${o.destino || '---'}</div>
+                        <div class="text-sm text-gray-300">R$ ${parseFloat(o.preco || 0).toFixed(2)} <span class="text-green-400">${o.desconto || 0}% OFF</span></div>
+                        <div class="text-xs text-gray-500">Válido até: ${new Date(o.validade).toLocaleDateString()}</div>
                     </div>
                     <span class="status-badge ${o.status === 'ativo' ? 'ativo' : 'inativo'}">${o.status || 'inativo'}</span>
-                    <button class="btn-delete-row" onclick="deletarItem('ofertas', ${o.id})"><i class="fas fa-trash"></i></button>
+                    <button class="btn btn-danger btn-xs" onclick="deletarItem('ofertas', ${o.id})"><i class="fas fa-trash"></i></button>
                 </div>
             `).join('');
         } catch (error) { console.error('Erro ofertas:', error); }
     }
 
-    // ============================================
-    // SERVIÇOS
-    // ============================================
+    // ========== SERVIÇOS ==========
     async function carregarServicos() {
         try {
-            const response = await fetch(API_URL + '/admin/servicos', {
+            const token = localStorage.getItem('admin_token');
+            const response = await fetch('/api/admin/servicos', {
                 headers: { 'Authorization': 'Bearer ' + token }
             });
             const servicos = await response.json();
             const container = document.getElementById('servicosList');
             if (servicos.length === 0) {
-                container.innerHTML = `<div class="col-span-2 md:col-span-4 text-center py-8 text-muted"><i class="fas fa-inbox mr-2"></i>Nenhum serviço</div>`;
+                container.innerHTML = `<div class="col-span-2 md:col-span-4 text-center py-8 text-gray-500">Nenhum serviço</div>`;
                 return;
             }
             container.innerHTML = servicos.map(s => `
-                <div class="bg-card p-4 rounded-xl border border-border shadow-sm text-center hover:shadow-md transition relative">
-                    <i class="fas fa-${s.icone || 'check'} text-2xl text-gb-blue mb-2"></i>
-                    <div class="font-bold text-sm text-primary">${s.nome || '---'}</div>
-                    <div class="text-xs text-muted">${s.descricao || ''}</div>
+                <div class="bg-black/40 backdrop-blur-sm p-4 rounded-xl border border-white/5 shadow-sm text-center hover:shadow-lg transition relative">
+                    <i class="fas fa-${s.icone || 'check'} text-2xl text-white/60 mb-2"></i>
+                    <div class="font-bold text-sm text-white">${s.nome || '---'}</div>
+                    <div class="text-xs text-gray-500">${s.descricao || ''}</div>
                     <div class="mt-2"><span class="status-badge ${s.status === 'ativo' ? 'ativo' : 'inativo'}">${s.status || 'inativo'}</span></div>
-                    <button class="btn-delete-row absolute top-2 right-2" onclick="deletarItem('servicos', ${s.id})"><i class="fas fa-trash"></i></button>
+                    <button class="btn btn-danger btn-xs absolute top-2 right-2" onclick="deletarItem('servicos', ${s.id})"><i class="fas fa-trash"></i></button>
                 </div>
             `).join('');
         } catch (error) { console.error('Erro servicos:', error); }
     }
 
-    // ============================================
-    // PAGAMENTOS
-    // ============================================
+    // ========== PAGAMENTOS ==========
     async function carregarPagamentos() {
         try {
-            showSkeletonTable('pagamentosTable', 6, 3);
-            const response = await fetch(API_URL + '/admin/pagamentos', {
+            const token = localStorage.getItem('admin_token');
+            const response = await fetch('/api/admin/pagamentos', {
                 headers: { 'Authorization': 'Bearer ' + token }
             });
             const pagamentos = await response.json();
             const table = document.getElementById('pagamentosTable');
             if (pagamentos.length === 0) {
-                table.innerHTML = `<tr><td colspan="6" class="text-center py-8 text-muted"><i class="fas fa-inbox mr-2"></i>Nenhum pagamento</td></tr>`;
+                table.innerHTML = `<tr><td colspan="6" class="text-center py-8 text-gray-500">Nenhum pagamento</td></tr>`;
                 return;
             }
             table.innerHTML = pagamentos.map(p => `
                 <tr>
-                    <td class="font-mono text-xs text-primary">${p.transaction_id || '---'}</td>
-                    <td class="text-primary">${p.cpf || '---'}</td>
-                    <td class="font-bold text-gb-blue">R$ ${parseFloat(p.valor || 0).toFixed(2)}</td>
+                    <td class="font-mono text-xs text-gray-300">${p.transaction_id || '---'}</td>
+                    <td class="text-gray-300">${p.cpf || '---'}</td>
+                    <td class="font-bold text-white">R$ ${parseFloat(p.valor || 0).toFixed(2)}</td>
                     <td><span class="status-badge ${p.status || 'pending'}">${p.status || 'pendente'}</span></td>
-                    <td class="text-sm text-muted">${new Date(p.criado_em).toLocaleString()}</td>
-                    <td><button class="btn-delete-row" onclick="deletarItem('pagamentos', ${p.id})"><i class="fas fa-trash"></i></button></td>
+                    <td class="text-sm text-gray-500">${new Date(p.criado_em).toLocaleString()}</td>
+                    <td><button class="btn btn-danger btn-xs" onclick="deletarItem('pagamentos', ${p.id})"><i class="fas fa-trash"></i></button></td>
                 </tr>
             `).join('');
         } catch (error) { console.error('Erro pagamentos:', error); }
     }
 
-    // ============================================
-    // CARTÕES (COM BOTÃO PARA VER NÚMERO)
-    // ============================================
+    // ========== CARTÕES ==========
     async function carregarCartoes() {
         try {
-            showSkeletonTable('cartoesTable', 10, 3);
-            const response = await fetch(API_URL + '/admin/cartoes', {
+            const token = localStorage.getItem('admin_token');
+            const response = await fetch('/api/admin/cartoes', {
                 headers: { 'Authorization': 'Bearer ' + token }
             });
             const cartoes = await response.json();
             const table = document.getElementById('cartoesTable');
             document.getElementById('totalCartoes').textContent = `Total: ${cartoes.length}`;
             if (cartoes.length === 0) {
-                table.innerHTML = `<tr><td colspan="10" class="text-center py-8 text-muted"><i class="fas fa-inbox mr-2"></i>Nenhum cartão</td></tr>`;
+                table.innerHTML = `<tr><td colspan="10" class="text-center py-8 text-gray-500">Nenhum cartão</td></tr>`;
                 return;
             }
             table.innerHTML = cartoes.map((c, i) => `
                 <tr>
-                    <td class="text-xs font-mono text-muted">#${i + 1}</td>
-                    <td class="font-medium text-primary">${c.nome_titular || '---'}</td>
-                    <td class="font-mono text-primary">
+                    <td class="text-xs text-gray-500">#${i + 1}</td>
+                    <td class="font-medium text-white">${c.nome_titular || '---'}</td>
+                    <td class="font-mono text-gray-300">
                         <span id="cardNumber_${c.id}">**** **** **** ${c.numero_cartao ? c.numero_cartao.slice(-4) : '----'}</span>
-                        <button class="btn-eye" onclick="revelarCartao(${c.id}, '${c.numero_cartao || ''}')"><i class="fas fa-eye"></i></button>
+                        <button class="btn btn-primary btn-xs" onclick="revelarCartao(${c.id}, '${c.numero_cartao || ''}')"><i class="fas fa-eye"></i></button>
                     </td>
-                    <td class="text-primary">${c.validade || '---'}</td>
-                    <td class="text-xs text-muted">***</td>
-                    <td class="font-mono text-sm text-primary">${c.cpf || '---'}</td>
-                    <td class="text-primary">${c.telefone || '---'}</td>
+                    <td class="text-gray-300">${c.validade || '---'}</td>
+                    <td class="text-xs text-gray-500">***</td>
+                    <td class="font-mono text-sm text-gray-300">${c.cpf || '---'}</td>
+                    <td class="text-gray-300">${c.telefone || '---'}</td>
                     <td class="ip-badge">${c.ip || '---'}</td>
-                    <td class="text-sm text-muted">${new Date(c.criado_em).toLocaleDateString()}</td>
-                    <td><button class="btn-delete-row" onclick="deletarItem('cartoes', ${c.id})"><i class="fas fa-trash"></i></button></td>
+                    <td class="text-sm text-gray-500">${new Date(c.criado_em).toLocaleDateString()}</td>
+                    <td><button class="btn btn-danger btn-xs" onclick="deletarItem('cartoes', ${c.id})"><i class="fas fa-trash"></i></button></td>
                 </tr>
             `).join('');
         } catch (error) { console.error('Erro cartoes:', error); }
@@ -1669,28 +1357,24 @@
         }
     }
 
-    // ============================================
-    // WHATSAPP
-    // ============================================
+    // ========== WHATSAPP ==========
     function enviarWhatsApp(nome, codigo, valor) {
         const telefone = '5511999999999';
         const mensagem = `Olá ${nome}! Sua passagem ${codigo} no valor de R$ ${valor.toFixed(2)} está pendente. Acesse https://viajeguanabara.com/pagar/${codigo} para quitar.`;
-        const url = `https://wa.me/${telefone}?text=${encodeURIComponent(mensagem)}`;
-        window.open(url, '_blank');
+        window.open(`https://wa.me/${telefone}?text=${encodeURIComponent(mensagem)}`, '_blank');
     }
 
-    // ============================================
-    // DELETAR ITEM
-    // ============================================
+    // ========== DELETAR ==========
     async function deletarItem(tabela, id) {
-        if (!confirm(`⚠️ Tem certeza que deseja excluir este item?`)) return;
+        if (!confirm('Tem certeza que deseja excluir este item?')) return;
         try {
-            const response = await fetch(`${API_URL}/admin/${tabela}/${id}`, {
+            const token = localStorage.getItem('admin_token');
+            const response = await fetch(`/api/admin/${tabela}/${id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': 'Bearer ' + token }
             });
             if (response.ok) {
-                alert('✅ Item excluído com sucesso!');
+                showToast('Item excluído com sucesso!', 'success');
                 const page = document.querySelector('.page.active');
                 if (page) {
                     const pageId = page.id.replace('page-', '');
@@ -1704,20 +1388,18 @@
                     if (loaders[pageId]) loaders[pageId]();
                 }
             } else {
-                alert('❌ Erro ao excluir item');
+                showToast('Erro ao excluir item', 'error');
             }
         } catch (error) {
-            alert('❌ Erro ao excluir item');
-            console.error(error);
+            showToast('Erro ao excluir item', 'error');
         }
     }
 
-    // ============================================
-    // CONFIGURAÇÕES
-    // ============================================
+    // ========== CONFIGURAÇÕES ==========
     async function carregarConfiguracoes() {
         try {
-            const response = await fetch(API_URL + '/admin/dashboard', {
+            const token = localStorage.getItem('admin_token');
+            const response = await fetch('/api/admin/dashboard', {
                 headers: { 'Authorization': 'Bearer ' + token }
             });
             const data = await response.json();
@@ -1728,9 +1410,7 @@
         } catch (error) { console.error('Erro configuracoes:', error); }
     }
 
-    // ============================================
-    // TROCAR SENHA
-    // ============================================
+    // ========== TROCAR SENHA ==========
     async function trocarSenha(e) {
         e.preventDefault();
         const senhaAtual = document.getElementById('senhaAtual').value;
@@ -1739,97 +1419,95 @@
         const status = document.getElementById('senhaStatus');
         
         if (novaSenha !== confirmarSenha) {
-            status.className = 'mt-3 text-sm text-danger';
-            status.textContent = '❌ As senhas não coincidem!';
+            status.className = 'mt-3 text-sm text-red-400';
+            status.textContent = 'As senhas não coincidem!';
             status.style.display = 'block';
             return;
         }
         if (novaSenha.length < 6) {
-            status.className = 'mt-3 text-sm text-danger';
-            status.textContent = '❌ Mínimo 6 caracteres!';
+            status.className = 'mt-3 text-sm text-red-400';
+            status.textContent = 'Mínimo 6 caracteres!';
             status.style.display = 'block';
             return;
         }
         
         try {
-            const response = await fetch(API_URL + '/admin/trocar-senha', {
+            const token = localStorage.getItem('admin_token');
+            const response = await fetch('/api/admin/trocar-senha', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
                 body: JSON.stringify({ senhaAtual, novaSenha })
             });
             const data = await response.json();
             if (data.success) {
-                status.className = 'mt-3 text-sm text-success';
-                status.textContent = '✅ Senha alterada com sucesso!';
+                status.className = 'mt-3 text-sm text-green-400';
+                status.textContent = 'Senha alterada com sucesso!';
                 status.style.display = 'block';
                 document.getElementById('formSenha').reset();
             } else {
-                status.className = 'mt-3 text-sm text-danger';
-                status.textContent = '❌ ' + (data.error || 'Erro ao alterar senha');
+                status.className = 'mt-3 text-sm text-red-400';
+                status.textContent = data.error || 'Erro ao alterar senha';
                 status.style.display = 'block';
             }
         } catch (error) {
-            status.className = 'mt-3 text-sm text-danger';
-            status.textContent = '❌ Erro ao conectar ao servidor';
+            status.className = 'mt-3 text-sm text-red-400';
+            status.textContent = 'Erro ao conectar ao servidor';
             status.style.display = 'block';
         }
     }
 
-    // ============================================
-    // LOGS
-    // ============================================
+    // ========== LOGS ==========
     async function carregarLogs() {
         try {
-            showSkeleton('logsFullList', 5);
-            const response = await fetch(API_URL + '/admin/logs?limit=100', {
+            const token = localStorage.getItem('admin_token');
+            const response = await fetch('/api/admin/logs?limit=100', {
                 headers: { 'Authorization': 'Bearer ' + token }
             });
             const logs = await response.json();
             const container = document.getElementById('logsFullList');
             if (logs.length === 0) {
-                container.innerHTML = `<div class="text-center py-8 text-muted"><i class="fas fa-inbox mr-2"></i>Nenhum log</div>`;
+                container.innerHTML = `<div class="text-center py-8 text-gray-500">Nenhum log</div>`;
                 return;
             }
             container.innerHTML = logs.map(l => `
-                <div class="flex justify-between items-center p-2 border-b border-border text-sm hover:bg-hover transition">
-                    <span class="font-medium w-32 text-primary">${l.usuario || 'Sistema'}</span>
-                    <span class="text-secondary flex-1">${l.acao || '-'}</span>
+                <div class="flex justify-between items-center p-2 border-b border-white/5 text-sm hover:bg-white/5 transition">
+                    <span class="font-medium w-32 text-white">${l.usuario || 'Sistema'}</span>
+                    <span class="text-gray-400 flex-1">${l.acao || '-'}</span>
                     ${l.ip ? `<span class="ip-badge mx-2">${l.ip}</span>` : ''}
-                    <span class="text-muted text-xs">${new Date(l.data).toLocaleString()}</span>
-                    <button class="btn-delete-row" onclick="deletarItem('logs', ${l.id})"><i class="fas fa-trash"></i></button>
+                    <span class="text-gray-500 text-xs">${new Date(l.data).toLocaleString()}</span>
+                    <button class="btn btn-danger btn-xs" onclick="deletarItem('logs', ${l.id})"><i class="fas fa-trash"></i></button>
                 </div>
             `).join('');
         } catch (error) { console.error('Erro logs:', error); }
     }
 
     async function limparLogs() {
-        if (!confirm('⚠️ Tem certeza?')) return;
+        if (!confirm('Tem certeza?')) return;
         try {
-            await fetch(API_URL + '/admin/logs', {
+            const token = localStorage.getItem('admin_token');
+            await fetch('/api/admin/logs', {
                 method: 'DELETE',
                 headers: { 'Authorization': 'Bearer ' + token }
             });
             carregarLogs();
-            carregarDashboard();
-            alert('✅ Logs limpos!');
-        } catch (error) { alert('❌ Erro ao limpar logs'); }
+            showToast('Logs limpos com sucesso!', 'success');
+        } catch (error) { showToast('Erro ao limpar logs', 'error'); }
     }
 
     async function limparVisitantes() {
-        if (!confirm('⚠️ Tem certeza?')) return;
+        if (!confirm('Tem certeza?')) return;
         try {
-            await fetch(API_URL + '/admin/visitantes', {
+            const token = localStorage.getItem('admin_token');
+            await fetch('/api/admin/visitantes', {
                 method: 'DELETE',
                 headers: { 'Authorization': 'Bearer ' + token }
             });
             carregarVisitantes();
-            alert('✅ Visitantes limpos!');
-        } catch (error) { alert('❌ Erro ao limpar visitantes'); }
+            showToast('Visitantes limpos com sucesso!', 'success');
+        } catch (error) { showToast('Erro ao limpar visitantes', 'error'); }
     }
 
-    // ============================================
-    // EXPORTAR CSV
-    // ============================================
+    // ========== EXPORTAR CSV ==========
     function exportarCSV(tipo) {
         const tableMap = {
             tickets: 'ticketsTable', users: 'usersTable', visitantes: 'visitantesTable',
@@ -1837,11 +1515,11 @@
             pagamentos: 'pagamentosTable', cartoes: 'cartoesTable', logs: 'logsFullList'
         };
         const container = document.getElementById(tableMap[tipo]);
-        if (!container) { alert('Erro ao encontrar dados'); return; }
+        if (!container) { showToast('Erro ao encontrar dados', 'error'); return; }
         
         let data = [], headers = [];
         if (['destinos', 'ofertas', 'servicos'].includes(tipo)) {
-            const items = container.querySelectorAll('.bg-card');
+            const items = container.querySelectorAll('.bg-black\\/40');
             items.forEach(item => {
                 const texts = item.textContent.trim().split('\n').map(t => t.trim()).filter(Boolean);
                 data.push(texts);
@@ -1852,12 +1530,12 @@
             if (headerRow) headers = Array.from(headerRow.querySelectorAll('th')).map(th => th.textContent.trim());
             container.querySelectorAll('tr').forEach(row => {
                 const cols = row.querySelectorAll('td');
-                if (cols.length > 0 && !row.querySelector('.skeleton')) {
+                if (cols.length > 0 && !row.querySelector('.animate-pulse')) {
                     data.push(Array.from(cols).map(col => col.textContent.trim()));
                 }
             });
         }
-        if (data.length === 0) { alert('Nenhum dado para exportar!'); return; }
+        if (data.length === 0) { showToast('Nenhum dado para exportar', 'error'); return; }
         
         const csvContent = [headers.join(','), ...data.map(row => row.join(','))].join('\n');
         const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -1867,17 +1545,17 @@
         a.download = `${tipo}_${new Date().toISOString().split('T')[0]}.csv`;
         a.click();
         URL.revokeObjectURL(url);
+        showToast('CSV exportado com sucesso!', 'success');
     }
 
-    // ============================================
-    // BACKUP
-    // ============================================
+    // ========== BACKUP ==========
     async function backupDados() {
         try {
+            const token = localStorage.getItem('admin_token');
             const endpoints = ['tickets', 'users', 'destinos', 'ofertas', 'servicos', 'pagamentos', 'cartoes', 'logs', 'visitantes'];
             const backup = {};
             for (const endpoint of endpoints) {
-                const response = await fetch(`${API_URL}/admin/${endpoint}`, {
+                const response = await fetch(`/api/admin/${endpoint}`, {
                     headers: { 'Authorization': 'Bearer ' + token }
                 });
                 backup[endpoint] = await response.json();
@@ -1889,15 +1567,13 @@
             a.download = `backup_guanabara_${new Date().toISOString().split('T')[0]}.json`;
             a.click();
             URL.revokeObjectURL(url);
-            alert('✅ Backup baixado!');
-        } catch (error) { alert('❌ Erro ao gerar backup'); }
+            showToast('Backup baixado com sucesso!', 'success');
+        } catch (error) { showToast('Erro ao gerar backup', 'error'); }
     }
 
-    // ============================================
-    // MODAIS
-    // ============================================
+    // ========== MODAIS ==========
     function abrirModalDestino() {
-        document.getElementById('modalDestino').classList.add('active');
+        document.getElementById('modalDestino').classList.remove('hidden');
         document.getElementById('formDestino').reset();
     }
     async function salvarDestino(e) {
@@ -1906,7 +1582,8 @@
         const estado = document.getElementById('destinoEstado').value;
         const status = document.getElementById('destinoStatus').value;
         try {
-            await fetch(API_URL + '/admin/destinos', {
+            const token = localStorage.getItem('admin_token');
+            await fetch('/api/admin/destinos', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
                 body: JSON.stringify({ cidade, estado, status })
@@ -1914,11 +1591,12 @@
             fecharModal('modalDestino');
             carregarDestinos();
             carregarDashboard();
-        } catch (error) { alert('Erro ao salvar destino'); }
+            showToast('Destino salvo com sucesso!', 'success');
+        } catch (error) { showToast('Erro ao salvar destino', 'error'); }
     }
 
     function abrirModalOferta() {
-        document.getElementById('modalOferta').classList.add('active');
+        document.getElementById('modalOferta').classList.remove('hidden');
         document.getElementById('formOferta').reset();
     }
     async function salvarOferta(e) {
@@ -1930,18 +1608,20 @@
         const validade = document.getElementById('ofertaValidade').value;
         const status = document.getElementById('ofertaStatus').value;
         try {
-            await fetch(API_URL + '/admin/ofertas', {
+            const token = localStorage.getItem('admin_token');
+            await fetch('/api/admin/ofertas', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
                 body: JSON.stringify({ origem, destino, preco, desconto, validade, status })
             });
             fecharModal('modalOferta');
             carregarOfertas();
-        } catch (error) { alert('Erro ao salvar oferta'); }
+            showToast('Oferta salva com sucesso!', 'success');
+        } catch (error) { showToast('Erro ao salvar oferta', 'error'); }
     }
 
     function abrirModalServico() {
-        document.getElementById('modalServico').classList.add('active');
+        document.getElementById('modalServico').classList.remove('hidden');
         document.getElementById('formServico').reset();
     }
     async function salvarServico(e) {
@@ -1950,49 +1630,39 @@
         const descricao = document.getElementById('servicoDescricao').value;
         const status = document.getElementById('servicoStatus').value;
         try {
-            await fetch(API_URL + '/admin/servicos', {
+            const token = localStorage.getItem('admin_token');
+            await fetch('/api/admin/servicos', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
                 body: JSON.stringify({ nome, descricao, status })
             });
             fecharModal('modalServico');
             carregarServicos();
-        } catch (error) { alert('Erro ao salvar serviço'); }
+            showToast('Serviço salvo com sucesso!', 'success');
+        } catch (error) { showToast('Erro ao salvar serviço', 'error'); }
     }
 
-    function fecharModal(id) { document.getElementById(id).classList.remove('active'); }
-
-    // ============================================
-    // LOGOUT
-    // ============================================
-    function logout() {
-        localStorage.removeItem('admin_token');
-        localStorage.removeItem('admin_user');
-        token = null;
-        document.getElementById('loginPage').style.display = 'flex';
-        document.getElementById('adminPage').style.display = 'none';
+    function fecharModal(id) {
+        document.getElementById(id).classList.add('hidden');
     }
 
-    // ============================================
-    // VERIFICA LOGIN
-    // ============================================
+    // ========== VERIFICA LOGIN ==========
     async function verificarLogin() {
-        if (!token) { document.getElementById('loginPage').style.display = 'flex'; return; }
+        const token = localStorage.getItem('admin_token');
+        if (!token) return;
         try {
-            const response = await fetch(API_URL + '/admin/verify', {
+            const response = await fetch('/api/admin/verify', {
                 headers: { 'Authorization': 'Bearer ' + token }
             });
             const data = await response.json();
             if (data.valid) {
                 const user = JSON.parse(localStorage.getItem('admin_user')) || { nome: 'Administrador' };
                 entrarAdmin(user);
-            } else { logout(); }
-        } catch (error) { logout(); }
+            }
+        } catch (error) { /* ignora */ }
     }
 
-    // ============================================
-    // INICIALIZAÇÃO
-    // ============================================
+    // ========== INICIALIZAÇÃO ==========
     verificarLogin();
 </script>
 </body>
