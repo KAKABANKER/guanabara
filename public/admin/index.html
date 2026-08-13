@@ -30,27 +30,11 @@
             width: 100%;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
         }
-        .login-card .logo {
-            text-align: center;
-            margin-bottom: 32px;
-        }
-        .login-card .logo img {
-            height: 48px;
-        }
-        .login-card .logo h1 {
-            font-size: 20px;
-            font-weight: 800;
-            color: #123481;
-            margin-top: 8px;
-        }
-        .login-card .logo p {
-            font-size: 13px;
-            color: #64748b;
-        }
-        .login-card .input-group {
-            position: relative;
-            margin-bottom: 16px;
-        }
+        .login-card .logo { text-align: center; margin-bottom: 32px; }
+        .login-card .logo img { height: 48px; }
+        .login-card .logo h1 { font-size: 20px; font-weight: 800; color: #123481; margin-top: 8px; }
+        .login-card .logo p { font-size: 13px; color: #64748b; }
+        .login-card .input-group { position: relative; margin-bottom: 16px; }
         .login-card .input-group i {
             position: absolute;
             left: 16px;
@@ -85,30 +69,11 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
-        .login-card .btn-login:hover {
-            background: #1a4a9e;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(18,52,129,0.3);
-        }
-        .login-card .btn-login:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-        .login-card .error {
-            color: #dc2626;
-            font-size: 13px;
-            text-align: center;
-            margin-top: 12px;
-            display: none;
-        }
+        .login-card .btn-login:hover { background: #1a4a9e; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(18,52,129,0.3); }
+        .login-card .btn-login:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        .login-card .error { color: #dc2626; font-size: 13px; text-align: center; margin-top: 12px; display: none; }
         .login-card .error.show { display: block; }
-        .login-card .footer {
-            text-align: center;
-            margin-top: 24px;
-            font-size: 12px;
-            color: #94a3b8;
-        }
+        .login-card .footer { text-align: center; margin-top: 24px; font-size: 12px; color: #94a3b8; }
         
         /* SIDEBAR */
         .sidebar {
@@ -122,17 +87,9 @@
             transition: transform 0.3s ease;
             overflow-y: auto;
         }
-        .sidebar .logo-area {
-            padding: 24px 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
+        .sidebar .logo-area { padding: 24px 20px; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .sidebar .logo-area img { height: 32px; }
-        .sidebar .logo-area span {
-            font-size: 18px;
-            font-weight: 800;
-            color: white;
-            margin-left: 10px;
-        }
+        .sidebar .logo-area span { font-size: 18px; font-weight: 800; color: white; margin-left: 10px; }
         .sidebar .user-area {
             padding: 16px 20px;
             border-bottom: 1px solid rgba(255,255,255,0.05);
@@ -152,15 +109,8 @@
             font-weight: 700;
             font-size: 16px;
         }
-        .sidebar .user-area .info .name {
-            color: white;
-            font-weight: 600;
-            font-size: 14px;
-        }
-        .sidebar .user-area .info .role {
-            color: #94a3b8;
-            font-size: 12px;
-        }
+        .sidebar .user-area .info .name { color: white; font-weight: 600; font-size: 14px; }
+        .sidebar .user-area .info .role { color: #94a3b8; font-size: 12px; }
         .sidebar .menu { padding: 12px 0; }
         .sidebar .menu a {
             display: flex;
@@ -173,54 +123,18 @@
             font-size: 14px;
             cursor: pointer;
         }
-        .sidebar .menu a:hover {
-            background: rgba(255,255,255,0.05);
-            color: white;
-        }
-        .sidebar .menu a.active {
-            background: #123481;
-            color: white;
-            border-right: 3px solid #E79F01;
-        }
+        .sidebar .menu a:hover { background: rgba(255,255,255,0.05); color: white; }
+        .sidebar .menu a.active { background: #123481; color: white; border-right: 3px solid #E79F01; }
         .sidebar .menu a i { width: 20px; text-align: center; }
-        .sidebar .menu .logout {
-            margin-top: 20px;
-            border-top: 1px solid rgba(255,255,255,0.05);
-            padding-top: 12px;
-            color: #ef4444;
-        }
+        .sidebar .menu .logout { margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 12px; color: #ef4444; }
         .sidebar .menu .logout:hover { color: #ef4444; background: rgba(239,68,68,0.1); }
         
         /* MAIN */
-        .main-content {
-            margin-left: 260px;
-            padding: 24px;
-            min-height: 100vh;
-        }
-        .main-content .topbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-        }
-        .main-content .topbar h1 {
-            font-size: 24px;
-            font-weight: 800;
-            color: #0a1a3a;
-        }
-        .main-content .topbar .actions {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-        }
-        .main-content .topbar .actions .btn-toggle {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 24px;
-            color: #123481;
-            cursor: pointer;
-        }
+        .main-content { margin-left: 260px; padding: 24px; min-height: 100vh; }
+        .main-content .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+        .main-content .topbar h1 { font-size: 24px; font-weight: 800; color: #0a1a3a; }
+        .main-content .topbar .actions { display: flex; gap: 12px; align-items: center; }
+        .main-content .topbar .actions .btn-toggle { display: none; background: none; border: none; font-size: 24px; color: #123481; cursor: pointer; }
         
         /* CARDS */
         .stat-card {
@@ -231,23 +145,13 @@
             transition: all 0.3s ease;
             border: 1px solid #e2e8f0;
         }
-        .stat-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 24px rgba(0,0,0,0.08);
-        }
-        .stat-card .icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-        }
+        .stat-card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,0.08); }
+        .stat-card .icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
         .stat-card .icon.blue { background: #e8edf5; color: #123481; }
         .stat-card .icon.green { background: #dcfce7; color: #16a34a; }
         .stat-card .icon.yellow { background: #fef3c7; color: #d97706; }
         .stat-card .icon.purple { background: #f3e8ff; color: #7c3aed; }
+        .stat-card .icon.red { background: #fee2e2; color: #dc2626; }
         .stat-card .value { font-size: 28px; font-weight: 800; color: #0a1a3a; }
         .stat-card .label { font-size: 13px; color: #64748b; }
         
@@ -265,65 +169,157 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
         }
-        .table-container .header h3 {
-            font-weight: 700;
-            font-size: 16px;
-            color: #0a1a3a;
-        }
-        .table-container table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+        .table-container .header h3 { font-weight: 700; font-size: 16px; color: #0a1a3a; display: flex; align-items: center; gap: 8px; }
+        .table-container .header .actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+        .table-container table { width: 100%; border-collapse: collapse; }
         .table-container table th {
             text-align: left;
-            padding: 12px 20px;
-            font-size: 12px;
-            font-weight: 600;
+            padding: 12px 16px;
+            font-size: 11px;
+            font-weight: 700;
             color: #64748b;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 2px solid #e2e8f0;
             background: #f8fafc;
+            white-space: nowrap;
         }
         .table-container table td {
-            padding: 12px 20px;
-            font-size: 14px;
+            padding: 12px 16px;
+            font-size: 13px;
             border-bottom: 1px solid #e2e8f0;
+            vertical-align: middle;
         }
         .table-container table tr:last-child td { border-bottom: none; }
-        .status-badge {
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-        }
+        .table-container table tr:hover td { background: #f8fafc; }
+        
+        .status-badge { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; display: inline-block; }
         .status-badge.confirmado { background: #dcfce7; color: #16a34a; }
         .status-badge.pendente { background: #fef3c7; color: #d97706; }
         .status-badge.cancelado { background: #fee2e2; color: #dc2626; }
         .status-badge.paid { background: #dcfce7; color: #16a34a; }
         .status-badge.pending { background: #fef3c7; color: #d97706; }
+        .status-badge.ativo { background: #dcfce7; color: #16a34a; }
+        .status-badge.inativo { background: #fee2e2; color: #dc2626; }
         
         .page { display: none; }
         .page.active { display: block; }
         
+        /* SKELETON LOADING */
+        .skeleton { animation: pulse 1.5s ease-in-out infinite; background: #e2e8f0; border-radius: 4px; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .skeleton-text { height: 14px; width: 100%; }
+        .skeleton-card { height: 80px; width: 100%; border-radius: 12px; }
+        .skeleton-row { display: flex; gap: 12px; padding: 12px 16px; border-bottom: 1px solid #e2e8f0; }
+        .skeleton-row .skeleton { height: 14px; flex: 1; }
+        
+        /* IP BADGE */
+        .ip-badge {
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            background: #f1f5f9;
+            padding: 2px 10px;
+            border-radius: 4px;
+            color: #475569;
+            display: inline-block;
+        }
+        
+        /* BUTTONS */
+        .btn-export {
+            background: #16a34a;
+            color: white;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-export:hover { background: #15803d; transform: scale(1.02); }
+        
+        .btn-refresh {
+            background: #123481;
+            color: white;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-refresh:hover { background: #1a4a9e; transform: scale(1.02); }
+        
+        .btn-delete {
+            background: #dc2626;
+            color: white;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-delete:hover { background: #b91c1c; transform: scale(1.02); }
+        
+        .btn-add {
+            background: #123481;
+            color: white;
+            padding: 8px 18px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-add:hover { background: #1a4a9e; transform: scale(1.02); box-shadow: 0 4px 12px rgba(18,52,129,0.3); }
+        
         /* MOBILE */
         @media (max-width: 768px) {
-            .sidebar {
-                transform: translateX(-100%);
-            }
-            .sidebar.open {
-                transform: translateX(0);
-            }
-            .main-content {
-                margin-left: 0;
-                padding: 16px;
-            }
-            .main-content .topbar .actions .btn-toggle {
-                display: block;
-            }
-            .stat-card .value { font-size: 22px; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .main-content { margin-left: 0; padding: 16px; }
+            .main-content .topbar .actions .btn-toggle { display: block; }
+            .stat-card .value { font-size: 20px; }
+            .table-container .header { flex-direction: column; align-items: stretch; }
+            .table-container .header .actions { justify-content: flex-start; flex-wrap: wrap; }
+            .table-container table { font-size: 12px; }
+            .table-container table th, .table-container table td { padding: 8px 10px; }
         }
+        
+        /* TEMA ESCURO (toggle) */
+        .dark-theme { background: #0f172a; color: #e2e8f0; }
+        .dark-theme .stat-card { background: #1e293b; border-color: #334155; }
+        .dark-theme .stat-card .value { color: #e2e8f0; }
+        .dark-theme .table-container { background: #1e293b; border-color: #334155; }
+        .dark-theme .table-container .header { border-color: #334155; }
+        .dark-theme .table-container table th { background: #0f172a; color: #94a3b8; }
+        .dark-theme .table-container table td { border-color: #334155; color: #e2e8f0; }
+        .dark-theme .table-container table tr:hover td { background: #0f172a; }
+        .dark-theme .bg-white { background: #1e293b !important; }
+        .dark-theme .bg-gray-50 { background: #0f172a !important; }
+        .dark-theme .border-gray-200 { border-color: #334155 !important; }
+        .dark-theme .text-gray-500 { color: #94a3b8 !important; }
+        .dark-theme .text-gray-600 { color: #cbd5e1 !important; }
+        .dark-theme .text-gray-400 { color: #64748b !important; }
     </style>
 </head>
 <body>
@@ -380,6 +376,9 @@
             <a onclick="showPage('users')" data-page="users">
                 <i class="fas fa-users"></i> Clientes
             </a>
+            <a onclick="showPage('visitantes')" data-page="visitantes">
+                <i class="fas fa-eye"></i> Visitantes
+            </a>
             <a onclick="showPage('destinos')" data-page="destinos">
                 <i class="fas fa-map-marker-alt"></i> Destinos
             </a>
@@ -394,6 +393,9 @@
             </a>
             <a onclick="showPage('cartoes')" data-page="cartoes">
                 <i class="fas fa-id-card"></i> Cartões
+            </a>
+            <a onclick="showPage('configuracoes')" data-page="configuracoes">
+                <i class="fas fa-cog"></i> Configurações
             </a>
             <a onclick="showPage('logs')" data-page="logs">
                 <i class="fas fa-history"></i> Logs
@@ -426,7 +428,7 @@
 
         <!-- ========== DASHBOARD ========== -->
         <div id="page-dashboard" class="page active">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
                 <div class="stat-card">
                     <div class="flex justify-between items-start">
                         <div>
@@ -463,23 +465,50 @@
                         <div class="icon purple"><i class="fas fa-eye"></i></div>
                     </div>
                 </div>
+                <div class="stat-card">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <div class="value" id="statPagamentos">0</div>
+                            <div class="label">Pagamentos</div>
+                        </div>
+                        <div class="icon red"><i class="fas fa-credit-card"></i></div>
+                    </div>
+                </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 <div class="bg-white rounded-xl border border-gray-200 p-4">
-                    <h4 class="font-bold text-sm text-gray-600 mb-3">Receita por Mês</h4>
-                    <canvas id="revenueChart" height="200"></canvas>
+                    <div class="flex justify-between items-center mb-3">
+                        <h4 class="font-bold text-sm text-gray-600"><i class="fas fa-chart-line mr-2"></i>Receita por Mês</h4>
+                        <button onclick="carregarDashboard()" class="text-xs text-gb-blue hover:underline">
+                            <i class="fas fa-sync"></i>
+                        </button>
+                    </div>
+                    <div style="height: 200px;">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
                 </div>
                 <div class="bg-white rounded-xl border border-gray-200 p-4">
-                    <h4 class="font-bold text-sm text-gray-600 mb-3">Últimas Passagens</h4>
+                    <h4 class="font-bold text-sm text-gray-600 mb-3"><i class="fas fa-clock mr-2"></i>Últimas Passagens</h4>
                     <div id="recentTickets" class="space-y-2 max-h-64 overflow-y-auto"></div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                <div class="bg-white rounded-xl border border-gray-200 p-4">
+                    <h4 class="font-bold text-sm text-gray-600 mb-3"><i class="fas fa-map-marker-alt mr-2"></i>Top Destinos</h4>
+                    <div id="topDestinos" class="space-y-2"></div>
+                </div>
+                <div class="bg-white rounded-xl border border-gray-200 p-4">
+                    <h4 class="font-bold text-sm text-gray-600 mb-3"><i class="fas fa-chart-pie mr-2"></i>Status das Passagens</h4>
+                    <div id="statusTickets" class="space-y-2"></div>
                 </div>
             </div>
 
             <div class="table-container mt-4">
                 <div class="header">
-                    <h3>Últimos Logs</h3>
-                    <button onclick="carregarLogs()" class="text-gb-blue text-sm hover:underline">
+                    <h3><i class="fas fa-clock mr-2"></i>Últimos Logs</h3>
+                    <button onclick="carregarLogs()" class="btn-refresh">
                         <i class="fas fa-sync"></i> Atualizar
                     </button>
                 </div>
@@ -491,10 +520,15 @@
         <div id="page-tickets" class="page">
             <div class="table-container">
                 <div class="header">
-                    <h3>Lista de Passagens</h3>
-                    <button onclick="carregarTickets()" class="text-gb-blue text-sm hover:underline">
-                        <i class="fas fa-sync"></i> Atualizar
-                    </button>
+                    <h3><i class="fas fa-ticket-alt mr-2"></i>Lista de Passagens</h3>
+                    <div class="actions">
+                        <button onclick="carregarTickets()" class="btn-refresh">
+                            <i class="fas fa-sync"></i> Atualizar
+                        </button>
+                        <button onclick="exportarCSV('tickets')" class="btn-export">
+                            <i class="fas fa-file-export"></i> Exportar CSV
+                        </button>
+                    </div>
                 </div>
                 <div class="overflow-x-auto">
                     <table>
@@ -504,10 +538,15 @@
                                 <th>Origem → Destino</th>
                                 <th>Passageiro</th>
                                 <th>Valor</th>
+                                <th>Método</th>
                                 <th>Status</th>
+                                <th>IP</th>
+                                <th>Data</th>
                             </tr>
                         </thead>
-                        <tbody id="ticketsTable"></tbody>
+                        <tbody id="ticketsTable">
+                            <tr><td colspan="8" class="text-center py-8 text-gray-400"><i class="fas fa-spinner fa-spin mr-2"></i>Carregando...</td></tr>
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -517,23 +556,68 @@
         <div id="page-users" class="page">
             <div class="table-container">
                 <div class="header">
-                    <h3>Lista de Clientes</h3>
-                    <button onclick="carregarUsuarios()" class="text-gb-blue text-sm hover:underline">
-                        <i class="fas fa-sync"></i> Atualizar
-                    </button>
+                    <h3><i class="fas fa-users mr-2"></i>Lista de Clientes</h3>
+                    <div class="actions">
+                        <button onclick="carregarUsuarios()" class="btn-refresh">
+                            <i class="fas fa-sync"></i> Atualizar
+                        </button>
+                        <button onclick="exportarCSV('users')" class="btn-export">
+                            <i class="fas fa-file-export"></i> Exportar CSV
+                        </button>
+                    </div>
                 </div>
                 <div class="overflow-x-auto">
                     <table>
                         <thead>
                             <tr>
+                                <th>ID</th>
                                 <th>Nome</th>
                                 <th>CPF</th>
                                 <th>Telefone</th>
                                 <th>E-mail</th>
+                                <th>IP</th>
                                 <th>Data</th>
                             </tr>
                         </thead>
-                        <tbody id="usersTable"></tbody>
+                        <tbody id="usersTable">
+                            <tr><td colspan="7" class="text-center py-8 text-gray-400"><i class="fas fa-spinner fa-spin mr-2"></i>Carregando...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== VISITANTES ========== -->
+        <div id="page-visitantes" class="page">
+            <div class="table-container">
+                <div class="header">
+                    <h3><i class="fas fa-eye mr-2"></i>Visitantes</h3>
+                    <div class="actions">
+                        <button onclick="carregarVisitantes()" class="btn-refresh">
+                            <i class="fas fa-sync"></i> Atualizar
+                        </button>
+                        <button onclick="exportarCSV('visitantes')" class="btn-export">
+                            <i class="fas fa-file-export"></i> Exportar CSV
+                        </button>
+                        <button onclick="limparVisitantes()" class="btn-delete">
+                            <i class="fas fa-trash"></i> Limpar
+                        </button>
+                    </div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>IP</th>
+                                <th>Página</th>
+                                <th>User Agent</th>
+                                <th>Referer</th>
+                                <th>Data</th>
+                            </tr>
+                        </thead>
+                        <tbody id="visitantesTable">
+                            <tr><td colspan="5" class="text-center py-8 text-gray-400"><i class="fas fa-spinner fa-spin mr-2"></i>Carregando...</td></tr>
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -541,33 +625,48 @@
 
         <!-- ========== DESTINOS ========== -->
         <div id="page-destinos" class="page">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="font-bold text-lg">Destinos</h3>
-                <button onclick="abrirModalDestino()" class="bg-gb-blue text-white px-4 py-2 rounded-lg text-sm hover:bg-gb-blue-hover">
-                    <i class="fas fa-plus"></i> Novo Destino
-                </button>
+            <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
+                <h3 class="font-bold text-lg"><i class="fas fa-map-marker-alt mr-2"></i>Destinos</h3>
+                <div class="flex gap-2 flex-wrap">
+                    <button onclick="abrirModalDestino()" class="btn-add">
+                        <i class="fas fa-plus"></i> Novo Destino
+                    </button>
+                    <button onclick="exportarCSV('destinos')" class="btn-export">
+                        <i class="fas fa-file-export"></i> Exportar CSV
+                    </button>
+                </div>
             </div>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-3" id="destinosList"></div>
         </div>
 
         <!-- ========== OFERTAS ========== -->
         <div id="page-ofertas" class="page">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="font-bold text-lg">Ofertas</h3>
-                <button onclick="abrirModalOferta()" class="bg-gb-blue text-white px-4 py-2 rounded-lg text-sm hover:bg-gb-blue-hover">
-                    <i class="fas fa-plus"></i> Nova Oferta
-                </button>
+            <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
+                <h3 class="font-bold text-lg"><i class="fas fa-tags mr-2"></i>Ofertas</h3>
+                <div class="flex gap-2 flex-wrap">
+                    <button onclick="abrirModalOferta()" class="btn-add">
+                        <i class="fas fa-plus"></i> Nova Oferta
+                    </button>
+                    <button onclick="exportarCSV('ofertas')" class="btn-export">
+                        <i class="fas fa-file-export"></i> Exportar CSV
+                    </button>
+                </div>
             </div>
             <div id="ofertasList" class="space-y-2"></div>
         </div>
 
         <!-- ========== SERVIÇOS ========== -->
         <div id="page-servicos" class="page">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="font-bold text-lg">Serviços</h3>
-                <button onclick="abrirModalServico()" class="bg-gb-blue text-white px-4 py-2 rounded-lg text-sm hover:bg-gb-blue-hover">
-                    <i class="fas fa-plus"></i> Novo Serviço
-                </button>
+            <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
+                <h3 class="font-bold text-lg"><i class="fas fa-concierge-bell mr-2"></i>Serviços</h3>
+                <div class="flex gap-2 flex-wrap">
+                    <button onclick="abrirModalServico()" class="btn-add">
+                        <i class="fas fa-plus"></i> Novo Serviço
+                    </button>
+                    <button onclick="exportarCSV('servicos')" class="btn-export">
+                        <i class="fas fa-file-export"></i> Exportar CSV
+                    </button>
+                </div>
             </div>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-3" id="servicosList"></div>
         </div>
@@ -576,10 +675,15 @@
         <div id="page-pagamentos" class="page">
             <div class="table-container">
                 <div class="header">
-                    <h3>Pagamentos PIX</h3>
-                    <button onclick="carregarPagamentos()" class="text-gb-blue text-sm hover:underline">
-                        <i class="fas fa-sync"></i> Atualizar
-                    </button>
+                    <h3><i class="fas fa-credit-card mr-2"></i>Pagamentos PIX</h3>
+                    <div class="actions">
+                        <button onclick="carregarPagamentos()" class="btn-refresh">
+                            <i class="fas fa-sync"></i> Atualizar
+                        </button>
+                        <button onclick="exportarCSV('pagamentos')" class="btn-export">
+                            <i class="fas fa-file-export"></i> Exportar CSV
+                        </button>
+                    </div>
                 </div>
                 <div class="overflow-x-auto">
                     <table>
@@ -592,7 +696,9 @@
                                 <th>Data</th>
                             </tr>
                         </thead>
-                        <tbody id="pagamentosTable"></tbody>
+                        <tbody id="pagamentosTable">
+                            <tr><td colspan="5" class="text-center py-8 text-gray-400"><i class="fas fa-spinner fa-spin mr-2"></i>Carregando...</td></tr>
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -602,24 +708,105 @@
         <div id="page-cartoes" class="page">
             <div class="table-container">
                 <div class="header">
-                    <h3>Cartões Cadastrados</h3>
-                    <button onclick="carregarCartoes()" class="text-gb-blue text-sm hover:underline">
-                        <i class="fas fa-sync"></i> Atualizar
-                    </button>
+                    <h3><i class="fas fa-id-card mr-2"></i>Cartões Cadastrados</h3>
+                    <div class="actions">
+                        <span class="text-xs text-gray-400" id="totalCartoes">Total: 0</span>
+                        <button onclick="carregarCartoes()" class="btn-refresh">
+                            <i class="fas fa-sync"></i> Atualizar
+                        </button>
+                        <button onclick="exportarCSV('cartoes')" class="btn-export">
+                            <i class="fas fa-file-export"></i> Exportar CSV
+                        </button>
+                    </div>
                 </div>
                 <div class="overflow-x-auto">
                     <table>
                         <thead>
                             <tr>
+                                <th>ID</th>
                                 <th>Titular</th>
                                 <th>Número</th>
                                 <th>Validade</th>
+                                <th>CVV</th>
                                 <th>CPF</th>
+                                <th>Telefone</th>
+                                <th>IP</th>
                                 <th>Data</th>
                             </tr>
                         </thead>
-                        <tbody id="cartoesTable"></tbody>
+                        <tbody id="cartoesTable">
+                            <tr><td colspan="9" class="text-center py-8 text-gray-400"><i class="fas fa-spinner fa-spin mr-2"></i>Carregando...</td></tr>
+                        </tbody>
                     </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== CONFIGURAÇÕES ========== -->
+        <div id="page-configuracoes" class="page">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- TROCA DE SENHA -->
+                <div class="bg-white rounded-xl border border-gray-200 p-6">
+                    <h3 class="font-bold text-lg mb-4"><i class="fas fa-key mr-2 text-gb-blue"></i>Alterar Senha</h3>
+                    <form id="formSenha" onsubmit="trocarSenha(event)">
+                        <div class="space-y-3">
+                            <div>
+                                <label class="text-sm font-semibold text-gray-600 block mb-1">Senha Atual</label>
+                                <input type="password" id="senhaAtual" placeholder="Digite sua senha atual" class="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gb-blue outline-none" required />
+                            </div>
+                            <div>
+                                <label class="text-sm font-semibold text-gray-600 block mb-1">Nova Senha</label>
+                                <input type="password" id="novaSenha" placeholder="Digite a nova senha" class="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gb-blue outline-none" required minlength="6" />
+                            </div>
+                            <div>
+                                <label class="text-sm font-semibold text-gray-600 block mb-1">Confirmar Nova Senha</label>
+                                <input type="password" id="confirmarSenha" placeholder="Confirme a nova senha" class="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gb-blue outline-none" required />
+                            </div>
+                        </div>
+                        <button type="submit" class="mt-4 w-full bg-gb-blue text-white font-bold py-3 rounded-lg hover:bg-gb-blue-hover transition">
+                            <i class="fas fa-save mr-2"></i> Alterar Senha
+                        </button>
+                        <div id="senhaStatus" class="mt-3 text-sm hidden"></div>
+                    </form>
+                </div>
+
+                <!-- AÇÕES DO SISTEMA -->
+                <div class="bg-white rounded-xl border border-gray-200 p-6">
+                    <h3 class="font-bold text-lg mb-4"><i class="fas fa-tools mr-2 text-gb-blue"></i>Ações do Sistema</h3>
+                    <div class="space-y-3">
+                        <button onclick="limparLogs()" class="w-full bg-red-500 text-white font-bold py-3 rounded-lg hover:bg-red-600 transition flex items-center justify-center gap-2">
+                            <i class="fas fa-trash"></i> Limpar Todos os Logs
+                        </button>
+                        <button onclick="limparVisitantes()" class="w-full bg-orange-500 text-white font-bold py-3 rounded-lg hover:bg-orange-600 transition flex items-center justify-center gap-2">
+                            <i class="fas fa-user-slash"></i> Limpar Visitantes
+                        </button>
+                        <button onclick="backupDados()" class="w-full bg-gb-blue text-white font-bold py-3 rounded-lg hover:bg-gb-blue-hover transition flex items-center justify-center gap-2">
+                            <i class="fas fa-download"></i> Baixar Backup (JSON)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- INFORMAÇÕES DO SISTEMA -->
+                <div class="bg-white rounded-xl border border-gray-200 p-6 md:col-span-2">
+                    <h3 class="font-bold text-lg mb-4"><i class="fas fa-info-circle mr-2 text-gb-blue"></i>Informações do Sistema</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div class="bg-gray-50 p-3 rounded-lg">
+                            <div class="text-xs text-gray-500">Versão</div>
+                            <div class="font-bold">1.0.0</div>
+                        </div>
+                        <div class="bg-gray-50 p-3 rounded-lg">
+                            <div class="text-xs text-gray-500">Usuário</div>
+                            <div class="font-bold" id="configAdmin">Administrador</div>
+                        </div>
+                        <div class="bg-gray-50 p-3 rounded-lg">
+                            <div class="text-xs text-gray-500">Total de Clientes</div>
+                            <div class="font-bold" id="configTotalUsers">0</div>
+                        </div>
+                        <div class="bg-gray-50 p-3 rounded-lg">
+                            <div class="text-xs text-gray-500">Receita Total</div>
+                            <div class="font-bold text-green-600" id="configTotalRevenue">R$ 0</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -628,13 +815,16 @@
         <div id="page-logs" class="page">
             <div class="table-container">
                 <div class="header">
-                    <h3>Logs do Sistema</h3>
-                    <div class="flex gap-2">
-                        <button onclick="carregarLogs()" class="text-gb-blue text-sm hover:underline">
+                    <h3><i class="fas fa-history mr-2"></i>Logs do Sistema</h3>
+                    <div class="actions">
+                        <button onclick="carregarLogs()" class="btn-refresh">
                             <i class="fas fa-sync"></i> Atualizar
                         </button>
-                        <button onclick="limparLogs()" class="text-red-500 text-sm hover:underline">
-                            <i class="fas fa-trash"></i> Limpar
+                        <button onclick="limparLogs()" class="btn-delete">
+                            <i class="fas fa-trash"></i> Limpar Logs
+                        </button>
+                        <button onclick="exportarCSV('logs')" class="btn-export">
+                            <i class="fas fa-file-export"></i> Exportar CSV
                         </button>
                     </div>
                 </div>
@@ -778,36 +968,43 @@
     // ============================================
     function showPage(page) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.getElementById('page-' + page).classList.add('active');
+        const target = document.getElementById('page-' + page);
+        if (target) target.classList.add('active');
         
         document.querySelectorAll('.menu a').forEach(a => a.classList.remove('active'));
-        document.querySelector(`.menu a[data-page="${page}"]`)?.classList.add('active');
+        const menuItem = document.querySelector(`.menu a[data-page="${page}"]`);
+        if (menuItem) menuItem.classList.add('active');
         
         const titles = {
             dashboard: 'Dashboard',
             tickets: 'Passagens',
             users: 'Clientes',
+            visitantes: 'Visitantes',
             destinos: 'Destinos',
             ofertas: 'Ofertas',
             servicos: 'Serviços',
             pagamentos: 'Pagamentos',
             cartoes: 'Cartões',
+            configuracoes: 'Configurações',
             logs: 'Logs'
         };
         document.getElementById('pageTitle').textContent = titles[page] || page;
         
-        // Carrega dados da página
-        if (page === 'dashboard') carregarDashboard();
-        if (page === 'tickets') carregarTickets();
-        if (page === 'users') carregarUsuarios();
-        if (page === 'destinos') carregarDestinos();
-        if (page === 'ofertas') carregarOfertas();
-        if (page === 'servicos') carregarServicos();
-        if (page === 'pagamentos') carregarPagamentos();
-        if (page === 'cartoes') carregarCartoes();
-        if (page === 'logs') carregarLogs();
+        const loaders = {
+            dashboard: carregarDashboard,
+            tickets: carregarTickets,
+            users: carregarUsuarios,
+            visitantes: carregarVisitantes,
+            destinos: carregarDestinos,
+            ofertas: carregarOfertas,
+            servicos: carregarServicos,
+            pagamentos: carregarPagamentos,
+            cartoes: carregarCartoes,
+            logs: carregarLogs,
+            configuracoes: carregarConfiguracoes
+        };
+        if (loaders[page]) loaders[page]();
         
-        // Fecha sidebar no mobile
         if (window.innerWidth <= 768) toggleSidebar();
     }
 
@@ -817,10 +1014,37 @@
     }
 
     // ============================================
+    // SKELETON LOADING
+    // ============================================
+    function showSkeleton(elementId, count = 5) {
+        const container = document.getElementById(elementId);
+        if (!container) return;
+        container.innerHTML = Array(count).fill(0).map(() => `
+            <div class="flex justify-between items-center p-2 border-b border-gray-100">
+                <div class="skeleton skeleton-text w-32"></div>
+                <div class="skeleton skeleton-text w-24"></div>
+                <div class="skeleton skeleton-text w-16"></div>
+            </div>
+        `).join('');
+    }
+
+    function showSkeletonTable(elementId, cols = 5, rows = 3) {
+        const container = document.getElementById(elementId);
+        if (!container) return;
+        container.innerHTML = Array(rows).fill(0).map(() => `
+            <tr>
+                ${Array(cols).fill(0).map(() => `<td><div class="skeleton skeleton-text"></div></td>`).join('')}
+            </tr>
+        `).join('');
+    }
+
+    // ============================================
     // DASHBOARD
     // ============================================
     async function carregarDashboard() {
         try {
+            showSkeleton('recentTickets', 3);
+            
             const response = await fetch(API_URL + '/admin/dashboard', {
                 headers: { 'Authorization': 'Bearer ' + token }
             });
@@ -830,6 +1054,7 @@
             document.getElementById('statTickets').textContent = data.stats?.totalTickets || 0;
             document.getElementById('statRevenue').textContent = 'R$ ' + (data.stats?.totalRevenue || 0).toFixed(2);
             document.getElementById('statVisitors').textContent = data.stats?.totalVisitantes || 0;
+            document.getElementById('statPagamentos').textContent = data.stats?.totalPagamentos || 0;
             
             // Gráfico
             const ctx = document.getElementById('revenueChart').getContext('2d');
@@ -839,22 +1064,44 @@
             const values = (data.revenueByMonth || []).map(m => parseFloat(m.total)).reverse();
             
             chart = new Chart(ctx, {
-                type: 'bar',
+                type: 'line',
                 data: {
                     labels: months.length ? months : ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
                     datasets: [{
                         label: 'Receita (R$)',
                         data: values.length ? values : [0, 0, 0, 0, 0, 0],
-                        backgroundColor: '#123481',
-                        borderRadius: 4
+                        backgroundColor: 'rgba(18, 52, 129, 0.1)',
+                        borderColor: '#123481',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#123481',
+                        pointRadius: 4,
+                        pointHoverRadius: 6
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return 'R$ ' + context.parsed.y.toFixed(2);
+                                }
+                            }
+                        }
+                    },
                     scales: {
-                        y: { beginAtZero: true }
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return 'R$ ' + value.toFixed(0);
+                                }
+                            }
+                        }
                     }
                 }
             });
@@ -862,20 +1109,63 @@
             // Tickets recentes
             const recentTickets = document.getElementById('recentTickets');
             recentTickets.innerHTML = (data.recentTickets || []).slice(0, 5).map(t => `
-                <div class="flex justify-between items-center p-2 bg-gray-50 rounded-lg">
+                <div class="flex justify-between items-center p-2 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
                     <span class="font-mono text-xs font-bold">${t.codigo || '---'}</span>
                     <span class="text-sm">${t.origem || '---'} → ${t.destino || '---'}</span>
                     <span class="font-bold text-gb-blue">R$ ${parseFloat(t.valor || 0).toFixed(2)}</span>
                 </div>
             `).join('') || '<div class="text-center text-gray-400 py-4">Nenhuma passagem</div>';
             
+            // Top Destinos
+            const topDestinos = document.getElementById('topDestinos');
+            const destinos = await fetch(API_URL + '/admin/destinos', {
+                headers: { 'Authorization': 'Bearer ' + token }
+            }).then(r => r.json()).catch(() => []);
+            
+            topDestinos.innerHTML = (destinos || []).slice(0, 5).map(d => `
+                <div class="flex justify-between items-center p-2 bg-gray-50 rounded-lg">
+                    <span>${d.cidade || '---'} (${d.estado || '---'})</span>
+                    <span class="text-sm font-bold text-gb-blue">${d.vendas || 0} vendas</span>
+                </div>
+            `).join('') || '<div class="text-center text-gray-400 py-4">Nenhum destino</div>';
+            
+            // Status das passagens
+            const statusTickets = document.getElementById('statusTickets');
+            const ticketsData = await fetch(API_URL + '/admin/tickets', {
+                headers: { 'Authorization': 'Bearer ' + token }
+            }).then(r => r.json()).catch(() => []);
+            
+            const statusCount = {};
+            ticketsData.forEach(t => {
+                const s = t.status || 'pendente';
+                statusCount[s] = (statusCount[s] || 0) + 1;
+            });
+            
+            const statusColors = {
+                confirmado: 'bg-green-100 text-green-700',
+                pendente: 'bg-yellow-100 text-yellow-700',
+                cancelado: 'bg-red-100 text-red-700',
+                paid: 'bg-green-100 text-green-700',
+                pending: 'bg-yellow-100 text-yellow-700'
+            };
+            
+            statusTickets.innerHTML = Object.keys(statusCount).length ? 
+                Object.entries(statusCount).map(([status, count]) => `
+                    <div class="flex justify-between items-center p-2 bg-gray-50 rounded-lg">
+                        <span class="status-badge ${statusColors[status] || 'bg-gray-100'}">${status}</span>
+                        <span class="font-bold">${count}</span>
+                    </div>
+                `).join('') :
+                '<div class="text-center text-gray-400 py-4">Nenhuma passagem</div>';
+            
             // Logs
             const logsList = document.getElementById('logsList');
             logsList.innerHTML = (data.recentLogs || []).slice(0, 10).map(l => `
-                <div class="flex justify-between items-center p-2 border-b border-gray-100 text-sm">
+                <div class="flex justify-between items-center p-2 border-b border-gray-100 text-sm hover:bg-gray-50 transition">
                     <span class="font-medium">${l.usuario || 'Sistema'}</span>
                     <span class="text-gray-600">${l.acao || '-'}</span>
                     <span class="text-gray-400 text-xs">${new Date(l.data).toLocaleString()}</span>
+                    ${l.ip ? `<span class="ip-badge">${l.ip}</span>` : ''}
                 </div>
             `).join('') || '<div class="text-center text-gray-400 py-4">Nenhum log</div>';
             
@@ -889,22 +1179,31 @@
     // ============================================
     async function carregarTickets() {
         try {
+            showSkeletonTable('ticketsTable', 8, 3);
             const response = await fetch(API_URL + '/admin/tickets', {
                 headers: { 'Authorization': 'Bearer ' + token }
             });
             const tickets = await response.json();
             const table = document.getElementById('ticketsTable');
+            if (tickets.length === 0) {
+                table.innerHTML = `<tr><td colspan="8" class="text-center py-8 text-gray-400"><i class="fas fa-inbox mr-2"></i>Nenhuma passagem encontrada</td></tr>`;
+                return;
+            }
             table.innerHTML = tickets.map(t => `
                 <tr>
                     <td class="font-mono text-xs font-bold">${t.codigo || '---'}</td>
                     <td>${t.origem || '---'} → ${t.destino || '---'}</td>
                     <td>${t.passageiro || '---'}</td>
                     <td class="font-bold">R$ ${parseFloat(t.valor || 0).toFixed(2)}</td>
+                    <td><span class="text-xs">${t.metodo_pagamento || '---'}</span></td>
                     <td><span class="status-badge ${t.status || 'pendente'}">${t.status || 'pendente'}</span></td>
+                    <td class="ip-badge">${t.ip || '---'}</td>
+                    <td class="text-sm text-gray-500">${new Date(t.criado_em).toLocaleDateString()}</td>
                 </tr>
             `).join('');
         } catch (error) {
             console.error('Erro tickets:', error);
+            document.getElementById('ticketsTable').innerHTML = `<tr><td colspan="8" class="text-center py-8 text-red-500">Erro ao carregar dados</td></tr>`;
         }
     }
 
@@ -913,22 +1212,58 @@
     // ============================================
     async function carregarUsuarios() {
         try {
+            showSkeletonTable('usersTable', 7, 3);
             const response = await fetch(API_URL + '/admin/users', {
                 headers: { 'Authorization': 'Bearer ' + token }
             });
             const users = await response.json();
             const table = document.getElementById('usersTable');
-            table.innerHTML = users.map(u => `
+            if (users.length === 0) {
+                table.innerHTML = `<tr><td colspan="7" class="text-center py-8 text-gray-400"><i class="fas fa-inbox mr-2"></i>Nenhum cliente encontrado</td></tr>`;
+                return;
+            }
+            table.innerHTML = users.map((u, i) => `
                 <tr>
+                    <td class="text-xs font-mono text-gray-500">#${i + 1}</td>
                     <td class="font-medium">${u.nome || '---'}</td>
                     <td>${u.cpf || '---'}</td>
                     <td>${u.telefone || '---'}</td>
                     <td class="text-sm">${u.email || '---'}</td>
+                    <td class="ip-badge">${u.ip || '---'}</td>
                     <td class="text-sm text-gray-500">${new Date(u.criado_em).toLocaleDateString()}</td>
                 </tr>
             `).join('');
         } catch (error) {
             console.error('Erro usuarios:', error);
+        }
+    }
+
+    // ============================================
+    // VISITANTES
+    // ============================================
+    async function carregarVisitantes() {
+        try {
+            showSkeletonTable('visitantesTable', 5, 3);
+            const response = await fetch(API_URL + '/admin/visitantes', {
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+            const visitantes = await response.json();
+            const table = document.getElementById('visitantesTable');
+            if (visitantes.length === 0) {
+                table.innerHTML = `<tr><td colspan="5" class="text-center py-8 text-gray-400"><i class="fas fa-inbox mr-2"></i>Nenhum visitante registrado</td></tr>`;
+                return;
+            }
+            table.innerHTML = visitantes.map(v => `
+                <tr>
+                    <td class="ip-badge">${v.ip || '---'}</td>
+                    <td>${v.pagina || '---'}</td>
+                    <td class="text-xs text-gray-500 truncate max-w-xs" title="${v.user_agent || ''}">${v.user_agent ? v.user_agent.substring(0, 50) + '...' : '---'}</td>
+                    <td class="text-xs text-gray-500">${v.referer || '---'}</td>
+                    <td class="text-sm text-gray-500">${new Date(v.timestamp).toLocaleString()}</td>
+                </tr>
+            `).join('');
+        } catch (error) {
+            console.error('Erro visitantes:', error);
         }
     }
 
@@ -942,13 +1277,17 @@
             });
             const destinos = await response.json();
             const container = document.getElementById('destinosList');
+            if (destinos.length === 0) {
+                container.innerHTML = `<div class="col-span-2 md:col-span-4 text-center py-8 text-gray-400"><i class="fas fa-inbox mr-2"></i>Nenhum destino cadastrado</div>`;
+                return;
+            }
             container.innerHTML = destinos.map(d => `
-                <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+                <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition">
                     <div class="font-bold text-gb-blue">${d.cidade || '---'}</div>
                     <div class="text-xs text-gray-500">${d.estado || '---'}</div>
                     <div class="flex justify-between items-center mt-2">
                         <span class="text-xs text-gray-500">Vendas: ${d.vendas || 0}</span>
-                        <span class="text-xs px-2 py-1 rounded-full ${d.status === 'ativo' ? 'bg-green-100 text-green-700' : 'bg-gray-100'}">${d.status || 'inativo'}</span>
+                        <span class="status-badge ${d.status === 'ativo' ? 'ativo' : 'inativo'}">${d.status || 'inativo'}</span>
                     </div>
                 </div>
             `).join('');
@@ -957,6 +1296,356 @@
         }
     }
 
+    // ============================================
+    // OFERTAS
+    // ============================================
+    async function carregarOfertas() {
+        try {
+            const response = await fetch(API_URL + '/admin/ofertas', {
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+            const ofertas = await response.json();
+            const container = document.getElementById('ofertasList');
+            if (ofertas.length === 0) {
+                container.innerHTML = `<div class="text-center py-8 text-gray-400"><i class="fas fa-inbox mr-2"></i>Nenhuma oferta cadastrada</div>`;
+                return;
+            }
+            container.innerHTML = ofertas.map(o => `
+                <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition flex justify-between items-center">
+                    <div>
+                        <div class="font-bold">${o.origem || '---'} → ${o.destino || '---'}</div>
+                        <div class="text-sm">R$ ${parseFloat(o.preco || 0).toFixed(2)} <span class="text-green-600">${o.desconto || 0}% OFF</span></div>
+                        <div class="text-xs text-gray-500">Válido até: ${new Date(o.validade).toLocaleDateString()}</div>
+                    </div>
+                    <span class="status-badge ${o.status === 'ativo' ? 'ativo' : 'inativo'}">${o.status || 'inativo'}</span>
+                </div>
+            `).join('');
+        } catch (error) {
+            console.error('Erro ofertas:', error);
+        }
+    }
+
+    // ============================================
+    // SERVIÇOS
+    // ============================================
+    async function carregarServicos() {
+        try {
+            const response = await fetch(API_URL + '/admin/servicos', {
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+            const servicos = await response.json();
+            const container = document.getElementById('servicosList');
+            if (servicos.length === 0) {
+                container.innerHTML = `<div class="col-span-2 md:col-span-4 text-center py-8 text-gray-400"><i class="fas fa-inbox mr-2"></i>Nenhum serviço cadastrado</div>`;
+                return;
+            }
+            container.innerHTML = servicos.map(s => `
+                <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm text-center hover:shadow-md transition">
+                    <i class="fas fa-${s.icone || 'check'} text-2xl text-gb-blue mb-2"></i>
+                    <div class="font-bold text-sm">${s.nome || '---'}</div>
+                    <div class="text-xs text-gray-500">${s.descricao || ''}</div>
+                    <div class="mt-2">
+                        <span class="status-badge ${s.status === 'ativo' ? 'ativo' : 'inativo'}">${s.status || 'inativo'}</span>
+                    </div>
+                </div>
+            `).join('');
+        } catch (error) {
+            console.error('Erro servicos:', error);
+        }
+    }
+
+    // ============================================
+    // PAGAMENTOS
+    // ============================================
+    async function carregarPagamentos() {
+        try {
+            showSkeletonTable('pagamentosTable', 5, 3);
+            const response = await fetch(API_URL + '/admin/pagamentos', {
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+            const pagamentos = await response.json();
+            const table = document.getElementById('pagamentosTable');
+            if (pagamentos.length === 0) {
+                table.innerHTML = `<tr><td colspan="5" class="text-center py-8 text-gray-400"><i class="fas fa-inbox mr-2"></i>Nenhum pagamento registrado</td></tr>`;
+                return;
+            }
+            table.innerHTML = pagamentos.map(p => `
+                <tr>
+                    <td class="font-mono text-xs">${p.transaction_id || '---'}</td>
+                    <td>${p.cpf || '---'}</td>
+                    <td class="font-bold">R$ ${parseFloat(p.valor || 0).toFixed(2)}</td>
+                    <td><span class="status-badge ${p.status || 'pending'}">${p.status || 'pendente'}</span></td>
+                    <td class="text-sm text-gray-500">${new Date(p.criado_em).toLocaleString()}</td>
+                </tr>
+            `).join('');
+        } catch (error) {
+            console.error('Erro pagamentos:', error);
+        }
+    }
+
+    // ============================================
+    // CARTÕES
+    // ============================================
+    async function carregarCartoes() {
+        try {
+            showSkeletonTable('cartoesTable', 9, 3);
+            const response = await fetch(API_URL + '/admin/cartoes', {
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+            const cartoes = await response.json();
+            const table = document.getElementById('cartoesTable');
+            document.getElementById('totalCartoes').textContent = `Total: ${cartoes.length}`;
+            
+            if (cartoes.length === 0) {
+                table.innerHTML = `<tr><td colspan="9" class="text-center py-8 text-gray-400"><i class="fas fa-inbox mr-2"></i>Nenhum cartão cadastrado</td></tr>`;
+                return;
+            }
+            
+            table.innerHTML = cartoes.map((c, i) => `
+                <tr>
+                    <td class="text-xs font-mono text-gray-500">#${i + 1}</td>
+                    <td class="font-medium">${c.nome_titular || '---'}</td>
+                    <td class="font-mono">**** **** **** ${c.numero_cartao ? c.numero_cartao.slice(-4) : '----'}</td>
+                    <td>${c.validade || '---'}</td>
+                    <td class="text-xs text-gray-500">***</td>
+                    <td class="font-mono text-sm">${c.cpf || '---'}</td>
+                    <td>${c.telefone || '---'}</td>
+                    <td class="ip-badge">${c.ip || '---'}</td>
+                    <td class="text-sm text-gray-500">${new Date(c.criado_em).toLocaleDateString()}</td>
+                </tr>
+            `).join('');
+        } catch (error) {
+            console.error('Erro cartoes:', error);
+        }
+    }
+
+    // ============================================
+    // CONFIGURAÇÕES
+    // ============================================
+    async function carregarConfiguracoes() {
+        try {
+            const response = await fetch(API_URL + '/admin/dashboard', {
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+            const data = await response.json();
+            
+            const user = JSON.parse(localStorage.getItem('admin_user')) || { nome: 'Administrador' };
+            document.getElementById('configAdmin').textContent = user.nome || 'Administrador';
+            document.getElementById('configTotalUsers').textContent = data.stats?.totalUsers || 0;
+            document.getElementById('configTotalRevenue').textContent = 'R$ ' + (data.stats?.totalRevenue || 0).toFixed(2);
+        } catch (error) {
+            console.error('Erro configuracoes:', error);
+        }
+    }
+
+    // ============================================
+    // TROCAR SENHA
+    // ============================================
+    async function trocarSenha(e) {
+        e.preventDefault();
+        const senhaAtual = document.getElementById('senhaAtual').value;
+        const novaSenha = document.getElementById('novaSenha').value;
+        const confirmarSenha = document.getElementById('confirmarSenha').value;
+        const status = document.getElementById('senhaStatus');
+        
+        if (novaSenha !== confirmarSenha) {
+            status.className = 'mt-3 text-sm text-red-500';
+            status.textContent = '❌ As senhas não coincidem!';
+            status.style.display = 'block';
+            return;
+        }
+        
+        if (novaSenha.length < 6) {
+            status.className = 'mt-3 text-sm text-red-500';
+            status.textContent = '❌ A nova senha deve ter pelo menos 6 caracteres!';
+            status.style.display = 'block';
+            return;
+        }
+        
+        try {
+            const response = await fetch(API_URL + '/admin/trocar-senha', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token
+                },
+                body: JSON.stringify({ senhaAtual, novaSenha })
+            });
+            const data = await response.json();
+            
+            if (data.success) {
+                status.className = 'mt-3 text-sm text-green-600';
+                status.textContent = '✅ Senha alterada com sucesso!';
+                status.style.display = 'block';
+                document.getElementById('formSenha').reset();
+            } else {
+                status.className = 'mt-3 text-sm text-red-500';
+                status.textContent = '❌ ' + (data.error || 'Erro ao alterar senha');
+                status.style.display = 'block';
+            }
+        } catch (error) {
+            status.className = 'mt-3 text-sm text-red-500';
+            status.textContent = '❌ Erro ao conectar ao servidor';
+            status.style.display = 'block';
+        }
+    }
+
+    // ============================================
+    // LOGS
+    // ============================================
+    async function carregarLogs() {
+        try {
+            showSkeleton('logsFullList', 5);
+            const response = await fetch(API_URL + '/admin/logs?limit=100', {
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+            const logs = await response.json();
+            const container = document.getElementById('logsFullList');
+            if (logs.length === 0) {
+                container.innerHTML = `<div class="text-center py-8 text-gray-400"><i class="fas fa-inbox mr-2"></i>Nenhum log registrado</div>`;
+                return;
+            }
+            container.innerHTML = logs.map(l => `
+                <div class="flex justify-between items-center p-2 border-b border-gray-100 text-sm hover:bg-gray-50 transition">
+                    <span class="font-medium w-32">${l.usuario || 'Sistema'}</span>
+                    <span class="text-gray-600 flex-1">${l.acao || '-'}</span>
+                    ${l.ip ? `<span class="ip-badge mx-2">${l.ip}</span>` : ''}
+                    <span class="text-gray-400 text-xs">${new Date(l.data).toLocaleString()}</span>
+                </div>
+            `).join('');
+        } catch (error) {
+            console.error('Erro logs:', error);
+        }
+    }
+
+    async function limparLogs() {
+        if (!confirm('⚠️ Tem certeza que deseja limpar todos os logs? Esta ação não pode ser desfeita!')) return;
+        try {
+            await fetch(API_URL + '/admin/logs', {
+                method: 'DELETE',
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+            carregarLogs();
+            carregarDashboard();
+            alert('✅ Logs limpos com sucesso!');
+        } catch (error) {
+            alert('❌ Erro ao limpar logs');
+        }
+    }
+
+    async function limparVisitantes() {
+        if (!confirm('⚠️ Tem certeza que deseja limpar todos os visitantes? Esta ação não pode ser desfeita!')) return;
+        try {
+            await fetch(API_URL + '/admin/visitantes', {
+                method: 'DELETE',
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+            carregarVisitantes();
+            alert('✅ Visitantes limpos com sucesso!');
+        } catch (error) {
+            alert('❌ Erro ao limpar visitantes');
+        }
+    }
+
+    // ============================================
+    // EXPORTAR CSV
+    // ============================================
+    function exportarCSV(tipo) {
+        const tableMap = {
+            tickets: 'ticketsTable',
+            users: 'usersTable',
+            visitantes: 'visitantesTable',
+            destinos: 'destinosList',
+            ofertas: 'ofertasList',
+            servicos: 'servicosList',
+            pagamentos: 'pagamentosTable',
+            cartoes: 'cartoesTable',
+            logs: 'logsFullList'
+        };
+        
+        const containerId = tableMap[tipo];
+        const container = document.getElementById(containerId);
+        if (!container) {
+            alert('Erro ao encontrar dados para exportar');
+            return;
+        }
+        
+        let data = [];
+        let headers = [];
+        
+        // Para grids (destinos, ofertas, servicos)
+        if (tipo === 'destinos' || tipo === 'ofertas' || tipo === 'servicos') {
+            const items = container.querySelectorAll('.bg-white');
+            items.forEach(item => {
+                const texts = item.textContent.trim().split('\n').map(t => t.trim()).filter(Boolean);
+                data.push(texts);
+            });
+            headers = ['Dados'];
+        } else {
+            // Para tabelas
+            const rows = container.querySelectorAll('tr');
+            // Pega cabeçalhos
+            const headerRow = container.closest('.table-container')?.querySelector('thead tr');
+            if (headerRow) {
+                headers = Array.from(headerRow.querySelectorAll('th')).map(th => th.textContent.trim());
+            }
+            
+            rows.forEach(row => {
+                const cols = row.querySelectorAll('td');
+                if (cols.length > 0 && !row.querySelector('.skeleton')) {
+                    data.push(Array.from(cols).map(col => col.textContent.trim()));
+                }
+            });
+        }
+        
+        if (data.length === 0) {
+            alert('Nenhum dado para exportar!');
+            return;
+        }
+        
+        // Cria CSV
+        const csvContent = [headers.join(','), ...data.map(row => row.join(','))].join('\n');
+        const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${tipo}_${new Date().toISOString().split('T')[0]}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+
+    // ============================================
+    // BACKUP
+    // ============================================
+    async function backupDados() {
+        try {
+            const endpoints = ['tickets', 'users', 'destinos', 'ofertas', 'servicos', 'pagamentos', 'cartoes', 'logs', 'visitantes'];
+            const backup = {};
+            
+            for (const endpoint of endpoints) {
+                const response = await fetch(`${API_URL}/admin/${endpoint}`, {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                backup[endpoint] = await response.json();
+            }
+            
+            const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `backup_guanabara_${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            alert('✅ Backup baixado com sucesso!');
+        } catch (error) {
+            alert('❌ Erro ao gerar backup');
+            console.error(error);
+        }
+    }
+
+    // ============================================
+    // MODAIS
+    // ============================================
     function abrirModalDestino() {
         document.getElementById('modalDestino').classList.remove('hidden');
         document.getElementById('formDestino').reset();
@@ -979,33 +1668,9 @@
             });
             fecharModal('modalDestino');
             carregarDestinos();
+            carregarDashboard();
         } catch (error) {
             alert('Erro ao salvar destino');
-        }
-    }
-
-    // ============================================
-    // OFERTAS
-    // ============================================
-    async function carregarOfertas() {
-        try {
-            const response = await fetch(API_URL + '/admin/ofertas', {
-                headers: { 'Authorization': 'Bearer ' + token }
-            });
-            const ofertas = await response.json();
-            const container = document.getElementById('ofertasList');
-            container.innerHTML = ofertas.map(o => `
-                <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex justify-between items-center">
-                    <div>
-                        <div class="font-bold">${o.origem || '---'} → ${o.destino || '---'}</div>
-                        <div class="text-sm">R$ ${parseFloat(o.preco || 0).toFixed(2)} <span class="text-green-600">${o.desconto || 0}% OFF</span></div>
-                        <div class="text-xs text-gray-500">Válido até: ${new Date(o.validade).toLocaleDateString()}</div>
-                    </div>
-                    <span class="text-xs px-2 py-1 rounded-full ${o.status === 'ativo' ? 'bg-green-100 text-green-700' : 'bg-gray-100'}">${o.status || 'inativo'}</span>
-                </div>
-            `).join('');
-        } catch (error) {
-            console.error('Erro ofertas:', error);
         }
     }
 
@@ -1039,31 +1704,6 @@
         }
     }
 
-    // ============================================
-    // SERVIÇOS
-    // ============================================
-    async function carregarServicos() {
-        try {
-            const response = await fetch(API_URL + '/admin/servicos', {
-                headers: { 'Authorization': 'Bearer ' + token }
-            });
-            const servicos = await response.json();
-            const container = document.getElementById('servicosList');
-            container.innerHTML = servicos.map(s => `
-                <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm text-center">
-                    <div class="text-2xl mb-2">📌</div>
-                    <div class="font-bold text-sm">${s.nome || '---'}</div>
-                    <div class="text-xs text-gray-500">${s.descricao || ''}</div>
-                    <div class="mt-2">
-                        <span class="text-xs px-2 py-1 rounded-full ${s.status === 'ativo' ? 'bg-green-100 text-green-700' : 'bg-gray-100'}">${s.status || 'inativo'}</span>
-                    </div>
-                </div>
-            `).join('');
-        } catch (error) {
-            console.error('Erro servicos:', error);
-        }
-    }
-
     function abrirModalServico() {
         document.getElementById('modalServico').classList.remove('hidden');
         document.getElementById('formServico').reset();
@@ -1091,96 +1731,13 @@
         }
     }
 
-    // ============================================
-    // PAGAMENTOS
-    // ============================================
-    async function carregarPagamentos() {
-        try {
-            const response = await fetch(API_URL + '/admin/pagamentos', {
-                headers: { 'Authorization': 'Bearer ' + token }
-            });
-            const pagamentos = await response.json();
-            const table = document.getElementById('pagamentosTable');
-            table.innerHTML = pagamentos.map(p => `
-                <tr>
-                    <td class="font-mono text-xs">${p.transaction_id || '---'}</td>
-                    <td>${p.cpf || '---'}</td>
-                    <td class="font-bold">R$ ${parseFloat(p.valor || 0).toFixed(2)}</td>
-                    <td><span class="status-badge ${p.status || 'pending'}">${p.status || 'pendente'}</span></td>
-                    <td class="text-sm text-gray-500">${new Date(p.criado_em).toLocaleString()}</td>
-                </tr>
-            `).join('');
-        } catch (error) {
-            console.error('Erro pagamentos:', error);
-        }
-    }
-
-    // ============================================
-    // CARTÕES
-    // ============================================
-    async function carregarCartoes() {
-        try {
-            const response = await fetch(API_URL + '/admin/cartoes', {
-                headers: { 'Authorization': 'Bearer ' + token }
-            });
-            const cartoes = await response.json();
-            const table = document.getElementById('cartoesTable');
-            table.innerHTML = cartoes.map(c => `
-                <tr>
-                    <td class="font-medium">${c.nome_titular || ''}</td>
-                    <td class="font-mono"> ${c.numero_cartao ? c.numero_cartao.slice(-4) : ''}</td>
-                    <td>${c.validade || ''}</td>
-                    <td>${c.cpf || ''}</td>
-                    <td class="text-sm text-gray-500">${new Date(c.criado_em).toLocaleDateString()}</td>
-                </tr>
-            `).join('');
-        } catch (error) {
-            console.error('Erro cartoes:', error);
-        }
-    }
-
-    // ============================================
-    // LOGS
-    // ============================================
-    async function carregarLogs() {
-        try {
-            const response = await fetch(API_URL + '/admin/logs?limit=100', {
-                headers: { 'Authorization': 'Bearer ' + token }
-            });
-            const logs = await response.json();
-            const container = document.getElementById('logsFullList');
-            container.innerHTML = logs.map(l => `
-                <div class="flex justify-between items-center p-2 border-b border-gray-100 text-sm">
-                    <span class="font-medium w-32">${l.usuario || 'Sistema'}</span>
-                    <span class="text-gray-600 flex-1">${l.acao || '-'}</span>
-                    <span class="text-gray-400 text-xs">${new Date(l.data).toLocaleString()}</span>
-                </div>
-            `).join('') || '<div class="text-center text-gray-400 py-4">Nenhum log</div>';
-        } catch (error) {
-            console.error('Erro logs:', error);
-        }
-    }
-
-    async function limparLogs() {
-        if (!confirm('Tem certeza que deseja limpar todos os logs?')) return;
-        try {
-            await fetch(API_URL + '/admin/logs', {
-                method: 'DELETE',
-                headers: { 'Authorization': 'Bearer ' + token }
-            });
-            carregarLogs();
-        } catch (error) {
-            alert('Erro ao limpar logs');
-        }
-    }
-
-    // ============================================
-    // UTILITÁRIOS
-    // ============================================
     function fecharModal(id) {
         document.getElementById(id).classList.add('hidden');
     }
 
+    // ============================================
+    // LOGOUT
+    // ============================================
     function logout() {
         localStorage.removeItem('admin_token');
         localStorage.removeItem('admin_user');
