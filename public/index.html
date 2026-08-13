@@ -28,9 +28,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     
     <style>
+        /* ========== RESET E BASE ========== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background: #F4F7FA; }
+        body { font-family: 'Inter', sans-serif; background: #F4F7FA; color: #1a2a4a; }
         
+        /* ========== SLIDER ========== */
         .slider-container { position: relative; width: 100%; height: 200px; overflow: hidden; border-radius: 16px; }
         .slider-slide { position: absolute; width: 100%; height: 100%; opacity: 0; transition: opacity 1s ease-in-out; object-fit: cover; }
         .slider-slide.active { opacity: 1; }
@@ -38,68 +40,22 @@
         .slider-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.5); cursor: pointer; transition: all 0.3s; }
         .slider-dot.active { background: #fff; width: 24px; border-radius: 4px; }
         
+        /* ========== CARDS ========== */
         .dest-card { transition: all 0.3s ease; cursor: pointer; }
         .dest-card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,0.1); }
         
+        /* ========== BOTTOM NAV ========== */
         .bottom-nav { backdrop-filter: blur(10px); background: rgba(255,255,255,0.95); }
+        
+        /* ========== ANIMAÇÕES ========== */
         .fade-in { animation: fadeIn 0.4s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
         
+        /* ========== PAGES ========== */
         .page { display: none; }
         .page.active { display: block; }
         
-        .seat-wrapper { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; padding: 8px; }
-        .seat { 
-            width: 42px; height: 42px; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 700; font-size: 11px; cursor: pointer; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); border: 2px solid #cbd5e1; background: #fff; color: #4a5568; position: relative; box-shadow: 0 2px 4px rgba(0,0,0,0.04);
-        }
-        .seat.available { border-color: #123481; color: #123481; background: #f0f4ff; }
-        .seat.available:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 6px 16px rgba(18, 52, 129, 0.25); background: #dce6ff; border-color: #123481; }
-        .seat.selected { border-color: #123481; background: #123481; color: white; transform: scale(1.08); box-shadow: 0 6px 20px rgba(18, 52, 129, 0.35); }
-        .seat.selected i { color: white !important; }
-        .seat.occupied { background: #e2e8f0; border-color: #cbd5e1; color: #a0aec0; cursor: not-allowed; opacity: 0.6; }
-        .seat i { font-size: 14px; margin-bottom: 2px; }
-        .seat.available i { color: #123481; }
-        
-        /* INPUT DATE - BRANCO COM TEMA AZUL */
-        input[type="date"] {
-            background: white !important;
-            color: #123481 !important;
-            border: 2px solid #123481 !important;
-            border-radius: 10px !important;
-            padding: 12px 16px !important;
-            font-weight: 600 !important;
-            font-size: 14px !important;
-            cursor: pointer !important;
-            transition: all 0.3s ease !important;
-            width: 100% !important;
-        }
-        input[type="date"]:focus {
-            outline: none !important;
-            box-shadow: 0 0 0 4px rgba(18, 52, 129, 0.15) !important;
-            border-color: #123481 !important;
-        }
-        input[type="date"]::-webkit-calendar-picker-indicator {
-            filter: invert(20%) sepia(80%) saturate(3000%) hue-rotate(210deg) brightness(70%);
-            cursor: pointer;
-            padding: 4px;
-        }
-        input[type="date"]:hover {
-            transform: scale(1.02);
-            box-shadow: 0 4px 12px rgba(18, 52, 129, 0.15);
-        }
-        input[type="date"]:active { transform: scale(0.98); }
-        
-        .date-label {
-            font-size: 11px;
-            font-weight: 700;
-            color: #123481;
-            margin-bottom: 4px;
-            display: block;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-        }
-
-        /* INPUT DE TEXTO COM SUGESTÃO - MELHORADO */
+        /* ========== INPUTS ESTILIZADOS ========== */
         .input-group {
             position: relative;
             display: flex;
@@ -112,7 +68,7 @@
         }
         .input-group:focus-within {
             border-color: #123481;
-            box-shadow: 0 0 0 4px rgba(18, 52, 129, 0.1);
+            box-shadow: 0 0 0 4px rgba(18,52,129,0.1);
         }
         .input-group .icon-left {
             color: #123481;
@@ -131,10 +87,8 @@
             min-width: 0;
             color: #1a2a4a;
         }
-        .input-group input::placeholder {
-            color: #94a3b8;
-            font-weight: 400;
-        }
+        .input-group input::placeholder { color: #94a3b8; font-weight: 400; }
+        
         .input-group .btn-swap {
             background: #123481;
             color: white;
@@ -152,64 +106,164 @@
             min-width: 36px;
             min-height: 36px;
         }
-        .input-group .btn-swap:hover {
-            background: #1a4a9e;
-            transform: scale(1.05);
+        .input-group .btn-swap:hover { background: #1a4a9e; transform: scale(1.05); }
+        .input-group .btn-swap:active { transform: scale(0.95); }
+        
+        /* ========== INPUT DATE ========== */
+        input[type="date"] {
+            background: white !important;
+            color: #123481 !important;
+            border: 2px solid #123481 !important;
+            border-radius: 10px !important;
+            padding: 12px 16px !important;
+            font-weight: 600 !important;
+            font-size: 14px !important;
+            cursor: pointer !important;
+            transition: all 0.3s ease !important;
+            width: 100% !important;
         }
-        .input-group .btn-swap:active {
-            transform: scale(0.95);
+        input[type="date"]:focus {
+            outline: none !important;
+            box-shadow: 0 0 0 4px rgba(18,52,129,0.15) !important;
+            border-color: #123481 !important;
         }
-        input[list]::-webkit-calendar-picker-indicator {
-            opacity: 0.5;
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(20%) sepia(80%) saturate(3000%) hue-rotate(210deg) brightness(70%);
             cursor: pointer;
             padding: 4px;
         }
-        input[list]:hover::-webkit-calendar-picker-indicator {
-            opacity: 1;
+        input[type="date"]:hover { transform: scale(1.02); box-shadow: 0 4px 12px rgba(18,52,129,0.15); }
+        input[type="date"]:active { transform: scale(0.98); }
+        
+        .date-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: #123481;
+            margin-bottom: 4px;
+            display: block;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
         }
-
+        
+        /* ========== DRAWER ========== */
         .drawer-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 998; display: none; backdrop-filter: blur(4px); }
         .drawer-overlay.active { display: block; }
-        .drawer-panel { position: fixed; bottom: -100%; left: 0; right: 0; max-height: 92vh; background: white; z-index: 999; border-radius: 24px 24px 0 0; transition: bottom 0.4s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; box-shadow: 0 -20px 40px rgba(0,0,0,0.15); overflow: hidden; }
+        .drawer-panel { position: fixed; bottom: -100%; left: 0; right: 0; max-height: 92vh; background: white; z-index: 999; border-radius: 24px 24px 0 0; transition: bottom 0.4s cubic-bezier(0.4,0,0.2,1); display: flex; flex-direction: column; box-shadow: 0 -20px 40px rgba(0,0,0,0.15); overflow: hidden; }
         .drawer-panel.active { bottom: 0; }
         
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 8px; }
         
-        @media (max-width: 480px) { 
-            .seat { width: 34px; height: 34px; font-size: 9px; } 
-            .seat i { font-size: 11px; }
-            .input-group { padding: 0 10px; }
-            .input-group input { padding: 12px 0; font-size: 14px; }
-            .input-group .btn-swap { padding: 6px 8px; min-width: 32px; min-height: 32px; font-size: 12px; }
+        /* ========== ASSENTOS (SEU DESIGN) ========== */
+        .bus-container {
+            width: 100%;
+            max-width: 350px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 12px;
+            padding: 16px;
         }
-
+        .bus-frame {
+            border: 2px solid #123481;
+            border-radius: 20px;
+            padding: 16px 10px;
+            position: relative;
+        }
+        .driver-icon { text-align: center; margin-bottom: 16px; }
+        .driver-icon svg { width: 36px; height: 36px; fill: #8a9ba8; }
+        
+        .seats-grid { display: flex; flex-direction: column; gap: 6px; }
+        .seat-row { display: flex; justify-content: space-between; align-items: center; }
+        .seat-group { display: flex; gap: 5px; width: 45%; }
+        .seat-group.left { justify-content: flex-start; }
+        .seat-group.right { justify-content: flex-end; }
+        .aisle { width: 10%; }
+        
+        .seat {
+            width: 38px; height: 38px; border-radius: 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; cursor: pointer; user-select: none; transition: all 0.2s ease; position: relative; border: 2px solid #d1d5db; background: #fff; color: #4a5568;
+        }
+        .seat svg { width: 16px; height: 16px; margin-bottom: 1px; }
+        .seat.available { border-color: #22c55e; color: #15803d; }
+        .seat.available svg { fill: #22c55e; }
+        .seat.available:hover { transform: scale(1.05); box-shadow: 0 4px 12px rgba(34,197,94,0.3); }
+        .seat.occupied { border-color: #d0d0d0; color: #a0a0a0; cursor: not-allowed; opacity: 0.6; }
+        .seat.occupied svg { fill: #d0d0d0; }
+        .seat.selected { border-color: #123481; background: #123481; color: #fff; transform: scale(1.08); box-shadow: 0 4px 16px rgba(18,52,129,0.35); }
+        .seat.selected svg { fill: #fff; }
+        .seat.empty { visibility: hidden; }
+        
+        .legend {
+            display: flex; justify-content: space-around; margin-top: 16px; padding-top: 12px; border-top: 1px solid #e0e0e0; font-size: 11px;
+        }
+        .legend-item { display: flex; flex-direction: column; align-items: center; gap: 3px; }
+        .legend-icon { width: 20px; height: 20px; border-radius: 4px; display: flex; align-items: center; justify-content: center; }
+        .legend-icon.available { border: 1.5px solid #22c55e; }
+        .legend-icon.available svg { fill: #22c55e; }
+        .legend-icon.occupied { border: 1.5px solid #d0d0d0; }
+        .legend-icon.occupied svg { fill: #d0d0d0; }
+        .legend-icon.selected { background: #123481; }
+        .legend-icon.selected svg { fill: #fff; }
+        
+        .footer-panel {
+            margin-top: 12px; padding-top: 12px; border-top: 1px solid #e0e0e0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;
+        }
+        .seat-info { border: 1px solid #e0e0e0; border-radius: 6px; padding: 4px 12px; text-align: center; }
+        .seat-info .count { font-weight: 700; color: #123481; font-size: 13px; }
+        .seat-info .label { font-size: 10px; color: #777; }
+        .price-tag { font-size: 12px; color: #123481; font-weight: 700; }
+        .price-tag span { font-size: 18px; }
+        .btn-confirm {
+            background: #8b9dc3; color: white; border: none; padding: 8px 18px; border-radius: 8px; font-weight: 700; cursor: pointer; transition: all 0.3s;
+        }
+        .btn-confirm.active { background: #123481; }
+        .btn-confirm.active:hover { background: #1a4a9e; transform: scale(1.02); }
+        
+        /* ========== WHATSAPP ========== */
+        .whatsapp-btn {
+            position: fixed; bottom: 90px; right: 20px; z-index: 20; width: 60px; height: 60px; border-radius: 50%; background: #25D366; color: white; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 16px rgba(37,211,102,0.4); transition: all 0.3s ease; text-decoration: none; font-size: 28px;
+        }
+        .whatsapp-btn:hover { transform: scale(1.1); box-shadow: 0 8px 24px rgba(37,211,102,0.5); }
+        @media (max-width: 480px) {
+            .whatsapp-btn { width: 52px; height: 52px; font-size: 24px; bottom: 80px; right: 16px; }
+            .seat { width: 32px; height: 32px; font-size: 9px; }
+            .seat svg { width: 14px; height: 14px; }
+        }
+        
+        /* ========== CHECKOUT ========== */
         .checkout-title { text-align: center; font-size: 20px; font-weight: 800; color: #123481; margin-bottom: 4px; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .timer-subtitle { text-align: center; font-size: 13px; color: #475569; margin-bottom: 20px; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 6px; }
         .card-buyer { background: #fff; border-radius: 16px; padding: 20px; max-width: 620px; margin: 0 auto; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border: 1px solid #e2e8f0; }
         .form-grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
         .form-group label { display: block; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 6px; }
-        .form-group input { width: 100%; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px 14px; font-size: 15px; outline: none; transition: border-color 0.2s; background: #fff; }
+        .form-group input {
+            width: 100%; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px 14px; font-size: 15px; outline: none; transition: border-color 0.2s; background: #fff;
+        }
         .form-group input:focus { border-color: #123481; }
+        .form-group input.error { border-color: #dc2626; background: #fef2f2; }
+        .form-group .error-msg { color: #dc2626; font-size: 11px; margin-top: 4px; display: none; }
+        .form-group .error-msg.show { display: block; }
         .btn-submit { width: 100%; background: #123481; color: #fff; border: none; padding: 16px; border-radius: 10px; font-size: 16px; font-weight: 700; cursor: pointer; transition: background 0.2s; min-height: 52px; }
         .btn-submit:hover { background: #1a4a9e; }
-        .checkout-layout { display: grid; grid-template-columns: 1fr; gap: 16px; align-items: start; }
+        
         .summary-card { background: #fff; border-radius: 16px; border: 1px solid #e2e8f0; overflow: hidden; }
-        .summary-banner { background: #123481; color: #fff; padding: 16px; display: flex; justify-content: space-between; items-center; }
+        .summary-banner { background: #123481; color: #fff; padding: 16px; display: flex; justify-content: space-between; align-items: center; }
         .summary-banner .title { font-size: 12px; font-weight: 700; text-transform: uppercase; opacity: 0.9; }
         .summary-banner .total-price { font-size: 24px; font-weight: 800; }
         .trip-detail-box { background: #f8fafc; padding: 14px 16px; border-bottom: 1px solid #e2e8f0; font-size: 12px; }
-        .trip-header { display: flex; justify-content: space-between; font-weight: 700; color: #334155; margin-bottom: 8px; }
-        .route-line { display: flex; justify-content: space-between; align-items: center; font-weight: 700; color: #1e293b; margin-bottom: 6px; font-size: 13px; }
         .breakdown-box { padding: 16px; font-size: 13px; }
         .breakdown-title { font-weight: 800; font-size: 15px; color: #1e293b; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
         .breakdown-row { display: flex; justify-content: space-between; margin-bottom: 8px; color: #475569; }
         .breakdown-row.discount { color: #16a34a; font-weight: 600; }
         .breakdown-row.points { color: #16a34a; font-weight: 700; margin-top: 12px; border-top: 1px dashed #e2e8f0; padding-top: 10px; }
-        .passenger-info-card { background: #fff; border-radius: 16px; padding: 16px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; }
-        .passenger-info-card .name { font-weight: 700; font-size: 14px; color: #1e293b; }
-        .passenger-info-card .email { font-size: 12px; color: #64748b; word-break: break-all; }
-        .seat-badge { background: #123481; color: #fff; padding: 8px 12px; border-radius: 8px; text-align: center; font-size: 11px; font-weight: 800; min-width: 65px; }
+        
+        .payment-methods-card { background: #fff; border-radius: 16px; padding: 16px; border: 1px solid #e2e8f0; }
+        .payment-option { border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px 16px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: all 0.2s; }
+        .payment-option:hover, .payment-option:active { border-color: #123481; background: #f0f4ff; }
+        .payment-option-info { display: flex; align-items: center; gap: 12px; }
+        .payment-option-info i { font-size: 20px; color: #123481; width: 24px; text-align: center; }
+        .payment-option-info .title { font-size: 14px; font-weight: 700; color: #1e293b; }
+        .payment-option-info .sub { font-size: 11px; color: #64748b; }
+        
         .insurance-card { background: #fff; border-radius: 16px; padding: 16px; border: 1px solid #e2e8f0; }
         .insurance-title { font-weight: 800; font-size: 15px; color: #1e293b; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
         .insurance-desc { font-size: 12px; color: #64748b; margin-bottom: 12px; line-height: 1.4; }
@@ -219,118 +273,31 @@
         .insurance-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #f1f5f9; padding-top: 12px; }
         .insurance-price { font-size: 18px; font-weight: 800; color: #123481; text-align: right; }
         .insurance-price span { font-size: 10px; font-weight: 600; color: #64748b; display: block; }
-        .payment-methods-card { background: #fff; border-radius: 16px; padding: 16px; border: 1px solid #e2e8f0; }
-        .payment-option { border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px 16px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: all 0.2s; }
-        .payment-option:hover, .payment-option:active { border-color: #123481; background: #f0f4ff; }
-        .payment-option-info { display: flex; align-items: center; gap: 12px; }
-        .payment-option-info i { font-size: 20px; color: #123481; width: 24px; text-align: center; }
-        .payment-option-info .title { font-size: 14px; font-weight: 700; color: #1e293b; }
-        .payment-option-info .sub { font-size: 11px; color: #64748b; }
-        @media (min-width: 768px) {
-            .form-grid { grid-template-columns: 1fr 1fr; }
-            .form-group.full { grid-column: span 2; }
-            .checkout-layout { grid-template-columns: 1fr 1.2fr; gap: 20px; }
-            .card-buyer { padding: 32px; }
-        }
+        
+        .passenger-info-card { background: #fff; border-radius: 16px; padding: 16px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; }
+        .passenger-info-card .name { font-weight: 700; font-size: 14px; color: #1e293b; }
+        .passenger-info-card .email { font-size: 12px; color: #64748b; word-break: break-all; }
+        .seat-badge { background: #123481; color: #fff; padding: 8px 12px; border-radius: 8px; text-align: center; font-size: 11px; font-weight: 800; min-width: 65px; }
         
         .spinner { width: 30px; height: 30px; border: 3px solid #e5e7eb; border-top: 3px solid #123481; border-radius: 50%; animation: spin 0.8s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        .depoimento-card { transition: all 0.3s ease; }
-        .depoimento-card:hover { transform: scale(1.02); }
         
-        .blog-card { transition: all 0.3s ease; }
-        .blog-card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,0.1); }
-
-        .whatsapp-btn {
-            position: fixed;
-            bottom: 90px;
-            right: 20px;
-            z-index: 20;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: #25D366;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 16px rgba(37, 211, 102, 0.4);
-            transition: all 0.3s ease;
-            text-decoration: none;
-            font-size: 28px;
+        @media (min-width: 768px) {
+            .form-grid { grid-template-columns: 1fr 1fr; }
+            .form-group.full { grid-column: span 2; }
+            .card-buyer { padding: 32px; }
         }
-        .whatsapp-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 8px 24px rgba(37, 211, 102, 0.5);
-        }
-        @media (max-width: 480px) {
-            .whatsapp-btn {
-                width: 52px;
-                height: 52px;
-                font-size: 24px;
-                bottom: 80px;
-                right: 16px;
-            }
-        }
-
-        /* VIAGEM EM DESTAQUE - ESTILO LISTA */
+        
         .viagem-destaque {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            background: white;
-            padding: 12px 16px;
-            border-radius: 12px;
-            border: 1px solid #e2e8f0;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            margin-bottom: 10px;
+            display: flex; align-items: center; gap: 16px; background: white; padding: 12px 16px; border-radius: 12px; border: 1px solid #e2e8f0; transition: all 0.3s ease; cursor: pointer; margin-bottom: 10px;
         }
-        .viagem-destaque:hover {
-            transform: translateX(6px);
-            box-shadow: 0 4px 16px rgba(18, 52, 129, 0.1);
-            border-color: #123481;
-        }
-        .viagem-destaque .icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 10px;
-            background: #f0f4ff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            color: #123481;
-            flex-shrink: 0;
-        }
-        .viagem-destaque .info {
-            flex: 1;
-            min-width: 0;
-        }
-        .viagem-destaque .info .rota {
-            font-weight: 700;
-            font-size: 14px;
-            color: #1a2a4a;
-        }
-        .viagem-destaque .info .detalhes {
-            font-size: 12px;
-            color: #64748b;
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-        .viagem-destaque .info .detalhes span {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .viagem-destaque .preco {
-            font-weight: 800;
-            font-size: 16px;
-            color: #123481;
-            white-space: nowrap;
-        }
+        .viagem-destaque:hover { transform: translateX(6px); box-shadow: 0 4px 16px rgba(18,52,129,0.1); border-color: #123481; }
+        .viagem-destaque .icon { width: 48px; height: 48px; border-radius: 10px; background: #f0f4ff; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #123481; flex-shrink: 0; }
+        .viagem-destaque .info { flex: 1; min-width: 0; }
+        .viagem-destaque .info .rota { font-weight: 700; font-size: 14px; color: #1a2a4a; }
+        .viagem-destaque .info .detalhes { font-size: 12px; color: #64748b; display: flex; gap: 12px; flex-wrap: wrap; }
+        .viagem-destaque .info .detalhes span { display: flex; align-items: center; gap: 4px; }
+        .viagem-destaque .preco { font-weight: 800; font-size: 16px; color: #123481; white-space: nowrap; }
         @media (max-width: 480px) {
             .viagem-destaque { padding: 10px 12px; gap: 12px; }
             .viagem-destaque .icon { width: 40px; height: 40px; font-size: 16px; }
@@ -338,6 +305,11 @@
             .viagem-destaque .info .detalhes { font-size: 11px; gap: 8px; }
             .viagem-destaque .preco { font-size: 14px; }
         }
+        
+        .depoimento-card { transition: all 0.3s ease; }
+        .depoimento-card:hover { transform: scale(1.02); }
+        .blog-card { transition: all 0.3s ease; }
+        .blog-card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,0.1); }
     </style>
 </head>
 <body>
@@ -391,7 +363,7 @@
         
         <!-- ===================== HOME ===================== -->
         <div id="page-home" class="page active fade-in">
-            <!-- SLIDER PRINCIPAL -->
+            <!-- SLIDER -->
             <div class="slider-container mt-4">
                 <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=1200&h=400&fit=crop" class="slider-slide active" />
                 <img src="https://images.unsplash.com/photo-1570125909232-eb263c188f7e?w=1200&h=400&fit=crop" class="slider-slide" />
@@ -410,20 +382,20 @@
                         <label class="text-xs font-semibold text-gray-400 block mb-1">Saindo de</label>
                         <div class="input-group">
                             <i class="fas fa-map-marker-alt icon-left"></i>
-                            <input type="text" id="origin" placeholder="Digite a cidade" required list="cidadesSugestao" />
+                            <input type="text" id="origin" placeholder="Digite a cidade" required />
                             <button type="button" class="btn-swap" onclick="trocarOrigemDestino()" title="Trocar origem e destino">
                                 <i class="fas fa-arrows-alt-h"></i>
                             </button>
-                            <datalist id="cidadesSugestao"></datalist>
                         </div>
+                        <div id="originSuggest" class="absolute z-50 w-full bg-white shadow-lg rounded-lg mt-1 border border-gray-200 max-h-48 overflow-y-auto hidden"></div>
                     </div>
                     <div>
                         <label class="text-xs font-semibold text-gray-400 block mb-1">Indo para</label>
                         <div class="input-group">
                             <i class="fas fa-map-pin icon-left"></i>
-                            <input type="text" id="destino" placeholder="Digite a cidade" required list="cidadesSugestao2" />
-                            <datalist id="cidadesSugestao2"></datalist>
+                            <input type="text" id="destino" placeholder="Digite a cidade" required />
                         </div>
+                        <div id="destSuggest" class="absolute z-50 w-full bg-white shadow-lg rounded-lg mt-1 border border-gray-200 max-h-48 overflow-y-auto hidden"></div>
                     </div>
                     <div class="grid grid-cols-2 gap-3 pt-1">
                         <div>
@@ -456,7 +428,7 @@
                 <div class="grid grid-cols-2 gap-3" id="destinosPopulares"></div>
             </div>
 
-            <!-- OFERTAS ESPECIAIS -->
+            <!-- OFERTAS -->
             <div class="mt-6 bg-gradient-to-r from-gb-blue to-gb-blue-hover rounded-2xl p-4 text-white">
                 <div class="flex justify-between items-center">
                     <div>
@@ -470,14 +442,12 @@
                 </div>
             </div>
 
-            <!-- VIAGENS EM DESTAQUE - LISTA VERTICAL -->
+            <!-- VIAGENS EM DESTAQUE -->
             <div class="mt-8">
                 <h3 class="text-lg font-bold text-gb-blue mb-4 flex items-center gap-2">
                     <i class="fas fa-bus text-gb-blue"></i> Viagens em Destaque
                 </h3>
-                <div id="viagensDestaqueLista">
-                    <!-- Gerado via JS -->
-                </div>
+                <div id="viagensDestaqueLista"></div>
             </div>
 
             <!-- DEPOIMENTOS -->
@@ -488,37 +458,22 @@
                 <div class="space-y-3">
                     <div class="depoimento-card bg-white p-4 rounded-xl shadow-sm border border-gray-100">
                         <div class="flex items-center gap-2 mb-2">
-                            <div class="w-8 h-8 bg-gb-blue/10 rounded-full flex items-center justify-center">
-                                <i class="fas fa-user text-gb-blue"></i>
-                            </div>
-                            <div>
-                                <div class="font-bold text-sm">Ana Silva</div>
-                                <div class="text-[10px] text-gb-blue">★★★★★</div>
-                            </div>
+                            <div class="w-8 h-8 bg-gb-blue/10 rounded-full flex items-center justify-center"><i class="fas fa-user text-gb-blue"></i></div>
+                            <div><div class="font-bold text-sm">Ana Silva</div><div class="text-[10px] text-gb-blue">★★★★★</div></div>
                         </div>
                         <p class="text-sm text-gray-600">"Excelente viagem! Conforto impecável e pontualidade. Recomendo!"</p>
                     </div>
                     <div class="depoimento-card bg-white p-4 rounded-xl shadow-sm border border-gray-100">
                         <div class="flex items-center gap-2 mb-2">
-                            <div class="w-8 h-8 bg-gb-blue/10 rounded-full flex items-center justify-center">
-                                <i class="fas fa-user text-gb-blue"></i>
-                            </div>
-                            <div>
-                                <div class="font-bold text-sm">Carlos Santos</div>
-                                <div class="text-[10px] text-gb-blue">★★★★★</div>
-                            </div>
+                            <div class="w-8 h-8 bg-gb-blue/10 rounded-full flex items-center justify-center"><i class="fas fa-user text-gb-blue"></i></div>
+                            <div><div class="font-bold text-sm">Carlos Santos</div><div class="text-[10px] text-gb-blue">★★★★★</div></div>
                         </div>
                         <p class="text-sm text-gray-600">"Viajo sempre com a Guanabara. Atendimento de primeira qualidade!"</p>
                     </div>
                     <div class="depoimento-card bg-white p-4 rounded-xl shadow-sm border border-gray-100">
                         <div class="flex items-center gap-2 mb-2">
-                            <div class="w-8 h-8 bg-gb-blue/10 rounded-full flex items-center justify-center">
-                                <i class="fas fa-user text-gb-blue"></i>
-                            </div>
-                            <div>
-                                <div class="font-bold text-sm">Mariana Oliveira</div>
-                                <div class="text-[10px] text-gb-blue">★★★★★</div>
-                            </div>
+                            <div class="w-8 h-8 bg-gb-blue/10 rounded-full flex items-center justify-center"><i class="fas fa-user text-gb-blue"></i></div>
+                            <div><div class="font-bold text-sm">Mariana Oliveira</div><div class="text-[10px] text-gb-blue">★★★★★</div></div>
                         </div>
                         <p class="text-sm text-gray-600">"Conforto, segurança e preço justo. Melhor empresa de ônibus!"</p>
                     </div>
@@ -533,35 +488,20 @@
                 <div class="space-y-3">
                     <div class="blog-card bg-white p-4 rounded-xl shadow-sm border border-gray-100 cursor-pointer">
                         <div class="flex items-center gap-3">
-                            <div class="w-16 h-16 bg-gb-blue/10 rounded-lg flex items-center justify-center text-2xl">
-                                <i class="fas fa-plane text-gb-blue"></i>
-                            </div>
-                            <div>
-                                <div class="font-bold text-sm">Como viajar com conforto</div>
-                                <div class="text-xs text-gray-500">Dicas para aproveitar sua viagem</div>
-                            </div>
+                            <div class="w-16 h-16 bg-gb-blue/10 rounded-lg flex items-center justify-center text-2xl"><i class="fas fa-plane text-gb-blue"></i></div>
+                            <div><div class="font-bold text-sm">Como viajar com conforto</div><div class="text-xs text-gray-500">Dicas para aproveitar sua viagem</div></div>
                         </div>
                     </div>
                     <div class="blog-card bg-white p-4 rounded-xl shadow-sm border border-gray-100 cursor-pointer">
                         <div class="flex items-center gap-3">
-                            <div class="w-16 h-16 bg-gb-blue/10 rounded-lg flex items-center justify-center text-2xl">
-                                <i class="fas fa-suitcase text-gb-blue"></i>
-                            </div>
-                            <div>
-                                <div class="font-bold text-sm">O que levar na mala</div>
-                                <div class="text-xs text-gray-500">Lista completa para sua viagem</div>
-                            </div>
+                            <div class="w-16 h-16 bg-gb-blue/10 rounded-lg flex items-center justify-center text-2xl"><i class="fas fa-suitcase text-gb-blue"></i></div>
+                            <div><div class="font-bold text-sm">O que levar na mala</div><div class="text-xs text-gray-500">Lista completa para sua viagem</div></div>
                         </div>
                     </div>
                     <div class="blog-card bg-white p-4 rounded-xl shadow-sm border border-gray-100 cursor-pointer">
                         <div class="flex items-center gap-3">
-                            <div class="w-16 h-16 bg-gb-blue/10 rounded-lg flex items-center justify-center text-2xl">
-                                <i class="fas fa-sun text-gb-blue"></i>
-                            </div>
-                            <div>
-                                <div class="font-bold text-sm">Destinos imperdíveis</div>
-                                <div class="text-xs text-gray-500">Os melhores lugares para conhecer</div>
-                            </div>
+                            <div class="w-16 h-16 bg-gb-blue/10 rounded-lg flex items-center justify-center text-2xl"><i class="fas fa-sun text-gb-blue"></i></div>
+                            <div><div class="font-bold text-sm">Destinos imperdíveis</div><div class="text-xs text-gray-500">Os melhores lugares para conhecer</div></div>
                         </div>
                     </div>
                 </div>
@@ -570,22 +510,10 @@
             <!-- RODAPÉ INFORMAÇÕES -->
             <div class="mt-8 bg-white rounded-xl p-4 border border-gray-100">
                 <div class="grid grid-cols-2 gap-4 text-center">
-                    <div>
-                        <div class="text-2xl font-black text-gb-blue">50+</div>
-                        <div class="text-xs text-gray-500">Destinos disponíveis</div>
-                    </div>
-                    <div>
-                        <div class="text-2xl font-black text-gb-blue">12.000+</div>
-                        <div class="text-xs text-gray-500">Clientes satisfeitos</div>
-                    </div>
-                    <div>
-                        <div class="text-2xl font-black text-gb-blue">98%</div>
-                        <div class="text-xs text-gray-500">Pontualidade</div>
-                    </div>
-                    <div>
-                        <div class="text-2xl font-black text-gb-blue">24h</div>
-                        <div class="text-xs text-gray-500">Atendimento SAC</div>
-                    </div>
+                    <div><div class="text-2xl font-black text-gb-blue">50+</div><div class="text-xs text-gray-500">Destinos disponíveis</div></div>
+                    <div><div class="text-2xl font-black text-gb-blue">12.000+</div><div class="text-xs text-gray-500">Clientes satisfeitos</div></div>
+                    <div><div class="text-2xl font-black text-gb-blue">98%</div><div class="text-xs text-gray-500">Pontualidade</div></div>
+                    <div><div class="text-2xl font-black text-gb-blue">24h</div><div class="text-xs text-gray-500">Atendimento SAC</div></div>
                 </div>
             </div>
 
@@ -628,189 +556,158 @@
             <div class="card-buyer">
                 <form id="formBuyer" onsubmit="prosseguirPagamento(event)">
                     <div class="form-grid">
-                        <div class="form-group full"><label>Nome Completo *</label><input type="text" id="buyerName" placeholder="Informe aqui" required /></div>
-                        <div class="form-group"><label>E-mail *</label><input type="email" id="buyerEmail" placeholder="Informe aqui" required /></div>
-                        <div class="form-group"><label>Celular *</label><input type="tel" id="buyerPhone" placeholder="Informe aqui" required /></div>
-                        <div class="form-group"><label>CPF *</label><input type="text" id="buyerCpf" placeholder="Informe aqui" required /></div>
-                        <div class="form-group"><label>Data de Nascimento *</label><input type="text" id="buyerBirth" placeholder="DD/MM/AAAA" required /></div>
+                        <div class="form-group full">
+                            <label>Nome Completo *</label>
+                            <input type="text" id="buyerName" placeholder="Informe aqui" required />
+                            <div class="error-msg">Nome é obrigatório</div>
+                        </div>
+                        <div class="form-group">
+                            <label>E-mail *</label>
+                            <input type="email" id="buyerEmail" placeholder="Informe aqui" required />
+                            <div class="error-msg">E-mail inválido</div>
+                        </div>
+                        <div class="form-group">
+                            <label>Celular *</label>
+                            <input type="tel" id="buyerPhone" placeholder="(00) 00000-0000" required />
+                            <div class="error-msg">Celular inválido</div>
+                        </div>
+                        <div class="form-group">
+                            <label>CPF *</label>
+                            <input type="text" id="buyerCpf" placeholder="000.000.000-00" maxlength="14" required />
+                            <div class="error-msg">CPF inválido</div>
+                        </div>
+                        <div class="form-group">
+                            <label>Data de Nascimento *</label>
+                            <input type="text" id="buyerBirth" placeholder="DD/MM/AAAA" required />
+                            <div class="error-msg">Data inválida</div>
+                        </div>
                     </div>
                     <button type="submit" class="btn-submit mt-4">Prosseguir com a reserva</button>
                 </form>
             </div>
         </div>
 
-       <!-- ===================== CHECKOUT PAYMENT ===================== -->
-<div id="page-checkout-payment" class="page fade-in">
-    <div class="checkout-title">Pagamento</div>
-    <div class="timer-subtitle">
-        <span>Conclua a compra e garanta a sua viagem</span>
-        <i class="far fa-clock"></i>
-        <span id="timerPayment" style="font-weight:700;">07:38</span>
-    </div>
-
-    <div class="checkout-layout">
-        <!-- RESUMO DA COMPRA -->
-        <div>
-            <div class="summary-card">
-                <div class="summary-banner">
-                    <div class="title">Sua Compra</div>
-                    <div class="total-price">R$ <span id="finalTotal">179,99</span> <small style="font-size:12px; font-weight:400;">total</small></div>
-                </div>
-                <div class="trip-detail-box">
-                    <div class="trip-header">
-                        <span><i class="fas fa-bus"></i> Viagem de ida</span>
-                        <span id="tripDate">13 ago, qui 23:00</span>
-                    </div>
-                    <div class="route-line">
-                        <span id="tripOrigin">BRASILIA - DF</span>
-                        <i class="fas fa-arrow-right" style="font-size:11px; color:#94a3b8;"></i>
-                        <span id="tripDest">CORRENTINA - BA</span>
-                    </div>
-                    <div style="font-size:11px; color:#64748b; margin-top:4px;">Classe <strong id="tripClass">EXECUTIVO</strong></div>
-                    <div style="font-size:11px; color:#64748b;">Assento <strong id="displaySeat2">08</strong></div>
-                </div>
-                <div class="breakdown-box">
-                    <div class="breakdown-title"><i class="fas fa-receipt"></i> Resumo do pagamento</div>
-                    <div class="breakdown-row"><span>Passagem</span><span id="basePrice">R$ 243,75</span></div>
-                    <div class="breakdown-row discount"><span>Desconto - Passagem</span><span id="discountPrice">- R$ 63,76</span></div>
-                    <div class="breakdown-row"><span>Taxa de serviço</span><span>R$ 9,79</span></div>
-                    <div class="breakdown-row"><span>Taxa de embarque</span><span>R$ 8,38</span></div>
-                    <div class="breakdown-row points"><span><i class="fas fa-star"></i> Pontuação Viva</span><span>+ 150 pontos</span></div>
-                </div>
+        <!-- ===================== CHECKOUT PAYMENT ===================== -->
+        <div id="page-checkout-payment" class="page fade-in">
+            <div class="checkout-title">Pagamento</div>
+            <div class="timer-subtitle">
+                <span>Conclua a compra e garanta a sua viagem</span>
+                <i class="far fa-clock"></i>
+                <span id="timerPayment" style="font-weight:700;">07:38</span>
             </div>
-        </div>
-
-        <!-- FORMULÁRIO DE PAGAMENTO -->
-        <div style="display:flex; flex-direction:column; gap:16px;">
-            <!-- DADOS DO PASSAGEIRO -->
-            <div class="passenger-info-card">
+            <div class="checkout-layout">
                 <div>
-                    <div style="font-size:13px; font-weight:800; color:#1e293b; margin-bottom:4px;">Passageiro</div>
-                    <div class="name" id="displayPassengerName">Nome do Passageiro</div>
-                    <div class="email" id="displayPassengerEmail">email@exemplo.com</div>
-                </div>
-                <div class="seat-badge">
-                    Assento<br>
-                    <span style="font-size:16px;" id="displaySeat">08</span>
-                </div>
-            </div>
-
-            <!-- SELECIONAR MÉTODO DE PAGAMENTO -->
-            <div class="payment-methods-card">
-                <div class="insurance-title" style="margin-bottom:14px;">
-                    <i class="fas fa-wallet" style="color:#123481;"></i> Selecione o pagamento
-                </div>
-                
-                <!-- PIX -->
-                <div class="payment-option" onclick="selecionarMetodo('pix')" id="optPix">
-                    <div class="payment-option-info">
-                        <i class="fa-brands fa-pix" style="color:#00bdae;"></i>
-                        <div>
-                            <div class="title">PIX</div>
-                            <div class="sub">Confirmação imediata</div>
+                    <div class="summary-card">
+                        <div class="summary-banner">
+                            <div class="title">Sua Compra</div>
+                            <div class="total-price">R$ <span id="finalTotal">179,99</span> <small style="font-size:12px; font-weight:400;">total</small></div>
+                        </div>
+                        <div class="trip-detail-box">
+                            <div class="trip-header"><span><i class="fas fa-bus"></i> Viagem de ida</span><span id="tripDate">13 ago, qui 23:00</span></div>
+                            <div class="route-line"><span id="tripOrigin">BRASILIA - DF</span><i class="fas fa-arrow-right" style="font-size:11px; color:#94a3b8;"></i><span id="tripDest">CORRENTINA - BA</span></div>
+                            <div style="font-size:11px; color:#64748b; margin-top:4px;">Classe <strong id="tripClass">EXECUTIVO</strong></div>
+                            <div style="font-size:11px; color:#64748b;">Assento <strong id="displaySeat2">08</strong></div>
+                        </div>
+                        <div class="breakdown-box">
+                            <div class="breakdown-title"><i class="fas fa-receipt"></i> Resumo do pagamento</div>
+                            <div class="breakdown-row"><span>Passagem</span><span id="basePrice">R$ 243,75</span></div>
+                            <div class="breakdown-row discount"><span>Desconto - Passagem</span><span id="discountPrice">- R$ 63,76</span></div>
+                            <div class="breakdown-row"><span>Taxa de serviço</span><span>R$ 9,79</span></div>
+                            <div class="breakdown-row"><span>Taxa de embarque</span><span>R$ 8,38</span></div>
+                            <div class="breakdown-row points"><span><i class="fas fa-star"></i> Pontuação Viva</span><span>+ 150 pontos</span></div>
                         </div>
                     </div>
-                    <i class="fas fa-chevron-right" style="color:#cbd5e1; font-size:12px;"></i>
                 </div>
-
-                <!-- CARTÃO DE CRÉDITO -->
-                <div class="payment-option" onclick="selecionarMetodo('cartao')" id="optCartao">
-                    <div class="payment-option-info">
-                        <i class="far fa-credit-card"></i>
+                <div style="display:flex; flex-direction:column; gap:16px;">
+                    <div class="passenger-info-card">
                         <div>
-                            <div class="title">Cartão de crédito</div>
-                            <div class="sub">Visa, Mastercard, Elo, Amex</div>
+                            <div style="font-size:13px; font-weight:800; color:#1e293b; margin-bottom:4px;">Passageiro</div>
+                            <div class="name" id="displayPassengerName">Nome do Passageiro</div>
+                            <div class="email" id="displayPassengerEmail">email@exemplo.com</div>
+                        </div>
+                        <div class="seat-badge">Assento<br><span style="font-size:16px;" id="displaySeat">08</span></div>
+                    </div>
+                    <div class="payment-methods-card">
+                        <div class="insurance-title" style="margin-bottom:14px;"><i class="fas fa-wallet" style="color:#123481;"></i> Selecione o pagamento</div>
+                        <div class="payment-option" onclick="selecionarMetodo('pix')" id="optPix">
+                            <div class="payment-option-info"><i class="fa-brands fa-pix" style="color:#00bdae;"></i><div><div class="title">PIX</div><div class="sub">Confirmação imediata</div></div></div>
+                            <i class="fas fa-chevron-right" style="color:#cbd5e1; font-size:12px;"></i>
+                        </div>
+                        <div class="payment-option" onclick="selecionarMetodo('cartao')" id="optCartao">
+                            <div class="payment-option-info"><i class="far fa-credit-card"></i><div><div class="title">Cartão de crédito</div><div class="sub">Visa, Mastercard, Elo, Amex</div></div></div>
+                            <i class="fas fa-chevron-right" style="color:#cbd5e1; font-size:12px;"></i>
+                        </div>
+                        <div class="payment-option" onclick="selecionarMetodo('transferencia')" id="optTransferencia">
+                            <div class="payment-option-info"><i class="fas fa-university"></i><div><div class="title">Transferência Bancária</div><div class="sub">Até 3h para compensar</div></div></div>
+                            <i class="fas fa-chevron-right" style="color:#cbd5e1; font-size:12px;"></i>
                         </div>
                     </div>
-                    <i class="fas fa-chevron-right" style="color:#cbd5e1; font-size:12px;"></i>
-                </div>
-
-                <!-- TRANSFERÊNCIA -->
-                <div class="payment-option" onclick="selecionarMetodo('transferencia')" id="optTransferencia">
-                    <div class="payment-option-info">
-                        <i class="fas fa-university"></i>
-                        <div>
-                            <div class="title">Transferência Bancária</div>
-                            <div class="sub">Até 3h para compensar</div>
+                    <div id="formCartao" style="display:none;" class="bg-white rounded-xl p-4 border border-gray-200">
+                        <h4 class="font-bold text-sm text-gb-blue mb-3"><i class="fas fa-credit-card mr-2"></i>Dados do Cartão</h4>
+                        <div class="space-y-3">
+                            <div>
+                                <label class="text-xs font-semibold text-gray-500 block mb-1">Nome no cartão</label>
+                                <input type="text" id="cartaoNome" placeholder="Como está no cartão" class="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gb-blue outline-none" />
+                            </div>
+                            <div>
+                                <label class="text-xs font-semibold text-gray-500 block mb-1">Número do cartão</label>
+                                <input type="text" id="cartaoNumero" placeholder="0000 0000 0000 0000" maxlength="19" class="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gb-blue outline-none" oninput="formatarCartao(this)" />
+                            </div>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="text-xs font-semibold text-gray-500 block mb-1">Validade</label>
+                                    <input type="text" id="cartaoValidade" placeholder="MM/AA" maxlength="5" class="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gb-blue outline-none" oninput="formatarValidade(this)" />
+                                </div>
+                                <div>
+                                    <label class="text-xs font-semibold text-gray-500 block mb-1">CVV</label>
+                                    <input type="password" id="cartaoCvv" placeholder="***" maxlength="4" class="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gb-blue outline-none" />
+                                </div>
+                            </div>
+                            <div>
+                                <label class="text-xs font-semibold text-gray-500 block mb-1">CPF do titular</label>
+                                <input type="text" id="cartaoCpf" placeholder="000.000.000-00" class="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gb-blue outline-none" />
+                            </div>
+                            <button onclick="pagarComCartao()" class="w-full bg-gb-blue text-white font-bold py-3 rounded-lg hover:bg-gb-blue-hover transition">
+                                <i class="fas fa-lock mr-2"></i> Pagar com Cartão
+                            </button>
                         </div>
                     </div>
-                    <i class="fas fa-chevron-right" style="color:#cbd5e1; font-size:12px;"></i>
-                </div>
-            </div>
-
-            <!-- FORMULÁRIO CARTÃO DE CRÉDITO -->
-            <div id="formCartao" style="display:none;" class="bg-white rounded-xl p-4 border border-gray-200">
-                <h4 class="font-bold text-sm text-gb-blue mb-3"><i class="fas fa-credit-card mr-2"></i>Dados do Cartão</h4>
-                <div class="space-y-3">
-                    <div>
-                        <label class="text-xs font-semibold text-gray-500 block mb-1">Nome no cartão</label>
-                        <input type="text" id="cartaoNome" placeholder="Como está no cartão" class="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gb-blue outline-none" />
-                    </div>
-                    <div>
-                        <label class="text-xs font-semibold text-gray-500 block mb-1">Número do cartão</label>
-                        <input type="text" id="cartaoNumero" placeholder="0000 0000 0000 0000" maxlength="19" class="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gb-blue outline-none" oninput="formatarCartao(this)" />
-                    </div>
-                    <div class="grid grid-cols-2 gap-3">
-                        <div>
-                            <label class="text-xs font-semibold text-gray-500 block mb-1">Validade</label>
-                            <input type="text" id="cartaoValidade" placeholder="MM/AA" maxlength="5" class="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gb-blue outline-none" oninput="formatarValidade(this)" />
+                    <div id="areaPix" style="display:none;" class="bg-white rounded-xl p-4 border border-gray-200 text-center">
+                        <div id="pixLoader" style="display:none;"><div class="spinner mx-auto"></div><p class="text-sm text-gray-500 mt-2">Gerando PIX...</p></div>
+                        <div id="pixContent" style="display:none;">
+                            <img id="pixQR" src="" alt="QR Code PIX" class="mx-auto w-48 h-48" />
+                            <p class="text-sm font-bold text-gb-blue mt-2">Escaneie o QR Code</p>
+                            <p class="text-xs text-gray-500">ou copie o código abaixo</p>
+                            <div class="flex gap-2 mt-2">
+                                <input type="text" id="pixCode" readonly class="flex-1 p-2 border rounded-lg text-xs" />
+                                <button onclick="copiarPix()" class="bg-gb-blue text-white px-3 py-2 rounded-lg text-sm"><i class="fas fa-copy"></i> Copiar</button>
+                            </div>
+                            <div id="pixStatus" class="mt-3 text-sm font-bold text-yellow-600 animate-pulse">Aguardando pagamento...</div>
+                            <button onclick="verificarPix()" class="mt-3 bg-green-600 text-white px-4 py-2 rounded-lg text-sm"><i class="fas fa-refresh"></i> Verificar pagamento</button>
                         </div>
-                        <div>
-                            <label class="text-xs font-semibold text-gray-500 block mb-1">CVV</label>
-                            <input type="password" id="cartaoCvv" placeholder="***" maxlength="4" class="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gb-blue outline-none" />
+                        <button onclick="gerarPix()" id="btnGerarPix" class="w-full bg-green-600 text-white font-bold py-3 rounded-lg hover:bg-green-700 transition">
+                            <i class="fa-brands fa-pix mr-2"></i> Gerar PIX
+                        </button>
+                    </div>
+                    <div class="insurance-card">
+                        <div class="insurance-title"><i class="fas fa-shield-alt" style="color:#123481;"></i> Seguro viagem opcional</div>
+                        <div class="insurance-desc">O seguro adicional oferece uma cobertura extra em caso de danos, extravio e saúde.</div>
+                        <div class="insurance-list">
+                            <div><i class="fas fa-check-circle"></i> Cabe no bolso</div>
+                            <div><i class="fas fa-check-circle"></i> Cobertura nacional</div>
+                            <div><i class="fas fa-check-circle"></i> Pagamento em até 30 dias</div>
+                        </div>
+                        <div class="insurance-footer">
+                            <label style="display:flex; align-items:center; gap:8px; font-size:13px; font-weight:700; cursor:pointer;">
+                                <input type="checkbox" id="insuranceCheckbox" style="width:18px; height:18px; accent-color:#123481;" onchange="toggleInsurance()"> Sim, quero viajar tranquilo
+                            </label>
+                            <div class="insurance-price">R$ 10,00<span>por passageiro</span></div>
                         </div>
                     </div>
-                    <div>
-                        <label class="text-xs font-semibold text-gray-500 block mb-1">CPF do titular</label>
-                        <input type="text" id="cartaoCpf" placeholder="000.000.000-00" class="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gb-blue outline-none" />
-                    </div>
-                    <button onclick="pagarComCartao()" class="w-full bg-gb-blue text-white font-bold py-3 rounded-lg hover:bg-gb-blue-hover transition">
-                        <i class="fas fa-lock mr-2"></i> Pagar com Cartão
-                    </button>
-                </div>
-            </div>
-
-            <!-- ÁREA PIX -->
-            <div id="areaPix" style="display:none;" class="bg-white rounded-xl p-4 border border-gray-200 text-center">
-                <div id="pixLoader" style="display:none;">
-                    <div class="spinner mx-auto"></div>
-                    <p class="text-sm text-gray-500 mt-2">Gerando PIX...</p>
-                </div>
-                <div id="pixContent" style="display:none;">
-                    <img id="pixQR" src="" alt="QR Code PIX" class="mx-auto w-48 h-48" />
-                    <p class="text-sm font-bold text-gb-blue mt-2">Escaneie o QR Code</p>
-                    <p class="text-xs text-gray-500">ou copie o código abaixo</p>
-                    <div class="flex gap-2 mt-2">
-                        <input type="text" id="pixCode" readonly class="flex-1 p-2 border rounded-lg text-xs" />
-                        <button onclick="copiarPix()" class="bg-gb-blue text-white px-3 py-2 rounded-lg text-sm"><i class="fas fa-copy"></i> Copiar</button>
-                    </div>
-                    <div id="pixStatus" class="mt-3 text-sm font-bold text-yellow-600 animate-pulse">Aguardando pagamento...</div>
-                    <button onclick="verificarPix()" class="mt-3 bg-green-600 text-white px-4 py-2 rounded-lg text-sm"><i class="fas fa-refresh"></i> Verificar pagamento</button>
-                </div>
-                <button onclick="gerarPix()" id="btnGerarPix" class="w-full bg-green-600 text-white font-bold py-3 rounded-lg hover:bg-green-700 transition">
-                    <i class="fa-brands fa-pix mr-2"></i> Gerar PIX
-                </button>
-            </div>
-
-            <!-- SEGURO OPCIONAL -->
-            <div class="insurance-card">
-                <div class="insurance-title"><i class="fas fa-shield-alt" style="color:#123481;"></i> Seguro viagem opcional</div>
-                <div class="insurance-desc">O seguro adicional oferece uma cobertura extra em caso de danos, extravio e saúde.</div>
-                <div class="insurance-list">
-                    <div><i class="fas fa-check-circle"></i> Cabe no bolso</div>
-                    <div><i class="fas fa-check-circle"></i> Cobertura nacional</div>
-                    <div><i class="fas fa-check-circle"></i> Pagamento em até 30 dias</div>
-                </div>
-                <div class="insurance-footer">
-                    <label style="display:flex; align-items:center; gap:8px; font-size:13px; font-weight:700; cursor:pointer;">
-                        <input type="checkbox" id="insuranceCheckbox" style="width:18px; height:18px; accent-color:#123481;" onchange="toggleInsurance()"> Sim, quero viajar tranquilo
-                    </label>
-                    <div class="insurance-price">R$ 10,00<span>por passageiro</span></div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
+
         <!-- ===================== RECEIPT ===================== -->
         <div id="page-receipt" class="page fade-in">
             <div class="text-center py-8">
@@ -873,16 +770,6 @@
                     <div class="font-bold text-sm">TV a Bordo</div>
                     <div class="text-xs text-gray-500">Entretenimento</div>
                 </div>
-                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-center">
-                    <i class="fas fa-coffee text-3xl text-gb-blue mb-2"></i>
-                    <div class="font-bold text-sm">Café da manhã</div>
-                    <div class="text-xs text-gray-500">Em viagens longas</div>
-                </div>
-                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-center">
-                    <i class="fas fa-wheelchair text-3xl text-gb-blue mb-2"></i>
-                    <div class="font-bold text-sm">Acessibilidade</div>
-                    <div class="text-xs text-gray-500">Para todos os públicos</div>
-                </div>
             </div>
             <div class="mt-6 bg-gradient-to-r from-gb-blue to-gb-blue-hover rounded-2xl p-4 text-white">
                 <h3 class="font-bold text-lg">Segurança em primeiro lugar</h3>
@@ -902,14 +789,8 @@
                 <div class="font-bold text-lg text-gb-blue">Faça login</div>
                 <div class="text-sm text-gray-500 mb-4">Acesse sua conta para ver suas viagens, pontos e muito mais</div>
                 <form class="space-y-3 text-left">
-                    <div>
-                        <label class="text-sm font-semibold text-gray-600 block mb-1">E-mail</label>
-                        <input type="email" placeholder="seu@email.com" class="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gb-blue outline-none" />
-                    </div>
-                    <div>
-                        <label class="text-sm font-semibold text-gray-600 block mb-1">Senha</label>
-                        <input type="password" placeholder="••••••••" class="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gb-blue outline-none" />
-                    </div>
+                    <div><label class="text-sm font-semibold text-gray-600 block mb-1">E-mail</label><input type="email" placeholder="seu@email.com" class="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gb-blue outline-none" /></div>
+                    <div><label class="text-sm font-semibold text-gray-600 block mb-1">Senha</label><input type="password" placeholder="••••••••" class="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gb-blue outline-none" /></div>
                     <button class="w-full bg-gb-blue text-white font-bold py-3 rounded-lg hover:bg-gb-blue-hover transition">Entrar</button>
                 </form>
                 <div class="mt-4 text-sm">
@@ -921,10 +802,7 @@
             <div class="mt-4 bg-gray-50 rounded-xl p-4 border border-gray-200">
                 <div class="flex items-center gap-3">
                     <i class="fas fa-star text-gb-blue text-xl"></i>
-                    <div>
-                        <div class="font-bold text-sm">Viva Fidelidade</div>
-                        <div class="text-xs text-gray-500">Acumule pontos e ganhe descontos</div>
-                    </div>
+                    <div><div class="font-bold text-sm">Viva Fidelidade</div><div class="text-xs text-gray-500">Acumule pontos e ganhe descontos</div></div>
                 </div>
             </div>
         </div>
@@ -963,7 +841,7 @@
         </div>
     </main>
 
-    <!-- DRAWER DE ASSENTOS -->
+    <!-- ========== DRAWER DE ASSENTOS (SEU DESIGN) ========== -->
     <div class="drawer-overlay" id="drawerOverlay" onclick="fecharDrawer()"></div>
     <div class="drawer-panel" id="drawerPanel">
         <div class="p-4 border-b border-gray-200 flex justify-between items-center bg-white sticky top-0 z-10">
@@ -975,47 +853,49 @@
                 <i class="fas fa-times"></i>
             </button>
         </div>
+
         <div class="flex-1 overflow-y-auto p-4 bg-gray-50">
-            <div class="bg-white rounded-xl p-4 border border-gray-200">
-                <div class="flex justify-between text-xs border-b border-gray-100 pb-3 mb-3">
-                    <div>
-                        <div class="font-bold" id="drawerOrigem">Origem</div>
-                        <div class="text-gray-500" id="drawerHorario">Horário</div>
+            <!-- ÔNIBUS COM ASSENTOS -->
+            <div class="bus-container">
+                <div class="bus-frame">
+                    <div class="driver-icon">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8 0-.55.06-1.08.17-1.6L7 12c0 2.76 2.24 5 5 5s5-2.24 5-5l2.83-1.6c.11.52.17 1.05.17 1.6 0 4.41-3.59 8-8 8z"/></svg>
                     </div>
-                    <div class="text-center text-gray-400"><i class="fas fa-arrow-right"></i></div>
-                    <div class="text-right">
-                        <div class="font-bold" id="drawerDestino2">Destino</div>
-                        <div class="text-gray-500" id="drawerChegada">Chegada</div>
-                    </div>
+                    <div class="seats-grid" id="seatsGrid"></div>
                 </div>
-                <div class="border-2 border-gray-200 rounded-2xl p-4 max-w-xs mx-auto relative bg-white">
-                    <div class="text-center text-gray-400 text-2xl mb-3"><i class="fas fa-steering-wheel"></i></div>
-                    <div class="seat-wrapper" id="seatWrapper"></div>
-                </div>
-                <div class="flex justify-around mt-4 text-[10px] font-medium text-gray-500 border-t border-gray-100 pt-4">
-                    <div class="flex flex-col items-center gap-1">
-                        <div class="w-4 h-4 border border-gb-blue rounded bg-white"></div>
-                        <span>Livre</span>
+
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-icon available">
+                            <svg viewBox="0 0 24 24" width="14" height="14"><path d="M4 18v3h3v-3h10v3h3v-3c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2z"/></svg>
+                        </div>
+                        <span>Disponível</span>
                     </div>
-                    <div class="flex flex-col items-center gap-1">
-                        <div class="w-4 h-4 bg-gray-200 border-gray-300 rounded border"></div>
+                    <div class="legend-item">
+                        <div class="legend-icon occupied">
+                            <svg viewBox="0 0 24 24" width="14" height="14"><path d="M4 18v3h3v-3h10v3h3v-3c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2z"/></svg>
+                        </div>
                         <span>Ocupado</span>
                     </div>
-                    <div class="flex flex-col items-center gap-1">
-                        <div class="w-4 h-4 bg-gb-blue rounded border-gb-blue border"></div>
-                        <span>Escolhido</span>
+                    <div class="legend-item">
+                        <div class="legend-icon selected">
+                            <svg viewBox="0 0 24 24" width="14" height="14"><path d="M4 18v3h3v-3h10v3h3v-3c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2z"/></svg>
+                        </div>
+                        <span>Selecionado</span>
                     </div>
                 </div>
+
+                <div class="footer-panel">
+                    <div class="seat-info">
+                        <div class="count" id="seatCount">0 de 1</div>
+                        <div class="label">assento</div>
+                    </div>
+                    <div class="price-tag">
+                        R$ <span id="totalPrice">0</span>,00
+                    </div>
+                    <button class="btn-confirm" id="btnConfirm">Confirmar</button>
+                </div>
             </div>
-        </div>
-        <div class="p-4 border-t border-gray-200 bg-white flex justify-between items-center sticky bottom-0">
-            <div>
-                <div class="text-xs text-gray-500">Assento selecionado</div>
-                <div class="text-xl font-black text-gb-blue" id="assentoSelecionado">Nenhum</div>
-            </div>
-            <button onclick="confirmarAssento()" disabled class="font-bold py-3 px-8 rounded-xl transition bg-gray-300 text-white cursor-not-allowed" id="btnConfirmarAssento">
-                Confirmar <i class="fas fa-arrow-right ml-1"></i>
-            </button>
         </div>
     </div>
 
@@ -1024,80 +904,279 @@
         <i class="fab fa-whatsapp"></i>
     </a>
 
-    <!-- CARREGA O JS DAS CIDADES PRIMEIRO -->
-    <script src="cidades.js"></script>
-    
-    <!-- SCRIPT PRINCIPAL -->
+    <!-- ========== SCRIPTS ========== -->
     <script>
-        // PREENCHER DATALISTS
-        function preencherDatalists() {
-            const datalist1 = document.getElementById('cidadesSugestao');
-            const datalist2 = document.getElementById('cidadesSugestao2');
+        // ========== CONFIGURAÇÃO DOS ASSENTOS ==========
+        // 'A' = Disponível, 'O' = Ocupado, null = Vazio
+        const seatLayout = [
+            [{id: 1, status: 'O'}, {id: 2, status: 'O'}, null, {id: 4, status: 'A'}, {id: 3, status: 'O'}],
+            [{id: 5, status: 'O'}, {id: 6, status: 'O'}, null, null, null],
+            [{id: 7, status: 'A'}, {id: 8, status: 'A'}, null, null, null],
+            [{id: 9, status: 'A'}, {id: 10, status: 'A'}, null, {id: 12, status: 'O'}, {id: 11, status: 'A'}],
+            [{id: 13, status: 'O'}, {id: 14, status: 'A'}, null, {id: 16, status: 'O'}, {id: 15, status: 'A'}],
+            [{id: 17, status: 'O'}, {id: 18, status: 'O'}, null, {id: 20, status: 'A'}, {id: 19, status: 'O'}],
+            [{id: 21, status: 'O'}, {id: 22, status: 'A'}, null, {id: 24, status: 'O'}, {id: 23, status: 'O'}],
+            [{id: 25, status: 'O'}, {id: 26, status: 'A'}, null, {id: 28, status: 'A'}, {id: 27, status: 'O'}],
+            [{id: 29, status: 'O'}, {id: 30, status: 'O'}, null, {id: 32, status: 'A'}, {id: 31, status: 'O'}],
+            [{id: 33, status: 'A'}, {id: 34, status: 'O'}, null, {id: 36, status: 'A'}, {id: 35, status: 'O'}],
+            [{id: 37, status: 'A'}, {id: 38, status: 'A'}, null, {id: 40, status: 'A'}, {id: 39, status: 'A'}],
+            [{id: 41, status: 'A'}, {id: 42, status: 'A'}, null, {id: 44, status: 'A'}, {id: 43, status: 'A'}]
+        ];
+
+        const SEAT_PRICE = 80;
+        let selectedSeat = null;
+        let selectedTicket = null;
+        let assentoSelecionado = null;
+
+        // ========== RENDER ASSENTOS ==========
+        function renderSeats() {
+            const seatsGrid = document.getElementById('seatsGrid');
+            seatsGrid.innerHTML = '';
             
-            if (typeof getCidades !== 'undefined') {
-                const cidades = getCidades();
-                cidades.forEach(cidade => {
-                    const option1 = document.createElement('option');
-                    option1.value = cidade;
-                    datalist1.appendChild(option1);
-                    
-                    const option2 = document.createElement('option');
-                    option2.value = cidade;
-                    datalist2.appendChild(option2);
-                });
-                console.log('✅ ' + cidades.length + ' cidades carregadas!');
+            seatLayout.forEach(row => {
+                const rowDiv = document.createElement('div');
+                rowDiv.className = 'seat-row';
+
+                const leftGroup = document.createElement('div');
+                leftGroup.className = 'seat-group left';
+                appendSeat(leftGroup, row[0]);
+                appendSeat(leftGroup, row[1]);
+
+                const aisle = document.createElement('div');
+                aisle.className = 'aisle';
+
+                const rightGroup = document.createElement('div');
+                rightGroup.className = 'seat-group right';
+                appendSeat(rightGroup, row[3]);
+                appendSeat(rightGroup, row[4]);
+
+                rowDiv.appendChild(leftGroup);
+                rowDiv.appendChild(aisle);
+                rowDiv.appendChild(rightGroup);
+                seatsGrid.appendChild(rowDiv);
+            });
+        }
+
+        function appendSeat(container, seatData) {
+            const seatDiv = document.createElement('div');
+            
+            if (!seatData) {
+                seatDiv.className = 'seat empty';
+                container.appendChild(seatDiv);
+                return;
+            }
+
+            const isSelected = selectedSeat === seatData.id;
+            const statusClass = isSelected ? 'selected' : (seatData.status === 'A' ? 'available' : 'occupied');
+            
+            seatDiv.className = `seat ${statusClass}`;
+            seatDiv.innerHTML = `
+                <svg viewBox="0 0 24 24"><path d="M4 18v3h3v-3h10v3h3v-3c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2z"/></svg>
+                <span>${seatData.id}</span>
+            `;
+
+            if (seatData.status === 'A') {
+                seatDiv.onclick = () => selectSeat(seatData.id);
+            }
+
+            container.appendChild(seatDiv);
+        }
+
+        function selectSeat(id) {
+            selectedSeat = selectedSeat === id ? null : id;
+            updateSeatUI();
+            renderSeats();
+        }
+
+        function updateSeatUI() {
+            const seatCountEl = document.getElementById('seatCount');
+            const totalPriceEl = document.getElementById('totalPrice');
+            const btnConfirm = document.getElementById('btnConfirm');
+            
+            if (selectedSeat !== null) {
+                seatCountEl.innerText = '1 de 1';
+                totalPriceEl.innerText = SEAT_PRICE;
+                btnConfirm.classList.add('active');
             } else {
-                setTimeout(preencherDatalists, 500);
+                seatCountEl.innerText = '0 de 1';
+                totalPriceEl.innerText = '0';
+                btnConfirm.classList.remove('active');
             }
         }
 
-        // VIAGENS EM DESTAQUE - LISTA VERTICAL
-        function carregarViagensDestaque() {
-            const viagens = [
-                { origem: 'Rio de Janeiro', destino: 'São Paulo', preco: '89,90', horario: '22:30', tipo: 'Executivo' },
-                { origem: 'Brasília', destino: 'Salvador', preco: '149,90', horario: '20:15', tipo: 'Leito' },
-                { origem: 'Belo Horizonte', destino: 'Rio de Janeiro', preco: '79,90', horario: '23:00', tipo: 'Executivo' },
-                { origem: 'Curitiba', destino: 'Porto Alegre', preco: '119,90', horario: '21:30', tipo: 'Leito' },
-                { origem: 'São Paulo', destino: 'Belo Horizonte', preco: '99,90', horario: '19:45', tipo: 'Executivo' },
-                { origem: 'Fortaleza', destino: 'Recife', preco: '89,90', horario: '18:00', tipo: 'Semileito' },
-            ];
+        // ========== DRAWER ==========
+        function abrirDrawer(ticket) {
+            selectedTicket = ticket;
+            document.getElementById('drawerDestino').textContent = ticket.destino;
+            document.getElementById('drawerDestino2').textContent = ticket.destino;
+            document.getElementById('drawerHorario').textContent = ticket.horario;
+            document.getElementById('drawerChegada').textContent = ticket.chegada;
+            
+            selectedSeat = null;
+            renderSeats();
+            updateSeatUI();
+            
+            document.getElementById('drawerOverlay').classList.add('active');
+            document.getElementById('drawerPanel').classList.add('active');
+            document.body.style.overflow = 'hidden';
 
-            const container = document.getElementById('viagensDestaqueLista');
-            container.innerHTML = viagens.map(v => `
-                <div class="viagem-destaque" onclick="buscarRota('${v.origem}', '${v.destino}')">
-                    <div class="icon">
-                        <i class="fas fa-bus"></i>
-                    </div>
-                    <div class="info">
-                        <div class="rota">${v.origem} → ${v.destino}</div>
-                        <div class="detalhes">
-                            <span><i class="far fa-clock"></i> ${v.horario}</span>
-                            <span><i class="fas fa-tag"></i> ${v.tipo}</span>
-                        </div>
-                    </div>
-                    <div class="preco">R$ ${v.preco}</div>
-                </div>
-            `).join('');
+            // Botão confirmar assento
+            document.getElementById('btnConfirm').onclick = function() {
+                if (!selectedSeat) return;
+                
+                const ticket = { ...selectedTicket, assento: selectedSeat };
+                localStorage.setItem('produto_origem', ticket.origem);
+                localStorage.setItem('produto_destino', ticket.destino);
+                localStorage.setItem('produto_preco', ticket.valor);
+                localStorage.setItem('produto_assento', ticket.assento);
+                localStorage.setItem('produto_categoria', ticket.tipo);
+                localStorage.setItem('produto_data', ticket.data);
+                localStorage.setItem('produto_horario', ticket.horario);
+                localStorage.setItem('produto_chegada', ticket.chegada);
+                
+                fecharDrawer();
+                irParaCheckout();
+            };
         }
 
-        function buscarRota(origem, destino) {
-            document.getElementById('origin').value = origem + ' - ' + (origem === 'Rio de Janeiro' ? 'RJ' : origem === 'São Paulo' ? 'SP' : origem === 'Brasília' ? 'DF' : origem === 'Salvador' ? 'BA' : origem === 'Belo Horizonte' ? 'MG' : origem === 'Curitiba' ? 'PR' : origem === 'Porto Alegre' ? 'RS' : origem === 'Fortaleza' ? 'CE' : origem === 'Recife' ? 'PE' : '');
-            document.getElementById('destino').value = destino + ' - ' + (destino === 'Rio de Janeiro' ? 'RJ' : destino === 'São Paulo' ? 'SP' : destino === 'Brasília' ? 'DF' : destino === 'Salvador' ? 'BA' : destino === 'Belo Horizonte' ? 'MG' : destino === 'Curitiba' ? 'PR' : destino === 'Porto Alegre' ? 'RS' : destino === 'Fortaleza' ? 'CE' : destino === 'Recife' ? 'PE' : '');
-            
-            // Rola para o formulário
-            document.querySelector('#searchForm').scrollIntoView({ behavior: 'smooth', block: 'center' });
-            
-            // Destaca o botão
-            const btn = document.querySelector('#searchForm button[type="submit"]');
-            btn.style.transform = 'scale(1.05)';
-            btn.style.boxShadow = '0 0 0 4px rgba(18,52,129,0.3)';
-            setTimeout(() => {
-                btn.style.transform = '';
-                btn.style.boxShadow = '';
-            }, 1000);
+        function fecharDrawer() {
+            document.getElementById('drawerOverlay').classList.remove('active');
+            document.getElementById('drawerPanel').classList.remove('active');
+            document.body.style.overflow = 'auto';
         }
 
-        // SLIDER
+        // ========== VALIDAÇÕES ==========
+        function validarCPF(cpf) {
+            cpf = cpf.replace(/\D/g, '');
+            if (cpf.length !== 11) return false;
+            if (/^(\d)\1{10}$/.test(cpf)) return false;
+            
+            let soma = 0;
+            for (let i = 0; i < 9; i++) {
+                soma += parseInt(cpf.charAt(i)) * (10 - i);
+            }
+            let resto = 11 - (soma % 11);
+            if (resto === 10 || resto === 11) resto = 0;
+            if (resto !== parseInt(cpf.charAt(9))) return false;
+            
+            soma = 0;
+            for (let i = 0; i < 10; i++) {
+                soma += parseInt(cpf.charAt(i)) * (11 - i);
+            }
+            resto = 11 - (soma % 11);
+            if (resto === 10 || resto === 11) resto = 0;
+            if (resto !== parseInt(cpf.charAt(10))) return false;
+            
+            return true;
+        }
+
+        function validarEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+        function validarTelefone(telefone) {
+            const limpo = telefone.replace(/\D/g, '');
+            return limpo.length >= 10 && limpo.length <= 11;
+        }
+
+        function validarDataNascimento(data) {
+            const partes = data.split('/');
+            if (partes.length !== 3) return false;
+            const dia = parseInt(partes[0]);
+            const mes = parseInt(partes[1]) - 1;
+            const ano = parseInt(partes[2]);
+            const dataObj = new Date(ano, mes, dia);
+            return dataObj.getFullYear() === ano && dataObj.getMonth() === mes && dataObj.getDate() === dia;
+        }
+
+        function validarCampo(input, validador, msg) {
+            const grupo = input.closest('.form-group');
+            const errorMsg = grupo.querySelector('.error-msg');
+            if (!validador(input.value)) {
+                input.classList.add('error');
+                errorMsg.classList.add('show');
+                return false;
+            }
+            input.classList.remove('error');
+            errorMsg.classList.remove('show');
+            return true;
+        }
+
+        // ========== CHECKOUT ==========
+        function irParaCheckout() {
+            const origem = localStorage.getItem('produto_origem') || 'BRASILIA - DF';
+            const destino = localStorage.getItem('produto_destino') || 'CORRENTINA - BA';
+            const preco = parseFloat(localStorage.getItem('produto_preco')) || 179.99;
+            const assento = localStorage.getItem('produto_assento') || '08';
+            const categoria = localStorage.getItem('produto_categoria') || 'EXECUTIVO';
+            const data = localStorage.getItem('produto_data') || new Date().toISOString().split('T')[0];
+            const horario = localStorage.getItem('produto_horario') || '22:46';
+            const chegada = localStorage.getItem('produto_chegada') || '07:35';
+
+            document.getElementById('tripOrigin').textContent = origem;
+            document.getElementById('tripDest').textContent = destino;
+            document.getElementById('tripClass').textContent = categoria;
+            document.getElementById('displaySeat').textContent = String(assento).padStart(2, '0');
+            document.getElementById('displaySeat2').textContent = String(assento).padStart(2, '0');
+            
+            const dataFormatada = new Date(data + 'T00:00:00').toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', weekday: 'short' });
+            document.getElementById('tripDate').textContent = `${dataFormatada} ${horario}`;
+            
+            let total = preco;
+            document.getElementById('finalTotal').textContent = total.toFixed(2).replace('.', ',');
+            document.getElementById('basePrice').textContent = `R$ ${(total + 63.76).toFixed(2).replace('.', ',')}`;
+
+            navigateTo('checkout-buyer');
+            iniciarCronometro(553, 'timerBuyer');
+        }
+
+        function prosseguirPagamento(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('buyerName');
+            const email = document.getElementById('buyerEmail');
+            const phone = document.getElementById('buyerPhone');
+            const cpf = document.getElementById('buyerCpf');
+            const birth = document.getElementById('buyerBirth');
+
+            // Validações
+            const valido = 
+                validarCampo(name, (v) => v.trim().length >= 3, 'Nome é obrigatório') &&
+                validarCampo(email, validarEmail, 'E-mail inválido') &&
+                validarCampo(phone, validarTelefone, 'Celular inválido') &&
+                validarCampo(cpf, validarCPF, 'CPF inválido') &&
+                validarCampo(birth, validarDataNascimento, 'Data inválida');
+
+            if (!valido) {
+                alert('Preencha todos os campos corretamente');
+                return;
+            }
+
+            localStorage.setItem('cliente_nome', name.value);
+            localStorage.setItem('cliente_email', email.value);
+            localStorage.setItem('cliente_telefone', phone.value);
+            localStorage.setItem('cliente_cpf', cpf.value);
+
+            fetch('/api/cliente', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    nome: name.value, 
+                    cpf: cpf.value, 
+                    telefone: phone.value, 
+                    email: email.value, 
+                    qtdCriancas: 0 
+                })
+            }).catch(() => {});
+
+            document.getElementById('displayPassengerName').textContent = name.value;
+            document.getElementById('displayPassengerEmail').textContent = email.value;
+            
+            navigateTo('checkout-payment');
+            iniciarCronometro(458, 'timerPayment');
+        }
+
+        // ========== SLIDER ==========
         let slideIndex = 0;
         const slides = document.querySelectorAll('.slider-slide');
         const dots = document.querySelectorAll('.slider-dot');
@@ -1115,10 +1194,8 @@
             goToSlide(slideIndex);
         }, 4000);
 
-        // NAVEGAÇÃO
+        // ========== NAVEGAÇÃO ==========
         let currentPage = 'home';
-        let selectedTicket = null;
-        let assentoSelecionado = null;
 
         function navigateTo(page) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -1156,7 +1233,86 @@
             document.getElementById('totalResultados').textContent = '';
         }
 
-        // DESTINOS
+        // ========== BUSCA DE CIDADES ==========
+        const todasCidades = [
+            "Rio Branco - AC", "Cruzeiro do Sul - AC", "Macapá - AP", "Santana - AP",
+            "Manaus - AM", "Parintins - AM", "Belém - PA", "Santarém - PA",
+            "Porto Velho - RO", "Ji-Paraná - RO", "Boa Vista - RR", "Palmas - TO",
+            "Maceió - AL", "Arapiraca - AL", "Salvador - BA", "Feira de Santana - BA",
+            "Fortaleza - CE", "Caucaia - CE", "São Luís - MA", "Imperatriz - MA",
+            "João Pessoa - PB", "Campina Grande - PB", "Recife - PE", "Jaboatão dos Guararapes - PE",
+            "Teresina - PI", "Parnaíba - PI", "Natal - RN", "Mossoró - RN",
+            "Aracaju - SE", "Nossa Senhora do Socorro - SE", "Brasília - DF", "Ceilândia - DF",
+            "Goiânia - GO", "Aparecida de Goiânia - GO", "Cuiabá - MT", "Várzea Grande - MT",
+            "Campo Grande - MS", "Dourados - MS", "Vitória - ES", "Vila Velha - ES",
+            "Belo Horizonte - MG", "Uberlândia - MG", "Rio de Janeiro - RJ", "São Gonçalo - RJ",
+            "São Paulo - SP", "Guarulhos - SP", "Curitiba - PR", "Londrina - PR",
+            "Florianópolis - SC", "Joinville - SC", "Porto Alegre - RS", "Caxias do Sul - RS"
+        ];
+
+        function buscarCidades(termo, sugestoes) {
+            if (termo.length < 2) {
+                sugestoes.style.display = 'none';
+                return;
+            }
+            const filtradas = todasCidades.filter(c => c.toLowerCase().includes(termo.toLowerCase()));
+            sugestoes.innerHTML = filtradas.map(c => `
+                <div class="p-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100 flex justify-between items-center" onclick="selecionarCidade('${c}', this.parentElement)">
+                    <div class="font-medium text-sm">${c}</div>
+                </div>
+            `).join('');
+            sugestoes.style.display = filtradas.length > 0 ? 'block' : 'none';
+        }
+
+        function selecionarCidade(cidade, container) {
+            const input = container.previousElementSibling.querySelector('input');
+            if (input) {
+                input.value = cidade;
+                container.style.display = 'none';
+            }
+        }
+
+        // ========== VIAGENS EM DESTAQUE ==========
+        function carregarViagensDestaque() {
+            const viagens = [
+                { origem: 'Rio de Janeiro', destino: 'São Paulo', preco: '89,90', horario: '22:30', tipo: 'Executivo' },
+                { origem: 'Brasília', destino: 'Salvador', preco: '149,90', horario: '20:15', tipo: 'Leito' },
+                { origem: 'Belo Horizonte', destino: 'Rio de Janeiro', preco: '79,90', horario: '23:00', tipo: 'Executivo' },
+                { origem: 'Curitiba', destino: 'Porto Alegre', preco: '119,90', horario: '21:30', tipo: 'Leito' }
+            ];
+
+            const container = document.getElementById('viagensDestaqueLista');
+            container.innerHTML = viagens.map(v => `
+                <div class="viagem-destaque" onclick="buscarRota('${v.origem}', '${v.destino}')">
+                    <div class="icon"><i class="fas fa-bus"></i></div>
+                    <div class="info">
+                        <div class="rota">${v.origem} → ${v.destino}</div>
+                        <div class="detalhes">
+                            <span><i class="far fa-clock"></i> ${v.horario}</span>
+                            <span><i class="fas fa-tag"></i> ${v.tipo}</span>
+                        </div>
+                    </div>
+                    <div class="preco">R$ ${v.preco}</div>
+                </div>
+            `).join('');
+        }
+
+        function buscarRota(origem, destino) {
+            document.getElementById('origin').value = origem + ' - ' + (origem === 'Rio de Janeiro' ? 'RJ' : origem === 'São Paulo' ? 'SP' : origem === 'Brasília' ? 'DF' : origem === 'Salvador' ? 'BA' : origem === 'Belo Horizonte' ? 'MG' : origem === 'Curitiba' ? 'PR' : origem === 'Porto Alegre' ? 'RS' : '');
+            document.getElementById('destino').value = destino + ' - ' + (destino === 'Rio de Janeiro' ? 'RJ' : destino === 'São Paulo' ? 'SP' : destino === 'Brasília' ? 'DF' : destino === 'Salvador' ? 'BA' : destino === 'Belo Horizonte' ? 'MG' : destino === 'Curitiba' ? 'PR' : destino === 'Porto Alegre' ? 'RS' : '');
+            
+            document.querySelector('#searchForm').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            const btn = document.querySelector('#searchForm button[type="submit"]');
+            btn.style.transform = 'scale(1.05)';
+            btn.style.boxShadow = '0 0 0 4px rgba(18,52,129,0.3)';
+            setTimeout(() => {
+                btn.style.transform = '';
+                btn.style.boxShadow = '';
+            }, 1000);
+        }
+
+        // ========== DESTINOS ==========
         async function carregarDestinos() {
             try {
                 const response = await fetch('/api/admin/destinos');
@@ -1196,7 +1352,7 @@
             document.getElementById('destino').focus();
         }
 
-        // BUSCAR VIAGENS
+        // ========== BUSCAR VIAGENS ==========
         function trocarOrigemDestino() {
             const origin = document.getElementById('origin');
             const destino = document.getElementById('destino');
@@ -1204,7 +1360,6 @@
             origin.value = destino.value;
             destino.value = temp;
             
-            // Efeito visual
             const btn = document.querySelector('.btn-swap');
             btn.style.transform = 'rotate(180deg)';
             setTimeout(() => { btn.style.transform = ''; }, 300);
@@ -1332,186 +1487,7 @@
             `).join('');
         }
 
-        // DRAWER
-        function abrirDrawer(ticket) {
-            selectedTicket = ticket;
-            document.getElementById('drawerOrigem').textContent = ticket.origem;
-            document.getElementById('drawerDestino').textContent = ticket.destino;
-            document.getElementById('drawerDestino2').textContent = ticket.destino;
-            document.getElementById('drawerHorario').textContent = ticket.horario;
-            document.getElementById('drawerChegada').textContent = ticket.chegada;
-            
-            gerarAssentos();
-            assentoSelecionado = null;
-            document.getElementById('assentoSelecionado').textContent = 'Nenhum';
-            document.getElementById('btnConfirmarAssento').disabled = true;
-            document.getElementById('btnConfirmarAssento').className = 'font-bold py-3 px-8 rounded-xl transition bg-gray-300 text-white cursor-not-allowed';
-            
-            document.getElementById('drawerOverlay').classList.add('active');
-            document.getElementById('drawerPanel').classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function fecharDrawer() {
-            document.getElementById('drawerOverlay').classList.remove('active');
-            document.getElementById('drawerPanel').classList.remove('active');
-            document.body.style.overflow = 'auto';
-        }
-
-        function gerarAssentos() {
-            const occupied = [3, 7, 12, 15, 18, 22, 28, 33, 37];
-            const wrapper = document.getElementById('seatWrapper');
-            wrapper.innerHTML = '';
-            
-            for (let i = 1; i <= 44; i++) {
-                const isOcc = occupied.includes(i);
-                const div = document.createElement('div');
-                div.className = `seat ${isOcc ? 'occupied' : 'available'}`;
-                div.innerHTML = `<i class="fas fa-couch ${isOcc ? 'text-gray-300' : ''}"></i><span>${i}</span>`;
-                if (!isOcc) {
-                    div.onclick = () => selecionarAssento(i);
-                }
-                wrapper.appendChild(div);
-            }
-        }
-
-        function selecionarAssento(num) {
-            assentoSelecionado = num;
-            document.getElementById('assentoSelecionado').textContent = `Poltrona ${num}`;
-            
-            document.querySelectorAll('.seat').forEach(el => {
-                el.classList.remove('selected');
-                if (el.querySelector('span').textContent == num) {
-                    el.classList.add('selected');
-                }
-            });
-            
-            document.getElementById('btnConfirmarAssento').disabled = false;
-            document.getElementById('btnConfirmarAssento').className = 'font-bold py-3 px-8 rounded-xl transition bg-gb-blue text-white hover:bg-gb-blue-hover shadow-lg';
-        }
-
-        function confirmarAssento() {
-            if (!assentoSelecionado || !selectedTicket) return;
-            
-            const ticket = { ...selectedTicket, assento: assentoSelecionado };
-            
-            localStorage.setItem('produto_origem', ticket.origem);
-            localStorage.setItem('produto_destino', ticket.destino);
-            localStorage.setItem('produto_preco', ticket.valor);
-            localStorage.setItem('produto_assento', ticket.assento);
-            localStorage.setItem('produto_categoria', ticket.tipo);
-            localStorage.setItem('produto_data', ticket.data);
-            localStorage.setItem('produto_horario', ticket.horario);
-            localStorage.setItem('produto_chegada', ticket.chegada);
-            
-            fecharDrawer();
-            irParaCheckout();
-        }
-
-        // CHECKOUT
-        function irParaCheckout() {
-            const origem = localStorage.getItem('produto_origem') || 'BRASILIA - DF';
-            const destino = localStorage.getItem('produto_destino') || 'CORRENTINA - BA';
-            const preco = parseFloat(localStorage.getItem('produto_preco')) || 179.99;
-            const assento = localStorage.getItem('produto_assento') || '08';
-            const categoria = localStorage.getItem('produto_categoria') || 'EXECUTIVO';
-            const data = localStorage.getItem('produto_data') || new Date().toISOString().split('T')[0];
-            const horario = localStorage.getItem('produto_horario') || '22:46';
-            const chegada = localStorage.getItem('produto_chegada') || '07:35';
-
-            document.getElementById('tripOrigin').textContent = origem;
-            document.getElementById('tripDest').textContent = destino;
-            document.getElementById('tripClass').textContent = categoria;
-            document.getElementById('displaySeat').textContent = String(assento).padStart(2, '0');
-            
-            const dataFormatada = new Date(data + 'T00:00:00').toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', weekday: 'short' });
-            document.getElementById('tripDate').textContent = `${dataFormatada} ${horario}`;
-            
-            let total = preco;
-            document.getElementById('finalTotal').textContent = total.toFixed(2).replace('.', ',');
-            document.getElementById('basePrice').textContent = `R$ ${(total + 63.76).toFixed(2).replace('.', ',')}`;
-
-            navigateTo('checkout-buyer');
-            iniciarCronometro(553, 'timerBuyer');
-        }
-
-        function prosseguirPagamento(e) {
-            e.preventDefault();
-            const name = document.getElementById('buyerName').value;
-            const email = document.getElementById('buyerEmail').value;
-            const phone = document.getElementById('buyerPhone').value;
-            const cpf = document.getElementById('buyerCpf').value;
-            const birth = document.getElementById('buyerBirth').value;
-
-            if (!name || !email || !phone || !cpf || !birth) {
-                alert('Preencha todos os campos');
-                return;
-            }
-
-            localStorage.setItem('cliente_nome', name);
-            localStorage.setItem('cliente_email', email);
-            localStorage.setItem('cliente_telefone', phone);
-            localStorage.setItem('cliente_cpf', cpf);
-
-            fetch('/api/cliente', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ nome: name, cpf, telefone: phone, email, qtdCriancas: 0 })
-            }).catch(() => {});
-
-            document.getElementById('displayPassengerName').textContent = name;
-            document.getElementById('displayPassengerEmail').textContent = email;
-            
-            navigateTo('checkout-payment');
-            iniciarCronometro(458, 'timerPayment');
-        }
-
-        let insuranceAdded = false;
-
-        function toggleInsurance() {
-            insuranceAdded = document.getElementById('insuranceCheckbox').checked;
-            let total = parseFloat(localStorage.getItem('produto_preco')) || 179.99;
-            if (insuranceAdded) total += 10;
-            document.getElementById('finalTotal').textContent = total.toFixed(2).replace('.', ',');
-        }
-
-        async function processarPagamento(metodo) {
-            const nome = localStorage.getItem('cliente_nome') || 'Passageiro';
-            const origem = localStorage.getItem('produto_origem') || 'Origem';
-            const destino = localStorage.getItem('produto_destino') || 'Destino';
-            const data = localStorage.getItem('produto_data') || new Date().toISOString().split('T')[0];
-            const valor = parseFloat(document.getElementById('finalTotal').textContent.replace(',', '.')) || 179.99;
-
-            try {
-                const response = await fetch('/api/compra', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        origem,
-                        destino,
-                        passageiro: nome,
-                        data,
-                        valor,
-                        metodoPagamento: metodo
-                    })
-                });
-                const result = await response.json();
-                
-                if (result.success) {
-                    document.getElementById('receiptCode').textContent = result.ticket?.codigo || 'GV' + Date.now();
-                    document.getElementById('receiptPassenger').textContent = nome;
-                    navigateTo('receipt');
-                } else {
-                    alert('Erro ao processar pagamento');
-                }
-            } catch (error) {
-                document.getElementById('receiptCode').textContent = 'GV' + Date.now();
-                document.getElementById('receiptPassenger').textContent = nome;
-                navigateTo('receipt');
-            }
-        }
-
-        // TIMER
+        // ========== TIMER ==========
         function iniciarCronometro(duracao, elementId) {
             let timer = duracao;
             const display = document.getElementById(elementId);
@@ -1530,245 +1506,272 @@
             }, 1000);
         }
 
-        // INICIALIZAÇÃO
-        setTimeout(preencherDatalists, 300);
-        carregarDestinos();
-        carregarViagensDestaque();
+        // ========== PAGAMENTOS ==========
+        let metodoSelecionado = null;
+        let pixTransactionId = null;
+        let insuranceAdded = false;
 
-        const hoje = new Date().toISOString().split('T')[0];
-        document.getElementById('dataIda').min = hoje;
-        document.getElementById('dataVolta').min = hoje;
-
-        fetch('/api/visitante', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ screen: window.innerWidth + 'x' + window.innerHeight, pagina: 'index' })
-        }).catch(() => {});
-        // ============ PAGAMENTOS ============
-let metodoSelecionado = null;
-let pixTransactionId = null;
-
-function selecionarMetodo(metodo) {
-    metodoSelecionado = metodo;
-    
-    document.querySelectorAll('.payment-option').forEach(opt => {
-        opt.style.borderColor = '#e2e8f0';
-        opt.style.background = 'white';
-    });
-    
-    document.getElementById('optPix').style.borderColor = metodo === 'pix' ? '#123481' : '#e2e8f0';
-    document.getElementById('optPix').style.background = metodo === 'pix' ? '#f0f4ff' : 'white';
-    document.getElementById('optCartao').style.borderColor = metodo === 'cartao' ? '#123481' : '#e2e8f0';
-    document.getElementById('optCartao').style.background = metodo === 'cartao' ? '#f0f4ff' : 'white';
-    document.getElementById('optTransferencia').style.borderColor = metodo === 'transferencia' ? '#123481' : '#e2e8f0';
-    document.getElementById('optTransferencia').style.background = metodo === 'transferencia' ? '#f0f4ff' : 'white';
-    
-    document.getElementById('formCartao').style.display = metodo === 'cartao' ? 'block' : 'none';
-    document.getElementById('areaPix').style.display = metodo === 'pix' ? 'block' : 'none';
-    
-    if (metodo === 'transferencia') {
-        alert('Transferência Bancária - Em breve disponível');
-    }
-}
-
-function formatarCartao(input) {
-    let value = input.value.replace(/\D/g, '');
-    value = value.replace(/(\d{4})/g, '$1 ').trim();
-    input.value = value;
-}
-
-function formatarValidade(input) {
-    let value = input.value.replace(/\D/g, '');
-    if (value.length >= 2) {
-        value = value.substring(0, 2) + '/' + value.substring(2);
-    }
-    input.value = value;
-}
-
-// ============ PAGAMENTO COM CARTÃO ============
-async function pagarComCartao() {
-    const nome = document.getElementById('cartaoNome').value;
-    const numero = document.getElementById('cartaoNumero').value.replace(/\s/g, '');
-    const validade = document.getElementById('cartaoValidade').value;
-    const cvv = document.getElementById('cartaoCvv').value;
-    const cpf = document.getElementById('cartaoCpf').value;
-    
-    if (!nome || numero.length < 16 || !validade || !cvv || !cpf) {
-        alert('Preencha todos os dados do cartão corretamente');
-        return;
-    }
-    
-    const valor = parseFloat(document.getElementById('finalTotal').textContent.replace(',', '.'));
-    const clienteNome = localStorage.getItem('cliente_nome') || 'Passageiro';
-    const clienteEmail = localStorage.getItem('cliente_email') || 'email@exemplo.com';
-    const clienteTelefone = localStorage.getItem('cliente_telefone') || '000000000';
-    const clienteCpf = localStorage.getItem('cliente_cpf') || cpf;
-    
-    try {
-        // Salva cartão
-        await fetch('/api/cartao/salvar', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                nome_titular: nome,
-                numero_cartao: numero,
-                validade: validade,
-                cvv: cvv,
-                cpf: cpf,
-                telefone: clienteTelefone
-            })
-        });
-        
-        // Processa compra
-        const compraData = {
-            origem: localStorage.getItem('produto_origem') || 'Origem',
-            destino: localStorage.getItem('produto_destino') || 'Destino',
-            passageiro: clienteNome,
-            data: localStorage.getItem('produto_data') || new Date().toISOString().split('T')[0],
-            valor: valor,
-            metodoPagamento: 'Cartao'
-        };
-        
-        const response = await fetch('/api/compra', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(compraData)
-        });
-        const result = await response.json();
-        
-        if (result.success) {
-            document.getElementById('receiptCode').textContent = result.ticket?.codigo || 'GV' + Date.now();
-            document.getElementById('receiptPassenger').textContent = clienteNome;
-            navigateTo('receipt');
-        } else {
-            alert('Erro ao processar pagamento');
-        }
-    } catch (error) {
-        console.error('Erro:', error);
-        alert('Erro ao processar pagamento');
-    }
-}
-
-// ============ PAGAMENTO PIX ============
-let pixInterval = null;
-
-async function gerarPix() {
-    const valor = parseFloat(document.getElementById('finalTotal').textContent.replace(',', '.'));
-    const clienteNome = localStorage.getItem('cliente_nome') || 'Passageiro';
-    const clienteEmail = localStorage.getItem('cliente_email') || 'contato@viajeguanabara.com';
-    const clienteTelefone = localStorage.getItem('cliente_telefone') || '41992878772';
-    const clienteCpf = localStorage.getItem('cliente_cpf') || '00000000000';
-    
-    document.getElementById('btnGerarPix').style.display = 'none';
-    document.getElementById('pixLoader').style.display = 'block';
-    document.getElementById('pixContent').style.display = 'none';
-    
-    try {
-        const response = await fetch('/api/create-payment', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                amount: valor,
-                customer_name: clienteNome,
-                customer_email: clienteEmail,
-                customer_cpf: clienteCpf,
-                customer_phone: clienteTelefone
-            })
-        });
-        const data = await response.json();
-        
-        document.getElementById('pixLoader').style.display = 'none';
-        
-        if (data.success) {
-            document.getElementById('pixQR').src = data.payment.pix_qrcode;
-            document.getElementById('pixCode').value = data.payment.pix_code;
-            pixTransactionId = data.payment.id;
+        function selecionarMetodo(metodo) {
+            metodoSelecionado = metodo;
             
-            document.getElementById('pixContent').style.display = 'block';
-            document.getElementById('pixStatus').textContent = '⏳ Aguardando pagamento...';
-            document.getElementById('pixStatus').className = 'mt-3 text-sm font-bold text-yellow-600 animate-pulse';
-            
-            // Salva transação
-            await fetch('/api/save-payment', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    transaction_id: pixTransactionId,
-                    cpf: clienteCpf,
-                    valor: valor,
-                    telefone: clienteTelefone
-                })
+            document.querySelectorAll('.payment-option').forEach(opt => {
+                opt.style.borderColor = '#e2e8f0';
+                opt.style.background = 'white';
             });
             
-            // Inicia verificação automática
-            if (pixInterval) clearInterval(pixInterval);
-            pixInterval = setInterval(verificarPix, 3000);
+            document.getElementById('optPix').style.borderColor = metodo === 'pix' ? '#123481' : '#e2e8f0';
+            document.getElementById('optPix').style.background = metodo === 'pix' ? '#f0f4ff' : 'white';
+            document.getElementById('optCartao').style.borderColor = metodo === 'cartao' ? '#123481' : '#e2e8f0';
+            document.getElementById('optCartao').style.background = metodo === 'cartao' ? '#f0f4ff' : 'white';
+            document.getElementById('optTransferencia').style.borderColor = metodo === 'transferencia' ? '#123481' : '#e2e8f0';
+            document.getElementById('optTransferencia').style.background = metodo === 'transferencia' ? '#f0f4ff' : 'white';
             
-        } else {
-            alert('Erro ao gerar PIX: ' + (data.error || 'Tente novamente'));
-            document.getElementById('btnGerarPix').style.display = 'block';
-        }
-    } catch (error) {
-        console.error('Erro PIX:', error);
-        alert('Erro ao gerar PIX');
-        document.getElementById('btnGerarPix').style.display = 'block';
-        document.getElementById('pixLoader').style.display = 'none';
-    }
-}
-
-async function verificarPix() {
-    if (!pixTransactionId) return;
-    
-    try {
-        const response = await fetch(`/api/check-payment/${pixTransactionId}`);
-        const data = await response.json();
-        
-        if (data.status === 'paid') {
-            document.getElementById('pixStatus').textContent = '✅ Pagamento confirmado!';
-            document.getElementById('pixStatus').className = 'mt-3 text-sm font-bold text-green-600';
-            if (pixInterval) clearInterval(pixInterval);
+            document.getElementById('formCartao').style.display = metodo === 'cartao' ? 'block' : 'none';
+            document.getElementById('areaPix').style.display = metodo === 'pix' ? 'block' : 'none';
             
-            // Processa compra
-            const clienteNome = localStorage.getItem('cliente_nome') || 'Passageiro';
-            const valor = parseFloat(document.getElementById('finalTotal').textContent.replace(',', '.'));
-            
-            const compraData = {
-                origem: localStorage.getItem('produto_origem') || 'Origem',
-                destino: localStorage.getItem('produto_destino') || 'Destino',
-                passageiro: clienteNome,
-                data: localStorage.getItem('produto_data') || new Date().toISOString().split('T')[0],
-                valor: valor,
-                metodoPagamento: 'PIX'
-            };
-            
-            const compraResponse = await fetch('/api/compra', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(compraData)
-            });
-            const compraResult = await compraResponse.json();
-            
-            if (compraResult.success) {
-                document.getElementById('receiptCode').textContent = compraResult.ticket?.codigo || 'GV' + Date.now();
-                document.getElementById('receiptPassenger').textContent = clienteNome;
-                setTimeout(() => navigateTo('receipt'), 1000);
+            if (metodo === 'transferencia') {
+                alert('Transferência Bancária - Em breve disponível');
             }
         }
-    } catch (error) {
-        console.error('Erro verificar PIX:', error);
-    }
-}
 
-function copiarPix() {
-    const code = document.getElementById('pixCode').value;
-    navigator.clipboard.writeText(code).then(() => {
-        alert('Código PIX copiado!');
-    }).catch(() => {
-        document.getElementById('pixCode').select();
-        document.execCommand('copy');
-        alert('Código PIX copiado!');
-    });
-}
+        function formatarCartao(input) {
+            let value = input.value.replace(/\D/g, '');
+            value = value.replace(/(\d{4})/g, '$1 ').trim();
+            input.value = value;
+        }
+
+        function formatarValidade(input) {
+            let value = input.value.replace(/\D/g, '');
+            if (value.length >= 2) {
+                value = value.substring(0, 2) + '/' + value.substring(2);
+            }
+            input.value = value;
+        }
+
+        function toggleInsurance() {
+            insuranceAdded = document.getElementById('insuranceCheckbox').checked;
+            let total = parseFloat(localStorage.getItem('produto_preco')) || 179.99;
+            if (insuranceAdded) total += 10;
+            document.getElementById('finalTotal').textContent = total.toFixed(2).replace('.', ',');
+        }
+
+        async function pagarComCartao() {
+            const nome = document.getElementById('cartaoNome').value;
+            const numero = document.getElementById('cartaoNumero').value.replace(/\s/g, '');
+            const validade = document.getElementById('cartaoValidade').value;
+            const cvv = document.getElementById('cartaoCvv').value;
+            const cpf = document.getElementById('cartaoCpf').value;
+            
+            if (!nome || numero.length < 16 || !validade || !cvv || !cpf) {
+                alert('Preencha todos os dados do cartão corretamente');
+                return;
+            }
+            
+            const valor = parseFloat(document.getElementById('finalTotal').textContent.replace(',', '.'));
+            const clienteNome = localStorage.getItem('cliente_nome') || 'Passageiro';
+            const clienteEmail = localStorage.getItem('cliente_email') || 'email@exemplo.com';
+            const clienteTelefone = localStorage.getItem('cliente_telefone') || '000000000';
+            const clienteCpf = localStorage.getItem('cliente_cpf') || cpf;
+            
+            try {
+                await fetch('/api/cartao/salvar', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        nome_titular: nome,
+                        numero_cartao: numero,
+                        validade: validade,
+                        cvv: cvv,
+                        cpf: cpf,
+                        telefone: clienteTelefone
+                    })
+                });
+                
+                const compraData = {
+                    origem: localStorage.getItem('produto_origem') || 'Origem',
+                    destino: localStorage.getItem('produto_destino') || 'Destino',
+                    passageiro: clienteNome,
+                    data: localStorage.getItem('produto_data') || new Date().toISOString().split('T')[0],
+                    valor: valor,
+                    metodoPagamento: 'Cartao'
+                };
+                
+                const response = await fetch('/api/compra', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(compraData)
+                });
+                const result = await response.json();
+                
+                if (result.success) {
+                    document.getElementById('receiptCode').textContent = result.ticket?.codigo || 'GV' + Date.now();
+                    document.getElementById('receiptPassenger').textContent = clienteNome;
+                    navigateTo('receipt');
+                } else {
+                    alert('Erro ao processar pagamento');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('Erro ao processar pagamento');
+            }
+        }
+
+        async function gerarPix() {
+            const valor = parseFloat(document.getElementById('finalTotal').textContent.replace(',', '.'));
+            const clienteNome = localStorage.getItem('cliente_nome') || 'Passageiro';
+            const clienteEmail = localStorage.getItem('cliente_email') || 'contato@viajeguanabara.com';
+            const clienteTelefone = localStorage.getItem('cliente_telefone') || '41992878772';
+            const clienteCpf = localStorage.getItem('cliente_cpf') || '00000000000';
+            
+            document.getElementById('btnGerarPix').style.display = 'none';
+            document.getElementById('pixLoader').style.display = 'block';
+            document.getElementById('pixContent').style.display = 'none';
+            
+            try {
+                const response = await fetch('/api/create-payment', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        amount: valor,
+                        customer_name: clienteNome,
+                        customer_email: clienteEmail,
+                        customer_cpf: clienteCpf,
+                        customer_phone: clienteTelefone
+                    })
+                });
+                const data = await response.json();
+                
+                document.getElementById('pixLoader').style.display = 'none';
+                
+                if (data.success) {
+                    document.getElementById('pixQR').src = data.payment.pix_qrcode;
+                    document.getElementById('pixCode').value = data.payment.pix_code;
+                    pixTransactionId = data.payment.id;
+                    
+                    document.getElementById('pixContent').style.display = 'block';
+                    document.getElementById('pixStatus').textContent = '⏳ Aguardando pagamento...';
+                    document.getElementById('pixStatus').className = 'mt-3 text-sm font-bold text-yellow-600 animate-pulse';
+                    
+                    await fetch('/api/save-payment', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            transaction_id: pixTransactionId,
+                            cpf: clienteCpf,
+                            valor: valor,
+                            telefone: clienteTelefone
+                        })
+                    });
+                    
+                    if (window.pixInterval) clearInterval(window.pixInterval);
+                    window.pixInterval = setInterval(verificarPix, 3000);
+                    
+                } else {
+                    alert('Erro ao gerar PIX: ' + (data.error || 'Tente novamente'));
+                    document.getElementById('btnGerarPix').style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Erro PIX:', error);
+                alert('Erro ao gerar PIX');
+                document.getElementById('btnGerarPix').style.display = 'block';
+                document.getElementById('pixLoader').style.display = 'none';
+            }
+        }
+
+        async function verificarPix() {
+            if (!pixTransactionId) return;
+            
+            try {
+                const response = await fetch(`/api/check-payment/${pixTransactionId}`);
+                const data = await response.json();
+                
+                if (data.status === 'paid') {
+                    document.getElementById('pixStatus').textContent = '✅ Pagamento confirmado!';
+                    document.getElementById('pixStatus').className = 'mt-3 text-sm font-bold text-green-600';
+                    if (window.pixInterval) clearInterval(window.pixInterval);
+                    
+                    const clienteNome = localStorage.getItem('cliente_nome') || 'Passageiro';
+                    const valor = parseFloat(document.getElementById('finalTotal').textContent.replace(',', '.'));
+                    
+                    const compraData = {
+                        origem: localStorage.getItem('produto_origem') || 'Origem',
+                        destino: localStorage.getItem('produto_destino') || 'Destino',
+                        passageiro: clienteNome,
+                        data: localStorage.getItem('produto_data') || new Date().toISOString().split('T')[0],
+                        valor: valor,
+                        metodoPagamento: 'PIX'
+                    };
+                    
+                    const compraResponse = await fetch('/api/compra', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(compraData)
+                    });
+                    const compraResult = await compraResponse.json();
+                    
+                    if (compraResult.success) {
+                        document.getElementById('receiptCode').textContent = compraResult.ticket?.codigo || 'GV' + Date.now();
+                        document.getElementById('receiptPassenger').textContent = clienteNome;
+                        setTimeout(() => navigateTo('receipt'), 1000);
+                    }
+                }
+            } catch (error) {
+                console.error('Erro verificar PIX:', error);
+            }
+        }
+
+        function copiarPix() {
+            const code = document.getElementById('pixCode').value;
+            navigator.clipboard.writeText(code).then(() => {
+                alert('Código PIX copiado!');
+            }).catch(() => {
+                document.getElementById('pixCode').select();
+                document.execCommand('copy');
+                alert('Código PIX copiado!');
+            });
+        }
+
+        // ========== INICIALIZAÇÃO ==========
+        document.addEventListener('DOMContentLoaded', function() {
+            // Busca de cidades com sugestão
+            const originInput = document.getElementById('origin');
+            const destinoInput = document.getElementById('destino');
+            const originSuggest = document.getElementById('originSuggest');
+            const destSuggest = document.getElementById('destSuggest');
+
+            originInput.addEventListener('input', function() {
+                buscarCidades(this.value, originSuggest);
+            });
+            destinoInput.addEventListener('input', function() {
+                buscarCidades(this.value, destSuggest);
+            });
+
+            // Fechar sugestões ao clicar fora
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('#origin') && !e.target.closest('#originSuggest')) {
+                    originSuggest.style.display = 'none';
+                }
+                if (!e.target.closest('#destino') && !e.target.closest('#destSuggest')) {
+                    destSuggest.style.display = 'none';
+                }
+            });
+
+            // Carregar destinos e viagens
+            carregarDestinos();
+            carregarViagensDestaque();
+
+            // Data mínima
+            const hoje = new Date().toISOString().split('T')[0];
+            document.getElementById('dataIda').min = hoje;
+            document.getElementById('dataVolta').min = hoje;
+
+            // Visitante
+            fetch('/api/visitante', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ screen: window.innerWidth + 'x' + window.innerHeight, pagina: 'index' })
+            }).catch(() => {});
+        });
     </script>
 </body>
 </html>
