@@ -23,7 +23,6 @@ app.use(bodyParser.json({ limit: '10mb' }));
 app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
 app.use(requestIp.mw());
 
-// Servir arquivos estáticos
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/admin', express.static(path.join(__dirname, 'public/admin')));
 
@@ -41,7 +40,6 @@ function getClientIP(req) {
   return req.clientIp || req.ip || req.headers['x-forwarded-for']?.split(',')[0] || 'unknown';
 }
 
-// Sanitização simples
 function sanitizarInput(input) {
   if (!input) return input;
   if (typeof input === 'string') {
@@ -50,11 +48,10 @@ function sanitizarInput(input) {
   return input;
 }
 
-// Log de segurança
 async function logSeguranca(usuario, acao, ip, detalhes) {
   try {
     await pool.query(
-      'INSERT INTO logs (usuario, acao, ip, detalhes, data) VALUES ($1, $2, $3, $4, CURRENT_TIMESTAMP)',
+      'INSERT INTO logs (usuario, acao, ip, detalhes) VALUES ($1, $2, $3, $4)',
       [usuario || 'Sistema', acao, ip, detalhes]
     );
   } catch (error) {
@@ -80,6 +77,8 @@ function authenticate(req, res, next) {
 async function initDatabase() {
   const client = await pool.connect();
   try {
+    console.log('🔄 Inicializando banco de dados...');
+
     // TABELA ADMIN USERS
     await client.query(`
       CREATE TABLE IF NOT EXISTS admin_users (
@@ -90,7 +89,7 @@ async function initDatabase() {
         email VARCHAR(100),
         ultimo_login TIMESTAMP,
         ip_login TEXT,
-        criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        criado_em TIMESTAMP DEFAULT NOW()
       )
     `);
 
@@ -102,7 +101,7 @@ async function initDatabase() {
         username VARCHAR(50),
         tentativa TEXT,
         sucesso BOOLEAN DEFAULT false,
-        timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        timestamp TIMESTAMP DEFAULT NOW()
       )
     `);
 
@@ -116,7 +115,7 @@ async function initDatabase() {
         status VARCHAR(20) DEFAULT 'pending',
         telefone VARCHAR(20),
         data_pagamento TIMESTAMP,
-        criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        criado_em TIMESTAMP DEFAULT NOW()
       )
     `);
 
@@ -132,7 +131,7 @@ async function initDatabase() {
         cpf VARCHAR(14),
         telefone VARCHAR(20),
         ip TEXT,
-        criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        criado_em TIMESTAMP DEFAULT NOW()
       )
     `);
 
@@ -149,7 +148,7 @@ async function initDatabase() {
         status VARCHAR(20) DEFAULT 'pendente',
         metodo_pagamento VARCHAR(20),
         ip TEXT,
-        criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        criado_em TIMESTAMP DEFAULT NOW()
       )
     `);
 
@@ -162,7 +161,7 @@ async function initDatabase() {
         telefone VARCHAR(20),
         email VARCHAR(100),
         ip TEXT,
-        criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        criado_em TIMESTAMP DEFAULT NOW()
       )
     `);
 
@@ -174,7 +173,7 @@ async function initDatabase() {
         acao VARCHAR(50),
         ip TEXT,
         detalhes TEXT,
-        data TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        data TIMESTAMP DEFAULT NOW()
       )
     `);
 
@@ -185,7 +184,7 @@ async function initDatabase() {
         nome_site VARCHAR(100) DEFAULT 'Viaje Guanabara',
         manutencao BOOLEAN DEFAULT false,
         logs_ativos BOOLEAN DEFAULT true,
-        atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        atualizado_em TIMESTAMP DEFAULT NOW()
       )
     `);
 
@@ -232,7 +231,7 @@ async function initDatabase() {
         data DATE,
         passageiros INTEGER DEFAULT 1,
         ip TEXT,
-        timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        timestamp TIMESTAMP DEFAULT NOW()
       )
     `);
 
@@ -246,19 +245,21 @@ async function initDatabase() {
         language TEXT,
         referer TEXT,
         pagina TEXT,
-        timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        timestamp TIMESTAMP DEFAULT NOW()
       )
     `);
 
-    // ADMIN PADRÃO
+    // ADMIN PADRÃO - USANDO NOW() EM VEZ DE CURRENT_TIMESTAMP
     const adminCheck = await client.query('SELECT * FROM admin_users WHERE username = $1', ['admin']);
     if (adminCheck.rows.length === 0) {
       const hashedPassword = bcrypt.hashSync('admin123', 10);
       await client.query(`
         INSERT INTO admin_users (username, senha_hash, nome, email, ultimo_login, ip_login)
-        VALUES ($1, $2, $3, $4, $5, $6)
-      `, ['admin', hashedPassword, 'Administrador', 'admin@viajeguanabara.com', CURRENT_TIMESTAMP, '127.0.0.1']);
+        VALUES ($1, $2, $3, $4, NOW(), $5)
+      `, ['admin', hashedPassword, 'Administrador', 'admin@viajeguanabara.com', '127.0.0.1']);
       console.log('✅ Admin criado: admin / admin123');
+    } else {
+      console.log('✅ Admin já existe');
     }
 
     // DESTINOS INICIAIS
@@ -275,6 +276,7 @@ async function initDatabase() {
         ('Curitiba', 'PR', 56, 'ativo'),
         ('Porto Alegre', 'RS', 34, 'ativo')
       `);
+      console.log('✅ Destinos iniciais criados');
     }
 
     // SERVIÇOS INICIAIS
@@ -289,11 +291,13 @@ async function initDatabase() {
         ('Tomada USB', 'Carregue seus dispositivos', 'ativo'),
         ('TV a bordo', 'Entretenimento durante a viagem', 'ativo')
       `);
+      console.log('✅ Serviços iniciais criados');
     }
 
-    console.log('✅ Banco de dados inicializado');
+    console.log('✅ Banco de dados inicializado com sucesso!');
   } catch (err) {
     console.error('❌ Erro ao inicializar banco:', err.message);
+    console.error('❌ Detalhes:', err.stack);
   } finally {
     client.release();
   }
@@ -321,7 +325,7 @@ app.post('/api/admin/login', async (req, res) => {
     }
     
     await pool.query(
-      'UPDATE admin_users SET ultimo_login = CURRENT_TIMESTAMP, ip_login = $1 WHERE id = $2',
+      'UPDATE admin_users SET ultimo_login = NOW(), ip_login = $1 WHERE id = $2',
       [ip, result.rows[0].id]
     );
     
