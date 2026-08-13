@@ -10,9 +10,28 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background: #f1f5f9; }
+        body { font-family: 'Inter', sans-serif; background: #f1f5f9; transition: background 0.3s, color 0.3s; }
         
-        /* LOGIN */
+        /* ========== TEMA CLARO/ESCURO ========== */
+        body.dark-theme { background: #0f172a; color: #e2e8f0; }
+        body.dark-theme .stat-card { background: #1e293b; border-color: #334155; }
+        body.dark-theme .stat-card .value { color: #e2e8f0; }
+        body.dark-theme .table-container { background: #1e293b; border-color: #334155; }
+        body.dark-theme .table-container .header { border-color: #334155; }
+        body.dark-theme .table-container table th { background: #0f172a; color: #94a3b8; }
+        body.dark-theme .table-container table td { border-color: #334155; color: #e2e8f0; }
+        body.dark-theme .table-container table tr:hover td { background: #0f172a; }
+        body.dark-theme .bg-white { background: #1e293b !important; }
+        body.dark-theme .bg-gray-50 { background: #0f172a !important; }
+        body.dark-theme .border-gray-200 { border-color: #334155 !important; }
+        body.dark-theme .text-gray-500 { color: #94a3b8 !important; }
+        body.dark-theme .text-gray-600 { color: #cbd5e1 !important; }
+        body.dark-theme .text-gray-400 { color: #64748b !important; }
+        body.dark-theme .login-card { background: #1e293b; }
+        body.dark-theme .login-card .logo h1 { color: #e2e8f0; }
+        body.dark-theme .login-card .input-group input { background: #0f172a; color: #e2e8f0; border-color: #334155; }
+        
+        /* ========== LOGIN ========== */
         .login-container {
             min-height: 100vh;
             display: flex;
@@ -75,7 +94,7 @@
         .login-card .error.show { display: block; }
         .login-card .footer { text-align: center; margin-top: 24px; font-size: 12px; color: #94a3b8; }
         
-        /* SIDEBAR */
+        /* ========== SIDEBAR ========== */
         .sidebar {
             background: #0a1a3a;
             min-height: 100vh;
@@ -120,23 +139,25 @@
             color: #94a3b8;
             text-decoration: none;
             transition: all 0.2s;
-            font-size: 14px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
             cursor: pointer;
         }
         .sidebar .menu a:hover { background: rgba(255,255,255,0.05); color: white; }
         .sidebar .menu a.active { background: #123481; color: white; border-right: 3px solid #E79F01; }
-        .sidebar .menu a i { width: 20px; text-align: center; }
+        .sidebar .menu a i { width: 20px; text-align: center; font-size: 16px; }
         .sidebar .menu .logout { margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 12px; color: #ef4444; }
         .sidebar .menu .logout:hover { color: #ef4444; background: rgba(239,68,68,0.1); }
         
-        /* MAIN */
+        /* ========== MAIN ========== */
         .main-content { margin-left: 260px; padding: 24px; min-height: 100vh; }
         .main-content .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
         .main-content .topbar h1 { font-size: 24px; font-weight: 800; color: #0a1a3a; }
         .main-content .topbar .actions { display: flex; gap: 12px; align-items: center; }
         .main-content .topbar .actions .btn-toggle { display: none; background: none; border: none; font-size: 24px; color: #123481; cursor: pointer; }
         
-        /* CARDS */
+        /* ========== STAT CARDS ========== */
         .stat-card {
             background: white;
             border-radius: 16px;
@@ -155,7 +176,7 @@
         .stat-card .value { font-size: 28px; font-weight: 800; color: #0a1a3a; }
         .stat-card .label { font-size: 13px; color: #64748b; }
         
-        /* TABLES */
+        /* ========== TABLES ========== */
         .table-container {
             background: white;
             border-radius: 16px;
@@ -196,6 +217,7 @@
         .table-container table tr:last-child td { border-bottom: none; }
         .table-container table tr:hover td { background: #f8fafc; }
         
+        /* ========== BADGES ========== */
         .status-badge { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; display: inline-block; }
         .status-badge.confirmado { background: #dcfce7; color: #16a34a; }
         .status-badge.pendente { background: #fef3c7; color: #d97706; }
@@ -205,18 +227,6 @@
         .status-badge.ativo { background: #dcfce7; color: #16a34a; }
         .status-badge.inativo { background: #fee2e2; color: #dc2626; }
         
-        .page { display: none; }
-        .page.active { display: block; }
-        
-        /* SKELETON LOADING */
-        .skeleton { animation: pulse 1.5s ease-in-out infinite; background: #e2e8f0; border-radius: 4px; }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-        .skeleton-text { height: 14px; width: 100%; }
-        .skeleton-card { height: 80px; width: 100%; border-radius: 12px; }
-        .skeleton-row { display: flex; gap: 12px; padding: 12px 16px; border-bottom: 1px solid #e2e8f0; }
-        .skeleton-row .skeleton { height: 14px; flex: 1; }
-        
-        /* IP BADGE */
         .ip-badge {
             font-family: 'Courier New', monospace;
             font-size: 11px;
@@ -227,72 +237,51 @@
             display: inline-block;
         }
         
-        /* BUTTONS */
-        .btn-export {
-            background: #16a34a;
-            color: white;
-            padding: 6px 14px;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 600;
-            border: none;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
+        .page { display: none; }
+        .page.active { display: block; }
+        
+        /* ========== SKELETON ========== */
+        .skeleton { animation: pulse 1.5s ease-in-out infinite; background: #e2e8f0; border-radius: 4px; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .skeleton-text { height: 14px; width: 100%; }
+        
+        /* ========== BUTTONS ========== */
+        .btn-export { background: #16a34a; color: white; padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; border: none; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; }
         .btn-export:hover { background: #15803d; transform: scale(1.02); }
         
-        .btn-refresh {
-            background: #123481;
-            color: white;
-            padding: 6px 14px;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 600;
-            border: none;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
+        .btn-refresh { background: #123481; color: white; padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; border: none; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; }
         .btn-refresh:hover { background: #1a4a9e; transform: scale(1.02); }
         
-        .btn-delete {
-            background: #dc2626;
-            color: white;
-            padding: 6px 14px;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 600;
-            border: none;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
+        .btn-delete { background: #dc2626; color: white; padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; border: none; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; }
         .btn-delete:hover { background: #b91c1c; transform: scale(1.02); }
         
-        .btn-add {
-            background: #123481;
-            color: white;
-            padding: 8px 18px;
-            border-radius: 10px;
-            font-size: 13px;
-            font-weight: 700;
-            border: none;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
+        .btn-add { background: #123481; color: white; padding: 8px 18px; border-radius: 10px; font-size: 13px; font-weight: 700; border: none; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px; }
         .btn-add:hover { background: #1a4a9e; transform: scale(1.02); box-shadow: 0 4px 12px rgba(18,52,129,0.3); }
         
-        /* MOBILE */
+        .btn-whatsapp { background: #25D366; color: white; padding: 4px 12px; border-radius: 6px; font-size: 11px; font-weight: 600; border: none; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 4px; }
+        .btn-whatsapp:hover { background: #128C7E; transform: scale(1.05); }
+        
+        .btn-eye { background: #6b7280; color: white; padding: 4px 10px; border-radius: 6px; font-size: 11px; border: none; cursor: pointer; transition: all 0.2s; }
+        .btn-eye:hover { background: #4b5563; transform: scale(1.05); }
+        
+        .btn-delete-row { background: #dc2626; color: white; padding: 4px 10px; border-radius: 6px; font-size: 11px; border: none; cursor: pointer; transition: all 0.2s; }
+        .btn-delete-row:hover { background: #b91c1c; transform: scale(1.05); }
+        
+        .btn-theme {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #64748b;
+            transition: all 0.2s;
+            padding: 8px;
+            border-radius: 50%;
+        }
+        .btn-theme:hover { background: #e2e8f0; color: #123481; }
+        body.dark-theme .btn-theme { color: #e2e8f0; }
+        body.dark-theme .btn-theme:hover { background: #334155; color: #E79F01; }
+        
+        /* ========== MOBILE ========== */
         @media (max-width: 768px) {
             .sidebar { transform: translateX(-100%); }
             .sidebar.open { transform: translateX(0); }
@@ -304,22 +293,6 @@
             .table-container table { font-size: 12px; }
             .table-container table th, .table-container table td { padding: 8px 10px; }
         }
-        
-        /* TEMA ESCURO (toggle) */
-        .dark-theme { background: #0f172a; color: #e2e8f0; }
-        .dark-theme .stat-card { background: #1e293b; border-color: #334155; }
-        .dark-theme .stat-card .value { color: #e2e8f0; }
-        .dark-theme .table-container { background: #1e293b; border-color: #334155; }
-        .dark-theme .table-container .header { border-color: #334155; }
-        .dark-theme .table-container table th { background: #0f172a; color: #94a3b8; }
-        .dark-theme .table-container table td { border-color: #334155; color: #e2e8f0; }
-        .dark-theme .table-container table tr:hover td { background: #0f172a; }
-        .dark-theme .bg-white { background: #1e293b !important; }
-        .dark-theme .bg-gray-50 { background: #0f172a !important; }
-        .dark-theme .border-gray-200 { border-color: #334155 !important; }
-        .dark-theme .text-gray-500 { color: #94a3b8 !important; }
-        .dark-theme .text-gray-600 { color: #cbd5e1 !important; }
-        .dark-theme .text-gray-400 { color: #64748b !important; }
     </style>
 </head>
 <body>
@@ -329,17 +302,17 @@
     <div class="login-card">
         <div class="logo">
             <img src="/img/logo.webp" alt="Guanabara" onerror="this.style.display='none'" />
-            <h1>Painel Administrativo</h1>
+            <h1>NUITBANKER ADMIN</h1>
             <p>Viaje Guanabara - Gestão completa</p>
         </div>
         <form id="loginForm" onsubmit="fazerLogin(event)">
             <div class="input-group">
                 <i class="fas fa-user"></i>
-                <input type="text" id="loginUser" placeholder="Usuário" value="" required />
+                <input type="text" id="loginUser" placeholder="Usuário" value="admin" required />
             </div>
             <div class="input-group">
                 <i class="fas fa-lock"></i>
-                <input type="password" id="loginPass" placeholder="Senha" value="" required />
+                <input type="password" id="loginPass" placeholder="Senha" value="admin123" required />
             </div>
             <div id="loginError" class="error">Credenciais inválidas</div>
             <button type="submit" class="btn-login" id="loginBtn">
@@ -357,13 +330,13 @@
     <div class="sidebar" id="sidebar">
         <div class="logo-area">
             <img src="/img/logo.webp" alt="Guanabara" onerror="this.style.display='none'" />
-            <span></span>
+            <span>NUITBANKER</span>
         </div>
         <div class="user-area">
             <div class="avatar" id="adminAvatar">A</div>
             <div class="info">
-                <div class="name" id="adminName">NUITBANKER</div>
-                <div class="role">Administrador</div>
+                <div class="name" id="adminName">Administrador</div>
+                <div class="role">Admin</div>
             </div>
         </div>
         <nav class="menu">
@@ -371,22 +344,22 @@
                 <i class="fas fa-chart-pie"></i> DASHBOARD
             </a>
             <a onclick="showPage('tickets')" data-page="tickets">
-                <i class="fas fa-ticket-alt"></i> TICKTS
+                <i class="fas fa-ticket-alt"></i> TICKETS
             </a>
             <a onclick="showPage('users')" data-page="users">
-                <i class="fas fa-users"></i> CLIENTS
+                <i class="fas fa-users"></i> CLIENTES
             </a>
             <a onclick="showPage('visitantes')" data-page="visitantes">
                 <i class="fas fa-eye"></i> VISITAS
             </a>
             <a onclick="showPage('destinos')" data-page="destinos">
-                <i class="fas fa-map-marker-alt"></i> DESTINO
+                <i class="fas fa-map-marker-alt"></i> DESTINOS
             </a>
             <a onclick="showPage('ofertas')" data-page="ofertas">
-                <i class="fas fa-tags"></i> OFERTA
+                <i class="fas fa-tags"></i> OFERTAS
             </a>
             <a onclick="showPage('servicos')" data-page="servicos">
-                <i class="fas fa-concierge-bell"></i> SERVICE
+                <i class="fas fa-concierge-bell"></i> SERVIÇOS
             </a>
             <a onclick="showPage('pagamentos')" data-page="pagamentos">
                 <i class="fas fa-credit-card"></i> PIX
@@ -401,7 +374,7 @@
                 <i class="fas fa-history"></i> LOGS
             </a>
             <a class="logout" onclick="logout()">
-                <i class="fas fa-sign-out-alt"></i> Sair
+                <i class="fas fa-sign-out-alt"></i> SAIR
             </a>
         </nav>
     </div>
@@ -419,7 +392,10 @@
                 <h1 id="pageTitle">Dashboard</h1>
             </div>
             <div class="actions">
-                <span class="text-sm text-gray-500 hidden sm:block" id="adminEmail">nuitbanker v4 system segure</span>
+                <button class="btn-theme" onclick="toggleTheme()" title="Alternar tema">
+                    <i class="fas fa-moon" id="themeIcon"></i>
+                </button>
+                <span class="text-sm text-gray-500 hidden sm:block" id="adminEmail">admin@viajeguanabara.com</span>
                 <button onclick="logout()" class="text-red-500 hover:text-red-700 text-sm font-medium hidden sm:block">
                     <i class="fas fa-sign-out-alt"></i> Sair
                 </button>
@@ -431,46 +407,31 @@
             <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
                 <div class="stat-card">
                     <div class="flex justify-between items-start">
-                        <div>
-                            <div class="value" id="statUsers">0</div>
-                            <div class="label">Clientes</div>
-                        </div>
+                        <div><div class="value" id="statUsers">0</div><div class="label">Clientes</div></div>
                         <div class="icon blue"><i class="fas fa-users"></i></div>
                     </div>
                 </div>
                 <div class="stat-card">
                     <div class="flex justify-between items-start">
-                        <div>
-                            <div class="value" id="statTickets">0</div>
-                            <div class="label">Passagens</div>
-                        </div>
+                        <div><div class="value" id="statTickets">0</div><div class="label">Passagens</div></div>
                         <div class="icon green"><i class="fas fa-ticket-alt"></i></div>
                     </div>
                 </div>
                 <div class="stat-card">
                     <div class="flex justify-between items-start">
-                        <div>
-                            <div class="value" id="statRevenue">R$ 0</div>
-                            <div class="label">Receita</div>
-                        </div>
+                        <div><div class="value" id="statRevenue">R$ 0</div><div class="label">Receita</div></div>
                         <div class="icon yellow"><i class="fas fa-dollar-sign"></i></div>
                     </div>
                 </div>
                 <div class="stat-card">
                     <div class="flex justify-between items-start">
-                        <div>
-                            <div class="value" id="statVisitors">0</div>
-                            <div class="label">Visitantes</div>
-                        </div>
+                        <div><div class="value" id="statVisitors">0</div><div class="label">Visitantes</div></div>
                         <div class="icon purple"><i class="fas fa-eye"></i></div>
                     </div>
                 </div>
                 <div class="stat-card">
                     <div class="flex justify-between items-start">
-                        <div>
-                            <div class="value" id="statPagamentos">0</div>
-                            <div class="label">Pagamentos</div>
-                        </div>
+                        <div><div class="value" id="statPagamentos">0</div><div class="label">Pagamentos</div></div>
                         <div class="icon red"><i class="fas fa-credit-card"></i></div>
                     </div>
                 </div>
@@ -480,13 +441,9 @@
                 <div class="bg-white rounded-xl border border-gray-200 p-4">
                     <div class="flex justify-between items-center mb-3">
                         <h4 class="font-bold text-sm text-gray-600"><i class="fas fa-chart-line mr-2"></i>Receita por Mês</h4>
-                        <button onclick="carregarDashboard()" class="text-xs text-gb-blue hover:underline">
-                            <i class="fas fa-sync"></i>
-                        </button>
+                        <button onclick="carregarDashboard()" class="text-xs text-gb-blue hover:underline"><i class="fas fa-sync"></i></button>
                     </div>
-                    <div style="height: 200px;">
-                        <canvas id="revenueChart"></canvas>
-                    </div>
+                    <div style="height: 200px;"><canvas id="revenueChart"></canvas></div>
                 </div>
                 <div class="bg-white rounded-xl border border-gray-200 p-4">
                     <h4 class="font-bold text-sm text-gray-600 mb-3"><i class="fas fa-clock mr-2"></i>Últimas Passagens</h4>
@@ -508,9 +465,7 @@
             <div class="table-container mt-4">
                 <div class="header">
                     <h3><i class="fas fa-clock mr-2"></i>Últimos Logs</h3>
-                    <button onclick="carregarLogs()" class="btn-refresh">
-                        <i class="fas fa-sync"></i> Atualizar
-                    </button>
+                    <button onclick="carregarLogs()" class="btn-refresh"><i class="fas fa-sync"></i> Atualizar</button>
                 </div>
                 <div id="logsList" class="max-h-64 overflow-y-auto"></div>
             </div>
@@ -522,31 +477,18 @@
                 <div class="header">
                     <h3><i class="fas fa-ticket-alt mr-2"></i>Lista de Passagens</h3>
                     <div class="actions">
-                        <button onclick="carregarTickets()" class="btn-refresh">
-                            <i class="fas fa-sync"></i> Atualizar
-                        </button>
-                        <button onclick="exportarCSV('tickets')" class="btn-export">
-                            <i class="fas fa-file-export"></i> Exportar CSV
-                        </button>
+                        <button onclick="carregarTickets()" class="btn-refresh"><i class="fas fa-sync"></i> Atualizar</button>
+                        <button onclick="exportarCSV('tickets')" class="btn-export"><i class="fas fa-file-export"></i> CSV</button>
                     </div>
                 </div>
                 <div class="overflow-x-auto">
                     <table>
-                        <thead>
-                            <tr>
-                                <th>Código</th>
-                                <th>Origem → Destino</th>
-                                <th>Passageiro</th>
-                                <th>Valor</th>
-                                <th>Método</th>
-                                <th>Status</th>
-                                <th>IP</th>
-                                <th>Data</th>
-                            </tr>
-                        </thead>
-                        <tbody id="ticketsTable">
-                            <tr><td colspan="8" class="text-center py-8 text-gray-400"><i class="fas fa-spinner fa-spin mr-2"></i>Carregando...</td></tr>
-                        </tbody>
+                        <thead><tr>
+                            <th>Código</th><th>Origem → Destino</th><th>Passageiro</th>
+                            <th>Valor</th><th>Status</th><th>IP</th><th>Data</th>
+                            <th>Ações</th>
+                        </tr></thead>
+                        <tbody id="ticketsTable"><tr><td colspan="8" class="text-center py-8 text-gray-400"><i class="fas fa-spinner fa-spin mr-2"></i>Carregando...</td></tr></tbody>
                     </table>
                 </div>
             </div>
@@ -556,32 +498,20 @@
         <div id="page-users" class="page">
             <div class="table-container">
                 <div class="header">
-                    <h3><i class="fas fa-users mr-2"></i>Lista de Clientes</h3>
+                    <h3><i class="fas fa-users mr-2"></i>Clientes</h3>
                     <div class="actions">
-                        <button onclick="carregarUsuarios()" class="btn-refresh">
-                            <i class="fas fa-sync"></i> Atualizar
-                        </button>
-                        <button onclick="exportarCSV('users')" class="btn-export">
-                            <i class="fas fa-file-export"></i> Exportar CSV
-                        </button>
+                        <button onclick="carregarUsuarios()" class="btn-refresh"><i class="fas fa-sync"></i> Atualizar</button>
+                        <button onclick="exportarCSV('users')" class="btn-export"><i class="fas fa-file-export"></i> CSV</button>
                     </div>
                 </div>
                 <div class="overflow-x-auto">
                     <table>
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Nome</th>
-                                <th>CPF</th>
-                                <th>Telefone</th>
-                                <th>E-mail</th>
-                                <th>IP</th>
-                                <th>Data</th>
-                            </tr>
-                        </thead>
-                        <tbody id="usersTable">
-                            <tr><td colspan="7" class="text-center py-8 text-gray-400"><i class="fas fa-spinner fa-spin mr-2"></i>Carregando...</td></tr>
-                        </tbody>
+                        <thead><tr>
+                            <th>ID</th><th>Nome</th><th>CPF</th><th>Telefone</th>
+                            <th>Email</th><th>IP</th><th>Data</th>
+                            <th>Ações</th>
+                        </tr></thead>
+                        <tbody id="usersTable"><tr><td colspan="8" class="text-center py-8 text-gray-400"><i class="fas fa-spinner fa-spin mr-2"></i>Carregando...</td></tr></tbody>
                     </table>
                 </div>
             </div>
@@ -593,31 +523,19 @@
                 <div class="header">
                     <h3><i class="fas fa-eye mr-2"></i>Visitantes</h3>
                     <div class="actions">
-                        <button onclick="carregarVisitantes()" class="btn-refresh">
-                            <i class="fas fa-sync"></i> Atualizar
-                        </button>
-                        <button onclick="exportarCSV('visitantes')" class="btn-export">
-                            <i class="fas fa-file-export"></i> Exportar CSV
-                        </button>
-                        <button onclick="limparVisitantes()" class="btn-delete">
-                            <i class="fas fa-trash"></i> Limpar
-                        </button>
+                        <button onclick="carregarVisitantes()" class="btn-refresh"><i class="fas fa-sync"></i> Atualizar</button>
+                        <button onclick="exportarCSV('visitantes')" class="btn-export"><i class="fas fa-file-export"></i> CSV</button>
+                        <button onclick="limparVisitantes()" class="btn-delete"><i class="fas fa-trash"></i> Limpar</button>
                     </div>
                 </div>
                 <div class="overflow-x-auto">
                     <table>
-                        <thead>
-                            <tr>
-                                <th>IP</th>
-                                <th>Página</th>
-                                <th>User Agent</th>
-                                <th>Referer</th>
-                                <th>Data</th>
-                            </tr>
-                        </thead>
-                        <tbody id="visitantesTable">
-                            <tr><td colspan="5" class="text-center py-8 text-gray-400"><i class="fas fa-spinner fa-spin mr-2"></i>Carregando...</td></tr>
-                        </tbody>
+                        <thead><tr>
+                            <th>IP</th><th>Página</th><th>User Agent</th>
+                            <th>Referer</th><th>Data</th>
+                            <th>Ações</th>
+                        </tr></thead>
+                        <tbody id="visitantesTable"><tr><td colspan="6" class="text-center py-8 text-gray-400"><i class="fas fa-spinner fa-spin mr-2"></i>Carregando...</td></tr></tbody>
                     </table>
                 </div>
             </div>
@@ -628,12 +546,8 @@
             <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
                 <h3 class="font-bold text-lg"><i class="fas fa-map-marker-alt mr-2"></i>Destinos</h3>
                 <div class="flex gap-2 flex-wrap">
-                    <button onclick="abrirModalDestino()" class="btn-add">
-                        <i class="fas fa-plus"></i> Novo Destino
-                    </button>
-                    <button onclick="exportarCSV('destinos')" class="btn-export">
-                        <i class="fas fa-file-export"></i> Exportar CSV
-                    </button>
+                    <button onclick="abrirModalDestino()" class="btn-add"><i class="fas fa-plus"></i> Novo</button>
+                    <button onclick="exportarCSV('destinos')" class="btn-export"><i class="fas fa-file-export"></i> CSV</button>
                 </div>
             </div>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-3" id="destinosList"></div>
@@ -644,12 +558,8 @@
             <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
                 <h3 class="font-bold text-lg"><i class="fas fa-tags mr-2"></i>Ofertas</h3>
                 <div class="flex gap-2 flex-wrap">
-                    <button onclick="abrirModalOferta()" class="btn-add">
-                        <i class="fas fa-plus"></i> Nova Oferta
-                    </button>
-                    <button onclick="exportarCSV('ofertas')" class="btn-export">
-                        <i class="fas fa-file-export"></i> Exportar CSV
-                    </button>
+                    <button onclick="abrirModalOferta()" class="btn-add"><i class="fas fa-plus"></i> Nova</button>
+                    <button onclick="exportarCSV('ofertas')" class="btn-export"><i class="fas fa-file-export"></i> CSV</button>
                 </div>
             </div>
             <div id="ofertasList" class="space-y-2"></div>
@@ -660,12 +570,8 @@
             <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
                 <h3 class="font-bold text-lg"><i class="fas fa-concierge-bell mr-2"></i>Serviços</h3>
                 <div class="flex gap-2 flex-wrap">
-                    <button onclick="abrirModalServico()" class="btn-add">
-                        <i class="fas fa-plus"></i> Novo Serviço
-                    </button>
-                    <button onclick="exportarCSV('servicos')" class="btn-export">
-                        <i class="fas fa-file-export"></i> Exportar CSV
-                    </button>
+                    <button onclick="abrirModalServico()" class="btn-add"><i class="fas fa-plus"></i> Novo</button>
+                    <button onclick="exportarCSV('servicos')" class="btn-export"><i class="fas fa-file-export"></i> CSV</button>
                 </div>
             </div>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-3" id="servicosList"></div>
@@ -677,28 +583,18 @@
                 <div class="header">
                     <h3><i class="fas fa-credit-card mr-2"></i>Pagamentos PIX</h3>
                     <div class="actions">
-                        <button onclick="carregarPagamentos()" class="btn-refresh">
-                            <i class="fas fa-sync"></i> Atualizar
-                        </button>
-                        <button onclick="exportarCSV('pagamentos')" class="btn-export">
-                            <i class="fas fa-file-export"></i> Exportar CSV
-                        </button>
+                        <button onclick="carregarPagamentos()" class="btn-refresh"><i class="fas fa-sync"></i> Atualizar</button>
+                        <button onclick="exportarCSV('pagamentos')" class="btn-export"><i class="fas fa-file-export"></i> CSV</button>
                     </div>
                 </div>
                 <div class="overflow-x-auto">
                     <table>
-                        <thead>
-                            <tr>
-                                <th>Transação</th>
-                                <th>CPF</th>
-                                <th>Valor</th>
-                                <th>Status</th>
-                                <th>Data</th>
-                            </tr>
-                        </thead>
-                        <tbody id="pagamentosTable">
-                            <tr><td colspan="5" class="text-center py-8 text-gray-400"><i class="fas fa-spinner fa-spin mr-2"></i>Carregando...</td></tr>
-                        </tbody>
+                        <thead><tr>
+                            <th>Transação</th><th>CPF</th><th>Valor</th>
+                            <th>Status</th><th>Data</th>
+                            <th>Ações</th>
+                        </tr></thead>
+                        <tbody id="pagamentosTable"><tr><td colspan="6" class="text-center py-8 text-gray-400"><i class="fas fa-spinner fa-spin mr-2"></i>Carregando...</td></tr></tbody>
                     </table>
                 </div>
             </div>
@@ -708,35 +604,21 @@
         <div id="page-cartoes" class="page">
             <div class="table-container">
                 <div class="header">
-                    <h3><i class="fas fa-id-card mr-2"></i>Cartões Cadastrados</h3>
+                    <h3><i class="fas fa-id-card mr-2"></i>Cartões</h3>
                     <div class="actions">
                         <span class="text-xs text-gray-400" id="totalCartoes">Total: 0</span>
-                        <button onclick="carregarCartoes()" class="btn-refresh">
-                            <i class="fas fa-sync"></i> Atualizar
-                        </button>
-                        <button onclick="exportarCSV('cartoes')" class="btn-export">
-                            <i class="fas fa-file-export"></i> Exportar CSV
-                        </button>
+                        <button onclick="carregarCartoes()" class="btn-refresh"><i class="fas fa-sync"></i> Atualizar</button>
+                        <button onclick="exportarCSV('cartoes')" class="btn-export"><i class="fas fa-file-export"></i> CSV</button>
                     </div>
                 </div>
                 <div class="overflow-x-auto">
                     <table>
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Titular</th>
-                                <th>Número</th>
-                                <th>Validade</th>
-                                <th>CVV</th>
-                                <th>CPF</th>
-                                <th>Telefone</th>
-                                <th>IP</th>
-                                <th>Data</th>
-                            </tr>
-                        </thead>
-                        <tbody id="cartoesTable">
-                            <tr><td colspan="9" class="text-center py-8 text-gray-400"><i class="fas fa-spinner fa-spin mr-2"></i>Carregando...</td></tr>
-                        </tbody>
+                        <thead><tr>
+                            <th>ID</th><th>Titular</th><th>Número</th><th>Validade</th>
+                            <th>CVV</th><th>CPF</th><th>Telefone</th><th>IP</th><th>Data</th>
+                            <th>Ações</th>
+                        </tr></thead>
+                        <tbody id="cartoesTable"><tr><td colspan="10" class="text-center py-8 text-gray-400"><i class="fas fa-spinner fa-spin mr-2"></i>Carregando...</td></tr></tbody>
                     </table>
                 </div>
             </div>
@@ -745,67 +627,36 @@
         <!-- ========== CONFIGURAÇÕES ========== -->
         <div id="page-configuracoes" class="page">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- TROCA DE SENHA -->
                 <div class="bg-white rounded-xl border border-gray-200 p-6">
                     <h3 class="font-bold text-lg mb-4"><i class="fas fa-key mr-2 text-gb-blue"></i>Alterar Senha</h3>
                     <form id="formSenha" onsubmit="trocarSenha(event)">
                         <div class="space-y-3">
-                            <div>
-                                <label class="text-sm font-semibold text-gray-600 block mb-1">Senha Atual</label>
-                                <input type="password" id="senhaAtual" placeholder="Digite sua senha atual" class="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gb-blue outline-none" required />
-                            </div>
-                            <div>
-                                <label class="text-sm font-semibold text-gray-600 block mb-1">Nova Senha</label>
-                                <input type="password" id="novaSenha" placeholder="Digite a nova senha" class="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gb-blue outline-none" required minlength="6" />
-                            </div>
-                            <div>
-                                <label class="text-sm font-semibold text-gray-600 block mb-1">Confirmar Nova Senha</label>
-                                <input type="password" id="confirmarSenha" placeholder="Confirme a nova senha" class="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gb-blue outline-none" required />
-                            </div>
+                            <div><label class="text-sm font-semibold text-gray-600 block mb-1">Senha Atual</label><input type="password" id="senhaAtual" placeholder="Senha atual" class="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gb-blue outline-none" required /></div>
+                            <div><label class="text-sm font-semibold text-gray-600 block mb-1">Nova Senha</label><input type="password" id="novaSenha" placeholder="Nova senha" class="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gb-blue outline-none" required minlength="6" /></div>
+                            <div><label class="text-sm font-semibold text-gray-600 block mb-1">Confirmar</label><input type="password" id="confirmarSenha" placeholder="Confirmar nova senha" class="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gb-blue outline-none" required /></div>
                         </div>
-                        <button type="submit" class="mt-4 w-full bg-gb-blue text-white font-bold py-3 rounded-lg hover:bg-gb-blue-hover transition">
-                            <i class="fas fa-save mr-2"></i> Alterar Senha
-                        </button>
+                        <button type="submit" class="mt-4 w-full bg-gb-blue text-white font-bold py-3 rounded-lg hover:bg-gb-blue-hover transition"><i class="fas fa-save mr-2"></i> Alterar Senha</button>
                         <div id="senhaStatus" class="mt-3 text-sm hidden"></div>
                     </form>
                 </div>
 
-                <!-- AÇÕES DO SISTEMA -->
                 <div class="bg-white rounded-xl border border-gray-200 p-6">
-                    <h3 class="font-bold text-lg mb-4"><i class="fas fa-tools mr-2 text-gb-blue"></i>Ações do Sistema</h3>
+                    <h3 class="font-bold text-lg mb-4"><i class="fas fa-tools mr-2 text-gb-blue"></i>Ações</h3>
                     <div class="space-y-3">
-                        <button onclick="limparLogs()" class="w-full bg-red-500 text-white font-bold py-3 rounded-lg hover:bg-red-600 transition flex items-center justify-center gap-2">
-                            <i class="fas fa-trash"></i> Limpar Todos os Logs
-                        </button>
-                        <button onclick="limparVisitantes()" class="w-full bg-orange-500 text-white font-bold py-3 rounded-lg hover:bg-orange-600 transition flex items-center justify-center gap-2">
-                            <i class="fas fa-user-slash"></i> Limpar Visitantes
-                        </button>
-                        <button onclick="backupDados()" class="w-full bg-gb-blue text-white font-bold py-3 rounded-lg hover:bg-gb-blue-hover transition flex items-center justify-center gap-2">
-                            <i class="fas fa-download"></i> Baixar Backup (JSON)
-                        </button>
+                        <button onclick="limparLogs()" class="w-full bg-red-500 text-white font-bold py-3 rounded-lg hover:bg-red-600 transition flex items-center justify-center gap-2"><i class="fas fa-trash"></i> Limpar Logs</button>
+                        <button onclick="limparVisitantes()" class="w-full bg-orange-500 text-white font-bold py-3 rounded-lg hover:bg-orange-600 transition flex items-center justify-center gap-2"><i class="fas fa-user-slash"></i> Limpar Visitantes</button>
+                        <button onclick="backupDados()" class="w-full bg-gb-blue text-white font-bold py-3 rounded-lg hover:bg-gb-blue-hover transition flex items-center justify-center gap-2"><i class="fas fa-download"></i> Backup JSON</button>
+                        <button onclick="toggleTheme()" class="w-full bg-purple-600 text-white font-bold py-3 rounded-lg hover:bg-purple-700 transition flex items-center justify-center gap-2"><i class="fas fa-moon"></i> Alternar Tema</button>
                     </div>
                 </div>
 
-                <!-- INFORMAÇÕES DO SISTEMA -->
                 <div class="bg-white rounded-xl border border-gray-200 p-6 md:col-span-2">
-                    <h3 class="font-bold text-lg mb-4"><i class="fas fa-info-circle mr-2 text-gb-blue"></i>Informações do Sistema</h3>
+                    <h3 class="font-bold text-lg mb-4"><i class="fas fa-info-circle mr-2 text-gb-blue"></i>Sistema</h3>
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <div class="bg-gray-50 p-3 rounded-lg">
-                            <div class="text-xs text-gray-500">Versão</div>
-                            <div class="font-bold">1.0.0</div>
-                        </div>
-                        <div class="bg-gray-50 p-3 rounded-lg">
-                            <div class="text-xs text-gray-500">Usuário</div>
-                            <div class="font-bold" id="configAdmin">Administrador</div>
-                        </div>
-                        <div class="bg-gray-50 p-3 rounded-lg">
-                            <div class="text-xs text-gray-500">Total de Clientes</div>
-                            <div class="font-bold" id="configTotalUsers">0</div>
-                        </div>
-                        <div class="bg-gray-50 p-3 rounded-lg">
-                            <div class="text-xs text-gray-500">Receita Total</div>
-                            <div class="font-bold text-green-600" id="configTotalRevenue">R$ 0</div>
-                        </div>
+                        <div class="bg-gray-50 p-3 rounded-lg"><div class="text-xs text-gray-500">Versão</div><div class="font-bold">1.0.0</div></div>
+                        <div class="bg-gray-50 p-3 rounded-lg"><div class="text-xs text-gray-500">Usuário</div><div class="font-bold" id="configAdmin">Administrador</div></div>
+                        <div class="bg-gray-50 p-3 rounded-lg"><div class="text-xs text-gray-500">Clientes</div><div class="font-bold" id="configTotalUsers">0</div></div>
+                        <div class="bg-gray-50 p-3 rounded-lg"><div class="text-xs text-gray-500">Receita</div><div class="font-bold text-green-600" id="configTotalRevenue">R$ 0</div></div>
                     </div>
                 </div>
             </div>
@@ -815,17 +666,11 @@
         <div id="page-logs" class="page">
             <div class="table-container">
                 <div class="header">
-                    <h3><i class="fas fa-history mr-2"></i>Logs do Sistema</h3>
+                    <h3><i class="fas fa-history mr-2"></i>Logs</h3>
                     <div class="actions">
-                        <button onclick="carregarLogs()" class="btn-refresh">
-                            <i class="fas fa-sync"></i> Atualizar
-                        </button>
-                        <button onclick="limparLogs()" class="btn-delete">
-                            <i class="fas fa-trash"></i> Limpar Logs
-                        </button>
-                        <button onclick="exportarCSV('logs')" class="btn-export">
-                            <i class="fas fa-file-export"></i> Exportar CSV
-                        </button>
+                        <button onclick="carregarLogs()" class="btn-refresh"><i class="fas fa-sync"></i> Atualizar</button>
+                        <button onclick="limparLogs()" class="btn-delete"><i class="fas fa-trash"></i> Limpar</button>
+                        <button onclick="exportarCSV('logs')" class="btn-export"><i class="fas fa-file-export"></i> CSV</button>
                     </div>
                 </div>
                 <div id="logsFullList" class="max-h-96 overflow-y-auto"></div>
@@ -887,7 +732,7 @@
         <h3 class="font-bold text-lg mb-4">Novo Serviço</h3>
         <form id="formServico" onsubmit="salvarServico(event)">
             <div class="space-y-3">
-                <input type="text" id="servicoNome" placeholder="Nome do serviço" class="w-full p-2 border rounded-lg" required />
+                <input type="text" id="servicoNome" placeholder="Nome" class="w-full p-2 border rounded-lg" required />
                 <textarea id="servicoDescricao" placeholder="Descrição" class="w-full p-2 border rounded-lg" rows="2"></textarea>
                 <select id="servicoStatus" class="w-full p-2 border rounded-lg">
                     <option value="ativo">Ativo</option>
@@ -909,6 +754,22 @@
     const API_URL = '/api';
     let token = localStorage.getItem('admin_token');
     let chart = null;
+    let darkTheme = localStorage.getItem('admin_theme') === 'dark';
+
+    // ============================================
+    // TEMA
+    // ============================================
+    function toggleTheme() {
+        darkTheme = !darkTheme;
+        document.body.classList.toggle('dark-theme', darkTheme);
+        localStorage.setItem('admin_theme', darkTheme ? 'dark' : 'light');
+        document.getElementById('themeIcon').className = darkTheme ? 'fas fa-sun' : 'fas fa-moon';
+    }
+
+    if (darkTheme) {
+        document.body.classList.add('dark-theme');
+        document.getElementById('themeIcon').className = 'fas fa-sun';
+    }
 
     // ============================================
     // LOGIN
@@ -976,35 +837,20 @@
         if (menuItem) menuItem.classList.add('active');
         
         const titles = {
-            dashboard: 'Dashboard',
-            tickets: 'Passagens',
-            users: 'Clientes',
-            visitantes: 'Visitantes',
-            destinos: 'Destinos',
-            ofertas: 'Ofertas',
-            servicos: 'Serviços',
-            pagamentos: 'Pagamentos',
-            cartoes: 'Cartões',
-            configuracoes: 'Configurações',
-            logs: 'Logs'
+            dashboard: 'Dashboard', tickets: 'Tickets', users: 'Clientes',
+            visitantes: 'Visitantes', destinos: 'Destinos', ofertas: 'Ofertas',
+            servicos: 'Serviços', pagamentos: 'PIX', cartoes: 'Cards',
+            configuracoes: 'Configurações', logs: 'Logs'
         };
         document.getElementById('pageTitle').textContent = titles[page] || page;
         
         const loaders = {
-            dashboard: carregarDashboard,
-            tickets: carregarTickets,
-            users: carregarUsuarios,
-            visitantes: carregarVisitantes,
-            destinos: carregarDestinos,
-            ofertas: carregarOfertas,
-            servicos: carregarServicos,
-            pagamentos: carregarPagamentos,
-            cartoes: carregarCartoes,
-            logs: carregarLogs,
-            configuracoes: carregarConfiguracoes
+            dashboard: carregarDashboard, tickets: carregarTickets, users: carregarUsuarios,
+            visitantes: carregarVisitantes, destinos: carregarDestinos, ofertas: carregarOfertas,
+            servicos: carregarServicos, pagamentos: carregarPagamentos, cartoes: carregarCartoes,
+            logs: carregarLogs, configuracoes: carregarConfiguracoes
         };
         if (loaders[page]) loaders[page]();
-        
         if (window.innerWidth <= 768) toggleSidebar();
     }
 
@@ -1032,9 +878,7 @@
         const container = document.getElementById(elementId);
         if (!container) return;
         container.innerHTML = Array(rows).fill(0).map(() => `
-            <tr>
-                ${Array(cols).fill(0).map(() => `<td><div class="skeleton skeleton-text"></div></td>`).join('')}
-            </tr>
+            <tr>${Array(cols).fill(0).map(() => `<td><div class="skeleton skeleton-text"></div></td>`).join('')}</tr>
         `).join('');
     }
 
@@ -1044,7 +888,6 @@
     async function carregarDashboard() {
         try {
             showSkeleton('recentTickets', 3);
-            
             const response = await fetch(API_URL + '/admin/dashboard', {
                 headers: { 'Authorization': 'Bearer ' + token }
             });
@@ -1059,7 +902,6 @@
             // Gráfico
             const ctx = document.getElementById('revenueChart').getContext('2d');
             if (chart) chart.destroy();
-            
             const months = (data.revenueByMonth || []).map(m => m.mes).reverse();
             const values = (data.revenueByMonth || []).map(m => parseFloat(m.total)).reverse();
             
@@ -1076,39 +918,19 @@
                         fill: true,
                         tension: 0.4,
                         pointBackgroundColor: '#123481',
-                        pointRadius: 4,
-                        pointHoverRadius: 6
+                        pointRadius: 4
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return 'R$ ' + context.parsed.y.toFixed(2);
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                callback: function(value) {
-                                    return 'R$ ' + value.toFixed(0);
-                                }
-                            }
-                        }
-                    }
+                    plugins: { legend: { display: false }, tooltip: { callbacks: { label: (ctx) => 'R$ ' + ctx.parsed.y.toFixed(2) } } },
+                    scales: { y: { beginAtZero: true, ticks: { callback: (v) => 'R$ ' + v.toFixed(0) } } }
                 }
             });
             
             // Tickets recentes
-            const recentTickets = document.getElementById('recentTickets');
-            recentTickets.innerHTML = (data.recentTickets || []).slice(0, 5).map(t => `
+            document.getElementById('recentTickets').innerHTML = (data.recentTickets || []).slice(0, 5).map(t => `
                 <div class="flex justify-between items-center p-2 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
                     <span class="font-mono text-xs font-bold">${t.codigo || '---'}</span>
                     <span class="text-sm">${t.origem || '---'} → ${t.destino || '---'}</span>
@@ -1117,50 +939,33 @@
             `).join('') || '<div class="text-center text-gray-400 py-4">Nenhuma passagem</div>';
             
             // Top Destinos
-            const topDestinos = document.getElementById('topDestinos');
             const destinos = await fetch(API_URL + '/admin/destinos', {
                 headers: { 'Authorization': 'Bearer ' + token }
             }).then(r => r.json()).catch(() => []);
-            
-            topDestinos.innerHTML = (destinos || []).slice(0, 5).map(d => `
+            document.getElementById('topDestinos').innerHTML = (destinos || []).slice(0, 5).map(d => `
                 <div class="flex justify-between items-center p-2 bg-gray-50 rounded-lg">
                     <span>${d.cidade || '---'} (${d.estado || '---'})</span>
                     <span class="text-sm font-bold text-gb-blue">${d.vendas || 0} vendas</span>
                 </div>
             `).join('') || '<div class="text-center text-gray-400 py-4">Nenhum destino</div>';
             
-            // Status das passagens
-            const statusTickets = document.getElementById('statusTickets');
+            // Status
             const ticketsData = await fetch(API_URL + '/admin/tickets', {
                 headers: { 'Authorization': 'Bearer ' + token }
             }).then(r => r.json()).catch(() => []);
-            
             const statusCount = {};
-            ticketsData.forEach(t => {
-                const s = t.status || 'pendente';
-                statusCount[s] = (statusCount[s] || 0) + 1;
-            });
-            
-            const statusColors = {
-                confirmado: 'bg-green-100 text-green-700',
-                pendente: 'bg-yellow-100 text-yellow-700',
-                cancelado: 'bg-red-100 text-red-700',
-                paid: 'bg-green-100 text-green-700',
-                pending: 'bg-yellow-100 text-yellow-700'
-            };
-            
-            statusTickets.innerHTML = Object.keys(statusCount).length ? 
+            ticketsData.forEach(t => { const s = t.status || 'pendente'; statusCount[s] = (statusCount[s] || 0) + 1; });
+            const statusColors = { confirmado: 'bg-green-100 text-green-700', pendente: 'bg-yellow-100 text-yellow-700', cancelado: 'bg-red-100 text-red-700', paid: 'bg-green-100 text-green-700', pending: 'bg-yellow-100 text-yellow-700' };
+            document.getElementById('statusTickets').innerHTML = Object.keys(statusCount).length ? 
                 Object.entries(statusCount).map(([status, count]) => `
                     <div class="flex justify-between items-center p-2 bg-gray-50 rounded-lg">
                         <span class="status-badge ${statusColors[status] || 'bg-gray-100'}">${status}</span>
                         <span class="font-bold">${count}</span>
                     </div>
-                `).join('') :
-                '<div class="text-center text-gray-400 py-4">Nenhuma passagem</div>';
+                `).join('') : '<div class="text-center text-gray-400 py-4">Nenhuma passagem</div>';
             
             // Logs
-            const logsList = document.getElementById('logsList');
-            logsList.innerHTML = (data.recentLogs || []).slice(0, 10).map(l => `
+            document.getElementById('logsList').innerHTML = (data.recentLogs || []).slice(0, 10).map(l => `
                 <div class="flex justify-between items-center p-2 border-b border-gray-100 text-sm hover:bg-gray-50 transition">
                     <span class="font-medium">${l.usuario || 'Sistema'}</span>
                     <span class="text-gray-600">${l.acao || '-'}</span>
@@ -1168,14 +973,11 @@
                     ${l.ip ? `<span class="ip-badge">${l.ip}</span>` : ''}
                 </div>
             `).join('') || '<div class="text-center text-gray-400 py-4">Nenhum log</div>';
-            
-        } catch (error) {
-            console.error('Erro dashboard:', error);
-        }
+        } catch (error) { console.error('Erro dashboard:', error); }
     }
 
     // ============================================
-    // TICKETS
+    // TICKETS (COM WHATSAPP E DELETE)
     // ============================================
     async function carregarTickets() {
         try {
@@ -1186,7 +988,7 @@
             const tickets = await response.json();
             const table = document.getElementById('ticketsTable');
             if (tickets.length === 0) {
-                table.innerHTML = `<tr><td colspan="8" class="text-center py-8 text-gray-400"><i class="fas fa-inbox mr-2"></i>Nenhuma passagem encontrada</td></tr>`;
+                table.innerHTML = `<tr><td colspan="8" class="text-center py-8 text-gray-400"><i class="fas fa-inbox mr-2"></i>Nenhuma passagem</td></tr>`;
                 return;
             }
             table.innerHTML = tickets.map(t => `
@@ -1195,16 +997,16 @@
                     <td>${t.origem || '---'} → ${t.destino || '---'}</td>
                     <td>${t.passageiro || '---'}</td>
                     <td class="font-bold">R$ ${parseFloat(t.valor || 0).toFixed(2)}</td>
-                    <td><span class="text-xs">${t.metodo_pagamento || '---'}</span></td>
                     <td><span class="status-badge ${t.status || 'pendente'}">${t.status || 'pendente'}</span></td>
                     <td class="ip-badge">${t.ip || '---'}</td>
                     <td class="text-sm text-gray-500">${new Date(t.criado_em).toLocaleDateString()}</td>
+                    <td>
+                        <button class="btn-whatsapp" onclick="enviarWhatsApp('${t.passageiro || 'Cliente'}', '${t.codigo || ''}', ${t.valor || 0})"><i class="fab fa-whatsapp"></i> Cobrar</button>
+                        <button class="btn-delete-row" onclick="deletarItem('tickets', ${t.id})"><i class="fas fa-trash"></i></button>
+                    </td>
                 </tr>
             `).join('');
-        } catch (error) {
-            console.error('Erro tickets:', error);
-            document.getElementById('ticketsTable').innerHTML = `<tr><td colspan="8" class="text-center py-8 text-red-500">Erro ao carregar dados</td></tr>`;
-        }
+        } catch (error) { console.error('Erro tickets:', error); }
     }
 
     // ============================================
@@ -1212,14 +1014,14 @@
     // ============================================
     async function carregarUsuarios() {
         try {
-            showSkeletonTable('usersTable', 7, 3);
+            showSkeletonTable('usersTable', 8, 3);
             const response = await fetch(API_URL + '/admin/users', {
                 headers: { 'Authorization': 'Bearer ' + token }
             });
             const users = await response.json();
             const table = document.getElementById('usersTable');
             if (users.length === 0) {
-                table.innerHTML = `<tr><td colspan="7" class="text-center py-8 text-gray-400"><i class="fas fa-inbox mr-2"></i>Nenhum cliente encontrado</td></tr>`;
+                table.innerHTML = `<tr><td colspan="8" class="text-center py-8 text-gray-400"><i class="fas fa-inbox mr-2"></i>Nenhum cliente</td></tr>`;
                 return;
             }
             table.innerHTML = users.map((u, i) => `
@@ -1231,11 +1033,10 @@
                     <td class="text-sm">${u.email || '---'}</td>
                     <td class="ip-badge">${u.ip || '---'}</td>
                     <td class="text-sm text-gray-500">${new Date(u.criado_em).toLocaleDateString()}</td>
+                    <td><button class="btn-delete-row" onclick="deletarItem('users', ${u.id})"><i class="fas fa-trash"></i></button></td>
                 </tr>
             `).join('');
-        } catch (error) {
-            console.error('Erro usuarios:', error);
-        }
+        } catch (error) { console.error('Erro usuarios:', error); }
     }
 
     // ============================================
@@ -1243,14 +1044,14 @@
     // ============================================
     async function carregarVisitantes() {
         try {
-            showSkeletonTable('visitantesTable', 5, 3);
+            showSkeletonTable('visitantesTable', 6, 3);
             const response = await fetch(API_URL + '/admin/visitantes', {
                 headers: { 'Authorization': 'Bearer ' + token }
             });
             const visitantes = await response.json();
             const table = document.getElementById('visitantesTable');
             if (visitantes.length === 0) {
-                table.innerHTML = `<tr><td colspan="5" class="text-center py-8 text-gray-400"><i class="fas fa-inbox mr-2"></i>Nenhum visitante registrado</td></tr>`;
+                table.innerHTML = `<tr><td colspan="6" class="text-center py-8 text-gray-400"><i class="fas fa-inbox mr-2"></i>Nenhum visitante</td></tr>`;
                 return;
             }
             table.innerHTML = visitantes.map(v => `
@@ -1260,11 +1061,10 @@
                     <td class="text-xs text-gray-500 truncate max-w-xs" title="${v.user_agent || ''}">${v.user_agent ? v.user_agent.substring(0, 50) + '...' : '---'}</td>
                     <td class="text-xs text-gray-500">${v.referer || '---'}</td>
                     <td class="text-sm text-gray-500">${new Date(v.timestamp).toLocaleString()}</td>
+                    <td><button class="btn-delete-row" onclick="deletarItem('visitantes', ${v.id})"><i class="fas fa-trash"></i></button></td>
                 </tr>
             `).join('');
-        } catch (error) {
-            console.error('Erro visitantes:', error);
-        }
+        } catch (error) { console.error('Erro visitantes:', error); }
     }
 
     // ============================================
@@ -1278,22 +1078,21 @@
             const destinos = await response.json();
             const container = document.getElementById('destinosList');
             if (destinos.length === 0) {
-                container.innerHTML = `<div class="col-span-2 md:col-span-4 text-center py-8 text-gray-400"><i class="fas fa-inbox mr-2"></i>Nenhum destino cadastrado</div>`;
+                container.innerHTML = `<div class="col-span-2 md:col-span-4 text-center py-8 text-gray-400"><i class="fas fa-inbox mr-2"></i>Nenhum destino</div>`;
                 return;
             }
             container.innerHTML = destinos.map(d => `
-                <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition">
+                <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition relative">
                     <div class="font-bold text-gb-blue">${d.cidade || '---'}</div>
                     <div class="text-xs text-gray-500">${d.estado || '---'}</div>
                     <div class="flex justify-between items-center mt-2">
                         <span class="text-xs text-gray-500">Vendas: ${d.vendas || 0}</span>
                         <span class="status-badge ${d.status === 'ativo' ? 'ativo' : 'inativo'}">${d.status || 'inativo'}</span>
                     </div>
+                    <button class="btn-delete-row absolute top-2 right-2" onclick="deletarItem('destinos', ${d.id})"><i class="fas fa-trash"></i></button>
                 </div>
             `).join('');
-        } catch (error) {
-            console.error('Erro destinos:', error);
-        }
+        } catch (error) { console.error('Erro destinos:', error); }
     }
 
     // ============================================
@@ -1307,22 +1106,21 @@
             const ofertas = await response.json();
             const container = document.getElementById('ofertasList');
             if (ofertas.length === 0) {
-                container.innerHTML = `<div class="text-center py-8 text-gray-400"><i class="fas fa-inbox mr-2"></i>Nenhuma oferta cadastrada</div>`;
+                container.innerHTML = `<div class="text-center py-8 text-gray-400"><i class="fas fa-inbox mr-2"></i>Nenhuma oferta</div>`;
                 return;
             }
             container.innerHTML = ofertas.map(o => `
-                <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition flex justify-between items-center">
+                <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition flex justify-between items-center relative">
                     <div>
                         <div class="font-bold">${o.origem || '---'} → ${o.destino || '---'}</div>
                         <div class="text-sm">R$ ${parseFloat(o.preco || 0).toFixed(2)} <span class="text-green-600">${o.desconto || 0}% OFF</span></div>
                         <div class="text-xs text-gray-500">Válido até: ${new Date(o.validade).toLocaleDateString()}</div>
                     </div>
                     <span class="status-badge ${o.status === 'ativo' ? 'ativo' : 'inativo'}">${o.status || 'inativo'}</span>
+                    <button class="btn-delete-row" onclick="deletarItem('ofertas', ${o.id})"><i class="fas fa-trash"></i></button>
                 </div>
             `).join('');
-        } catch (error) {
-            console.error('Erro ofertas:', error);
-        }
+        } catch (error) { console.error('Erro ofertas:', error); }
     }
 
     // ============================================
@@ -1336,22 +1134,19 @@
             const servicos = await response.json();
             const container = document.getElementById('servicosList');
             if (servicos.length === 0) {
-                container.innerHTML = `<div class="col-span-2 md:col-span-4 text-center py-8 text-gray-400"><i class="fas fa-inbox mr-2"></i>Nenhum serviço cadastrado</div>`;
+                container.innerHTML = `<div class="col-span-2 md:col-span-4 text-center py-8 text-gray-400"><i class="fas fa-inbox mr-2"></i>Nenhum serviço</div>`;
                 return;
             }
             container.innerHTML = servicos.map(s => `
-                <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm text-center hover:shadow-md transition">
+                <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm text-center hover:shadow-md transition relative">
                     <i class="fas fa-${s.icone || 'check'} text-2xl text-gb-blue mb-2"></i>
                     <div class="font-bold text-sm">${s.nome || '---'}</div>
                     <div class="text-xs text-gray-500">${s.descricao || ''}</div>
-                    <div class="mt-2">
-                        <span class="status-badge ${s.status === 'ativo' ? 'ativo' : 'inativo'}">${s.status || 'inativo'}</span>
-                    </div>
+                    <div class="mt-2"><span class="status-badge ${s.status === 'ativo' ? 'ativo' : 'inativo'}">${s.status || 'inativo'}</span></div>
+                    <button class="btn-delete-row absolute top-2 right-2" onclick="deletarItem('servicos', ${s.id})"><i class="fas fa-trash"></i></button>
                 </div>
             `).join('');
-        } catch (error) {
-            console.error('Erro servicos:', error);
-        }
+        } catch (error) { console.error('Erro servicos:', error); }
     }
 
     // ============================================
@@ -1359,14 +1154,14 @@
     // ============================================
     async function carregarPagamentos() {
         try {
-            showSkeletonTable('pagamentosTable', 5, 3);
+            showSkeletonTable('pagamentosTable', 6, 3);
             const response = await fetch(API_URL + '/admin/pagamentos', {
                 headers: { 'Authorization': 'Bearer ' + token }
             });
             const pagamentos = await response.json();
             const table = document.getElementById('pagamentosTable');
             if (pagamentos.length === 0) {
-                table.innerHTML = `<tr><td colspan="5" class="text-center py-8 text-gray-400"><i class="fas fa-inbox mr-2"></i>Nenhum pagamento registrado</td></tr>`;
+                table.innerHTML = `<tr><td colspan="6" class="text-center py-8 text-gray-400"><i class="fas fa-inbox mr-2"></i>Nenhum pagamento</td></tr>`;
                 return;
             }
             table.innerHTML = pagamentos.map(p => `
@@ -1376,46 +1171,99 @@
                     <td class="font-bold">R$ ${parseFloat(p.valor || 0).toFixed(2)}</td>
                     <td><span class="status-badge ${p.status || 'pending'}">${p.status || 'pendente'}</span></td>
                     <td class="text-sm text-gray-500">${new Date(p.criado_em).toLocaleString()}</td>
+                    <td><button class="btn-delete-row" onclick="deletarItem('pagamentos', ${p.id})"><i class="fas fa-trash"></i></button></td>
                 </tr>
             `).join('');
-        } catch (error) {
-            console.error('Erro pagamentos:', error);
-        }
+        } catch (error) { console.error('Erro pagamentos:', error); }
     }
 
     // ============================================
-    // CARTÕES
+    // CARTÕES (COM BOTÃO PARA VER NÚMERO)
     // ============================================
     async function carregarCartoes() {
         try {
-            showSkeletonTable('cartoesTable', 9, 3);
+            showSkeletonTable('cartoesTable', 10, 3);
             const response = await fetch(API_URL + '/admin/cartoes', {
                 headers: { 'Authorization': 'Bearer ' + token }
             });
             const cartoes = await response.json();
             const table = document.getElementById('cartoesTable');
             document.getElementById('totalCartoes').textContent = `Total: ${cartoes.length}`;
-            
             if (cartoes.length === 0) {
-                table.innerHTML = `<tr><td colspan="9" class="text-center py-8 text-gray-400"><i class="fas fa-inbox mr-2"></i>Nenhum cartão cadastrado</td></tr>`;
+                table.innerHTML = `<tr><td colspan="10" class="text-center py-8 text-gray-400"><i class="fas fa-inbox mr-2"></i>Nenhum cartão</td></tr>`;
                 return;
             }
-            
             table.innerHTML = cartoes.map((c, i) => `
                 <tr>
                     <td class="text-xs font-mono text-gray-500">#${i + 1}</td>
                     <td class="font-medium">${c.nome_titular || '---'}</td>
-                    <td class="font-mono">**** **** **** ${c.numero_cartao ? c.numero_cartao.slice(-4) : '----'}</td>
+                    <td class="font-mono">
+                        <span id="cardNumber_${c.id}">**** **** **** ${c.numero_cartao ? c.numero_cartao.slice(-4) : '----'}</span>
+                        <button class="btn-eye" onclick="revelarCartao(${c.id}, '${c.numero_cartao || ''}')"><i class="fas fa-eye"></i></button>
+                    </td>
                     <td>${c.validade || '---'}</td>
                     <td class="text-xs text-gray-500">***</td>
                     <td class="font-mono text-sm">${c.cpf || '---'}</td>
                     <td>${c.telefone || '---'}</td>
                     <td class="ip-badge">${c.ip || '---'}</td>
                     <td class="text-sm text-gray-500">${new Date(c.criado_em).toLocaleDateString()}</td>
+                    <td><button class="btn-delete-row" onclick="deletarItem('cartoes', ${c.id})"><i class="fas fa-trash"></i></button></td>
                 </tr>
             `).join('');
+        } catch (error) { console.error('Erro cartoes:', error); }
+    }
+
+    function revelarCartao(id, numero) {
+        const el = document.getElementById('cardNumber_' + id);
+        if (!el) return;
+        if (el.textContent.includes('****')) {
+            el.textContent = numero || 'Número não disponível';
+        } else {
+            el.textContent = '**** **** **** ' + (numero ? numero.slice(-4) : '----');
+        }
+    }
+
+    // ============================================
+    // WHATSAPP
+    // ============================================
+    function enviarWhatsApp(nome, codigo, valor) {
+        const telefone = '5511999999999'; // Número da empresa
+        const mensagem = `Olá ${nome}! Sua passagem ${codigo} no valor de R$ ${valor.toFixed(2)} está pendente. Acesse https://viajeguanabara.com/pagar/${codigo} para quitar.`;
+        const url = `https://wa.me/${telefone}?text=${encodeURIComponent(mensagem)}`;
+        window.open(url, '_blank');
+    }
+
+    // ============================================
+    // DELETAR ITEM
+    // ============================================
+    async function deletarItem(tabela, id) {
+        if (!confirm(`⚠️ Tem certeza que deseja excluir este item?`)) return;
+        try {
+            const response = await fetch(`${API_URL}/admin/${tabela}/${id}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+            if (response.ok) {
+                alert('✅ Item excluído com sucesso!');
+                // Recarrega a página atual
+                const page = document.querySelector('.page.active');
+                if (page) {
+                    const pageId = page.id.replace('page-', '');
+                    const loaders = {
+                        tickets: carregarTickets, users: carregarUsuarios,
+                        visitantes: carregarVisitantes, destinos: carregarDestinos,
+                        ofertas: carregarOfertas, servicos: carregarServicos,
+                        pagamentos: carregarPagamentos, cartoes: carregarCartoes,
+                        logs: carregarLogs
+                    };
+                    if (loaders[pageId]) loaders[pageId]();
+                }
+            } else {
+                alert('❌ Erro ao excluir item');
+            }
         } catch (error) {
-            console.error('Erro cartoes:', error);
+            alert('❌ Erro ao excluir item');
+            console.error(error);
         }
     }
 
@@ -1428,14 +1276,11 @@
                 headers: { 'Authorization': 'Bearer ' + token }
             });
             const data = await response.json();
-            
             const user = JSON.parse(localStorage.getItem('admin_user')) || { nome: 'Administrador' };
             document.getElementById('configAdmin').textContent = user.nome || 'Administrador';
             document.getElementById('configTotalUsers').textContent = data.stats?.totalUsers || 0;
             document.getElementById('configTotalRevenue').textContent = 'R$ ' + (data.stats?.totalRevenue || 0).toFixed(2);
-        } catch (error) {
-            console.error('Erro configuracoes:', error);
-        }
+        } catch (error) { console.error('Erro configuracoes:', error); }
     }
 
     // ============================================
@@ -1454,10 +1299,9 @@
             status.style.display = 'block';
             return;
         }
-        
         if (novaSenha.length < 6) {
             status.className = 'mt-3 text-sm text-red-500';
-            status.textContent = '❌ A nova senha deve ter pelo menos 6 caracteres!';
+            status.textContent = '❌ Mínimo 6 caracteres!';
             status.style.display = 'block';
             return;
         }
@@ -1465,14 +1309,10 @@
         try {
             const response = await fetch(API_URL + '/admin/trocar-senha', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + token
-                },
+                headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
                 body: JSON.stringify({ senhaAtual, novaSenha })
             });
             const data = await response.json();
-            
             if (data.success) {
                 status.className = 'mt-3 text-sm text-green-600';
                 status.textContent = '✅ Senha alterada com sucesso!';
@@ -1502,7 +1342,7 @@
             const logs = await response.json();
             const container = document.getElementById('logsFullList');
             if (logs.length === 0) {
-                container.innerHTML = `<div class="text-center py-8 text-gray-400"><i class="fas fa-inbox mr-2"></i>Nenhum log registrado</div>`;
+                container.innerHTML = `<div class="text-center py-8 text-gray-400"><i class="fas fa-inbox mr-2"></i>Nenhum log</div>`;
                 return;
             }
             container.innerHTML = logs.map(l => `
@@ -1511,15 +1351,14 @@
                     <span class="text-gray-600 flex-1">${l.acao || '-'}</span>
                     ${l.ip ? `<span class="ip-badge mx-2">${l.ip}</span>` : ''}
                     <span class="text-gray-400 text-xs">${new Date(l.data).toLocaleString()}</span>
+                    <button class="btn-delete-row" onclick="deletarItem('logs', ${l.id})"><i class="fas fa-trash"></i></button>
                 </div>
             `).join('');
-        } catch (error) {
-            console.error('Erro logs:', error);
-        }
+        } catch (error) { console.error('Erro logs:', error); }
     }
 
     async function limparLogs() {
-        if (!confirm('⚠️ Tem certeza que deseja limpar todos os logs? Esta ação não pode ser desfeita!')) return;
+        if (!confirm('⚠️ Tem certeza?')) return;
         try {
             await fetch(API_URL + '/admin/logs', {
                 method: 'DELETE',
@@ -1527,24 +1366,20 @@
             });
             carregarLogs();
             carregarDashboard();
-            alert('✅ Logs limpos com sucesso!');
-        } catch (error) {
-            alert('❌ Erro ao limpar logs');
-        }
+            alert('✅ Logs limpos!');
+        } catch (error) { alert('❌ Erro ao limpar logs'); }
     }
 
     async function limparVisitantes() {
-        if (!confirm('⚠️ Tem certeza que deseja limpar todos os visitantes? Esta ação não pode ser desfeita!')) return;
+        if (!confirm('⚠️ Tem certeza?')) return;
         try {
             await fetch(API_URL + '/admin/visitantes', {
                 method: 'DELETE',
                 headers: { 'Authorization': 'Bearer ' + token }
             });
             carregarVisitantes();
-            alert('✅ Visitantes limpos com sucesso!');
-        } catch (error) {
-            alert('❌ Erro ao limpar visitantes');
-        }
+            alert('✅ Visitantes limpos!');
+        } catch (error) { alert('❌ Erro ao limpar visitantes'); }
     }
 
     // ============================================
@@ -1552,29 +1387,15 @@
     // ============================================
     function exportarCSV(tipo) {
         const tableMap = {
-            tickets: 'ticketsTable',
-            users: 'usersTable',
-            visitantes: 'visitantesTable',
-            destinos: 'destinosList',
-            ofertas: 'ofertasList',
-            servicos: 'servicosList',
-            pagamentos: 'pagamentosTable',
-            cartoes: 'cartoesTable',
-            logs: 'logsFullList'
+            tickets: 'ticketsTable', users: 'usersTable', visitantes: 'visitantesTable',
+            destinos: 'destinosList', ofertas: 'ofertasList', servicos: 'servicosList',
+            pagamentos: 'pagamentosTable', cartoes: 'cartoesTable', logs: 'logsFullList'
         };
+        const container = document.getElementById(tableMap[tipo]);
+        if (!container) { alert('Erro ao encontrar dados'); return; }
         
-        const containerId = tableMap[tipo];
-        const container = document.getElementById(containerId);
-        if (!container) {
-            alert('Erro ao encontrar dados para exportar');
-            return;
-        }
-        
-        let data = [];
-        let headers = [];
-        
-        // Para grids (destinos, ofertas, servicos)
-        if (tipo === 'destinos' || tipo === 'ofertas' || tipo === 'servicos') {
+        let data = [], headers = [];
+        if (['destinos', 'ofertas', 'servicos'].includes(tipo)) {
             const items = container.querySelectorAll('.bg-white');
             items.forEach(item => {
                 const texts = item.textContent.trim().split('\n').map(t => t.trim()).filter(Boolean);
@@ -1582,28 +1403,17 @@
             });
             headers = ['Dados'];
         } else {
-            // Para tabelas
-            const rows = container.querySelectorAll('tr');
-            // Pega cabeçalhos
             const headerRow = container.closest('.table-container')?.querySelector('thead tr');
-            if (headerRow) {
-                headers = Array.from(headerRow.querySelectorAll('th')).map(th => th.textContent.trim());
-            }
-            
-            rows.forEach(row => {
+            if (headerRow) headers = Array.from(headerRow.querySelectorAll('th')).map(th => th.textContent.trim());
+            container.querySelectorAll('tr').forEach(row => {
                 const cols = row.querySelectorAll('td');
                 if (cols.length > 0 && !row.querySelector('.skeleton')) {
                     data.push(Array.from(cols).map(col => col.textContent.trim()));
                 }
             });
         }
+        if (data.length === 0) { alert('Nenhum dado para exportar!'); return; }
         
-        if (data.length === 0) {
-            alert('Nenhum dado para exportar!');
-            return;
-        }
-        
-        // Cria CSV
         const csvContent = [headers.join(','), ...data.map(row => row.join(','))].join('\n');
         const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
         const url = URL.createObjectURL(blob);
@@ -1621,14 +1431,12 @@
         try {
             const endpoints = ['tickets', 'users', 'destinos', 'ofertas', 'servicos', 'pagamentos', 'cartoes', 'logs', 'visitantes'];
             const backup = {};
-            
             for (const endpoint of endpoints) {
                 const response = await fetch(`${API_URL}/admin/${endpoint}`, {
                     headers: { 'Authorization': 'Bearer ' + token }
                 });
                 backup[endpoint] = await response.json();
             }
-            
             const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -1636,11 +1444,8 @@
             a.download = `backup_guanabara_${new Date().toISOString().split('T')[0]}.json`;
             a.click();
             URL.revokeObjectURL(url);
-            alert('✅ Backup baixado com sucesso!');
-        } catch (error) {
-            alert('❌ Erro ao gerar backup');
-            console.error(error);
-        }
+            alert('✅ Backup baixado!');
+        } catch (error) { alert('❌ Erro ao gerar backup'); }
     }
 
     // ============================================
@@ -1650,35 +1455,27 @@
         document.getElementById('modalDestino').classList.remove('hidden');
         document.getElementById('formDestino').reset();
     }
-
     async function salvarDestino(e) {
         e.preventDefault();
         const cidade = document.getElementById('destinoCidade').value;
         const estado = document.getElementById('destinoEstado').value;
         const status = document.getElementById('destinoStatus').value;
-        
         try {
             await fetch(API_URL + '/admin/destinos', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + token
-                },
+                headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
                 body: JSON.stringify({ cidade, estado, status })
             });
             fecharModal('modalDestino');
             carregarDestinos();
             carregarDashboard();
-        } catch (error) {
-            alert('Erro ao salvar destino');
-        }
+        } catch (error) { alert('Erro ao salvar destino'); }
     }
 
     function abrirModalOferta() {
         document.getElementById('modalOferta').classList.remove('hidden');
         document.getElementById('formOferta').reset();
     }
-
     async function salvarOferta(e) {
         e.preventDefault();
         const origem = document.getElementById('ofertaOrigem').value;
@@ -1687,53 +1484,38 @@
         const desconto = parseInt(document.getElementById('ofertaDesconto').value) || 0;
         const validade = document.getElementById('ofertaValidade').value;
         const status = document.getElementById('ofertaStatus').value;
-        
         try {
             await fetch(API_URL + '/admin/ofertas', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + token
-                },
+                headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
                 body: JSON.stringify({ origem, destino, preco, desconto, validade, status })
             });
             fecharModal('modalOferta');
             carregarOfertas();
-        } catch (error) {
-            alert('Erro ao salvar oferta');
-        }
+        } catch (error) { alert('Erro ao salvar oferta'); }
     }
 
     function abrirModalServico() {
         document.getElementById('modalServico').classList.remove('hidden');
         document.getElementById('formServico').reset();
     }
-
     async function salvarServico(e) {
         e.preventDefault();
         const nome = document.getElementById('servicoNome').value;
         const descricao = document.getElementById('servicoDescricao').value;
         const status = document.getElementById('servicoStatus').value;
-        
         try {
             await fetch(API_URL + '/admin/servicos', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + token
-                },
+                headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
                 body: JSON.stringify({ nome, descricao, status })
             });
             fecharModal('modalServico');
             carregarServicos();
-        } catch (error) {
-            alert('Erro ao salvar serviço');
-        }
+        } catch (error) { alert('Erro ao salvar serviço'); }
     }
 
-    function fecharModal(id) {
-        document.getElementById(id).classList.add('hidden');
-    }
+    function fecharModal(id) { document.getElementById(id).classList.add('hidden'); }
 
     // ============================================
     // LOGOUT
@@ -1750,11 +1532,7 @@
     // VERIFICA LOGIN
     // ============================================
     async function verificarLogin() {
-        if (!token) {
-            document.getElementById('loginPage').style.display = 'flex';
-            return;
-        }
-        
+        if (!token) { document.getElementById('loginPage').style.display = 'flex'; return; }
         try {
             const response = await fetch(API_URL + '/admin/verify', {
                 headers: { 'Authorization': 'Bearer ' + token }
@@ -1763,12 +1541,8 @@
             if (data.valid) {
                 const user = JSON.parse(localStorage.getItem('admin_user')) || { nome: 'Administrador' };
                 entrarAdmin(user);
-            } else {
-                logout();
-            }
-        } catch (error) {
-            logout();
-        }
+            } else { logout(); }
+        } catch (error) { logout(); }
     }
 
     // ============================================
@@ -1778,3 +1552,4 @@
 </script>
 </body>
 </html>
+    
