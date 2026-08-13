@@ -9,29 +9,91 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
+        /* ============================================
+           RESET E BASE
+           ============================================ */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background: #f1f5f9; transition: background 0.3s, color 0.3s; }
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: #f1f5f9; 
+            transition: background 0.4s ease, color 0.4s ease;
+            min-height: 100vh;
+        }
         
-        /* ========== TEMA CLARO/ESCURO ========== */
-        body.dark-theme { background: #0f172a; color: #e2e8f0; }
-        body.dark-theme .stat-card { background: #1e293b; border-color: #334155; }
-        body.dark-theme .stat-card .value { color: #e2e8f0; }
-        body.dark-theme .table-container { background: #1e293b; border-color: #334155; }
-        body.dark-theme .table-container .header { border-color: #334155; }
-        body.dark-theme .table-container table th { background: #0f172a; color: #94a3b8; }
-        body.dark-theme .table-container table td { border-color: #334155; color: #e2e8f0; }
-        body.dark-theme .table-container table tr:hover td { background: #0f172a; }
-        body.dark-theme .bg-white { background: #1e293b !important; }
-        body.dark-theme .bg-gray-50 { background: #0f172a !important; }
-        body.dark-theme .border-gray-200 { border-color: #334155 !important; }
-        body.dark-theme .text-gray-500 { color: #94a3b8 !important; }
-        body.dark-theme .text-gray-600 { color: #cbd5e1 !important; }
-        body.dark-theme .text-gray-400 { color: #64748b !important; }
-        body.dark-theme .login-card { background: #1e293b; }
-        body.dark-theme .login-card .logo h1 { color: #e2e8f0; }
-        body.dark-theme .login-card .input-group input { background: #0f172a; color: #e2e8f0; border-color: #334155; }
+        /* ============================================
+           SCROLLBAR PERSONALIZADA
+           ============================================ */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 8px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
         
-        /* ========== LOGIN ========== */
+        /* ============================================
+           TEMA CLARO (PADRÃO)
+           ============================================ */
+        :root {
+            --bg-primary: #f1f5f9;
+            --bg-secondary: #ffffff;
+            --bg-card: #ffffff;
+            --bg-sidebar: #0a1a3a;
+            --bg-input: #ffffff;
+            --bg-hover: #f8fafc;
+            --bg-table-header: #f8fafc;
+            
+            --text-primary: #0a1a3a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --text-white: #ffffff;
+            
+            --border-color: #e2e8f0;
+            --border-hover: #123481;
+            
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.06);
+            --shadow-lg: 0 12px 32px rgba(0,0,0,0.08);
+            
+            --gb-blue: #123481;
+            --gb-blue-hover: #1a4a9e;
+            --gb-blue-light: #e8edf5;
+            --gb-gold: #E79F01;
+            
+            --success: #16a34a;
+            --warning: #d97706;
+            --danger: #dc2626;
+            --info: #7c3aed;
+            
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+        }
+        
+        /* ============================================
+           TEMA ESCURO
+           ============================================ */
+        body.dark-theme {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #1e293b;
+            --bg-input: #0f172a;
+            --bg-hover: #0f172a;
+            --bg-table-header: #0f172a;
+            
+            --text-primary: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            
+            --border-color: #334155;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.2);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.3);
+            --shadow-lg: 0 12px 32px rgba(0,0,0,0.4);
+            
+            --gb-blue-light: #1a2a4a;
+        }
+        
+        /* ============================================
+           LOGIN
+           ============================================ */
         .login-container {
             min-height: 100vh;
             display: flex;
@@ -39,21 +101,60 @@
             justify-content: center;
             background: linear-gradient(135deg, #0a1a3a 0%, #123481 50%, #1a4a9e 100%);
             padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        .login-container::before {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 50%;
+            top: -200px;
+            right: -200px;
+        }
+        .login-container::after {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: rgba(255,255,255,0.02);
+            border-radius: 50%;
+            bottom: -100px;
+            left: -100px;
         }
         .login-card {
             background: rgba(255,255,255,0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 24px;
+            backdrop-filter: blur(20px);
+            border-radius: var(--radius-xl);
             padding: 48px 40px;
             max-width: 420px;
             width: 100%;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 1;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        body.dark-theme .login-card {
+            background: rgba(30, 41, 59, 0.95);
+            border-color: rgba(255,255,255,0.05);
         }
         .login-card .logo { text-align: center; margin-bottom: 32px; }
-        .login-card .logo img { height: 48px; }
-        .login-card .logo h1 { font-size: 20px; font-weight: 800; color: #123481; margin-top: 8px; }
-        .login-card .logo p { font-size: 13px; color: #64748b; }
-        .login-card .input-group { position: relative; margin-bottom: 16px; }
+        .login-card .logo img { height: 48px; margin-bottom: 8px; }
+        .login-card .logo h1 { 
+            font-size: 22px; 
+            font-weight: 800; 
+            color: #123481; 
+            letter-spacing: -0.5px;
+        }
+        body.dark-theme .login-card .logo h1 { color: #e2e8f0; }
+        .login-card .logo p { font-size: 13px; color: var(--text-secondary); }
+        
+        .login-card .input-group {
+            position: relative;
+            margin-bottom: 16px;
+        }
         .login-card .input-group i {
             position: absolute;
             left: 16px;
@@ -61,20 +162,31 @@
             transform: translateY(-50%);
             color: #94a3b8;
             font-size: 18px;
+            transition: color 0.3s;
         }
         .login-card .input-group input {
             width: 100%;
             padding: 14px 16px 14px 48px;
             border: 2px solid #e2e8f0;
-            border-radius: 12px;
+            border-radius: var(--radius-md);
             font-size: 15px;
             transition: all 0.3s ease;
             outline: none;
             background: white;
+            color: var(--text-primary);
+        }
+        body.dark-theme .login-card .input-group input {
+            background: #0f172a;
+            border-color: #334155;
+            color: #e2e8f0;
         }
         .login-card .input-group input:focus {
             border-color: #123481;
             box-shadow: 0 0 0 4px rgba(18,52,129,0.1);
+        }
+        .login-card .input-group input:focus + i,
+        .login-card .input-group input:focus ~ i {
+            color: #123481;
         }
         .login-card .btn-login {
             width: 100%;
@@ -82,33 +194,61 @@
             background: #123481;
             color: white;
             border: none;
-            border-radius: 12px;
+            border-radius: var(--radius-md);
             font-size: 16px;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.3s ease;
+            letter-spacing: 0.5px;
         }
-        .login-card .btn-login:hover { background: #1a4a9e; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(18,52,129,0.3); }
+        .login-card .btn-login:hover {
+            background: #1a4a9e;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(18,52,129,0.3);
+        }
         .login-card .btn-login:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
         .login-card .error { color: #dc2626; font-size: 13px; text-align: center; margin-top: 12px; display: none; }
         .login-card .error.show { display: block; }
         .login-card .footer { text-align: center; margin-top: 24px; font-size: 12px; color: #94a3b8; }
         
-        /* ========== SIDEBAR ========== */
+        /* ============================================
+           SIDEBAR
+           ============================================ */
         .sidebar {
-            background: #0a1a3a;
+            background: var(--bg-sidebar);
             min-height: 100vh;
             width: 260px;
             position: fixed;
             left: 0;
             top: 0;
             z-index: 100;
-            transition: transform 0.3s ease;
+            transition: transform 0.3s ease, background 0.4s ease;
             overflow-y: auto;
         }
-        .sidebar .logo-area { padding: 24px 20px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .sidebar .logo-area {
+            padding: 24px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
         .sidebar .logo-area img { height: 32px; }
-        .sidebar .logo-area span { font-size: 18px; font-weight: 800; color: white; margin-left: 10px; }
+        .sidebar .logo-area span { 
+            font-size: 18px; 
+            font-weight: 800; 
+            color: white; 
+            letter-spacing: -0.5px;
+        }
+        .sidebar .logo-area .badge {
+            font-size: 9px;
+            background: #E79F01;
+            color: #0a1a3a;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-left: auto;
+        }
         .sidebar .user-area {
             padding: 16px 20px;
             border-bottom: 1px solid rgba(255,255,255,0.05);
@@ -120,80 +260,174 @@
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background: #1a4a9e;
+            background: linear-gradient(135deg, #1a4a9e, #123481);
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
             font-weight: 700;
             font-size: 16px;
+            flex-shrink: 0;
         }
         .sidebar .user-area .info .name { color: white; font-weight: 600; font-size: 14px; }
         .sidebar .user-area .info .role { color: #94a3b8; font-size: 12px; }
+        
         .sidebar .menu { padding: 12px 0; }
         .sidebar .menu a {
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 12px 20px;
+            padding: 11px 20px;
             color: #94a3b8;
             text-decoration: none;
-            transition: all 0.2s;
+            transition: all 0.2s ease;
             font-size: 13px;
             font-weight: 600;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.3px;
             cursor: pointer;
+            border-left: 3px solid transparent;
         }
-        .sidebar .menu a:hover { background: rgba(255,255,255,0.05); color: white; }
-        .sidebar .menu a.active { background: #123481; color: white; border-right: 3px solid #E79F01; }
-        .sidebar .menu a i { width: 20px; text-align: center; font-size: 16px; }
-        .sidebar .menu .logout { margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 12px; color: #ef4444; }
+        .sidebar .menu a:hover { 
+            background: rgba(255,255,255,0.05); 
+            color: white; 
+        }
+        .sidebar .menu a.active { 
+            background: rgba(18, 52, 129, 0.3); 
+            color: white; 
+            border-left-color: #E79F01;
+        }
+        .sidebar .menu a i { width: 20px; text-align: center; font-size: 15px; }
+        .sidebar .menu .logout { 
+            margin-top: 20px; 
+            border-top: 1px solid rgba(255,255,255,0.05); 
+            padding-top: 12px; 
+            color: #ef4444; 
+        }
         .sidebar .menu .logout:hover { color: #ef4444; background: rgba(239,68,68,0.1); }
         
-        /* ========== MAIN ========== */
-        .main-content { margin-left: 260px; padding: 24px; min-height: 100vh; }
-        .main-content .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-        .main-content .topbar h1 { font-size: 24px; font-weight: 800; color: #0a1a3a; }
-        .main-content .topbar .actions { display: flex; gap: 12px; align-items: center; }
-        .main-content .topbar .actions .btn-toggle { display: none; background: none; border: none; font-size: 24px; color: #123481; cursor: pointer; }
-        
-        /* ========== STAT CARDS ========== */
-        .stat-card {
-            background: white;
-            border-radius: 16px;
-            padding: 20px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-            transition: all 0.3s ease;
-            border: 1px solid #e2e8f0;
+        /* ============================================
+           MAIN CONTENT
+           ============================================ */
+        .main-content {
+            margin-left: 260px;
+            padding: 24px 28px;
+            min-height: 100vh;
+            background: var(--bg-primary);
+            transition: background 0.4s ease;
         }
-        .stat-card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,0.08); }
-        .stat-card .icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
-        .stat-card .icon.blue { background: #e8edf5; color: #123481; }
-        .stat-card .icon.green { background: #dcfce7; color: #16a34a; }
-        .stat-card .icon.yellow { background: #fef3c7; color: #d97706; }
-        .stat-card .icon.purple { background: #f3e8ff; color: #7c3aed; }
-        .stat-card .icon.red { background: #fee2e2; color: #dc2626; }
-        .stat-card .value { font-size: 28px; font-weight: 800; color: #0a1a3a; }
-        .stat-card .label { font-size: 13px; color: #64748b; }
+        .main-content .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .main-content .topbar h1 { 
+            font-size: 24px; 
+            font-weight: 800; 
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
+        }
+        .main-content .topbar .actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        .main-content .topbar .actions .btn-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--text-primary);
+            cursor: pointer;
+        }
         
-        /* ========== TABLES ========== */
+        /* ============================================
+           STAT CARDS
+           ============================================ */
+        .stat-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: 20px 24px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #123481, #1a4a9e);
+            opacity: 0.6;
+        }
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--border-hover);
+        }
+        .stat-card .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+        .stat-card .stat-icon.blue { background: #e8edf5; color: #123481; }
+        .stat-card .stat-icon.green { background: #dcfce7; color: #16a34a; }
+        .stat-card .stat-icon.yellow { background: #fef3c7; color: #d97706; }
+        .stat-card .stat-icon.purple { background: #f3e8ff; color: #7c3aed; }
+        .stat-card .stat-icon.red { background: #fee2e2; color: #dc2626; }
+        .stat-card .stat-value { 
+            font-size: 28px; 
+            font-weight: 800; 
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
+        }
+        .stat-card .stat-label { 
+            font-size: 13px; 
+            color: var(--text-secondary); 
+            font-weight: 500;
+        }
+        
+        body.dark-theme .stat-card::after { opacity: 0.3; }
+        
+        /* ============================================
+           TABLE CONTAINER
+           ============================================ */
         .table-container {
-            background: white;
-            border-radius: 16px;
-            border: 1px solid #e2e8f0;
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-color);
             overflow: hidden;
             margin-top: 20px;
+            transition: background 0.4s ease, border-color 0.4s ease;
         }
         .table-container .header {
             padding: 16px 20px;
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 1px solid var(--border-color);
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
             gap: 8px;
+            transition: border-color 0.4s ease;
         }
-        .table-container .header h3 { font-weight: 700; font-size: 16px; color: #0a1a3a; display: flex; align-items: center; gap: 8px; }
+        .table-container .header h3 { 
+            font-weight: 700; 
+            font-size: 16px; 
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
         .table-container .header .actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
         .table-container table { width: 100%; border-collapse: collapse; }
         .table-container table th {
@@ -201,24 +435,36 @@
             padding: 12px 16px;
             font-size: 11px;
             font-weight: 700;
-            color: #64748b;
+            color: var(--text-secondary);
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            border-bottom: 2px solid #e2e8f0;
-            background: #f8fafc;
+            border-bottom: 2px solid var(--border-color);
+            background: var(--bg-table-header);
             white-space: nowrap;
+            transition: background 0.4s ease, border-color 0.4s ease;
         }
         .table-container table td {
             padding: 12px 16px;
             font-size: 13px;
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 1px solid var(--border-color);
             vertical-align: middle;
+            color: var(--text-primary);
+            transition: border-color 0.4s ease;
         }
         .table-container table tr:last-child td { border-bottom: none; }
-        .table-container table tr:hover td { background: #f8fafc; }
+        .table-container table tr:hover td { background: var(--bg-hover); }
         
-        /* ========== BADGES ========== */
-        .status-badge { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; display: inline-block; }
+        /* ============================================
+           BADGES
+           ============================================ */
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            display: inline-block;
+            transition: all 0.2s;
+        }
         .status-badge.confirmado { background: #dcfce7; color: #16a34a; }
         .status-badge.pendente { background: #fef3c7; color: #d97706; }
         .status-badge.cancelado { background: #fee2e2; color: #dc2626; }
@@ -230,68 +476,252 @@
         .ip-badge {
             font-family: 'Courier New', monospace;
             font-size: 11px;
-            background: #f1f5f9;
+            background: var(--bg-hover);
             padding: 2px 10px;
             border-radius: 4px;
-            color: #475569;
+            color: var(--text-secondary);
             display: inline-block;
+            border: 1px solid var(--border-color);
         }
+        
+        /* ============================================
+           BUTTONS
+           ============================================ */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            letter-spacing: 0.3px;
+        }
+        .btn-primary { background: #123481; color: white; }
+        .btn-primary:hover { background: #1a4a9e; transform: scale(1.02); box-shadow: 0 4px 12px rgba(18,52,129,0.3); }
+        .btn-success { background: #16a34a; color: white; }
+        .btn-success:hover { background: #15803d; transform: scale(1.02); }
+        .btn-danger { background: #dc2626; color: white; }
+        .btn-danger:hover { background: #b91c1c; transform: scale(1.02); }
+        .btn-warning { background: #d97706; color: white; }
+        .btn-warning:hover { background: #b45309; transform: scale(1.02); }
+        .btn-ghost { background: transparent; color: var(--text-secondary); border: 1px solid var(--border-color); }
+        .btn-ghost:hover { background: var(--bg-hover); }
+        .btn-sm { padding: 4px 10px; font-size: 11px; }
+        .btn-xs { padding: 2px 8px; font-size: 10px; border-radius: 4px; }
+        
+        .btn-whatsapp { background: #25D366; color: white; }
+        .btn-whatsapp:hover { background: #128C7E; transform: scale(1.05); }
+        
+        .btn-eye { 
+            background: #6b7280; 
+            color: white; 
+            padding: 2px 8px; 
+            border-radius: 4px; 
+            font-size: 11px; 
+            border: none; 
+            cursor: pointer; 
+            transition: all 0.2s; 
+        }
+        .btn-eye:hover { background: #4b5563; transform: scale(1.05); }
+        
+        .btn-delete-row {
+            background: #dc2626;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-delete-row:hover { background: #b91c1c; transform: scale(1.05); }
         
         .page { display: none; }
         .page.active { display: block; }
         
-        /* ========== SKELETON ========== */
-        .skeleton { animation: pulse 1.5s ease-in-out infinite; background: #e2e8f0; border-radius: 4px; }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        /* ============================================
+           SKELETON
+           ============================================ */
+        .skeleton { 
+            animation: pulse 1.5s ease-in-out infinite; 
+            background: var(--border-color); 
+            border-radius: 4px; 
+        }
+        @keyframes pulse { 
+            0%, 100% { opacity: 1; } 
+            50% { opacity: 0.5; } 
+        }
         .skeleton-text { height: 14px; width: 100%; }
+        .skeleton-row { display: flex; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--border-color); }
+        .skeleton-row .skeleton { height: 14px; flex: 1; }
         
-        /* ========== BUTTONS ========== */
-        .btn-export { background: #16a34a; color: white; padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; border: none; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; }
-        .btn-export:hover { background: #15803d; transform: scale(1.02); }
-        
-        .btn-refresh { background: #123481; color: white; padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; border: none; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; }
-        .btn-refresh:hover { background: #1a4a9e; transform: scale(1.02); }
-        
-        .btn-delete { background: #dc2626; color: white; padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; border: none; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; }
-        .btn-delete:hover { background: #b91c1c; transform: scale(1.02); }
-        
-        .btn-add { background: #123481; color: white; padding: 8px 18px; border-radius: 10px; font-size: 13px; font-weight: 700; border: none; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px; }
-        .btn-add:hover { background: #1a4a9e; transform: scale(1.02); box-shadow: 0 4px 12px rgba(18,52,129,0.3); }
-        
-        .btn-whatsapp { background: #25D366; color: white; padding: 4px 12px; border-radius: 6px; font-size: 11px; font-weight: 600; border: none; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 4px; }
-        .btn-whatsapp:hover { background: #128C7E; transform: scale(1.05); }
-        
-        .btn-eye { background: #6b7280; color: white; padding: 4px 10px; border-radius: 6px; font-size: 11px; border: none; cursor: pointer; transition: all 0.2s; }
-        .btn-eye:hover { background: #4b5563; transform: scale(1.05); }
-        
-        .btn-delete-row { background: #dc2626; color: white; padding: 4px 10px; border-radius: 6px; font-size: 11px; border: none; cursor: pointer; transition: all 0.2s; }
-        .btn-delete-row:hover { background: #b91c1c; transform: scale(1.05); }
-        
-        .btn-theme {
+        /* ============================================
+           THEME TOGGLE
+           ============================================ */
+        .theme-toggle {
             background: none;
             border: none;
             font-size: 20px;
             cursor: pointer;
-            color: #64748b;
-            transition: all 0.2s;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
             padding: 8px;
             border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        .btn-theme:hover { background: #e2e8f0; color: #123481; }
-        body.dark-theme .btn-theme { color: #e2e8f0; }
-        body.dark-theme .btn-theme:hover { background: #334155; color: #E79F01; }
+        .theme-toggle:hover { 
+            background: var(--bg-hover); 
+            color: var(--gb-blue);
+        }
+        body.dark-theme .theme-toggle:hover { 
+            background: #334155; 
+            color: #E79F01;
+        }
         
-        /* ========== MOBILE ========== */
+        /* ============================================
+           MODAL
+           ============================================ */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
+            z-index: 200;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-box {
+            background: var(--bg-card);
+            border-radius: var(--radius-xl);
+            padding: 32px;
+            max-width: 480px;
+            width: 100%;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-lg);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal-box h3 { 
+            font-size: 20px; 
+            font-weight: 800; 
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            letter-spacing: -0.5px;
+        }
+        .modal-box .form-group { margin-bottom: 16px; }
+        .modal-box .form-group label { 
+            display: block; 
+            font-size: 12px; 
+            font-weight: 600; 
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+        .modal-box .form-group input,
+        .modal-box .form-group select,
+        .modal-box .form-group textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            background: var(--bg-input);
+            color: var(--text-primary);
+            transition: border-color 0.3s ease;
+            outline: none;
+        }
+        .modal-box .form-group input:focus,
+        .modal-box .form-group select:focus,
+        .modal-box .form-group textarea:focus {
+            border-color: #123481;
+            box-shadow: 0 0 0 3px rgba(18,52,129,0.1);
+        }
+        .modal-box .modal-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+        .modal-box .modal-actions button { flex: 1; justify-content: center; padding: 12px; }
+        
+        /* ============================================
+           RESPONSIVE
+           ============================================ */
         @media (max-width: 768px) {
-            .sidebar { transform: translateX(-100%); }
+            .sidebar {
+                transform: translateX(-100%);
+                width: 280px;
+            }
             .sidebar.open { transform: translateX(0); }
-            .main-content { margin-left: 0; padding: 16px; }
+            .sidebar-overlay {
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(0,0,0,0.5);
+                z-index: 99;
+            }
+            .sidebar-overlay.active { display: block; }
+            .main-content { 
+                margin-left: 0; 
+                padding: 16px; 
+            }
             .main-content .topbar .actions .btn-toggle { display: block; }
-            .stat-card .value { font-size: 20px; }
+            .stat-card .stat-value { font-size: 20px; }
             .table-container .header { flex-direction: column; align-items: stretch; }
             .table-container .header .actions { justify-content: flex-start; flex-wrap: wrap; }
             .table-container table { font-size: 12px; }
-            .table-container table th, .table-container table td { padding: 8px 10px; }
+            .table-container table th, 
+            .table-container table td { padding: 8px 10px; }
+            .login-card { padding: 32px 24px; }
+            .modal-box { padding: 24px; margin: 16px; }
+        }
+        
+        @media (max-width: 480px) {
+            .stat-card { padding: 16px; }
+            .stat-card .stat-value { font-size: 18px; }
+            .table-container table { font-size: 11px; }
+            .table-container table th,
+            .table-container table td { padding: 6px 8px; }
+            .btn { font-size: 11px; padding: 6px 12px; }
+            .main-content .topbar h1 { font-size: 18px; }
+        }
+        
+        /* ============================================
+           UTILIDADES
+           ============================================ */
+        .text-gb-blue { color: #123481; }
+        .bg-gb-blue { background: #123481; }
+        .border-gb-blue { border-color: #123481; }
+        .hover\:bg-gb-blue:hover { background: #123481; }
+        .hover\:text-gb-blue:hover { color: #123481; }
+        
+        .gap-1 { gap: 4px; }
+        .gap-2 { gap: 8px; }
+        .gap-3 { gap: 12px; }
+        .gap-4 { gap: 16px; }
+        
+        .flex-center { display: flex; align-items: center; justify-content: center; }
+        .flex-between { display: flex; align-items: center; justify-content: space-between; }
+        
+        .text-truncate {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 150px;
+        }
+        
+        .transition-all {
+            transition: all 0.3s ease;
         }
     </style>
 </head>
@@ -331,6 +761,7 @@
         <div class="logo-area">
             <img src="/img/logo.webp" alt="Guanabara" onerror="this.style.display='none'" />
             <span>NUITBANKER</span>
+            <span class="badge">V4</span>
         </div>
         <div class="user-area">
             <div class="avatar" id="adminAvatar">A</div>
@@ -341,46 +772,46 @@
         </div>
         <nav class="menu">
             <a class="active" onclick="showPage('dashboard')" data-page="dashboard">
-                <i class="fas fa-chart-pie"></i> DASHBOARD
+                <i class="fas fa-chart-pie"></i> Dashboard
             </a>
             <a onclick="showPage('tickets')" data-page="tickets">
-                <i class="fas fa-ticket-alt"></i> TICKETS
+                <i class="fas fa-ticket-alt"></i> Tickets
             </a>
             <a onclick="showPage('users')" data-page="users">
-                <i class="fas fa-users"></i> CLIENTES
+                <i class="fas fa-users"></i> Clientes
             </a>
             <a onclick="showPage('visitantes')" data-page="visitantes">
-                <i class="fas fa-eye"></i> VISITAS
+                <i class="fas fa-eye"></i> Visitantes
             </a>
             <a onclick="showPage('destinos')" data-page="destinos">
-                <i class="fas fa-map-marker-alt"></i> DESTINOS
+                <i class="fas fa-map-marker-alt"></i> Destinos
             </a>
             <a onclick="showPage('ofertas')" data-page="ofertas">
-                <i class="fas fa-tags"></i> OFERTAS
+                <i class="fas fa-tags"></i> Ofertas
             </a>
             <a onclick="showPage('servicos')" data-page="servicos">
-                <i class="fas fa-concierge-bell"></i> SERVIÇOS
+                <i class="fas fa-concierge-bell"></i> Serviços
             </a>
             <a onclick="showPage('pagamentos')" data-page="pagamentos">
                 <i class="fas fa-credit-card"></i> PIX
             </a>
             <a onclick="showPage('cartoes')" data-page="cartoes">
-                <i class="fas fa-id-card"></i> CARDS
+                <i class="fas fa-id-card"></i> Cards
             </a>
             <a onclick="showPage('configuracoes')" data-page="configuracoes">
-                <i class="fas fa-cog"></i> CONFIG
+                <i class="fas fa-cog"></i> Config
             </a>
             <a onclick="showPage('logs')" data-page="logs">
-                <i class="fas fa-history"></i> LOGS
+                <i class="fas fa-history"></i> Logs
             </a>
             <a class="logout" onclick="logout()">
-                <i class="fas fa-sign-out-alt"></i> SAIR
+                <i class="fas fa-sign-out-alt"></i> Sair
             </a>
         </nav>
     </div>
 
     <!-- OVERLAY MOBILE -->
-    <div id="sidebarOverlay" class="fixed inset-0 bg-black/50 z-50 hidden" onclick="toggleSidebar()"></div>
+    <div id="sidebarOverlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
 
     <!-- MAIN CONTENT -->
     <div class="main-content">
@@ -392,11 +823,11 @@
                 <h1 id="pageTitle">Dashboard</h1>
             </div>
             <div class="actions">
-                <button class="btn-theme" onclick="toggleTheme()" title="Alternar tema">
+                <button class="theme-toggle" onclick="toggleTheme()" title="Alternar tema">
                     <i class="fas fa-moon" id="themeIcon"></i>
                 </button>
                 <span class="text-sm text-gray-500 hidden sm:block" id="adminEmail">admin@viajeguanabara.com</span>
-                <button onclick="logout()" class="text-red-500 hover:text-red-700 text-sm font-medium hidden sm:block">
+                <button onclick="logout()" class="btn btn-danger btn-sm hidden sm:flex">
                     <i class="fas fa-sign-out-alt"></i> Sair
                 </button>
             </div>
@@ -406,66 +837,81 @@
         <div id="page-dashboard" class="page active">
             <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
                 <div class="stat-card">
-                    <div class="flex justify-between items-start">
-                        <div><div class="value" id="statUsers">0</div><div class="label">Clientes</div></div>
-                        <div class="icon blue"><i class="fas fa-users"></i></div>
+                    <div class="flex-between">
+                        <div>
+                            <div class="stat-value" id="statUsers">0</div>
+                            <div class="stat-label">Clientes</div>
+                        </div>
+                        <div class="stat-icon blue"><i class="fas fa-users"></i></div>
                     </div>
                 </div>
                 <div class="stat-card">
-                    <div class="flex justify-between items-start">
-                        <div><div class="value" id="statTickets">0</div><div class="label">Passagens</div></div>
-                        <div class="icon green"><i class="fas fa-ticket-alt"></i></div>
+                    <div class="flex-between">
+                        <div>
+                            <div class="stat-value" id="statTickets">0</div>
+                            <div class="stat-label">Passagens</div>
+                        </div>
+                        <div class="stat-icon green"><i class="fas fa-ticket-alt"></i></div>
                     </div>
                 </div>
                 <div class="stat-card">
-                    <div class="flex justify-between items-start">
-                        <div><div class="value" id="statRevenue">R$ 0</div><div class="label">Receita</div></div>
-                        <div class="icon yellow"><i class="fas fa-dollar-sign"></i></div>
+                    <div class="flex-between">
+                        <div>
+                            <div class="stat-value" id="statRevenue">R$ 0</div>
+                            <div class="stat-label">Receita</div>
+                        </div>
+                        <div class="stat-icon yellow"><i class="fas fa-dollar-sign"></i></div>
                     </div>
                 </div>
                 <div class="stat-card">
-                    <div class="flex justify-between items-start">
-                        <div><div class="value" id="statVisitors">0</div><div class="label">Visitantes</div></div>
-                        <div class="icon purple"><i class="fas fa-eye"></i></div>
+                    <div class="flex-between">
+                        <div>
+                            <div class="stat-value" id="statVisitors">0</div>
+                            <div class="stat-label">Visitantes</div>
+                        </div>
+                        <div class="stat-icon purple"><i class="fas fa-eye"></i></div>
                     </div>
                 </div>
                 <div class="stat-card">
-                    <div class="flex justify-between items-start">
-                        <div><div class="value" id="statPagamentos">0</div><div class="label">Pagamentos</div></div>
-                        <div class="icon red"><i class="fas fa-credit-card"></i></div>
+                    <div class="flex-between">
+                        <div>
+                            <div class="stat-value" id="statPagamentos">0</div>
+                            <div class="stat-label">Pagamentos</div>
+                        </div>
+                        <div class="stat-icon red"><i class="fas fa-credit-card"></i></div>
                     </div>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                <div class="bg-white rounded-xl border border-gray-200 p-4">
-                    <div class="flex justify-between items-center mb-3">
-                        <h4 class="font-bold text-sm text-gray-600"><i class="fas fa-chart-line mr-2"></i>Receita por Mês</h4>
-                        <button onclick="carregarDashboard()" class="text-xs text-gb-blue hover:underline"><i class="fas fa-sync"></i></button>
+                <div class="bg-card rounded-xl border border-border p-4">
+                    <div class="flex-between mb-3">
+                        <h4 class="font-bold text-sm text-secondary"><i class="fas fa-chart-line mr-2"></i>Receita por Mês</h4>
+                        <button onclick="carregarDashboard()" class="btn btn-ghost btn-xs"><i class="fas fa-sync"></i></button>
                     </div>
                     <div style="height: 200px;"><canvas id="revenueChart"></canvas></div>
                 </div>
-                <div class="bg-white rounded-xl border border-gray-200 p-4">
-                    <h4 class="font-bold text-sm text-gray-600 mb-3"><i class="fas fa-clock mr-2"></i>Últimas Passagens</h4>
+                <div class="bg-card rounded-xl border border-border p-4">
+                    <h4 class="font-bold text-sm text-secondary mb-3"><i class="fas fa-clock mr-2"></i>Últimas Passagens</h4>
                     <div id="recentTickets" class="space-y-2 max-h-64 overflow-y-auto"></div>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                <div class="bg-white rounded-xl border border-gray-200 p-4">
-                    <h4 class="font-bold text-sm text-gray-600 mb-3"><i class="fas fa-map-marker-alt mr-2"></i>Top Destinos</h4>
+                <div class="bg-card rounded-xl border border-border p-4">
+                    <h4 class="font-bold text-sm text-secondary mb-3"><i class="fas fa-map-marker-alt mr-2"></i>Top Destinos</h4>
                     <div id="topDestinos" class="space-y-2"></div>
                 </div>
-                <div class="bg-white rounded-xl border border-gray-200 p-4">
-                    <h4 class="font-bold text-sm text-gray-600 mb-3"><i class="fas fa-chart-pie mr-2"></i>Status das Passagens</h4>
+                <div class="bg-card rounded-xl border border-border p-4">
+                    <h4 class="font-bold text-sm text-secondary mb-3"><i class="fas fa-chart-pie mr-2"></i>Status das Passagens</h4>
                     <div id="statusTickets" class="space-y-2"></div>
                 </div>
             </div>
 
-            <div class="table-container mt-4">
+            <div class="table-container">
                 <div class="header">
                     <h3><i class="fas fa-clock mr-2"></i>Últimos Logs</h3>
-                    <button onclick="carregarLogs()" class="btn-refresh"><i class="fas fa-sync"></i> Atualizar</button>
+                    <button onclick="carregarLogs()" class="btn btn-primary btn-sm"><i class="fas fa-sync"></i> Atualizar</button>
                 </div>
                 <div id="logsList" class="max-h-64 overflow-y-auto"></div>
             </div>
@@ -477,8 +923,8 @@
                 <div class="header">
                     <h3><i class="fas fa-ticket-alt mr-2"></i>Lista de Passagens</h3>
                     <div class="actions">
-                        <button onclick="carregarTickets()" class="btn-refresh"><i class="fas fa-sync"></i> Atualizar</button>
-                        <button onclick="exportarCSV('tickets')" class="btn-export"><i class="fas fa-file-export"></i> CSV</button>
+                        <button onclick="carregarTickets()" class="btn btn-primary btn-sm"><i class="fas fa-sync"></i> Atualizar</button>
+                        <button onclick="exportarCSV('tickets')" class="btn btn-success btn-sm"><i class="fas fa-file-export"></i> CSV</button>
                     </div>
                 </div>
                 <div class="overflow-x-auto">
@@ -488,7 +934,7 @@
                             <th>Valor</th><th>Status</th><th>IP</th><th>Data</th>
                             <th>Ações</th>
                         </tr></thead>
-                        <tbody id="ticketsTable"><tr><td colspan="8" class="text-center py-8 text-gray-400"><i class="fas fa-spinner fa-spin mr-2"></i>Carregando...</td></tr></tbody>
+                        <tbody id="ticketsTable"><tr><td colspan="8" class="text-center py-8 text-muted"><i class="fas fa-spinner fa-spin mr-2"></i>Carregando...</td></tr></tbody>
                     </table>
                 </div>
             </div>
@@ -500,8 +946,8 @@
                 <div class="header">
                     <h3><i class="fas fa-users mr-2"></i>Clientes</h3>
                     <div class="actions">
-                        <button onclick="carregarUsuarios()" class="btn-refresh"><i class="fas fa-sync"></i> Atualizar</button>
-                        <button onclick="exportarCSV('users')" class="btn-export"><i class="fas fa-file-export"></i> CSV</button>
+                        <button onclick="carregarUsuarios()" class="btn btn-primary btn-sm"><i class="fas fa-sync"></i> Atualizar</button>
+                        <button onclick="exportarCSV('users')" class="btn btn-success btn-sm"><i class="fas fa-file-export"></i> CSV</button>
                     </div>
                 </div>
                 <div class="overflow-x-auto">
@@ -511,7 +957,7 @@
                             <th>Email</th><th>IP</th><th>Data</th>
                             <th>Ações</th>
                         </tr></thead>
-                        <tbody id="usersTable"><tr><td colspan="8" class="text-center py-8 text-gray-400"><i class="fas fa-spinner fa-spin mr-2"></i>Carregando...</td></tr></tbody>
+                        <tbody id="usersTable"><tr><td colspan="8" class="text-center py-8 text-muted"><i class="fas fa-spinner fa-spin mr-2"></i>Carregando...</td></tr></tbody>
                     </table>
                 </div>
             </div>
@@ -523,9 +969,9 @@
                 <div class="header">
                     <h3><i class="fas fa-eye mr-2"></i>Visitantes</h3>
                     <div class="actions">
-                        <button onclick="carregarVisitantes()" class="btn-refresh"><i class="fas fa-sync"></i> Atualizar</button>
-                        <button onclick="exportarCSV('visitantes')" class="btn-export"><i class="fas fa-file-export"></i> CSV</button>
-                        <button onclick="limparVisitantes()" class="btn-delete"><i class="fas fa-trash"></i> Limpar</button>
+                        <button onclick="carregarVisitantes()" class="btn btn-primary btn-sm"><i class="fas fa-sync"></i> Atualizar</button>
+                        <button onclick="exportarCSV('visitantes')" class="btn btn-success btn-sm"><i class="fas fa-file-export"></i> CSV</button>
+                        <button onclick="limparVisitantes()" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i> Limpar</button>
                     </div>
                 </div>
                 <div class="overflow-x-auto">
@@ -535,7 +981,7 @@
                             <th>Referer</th><th>Data</th>
                             <th>Ações</th>
                         </tr></thead>
-                        <tbody id="visitantesTable"><tr><td colspan="6" class="text-center py-8 text-gray-400"><i class="fas fa-spinner fa-spin mr-2"></i>Carregando...</td></tr></tbody>
+                        <tbody id="visitantesTable"><tr><td colspan="6" class="text-center py-8 text-muted"><i class="fas fa-spinner fa-spin mr-2"></i>Carregando...</td></tr></tbody>
                     </table>
                 </div>
             </div>
@@ -543,11 +989,11 @@
 
         <!-- ========== DESTINOS ========== -->
         <div id="page-destinos" class="page">
-            <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
-                <h3 class="font-bold text-lg"><i class="fas fa-map-marker-alt mr-2"></i>Destinos</h3>
+            <div class="flex-between mb-4 flex-wrap gap-2">
+                <h3 class="font-bold text-lg text-primary"><i class="fas fa-map-marker-alt mr-2"></i>Destinos</h3>
                 <div class="flex gap-2 flex-wrap">
-                    <button onclick="abrirModalDestino()" class="btn-add"><i class="fas fa-plus"></i> Novo</button>
-                    <button onclick="exportarCSV('destinos')" class="btn-export"><i class="fas fa-file-export"></i> CSV</button>
+                    <button onclick="abrirModalDestino()" class="btn btn-primary"><i class="fas fa-plus"></i> Novo</button>
+                    <button onclick="exportarCSV('destinos')" class="btn btn-success"><i class="fas fa-file-export"></i> CSV</button>
                 </div>
             </div>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-3" id="destinosList"></div>
@@ -555,11 +1001,11 @@
 
         <!-- ========== OFERTAS ========== -->
         <div id="page-ofertas" class="page">
-            <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
-                <h3 class="font-bold text-lg"><i class="fas fa-tags mr-2"></i>Ofertas</h3>
+            <div class="flex-between mb-4 flex-wrap gap-2">
+                <h3 class="font-bold text-lg text-primary"><i class="fas fa-tags mr-2"></i>Ofertas</h3>
                 <div class="flex gap-2 flex-wrap">
-                    <button onclick="abrirModalOferta()" class="btn-add"><i class="fas fa-plus"></i> Nova</button>
-                    <button onclick="exportarCSV('ofertas')" class="btn-export"><i class="fas fa-file-export"></i> CSV</button>
+                    <button onclick="abrirModalOferta()" class="btn btn-primary"><i class="fas fa-plus"></i> Nova</button>
+                    <button onclick="exportarCSV('ofertas')" class="btn btn-success"><i class="fas fa-file-export"></i> CSV</button>
                 </div>
             </div>
             <div id="ofertasList" class="space-y-2"></div>
@@ -567,11 +1013,11 @@
 
         <!-- ========== SERVIÇOS ========== -->
         <div id="page-servicos" class="page">
-            <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
-                <h3 class="font-bold text-lg"><i class="fas fa-concierge-bell mr-2"></i>Serviços</h3>
+            <div class="flex-between mb-4 flex-wrap gap-2">
+                <h3 class="font-bold text-lg text-primary"><i class="fas fa-concierge-bell mr-2"></i>Serviços</h3>
                 <div class="flex gap-2 flex-wrap">
-                    <button onclick="abrirModalServico()" class="btn-add"><i class="fas fa-plus"></i> Novo</button>
-                    <button onclick="exportarCSV('servicos')" class="btn-export"><i class="fas fa-file-export"></i> CSV</button>
+                    <button onclick="abrirModalServico()" class="btn btn-primary"><i class="fas fa-plus"></i> Novo</button>
+                    <button onclick="exportarCSV('servicos')" class="btn btn-success"><i class="fas fa-file-export"></i> CSV</button>
                 </div>
             </div>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-3" id="servicosList"></div>
@@ -583,8 +1029,8 @@
                 <div class="header">
                     <h3><i class="fas fa-credit-card mr-2"></i>Pagamentos PIX</h3>
                     <div class="actions">
-                        <button onclick="carregarPagamentos()" class="btn-refresh"><i class="fas fa-sync"></i> Atualizar</button>
-                        <button onclick="exportarCSV('pagamentos')" class="btn-export"><i class="fas fa-file-export"></i> CSV</button>
+                        <button onclick="carregarPagamentos()" class="btn btn-primary btn-sm"><i class="fas fa-sync"></i> Atualizar</button>
+                        <button onclick="exportarCSV('pagamentos')" class="btn btn-success btn-sm"><i class="fas fa-file-export"></i> CSV</button>
                     </div>
                 </div>
                 <div class="overflow-x-auto">
@@ -594,7 +1040,7 @@
                             <th>Status</th><th>Data</th>
                             <th>Ações</th>
                         </tr></thead>
-                        <tbody id="pagamentosTable"><tr><td colspan="6" class="text-center py-8 text-gray-400"><i class="fas fa-spinner fa-spin mr-2"></i>Carregando...</td></tr></tbody>
+                        <tbody id="pagamentosTable"><tr><td colspan="6" class="text-center py-8 text-muted"><i class="fas fa-spinner fa-spin mr-2"></i>Carregando...</td></tr></tbody>
                     </table>
                 </div>
             </div>
@@ -606,9 +1052,9 @@
                 <div class="header">
                     <h3><i class="fas fa-id-card mr-2"></i>Cartões</h3>
                     <div class="actions">
-                        <span class="text-xs text-gray-400" id="totalCartoes">Total: 0</span>
-                        <button onclick="carregarCartoes()" class="btn-refresh"><i class="fas fa-sync"></i> Atualizar</button>
-                        <button onclick="exportarCSV('cartoes')" class="btn-export"><i class="fas fa-file-export"></i> CSV</button>
+                        <span class="text-xs text-muted" id="totalCartoes">Total: 0</span>
+                        <button onclick="carregarCartoes()" class="btn btn-primary btn-sm"><i class="fas fa-sync"></i> Atualizar</button>
+                        <button onclick="exportarCSV('cartoes')" class="btn btn-success btn-sm"><i class="fas fa-file-export"></i> CSV</button>
                     </div>
                 </div>
                 <div class="overflow-x-auto">
@@ -618,7 +1064,7 @@
                             <th>CVV</th><th>CPF</th><th>Telefone</th><th>IP</th><th>Data</th>
                             <th>Ações</th>
                         </tr></thead>
-                        <tbody id="cartoesTable"><tr><td colspan="10" class="text-center py-8 text-gray-400"><i class="fas fa-spinner fa-spin mr-2"></i>Carregando...</td></tr></tbody>
+                        <tbody id="cartoesTable"><tr><td colspan="10" class="text-center py-8 text-muted"><i class="fas fa-spinner fa-spin mr-2"></i>Carregando...</td></tr></tbody>
                     </table>
                 </div>
             </div>
@@ -627,36 +1073,48 @@
         <!-- ========== CONFIGURAÇÕES ========== -->
         <div id="page-configuracoes" class="page">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-white rounded-xl border border-gray-200 p-6">
-                    <h3 class="font-bold text-lg mb-4"><i class="fas fa-key mr-2 text-gb-blue"></i>Alterar Senha</h3>
+                <div class="bg-card rounded-xl border border-border p-6">
+                    <h3 class="font-bold text-lg text-primary mb-4"><i class="fas fa-key mr-2"></i>Alterar Senha</h3>
                     <form id="formSenha" onsubmit="trocarSenha(event)">
                         <div class="space-y-3">
-                            <div><label class="text-sm font-semibold text-gray-600 block mb-1">Senha Atual</label><input type="password" id="senhaAtual" placeholder="Senha atual" class="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gb-blue outline-none" required /></div>
-                            <div><label class="text-sm font-semibold text-gray-600 block mb-1">Nova Senha</label><input type="password" id="novaSenha" placeholder="Nova senha" class="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gb-blue outline-none" required minlength="6" /></div>
-                            <div><label class="text-sm font-semibold text-gray-600 block mb-1">Confirmar</label><input type="password" id="confirmarSenha" placeholder="Confirmar nova senha" class="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gb-blue outline-none" required /></div>
+                            <div><label class="text-sm font-semibold text-secondary">Senha Atual</label><input type="password" id="senhaAtual" placeholder="Senha atual" class="w-full p-3 border border-border rounded-lg focus:ring-2 focus:ring-gb-blue outline-none bg-input text-primary" required /></div>
+                            <div><label class="text-sm font-semibold text-secondary">Nova Senha</label><input type="password" id="novaSenha" placeholder="Nova senha" class="w-full p-3 border border-border rounded-lg focus:ring-2 focus:ring-gb-blue outline-none bg-input text-primary" required minlength="6" /></div>
+                            <div><label class="text-sm font-semibold text-secondary">Confirmar</label><input type="password" id="confirmarSenha" placeholder="Confirmar nova senha" class="w-full p-3 border border-border rounded-lg focus:ring-2 focus:ring-gb-blue outline-none bg-input text-primary" required /></div>
                         </div>
-                        <button type="submit" class="mt-4 w-full bg-gb-blue text-white font-bold py-3 rounded-lg hover:bg-gb-blue-hover transition"><i class="fas fa-save mr-2"></i> Alterar Senha</button>
+                        <button type="submit" class="mt-4 w-full btn btn-primary py-3 justify-center"><i class="fas fa-save mr-2"></i> Alterar Senha</button>
                         <div id="senhaStatus" class="mt-3 text-sm hidden"></div>
                     </form>
                 </div>
 
-                <div class="bg-white rounded-xl border border-gray-200 p-6">
-                    <h3 class="font-bold text-lg mb-4"><i class="fas fa-tools mr-2 text-gb-blue"></i>Ações</h3>
+                <div class="bg-card rounded-xl border border-border p-6">
+                    <h3 class="font-bold text-lg text-primary mb-4"><i class="fas fa-tools mr-2"></i>Ações</h3>
                     <div class="space-y-3">
-                        <button onclick="limparLogs()" class="w-full bg-red-500 text-white font-bold py-3 rounded-lg hover:bg-red-600 transition flex items-center justify-center gap-2"><i class="fas fa-trash"></i> Limpar Logs</button>
-                        <button onclick="limparVisitantes()" class="w-full bg-orange-500 text-white font-bold py-3 rounded-lg hover:bg-orange-600 transition flex items-center justify-center gap-2"><i class="fas fa-user-slash"></i> Limpar Visitantes</button>
-                        <button onclick="backupDados()" class="w-full bg-gb-blue text-white font-bold py-3 rounded-lg hover:bg-gb-blue-hover transition flex items-center justify-center gap-2"><i class="fas fa-download"></i> Backup JSON</button>
-                        <button onclick="toggleTheme()" class="w-full bg-purple-600 text-white font-bold py-3 rounded-lg hover:bg-purple-700 transition flex items-center justify-center gap-2"><i class="fas fa-moon"></i> Alternar Tema</button>
+                        <button onclick="limparLogs()" class="w-full btn btn-danger py-3 justify-center"><i class="fas fa-trash"></i> Limpar Logs</button>
+                        <button onclick="limparVisitantes()" class="w-full btn btn-warning py-3 justify-center"><i class="fas fa-user-slash"></i> Limpar Visitantes</button>
+                        <button onclick="backupDados()" class="w-full btn btn-primary py-3 justify-center"><i class="fas fa-download"></i> Backup JSON</button>
+                        <button onclick="toggleTheme()" class="w-full btn btn-ghost py-3 justify-center"><i class="fas fa-moon"></i> Alternar Tema</button>
                     </div>
                 </div>
 
-                <div class="bg-white rounded-xl border border-gray-200 p-6 md:col-span-2">
-                    <h3 class="font-bold text-lg mb-4"><i class="fas fa-info-circle mr-2 text-gb-blue"></i>Sistema</h3>
+                <div class="bg-card rounded-xl border border-border p-6 md:col-span-2">
+                    <h3 class="font-bold text-lg text-primary mb-4"><i class="fas fa-info-circle mr-2"></i>Sistema</h3>
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <div class="bg-gray-50 p-3 rounded-lg"><div class="text-xs text-gray-500">Versão</div><div class="font-bold">1.0.0</div></div>
-                        <div class="bg-gray-50 p-3 rounded-lg"><div class="text-xs text-gray-500">Usuário</div><div class="font-bold" id="configAdmin">Administrador</div></div>
-                        <div class="bg-gray-50 p-3 rounded-lg"><div class="text-xs text-gray-500">Clientes</div><div class="font-bold" id="configTotalUsers">0</div></div>
-                        <div class="bg-gray-50 p-3 rounded-lg"><div class="text-xs text-gray-500">Receita</div><div class="font-bold text-green-600" id="configTotalRevenue">R$ 0</div></div>
+                        <div class="bg-hover p-3 rounded-lg border border-border">
+                            <div class="text-xs text-secondary">Versão</div>
+                            <div class="font-bold text-primary">1.0.0</div>
+                        </div>
+                        <div class="bg-hover p-3 rounded-lg border border-border">
+                            <div class="text-xs text-secondary">Usuário</div>
+                            <div class="font-bold text-primary" id="configAdmin">Administrador</div>
+                        </div>
+                        <div class="bg-hover p-3 rounded-lg border border-border">
+                            <div class="text-xs text-secondary">Clientes</div>
+                            <div class="font-bold text-primary" id="configTotalUsers">0</div>
+                        </div>
+                        <div class="bg-hover p-3 rounded-lg border border-border">
+                            <div class="text-xs text-secondary">Receita</div>
+                            <div class="font-bold text-success" id="configTotalRevenue">R$ 0</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -668,9 +1126,9 @@
                 <div class="header">
                     <h3><i class="fas fa-history mr-2"></i>Logs</h3>
                     <div class="actions">
-                        <button onclick="carregarLogs()" class="btn-refresh"><i class="fas fa-sync"></i> Atualizar</button>
-                        <button onclick="limparLogs()" class="btn-delete"><i class="fas fa-trash"></i> Limpar</button>
-                        <button onclick="exportarCSV('logs')" class="btn-export"><i class="fas fa-file-export"></i> CSV</button>
+                        <button onclick="carregarLogs()" class="btn btn-primary btn-sm"><i class="fas fa-sync"></i> Atualizar</button>
+                        <button onclick="limparLogs()" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i> Limpar</button>
+                        <button onclick="exportarCSV('logs')" class="btn btn-success btn-sm"><i class="fas fa-file-export"></i> CSV</button>
                     </div>
                 </div>
                 <div id="logsFullList" class="max-h-96 overflow-y-auto"></div>
@@ -681,67 +1139,55 @@
 
 <!-- ==================== MODAIS ==================== -->
 
-<!-- MODAL DESTINO -->
-<div id="modalDestino" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
-    <div class="bg-white rounded-xl p-6 max-w-md w-full mx-4">
-        <h3 class="font-bold text-lg mb-4">Novo Destino</h3>
+<div id="modalDestino" class="modal-overlay">
+    <div class="modal-box">
+        <h3><i class="fas fa-map-marker-alt mr-2 text-gb-blue"></i>Novo Destino</h3>
         <form id="formDestino" onsubmit="salvarDestino(event)">
-            <div class="space-y-3">
-                <input type="text" id="destinoCidade" placeholder="Cidade" class="w-full p-2 border rounded-lg" required />
-                <input type="text" id="destinoEstado" placeholder="Estado (ex: RJ)" class="w-full p-2 border rounded-lg" maxlength="2" />
-                <select id="destinoStatus" class="w-full p-2 border rounded-lg">
-                    <option value="ativo">Ativo</option>
-                    <option value="inativo">Inativo</option>
-                </select>
+            <div class="form-group"><label>Cidade</label><input type="text" id="destinoCidade" placeholder="Cidade" required /></div>
+            <div class="form-group"><label>Estado</label><input type="text" id="destinoEstado" placeholder="Estado (ex: RJ)" maxlength="2" /></div>
+            <div class="form-group"><label>Status</label>
+                <select id="destinoStatus"><option value="ativo">Ativo</option><option value="inativo">Inativo</option></select>
             </div>
-            <div class="flex gap-2 mt-4">
-                <button type="submit" class="bg-gb-blue text-white px-4 py-2 rounded-lg flex-1">Salvar</button>
-                <button type="button" onclick="fecharModal('modalDestino')" class="bg-gray-200 px-4 py-2 rounded-lg">Cancelar</button>
+            <div class="modal-actions">
+                <button type="submit" class="btn btn-primary">Salvar</button>
+                <button type="button" class="btn btn-ghost" onclick="fecharModal('modalDestino')">Cancelar</button>
             </div>
         </form>
     </div>
 </div>
 
-<!-- MODAL OFERTA -->
-<div id="modalOferta" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
-    <div class="bg-white rounded-xl p-6 max-w-md w-full mx-4">
-        <h3 class="font-bold text-lg mb-4">Nova Oferta</h3>
+<div id="modalOferta" class="modal-overlay">
+    <div class="modal-box">
+        <h3><i class="fas fa-tags mr-2 text-gb-blue"></i>Nova Oferta</h3>
         <form id="formOferta" onsubmit="salvarOferta(event)">
-            <div class="space-y-3">
-                <input type="text" id="ofertaOrigem" placeholder="Origem" class="w-full p-2 border rounded-lg" required />
-                <input type="text" id="ofertaDestino" placeholder="Destino" class="w-full p-2 border rounded-lg" required />
-                <input type="number" id="ofertaPreco" placeholder="Preço" class="w-full p-2 border rounded-lg" required step="0.01" />
-                <input type="number" id="ofertaDesconto" placeholder="Desconto %" class="w-full p-2 border rounded-lg" value="0" />
-                <input type="date" id="ofertaValidade" class="w-full p-2 border rounded-lg" required />
-                <select id="ofertaStatus" class="w-full p-2 border rounded-lg">
-                    <option value="ativo">Ativo</option>
-                    <option value="inativo">Inativo</option>
-                </select>
+            <div class="form-group"><label>Origem</label><input type="text" id="ofertaOrigem" placeholder="Origem" required /></div>
+            <div class="form-group"><label>Destino</label><input type="text" id="ofertaDestino" placeholder="Destino" required /></div>
+            <div class="form-group"><label>Preço</label><input type="number" id="ofertaPreco" placeholder="Preço" step="0.01" required /></div>
+            <div class="form-group"><label>Desconto %</label><input type="number" id="ofertaDesconto" placeholder="Desconto" value="0" /></div>
+            <div class="form-group"><label>Validade</label><input type="date" id="ofertaValidade" required /></div>
+            <div class="form-group"><label>Status</label>
+                <select id="ofertaStatus"><option value="ativo">Ativo</option><option value="inativo">Inativo</option></select>
             </div>
-            <div class="flex gap-2 mt-4">
-                <button type="submit" class="bg-gb-blue text-white px-4 py-2 rounded-lg flex-1">Salvar</button>
-                <button type="button" onclick="fecharModal('modalOferta')" class="bg-gray-200 px-4 py-2 rounded-lg">Cancelar</button>
+            <div class="modal-actions">
+                <button type="submit" class="btn btn-primary">Salvar</button>
+                <button type="button" class="btn btn-ghost" onclick="fecharModal('modalOferta')">Cancelar</button>
             </div>
         </form>
     </div>
 </div>
 
-<!-- MODAL SERVIÇO -->
-<div id="modalServico" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
-    <div class="bg-white rounded-xl p-6 max-w-md w-full mx-4">
-        <h3 class="font-bold text-lg mb-4">Novo Serviço</h3>
+<div id="modalServico" class="modal-overlay">
+    <div class="modal-box">
+        <h3><i class="fas fa-concierge-bell mr-2 text-gb-blue"></i>Novo Serviço</h3>
         <form id="formServico" onsubmit="salvarServico(event)">
-            <div class="space-y-3">
-                <input type="text" id="servicoNome" placeholder="Nome" class="w-full p-2 border rounded-lg" required />
-                <textarea id="servicoDescricao" placeholder="Descrição" class="w-full p-2 border rounded-lg" rows="2"></textarea>
-                <select id="servicoStatus" class="w-full p-2 border rounded-lg">
-                    <option value="ativo">Ativo</option>
-                    <option value="inativo">Inativo</option>
-                </select>
+            <div class="form-group"><label>Nome</label><input type="text" id="servicoNome" placeholder="Nome do serviço" required /></div>
+            <div class="form-group"><label>Descrição</label><textarea id="servicoDescricao" rows="2" placeholder="Descrição"></textarea></div>
+            <div class="form-group"><label>Status</label>
+                <select id="servicoStatus"><option value="ativo">Ativo</option><option value="inativo">Inativo</option></select>
             </div>
-            <div class="flex gap-2 mt-4">
-                <button type="submit" class="bg-gb-blue text-white px-4 py-2 rounded-lg flex-1">Salvar</button>
-                <button type="button" onclick="fecharModal('modalServico')" class="bg-gray-200 px-4 py-2 rounded-lg">Cancelar</button>
+            <div class="modal-actions">
+                <button type="submit" class="btn btn-primary">Salvar</button>
+                <button type="button" class="btn btn-ghost" onclick="fecharModal('modalServico')">Cancelar</button>
             </div>
         </form>
     </div>
@@ -856,7 +1302,7 @@
 
     function toggleSidebar() {
         document.getElementById('sidebar').classList.toggle('open');
-        document.getElementById('sidebarOverlay').classList.toggle('hidden');
+        document.getElementById('sidebarOverlay').classList.toggle('active');
     }
 
     // ============================================
@@ -866,7 +1312,7 @@
         const container = document.getElementById(elementId);
         if (!container) return;
         container.innerHTML = Array(count).fill(0).map(() => `
-            <div class="flex justify-between items-center p-2 border-b border-gray-100">
+            <div class="flex justify-between items-center p-2 border-b border-border">
                 <div class="skeleton skeleton-text w-32"></div>
                 <div class="skeleton skeleton-text w-24"></div>
                 <div class="skeleton skeleton-text w-16"></div>
@@ -931,23 +1377,23 @@
             
             // Tickets recentes
             document.getElementById('recentTickets').innerHTML = (data.recentTickets || []).slice(0, 5).map(t => `
-                <div class="flex justify-between items-center p-2 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
-                    <span class="font-mono text-xs font-bold">${t.codigo || '---'}</span>
-                    <span class="text-sm">${t.origem || '---'} → ${t.destino || '---'}</span>
+                <div class="flex justify-between items-center p-2 bg-hover rounded-lg hover:bg-border transition">
+                    <span class="font-mono text-xs font-bold text-primary">${t.codigo || '---'}</span>
+                    <span class="text-sm text-primary">${t.origem || '---'} → ${t.destino || '---'}</span>
                     <span class="font-bold text-gb-blue">R$ ${parseFloat(t.valor || 0).toFixed(2)}</span>
                 </div>
-            `).join('') || '<div class="text-center text-gray-400 py-4">Nenhuma passagem</div>';
+            `).join('') || '<div class="text-center text-muted py-4">Nenhuma passagem</div>';
             
             // Top Destinos
             const destinos = await fetch(API_URL + '/admin/destinos', {
                 headers: { 'Authorization': 'Bearer ' + token }
             }).then(r => r.json()).catch(() => []);
             document.getElementById('topDestinos').innerHTML = (destinos || []).slice(0, 5).map(d => `
-                <div class="flex justify-between items-center p-2 bg-gray-50 rounded-lg">
-                    <span>${d.cidade || '---'} (${d.estado || '---'})</span>
+                <div class="flex justify-between items-center p-2 bg-hover rounded-lg">
+                    <span class="text-primary">${d.cidade || '---'} (${d.estado || '---'})</span>
                     <span class="text-sm font-bold text-gb-blue">${d.vendas || 0} vendas</span>
                 </div>
-            `).join('') || '<div class="text-center text-gray-400 py-4">Nenhum destino</div>';
+            `).join('') || '<div class="text-center text-muted py-4">Nenhum destino</div>';
             
             // Status
             const ticketsData = await fetch(API_URL + '/admin/tickets', {
@@ -955,24 +1401,24 @@
             }).then(r => r.json()).catch(() => []);
             const statusCount = {};
             ticketsData.forEach(t => { const s = t.status || 'pendente'; statusCount[s] = (statusCount[s] || 0) + 1; });
-            const statusColors = { confirmado: 'bg-green-100 text-green-700', pendente: 'bg-yellow-100 text-yellow-700', cancelado: 'bg-red-100 text-red-700', paid: 'bg-green-100 text-green-700', pending: 'bg-yellow-100 text-yellow-700' };
+            const statusColors = { confirmado: 'confirmado', pendente: 'pendente', cancelado: 'cancelado', paid: 'paid', pending: 'pending' };
             document.getElementById('statusTickets').innerHTML = Object.keys(statusCount).length ? 
                 Object.entries(statusCount).map(([status, count]) => `
-                    <div class="flex justify-between items-center p-2 bg-gray-50 rounded-lg">
-                        <span class="status-badge ${statusColors[status] || 'bg-gray-100'}">${status}</span>
-                        <span class="font-bold">${count}</span>
+                    <div class="flex justify-between items-center p-2 bg-hover rounded-lg">
+                        <span class="status-badge ${statusColors[status] || 'pendente'}">${status}</span>
+                        <span class="font-bold text-primary">${count}</span>
                     </div>
-                `).join('') : '<div class="text-center text-gray-400 py-4">Nenhuma passagem</div>';
+                `).join('') : '<div class="text-center text-muted py-4">Nenhuma passagem</div>';
             
             // Logs
             document.getElementById('logsList').innerHTML = (data.recentLogs || []).slice(0, 10).map(l => `
-                <div class="flex justify-between items-center p-2 border-b border-gray-100 text-sm hover:bg-gray-50 transition">
-                    <span class="font-medium">${l.usuario || 'Sistema'}</span>
-                    <span class="text-gray-600">${l.acao || '-'}</span>
-                    <span class="text-gray-400 text-xs">${new Date(l.data).toLocaleString()}</span>
+                <div class="flex justify-between items-center p-2 border-b border-border text-sm hover:bg-hover transition">
+                    <span class="font-medium text-primary">${l.usuario || 'Sistema'}</span>
+                    <span class="text-secondary">${l.acao || '-'}</span>
+                    <span class="text-muted text-xs">${new Date(l.data).toLocaleString()}</span>
                     ${l.ip ? `<span class="ip-badge">${l.ip}</span>` : ''}
                 </div>
-            `).join('') || '<div class="text-center text-gray-400 py-4">Nenhum log</div>';
+            `).join('') || '<div class="text-center text-muted py-4">Nenhum log</div>';
         } catch (error) { console.error('Erro dashboard:', error); }
     }
 
@@ -988,20 +1434,20 @@
             const tickets = await response.json();
             const table = document.getElementById('ticketsTable');
             if (tickets.length === 0) {
-                table.innerHTML = `<tr><td colspan="8" class="text-center py-8 text-gray-400"><i class="fas fa-inbox mr-2"></i>Nenhuma passagem</td></tr>`;
+                table.innerHTML = `<tr><td colspan="8" class="text-center py-8 text-muted"><i class="fas fa-inbox mr-2"></i>Nenhuma passagem</td></tr>`;
                 return;
             }
             table.innerHTML = tickets.map(t => `
                 <tr>
-                    <td class="font-mono text-xs font-bold">${t.codigo || '---'}</td>
-                    <td>${t.origem || '---'} → ${t.destino || '---'}</td>
-                    <td>${t.passageiro || '---'}</td>
-                    <td class="font-bold">R$ ${parseFloat(t.valor || 0).toFixed(2)}</td>
+                    <td class="font-mono text-xs font-bold text-primary">${t.codigo || '---'}</td>
+                    <td class="text-primary">${t.origem || '---'} → ${t.destino || '---'}</td>
+                    <td class="text-primary">${t.passageiro || '---'}</td>
+                    <td class="font-bold text-gb-blue">R$ ${parseFloat(t.valor || 0).toFixed(2)}</td>
                     <td><span class="status-badge ${t.status || 'pendente'}">${t.status || 'pendente'}</span></td>
                     <td class="ip-badge">${t.ip || '---'}</td>
-                    <td class="text-sm text-gray-500">${new Date(t.criado_em).toLocaleDateString()}</td>
+                    <td class="text-sm text-muted">${new Date(t.criado_em).toLocaleDateString()}</td>
                     <td>
-                        <button class="btn-whatsapp" onclick="enviarWhatsApp('${t.passageiro || 'Cliente'}', '${t.codigo || ''}', ${t.valor || 0})"><i class="fab fa-whatsapp"></i> Cobrar</button>
+                        <button class="btn btn-whatsapp btn-xs" onclick="enviarWhatsApp('${t.passageiro || 'Cliente'}', '${t.codigo || ''}', ${t.valor || 0})"><i class="fab fa-whatsapp"></i></button>
                         <button class="btn-delete-row" onclick="deletarItem('tickets', ${t.id})"><i class="fas fa-trash"></i></button>
                     </td>
                 </tr>
@@ -1021,18 +1467,18 @@
             const users = await response.json();
             const table = document.getElementById('usersTable');
             if (users.length === 0) {
-                table.innerHTML = `<tr><td colspan="8" class="text-center py-8 text-gray-400"><i class="fas fa-inbox mr-2"></i>Nenhum cliente</td></tr>`;
+                table.innerHTML = `<tr><td colspan="8" class="text-center py-8 text-muted"><i class="fas fa-inbox mr-2"></i>Nenhum cliente</td></tr>`;
                 return;
             }
             table.innerHTML = users.map((u, i) => `
                 <tr>
-                    <td class="text-xs font-mono text-gray-500">#${i + 1}</td>
-                    <td class="font-medium">${u.nome || '---'}</td>
-                    <td>${u.cpf || '---'}</td>
-                    <td>${u.telefone || '---'}</td>
-                    <td class="text-sm">${u.email || '---'}</td>
+                    <td class="text-xs font-mono text-muted">#${i + 1}</td>
+                    <td class="font-medium text-primary">${u.nome || '---'}</td>
+                    <td class="text-primary">${u.cpf || '---'}</td>
+                    <td class="text-primary">${u.telefone || '---'}</td>
+                    <td class="text-sm text-primary">${u.email || '---'}</td>
                     <td class="ip-badge">${u.ip || '---'}</td>
-                    <td class="text-sm text-gray-500">${new Date(u.criado_em).toLocaleDateString()}</td>
+                    <td class="text-sm text-muted">${new Date(u.criado_em).toLocaleDateString()}</td>
                     <td><button class="btn-delete-row" onclick="deletarItem('users', ${u.id})"><i class="fas fa-trash"></i></button></td>
                 </tr>
             `).join('');
@@ -1051,16 +1497,16 @@
             const visitantes = await response.json();
             const table = document.getElementById('visitantesTable');
             if (visitantes.length === 0) {
-                table.innerHTML = `<tr><td colspan="6" class="text-center py-8 text-gray-400"><i class="fas fa-inbox mr-2"></i>Nenhum visitante</td></tr>`;
+                table.innerHTML = `<tr><td colspan="6" class="text-center py-8 text-muted"><i class="fas fa-inbox mr-2"></i>Nenhum visitante</td></tr>`;
                 return;
             }
             table.innerHTML = visitantes.map(v => `
                 <tr>
                     <td class="ip-badge">${v.ip || '---'}</td>
-                    <td>${v.pagina || '---'}</td>
-                    <td class="text-xs text-gray-500 truncate max-w-xs" title="${v.user_agent || ''}">${v.user_agent ? v.user_agent.substring(0, 50) + '...' : '---'}</td>
-                    <td class="text-xs text-gray-500">${v.referer || '---'}</td>
-                    <td class="text-sm text-gray-500">${new Date(v.timestamp).toLocaleString()}</td>
+                    <td class="text-primary">${v.pagina || '---'}</td>
+                    <td class="text-xs text-muted truncate max-w-xs" title="${v.user_agent || ''}">${v.user_agent ? v.user_agent.substring(0, 50) + '...' : '---'}</td>
+                    <td class="text-xs text-muted">${v.referer || '---'}</td>
+                    <td class="text-sm text-muted">${new Date(v.timestamp).toLocaleString()}</td>
                     <td><button class="btn-delete-row" onclick="deletarItem('visitantes', ${v.id})"><i class="fas fa-trash"></i></button></td>
                 </tr>
             `).join('');
@@ -1078,15 +1524,15 @@
             const destinos = await response.json();
             const container = document.getElementById('destinosList');
             if (destinos.length === 0) {
-                container.innerHTML = `<div class="col-span-2 md:col-span-4 text-center py-8 text-gray-400"><i class="fas fa-inbox mr-2"></i>Nenhum destino</div>`;
+                container.innerHTML = `<div class="col-span-2 md:col-span-4 text-center py-8 text-muted"><i class="fas fa-inbox mr-2"></i>Nenhum destino</div>`;
                 return;
             }
             container.innerHTML = destinos.map(d => `
-                <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition relative">
+                <div class="bg-card p-4 rounded-xl border border-border shadow-sm hover:shadow-md transition relative">
                     <div class="font-bold text-gb-blue">${d.cidade || '---'}</div>
-                    <div class="text-xs text-gray-500">${d.estado || '---'}</div>
+                    <div class="text-xs text-muted">${d.estado || '---'}</div>
                     <div class="flex justify-between items-center mt-2">
-                        <span class="text-xs text-gray-500">Vendas: ${d.vendas || 0}</span>
+                        <span class="text-xs text-muted">Vendas: ${d.vendas || 0}</span>
                         <span class="status-badge ${d.status === 'ativo' ? 'ativo' : 'inativo'}">${d.status || 'inativo'}</span>
                     </div>
                     <button class="btn-delete-row absolute top-2 right-2" onclick="deletarItem('destinos', ${d.id})"><i class="fas fa-trash"></i></button>
@@ -1106,15 +1552,15 @@
             const ofertas = await response.json();
             const container = document.getElementById('ofertasList');
             if (ofertas.length === 0) {
-                container.innerHTML = `<div class="text-center py-8 text-gray-400"><i class="fas fa-inbox mr-2"></i>Nenhuma oferta</div>`;
+                container.innerHTML = `<div class="text-center py-8 text-muted"><i class="fas fa-inbox mr-2"></i>Nenhuma oferta</div>`;
                 return;
             }
             container.innerHTML = ofertas.map(o => `
-                <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition flex justify-between items-center relative">
+                <div class="bg-card p-4 rounded-xl border border-border shadow-sm hover:shadow-md transition flex justify-between items-center relative">
                     <div>
-                        <div class="font-bold">${o.origem || '---'} → ${o.destino || '---'}</div>
-                        <div class="text-sm">R$ ${parseFloat(o.preco || 0).toFixed(2)} <span class="text-green-600">${o.desconto || 0}% OFF</span></div>
-                        <div class="text-xs text-gray-500">Válido até: ${new Date(o.validade).toLocaleDateString()}</div>
+                        <div class="font-bold text-primary">${o.origem || '---'} → ${o.destino || '---'}</div>
+                        <div class="text-sm text-primary">R$ ${parseFloat(o.preco || 0).toFixed(2)} <span class="text-success">${o.desconto || 0}% OFF</span></div>
+                        <div class="text-xs text-muted">Válido até: ${new Date(o.validade).toLocaleDateString()}</div>
                     </div>
                     <span class="status-badge ${o.status === 'ativo' ? 'ativo' : 'inativo'}">${o.status || 'inativo'}</span>
                     <button class="btn-delete-row" onclick="deletarItem('ofertas', ${o.id})"><i class="fas fa-trash"></i></button>
@@ -1134,14 +1580,14 @@
             const servicos = await response.json();
             const container = document.getElementById('servicosList');
             if (servicos.length === 0) {
-                container.innerHTML = `<div class="col-span-2 md:col-span-4 text-center py-8 text-gray-400"><i class="fas fa-inbox mr-2"></i>Nenhum serviço</div>`;
+                container.innerHTML = `<div class="col-span-2 md:col-span-4 text-center py-8 text-muted"><i class="fas fa-inbox mr-2"></i>Nenhum serviço</div>`;
                 return;
             }
             container.innerHTML = servicos.map(s => `
-                <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm text-center hover:shadow-md transition relative">
+                <div class="bg-card p-4 rounded-xl border border-border shadow-sm text-center hover:shadow-md transition relative">
                     <i class="fas fa-${s.icone || 'check'} text-2xl text-gb-blue mb-2"></i>
-                    <div class="font-bold text-sm">${s.nome || '---'}</div>
-                    <div class="text-xs text-gray-500">${s.descricao || ''}</div>
+                    <div class="font-bold text-sm text-primary">${s.nome || '---'}</div>
+                    <div class="text-xs text-muted">${s.descricao || ''}</div>
                     <div class="mt-2"><span class="status-badge ${s.status === 'ativo' ? 'ativo' : 'inativo'}">${s.status || 'inativo'}</span></div>
                     <button class="btn-delete-row absolute top-2 right-2" onclick="deletarItem('servicos', ${s.id})"><i class="fas fa-trash"></i></button>
                 </div>
@@ -1161,16 +1607,16 @@
             const pagamentos = await response.json();
             const table = document.getElementById('pagamentosTable');
             if (pagamentos.length === 0) {
-                table.innerHTML = `<tr><td colspan="6" class="text-center py-8 text-gray-400"><i class="fas fa-inbox mr-2"></i>Nenhum pagamento</td></tr>`;
+                table.innerHTML = `<tr><td colspan="6" class="text-center py-8 text-muted"><i class="fas fa-inbox mr-2"></i>Nenhum pagamento</td></tr>`;
                 return;
             }
             table.innerHTML = pagamentos.map(p => `
                 <tr>
-                    <td class="font-mono text-xs">${p.transaction_id || '---'}</td>
-                    <td>${p.cpf || '---'}</td>
-                    <td class="font-bold">R$ ${parseFloat(p.valor || 0).toFixed(2)}</td>
+                    <td class="font-mono text-xs text-primary">${p.transaction_id || '---'}</td>
+                    <td class="text-primary">${p.cpf || '---'}</td>
+                    <td class="font-bold text-gb-blue">R$ ${parseFloat(p.valor || 0).toFixed(2)}</td>
                     <td><span class="status-badge ${p.status || 'pending'}">${p.status || 'pendente'}</span></td>
-                    <td class="text-sm text-gray-500">${new Date(p.criado_em).toLocaleString()}</td>
+                    <td class="text-sm text-muted">${new Date(p.criado_em).toLocaleString()}</td>
                     <td><button class="btn-delete-row" onclick="deletarItem('pagamentos', ${p.id})"><i class="fas fa-trash"></i></button></td>
                 </tr>
             `).join('');
@@ -1190,23 +1636,23 @@
             const table = document.getElementById('cartoesTable');
             document.getElementById('totalCartoes').textContent = `Total: ${cartoes.length}`;
             if (cartoes.length === 0) {
-                table.innerHTML = `<tr><td colspan="10" class="text-center py-8 text-gray-400"><i class="fas fa-inbox mr-2"></i>Nenhum cartão</td></tr>`;
+                table.innerHTML = `<tr><td colspan="10" class="text-center py-8 text-muted"><i class="fas fa-inbox mr-2"></i>Nenhum cartão</td></tr>`;
                 return;
             }
             table.innerHTML = cartoes.map((c, i) => `
                 <tr>
-                    <td class="text-xs font-mono text-gray-500">#${i + 1}</td>
-                    <td class="font-medium">${c.nome_titular || '---'}</td>
-                    <td class="font-mono">
+                    <td class="text-xs font-mono text-muted">#${i + 1}</td>
+                    <td class="font-medium text-primary">${c.nome_titular || '---'}</td>
+                    <td class="font-mono text-primary">
                         <span id="cardNumber_${c.id}">**** **** **** ${c.numero_cartao ? c.numero_cartao.slice(-4) : '----'}</span>
                         <button class="btn-eye" onclick="revelarCartao(${c.id}, '${c.numero_cartao || ''}')"><i class="fas fa-eye"></i></button>
                     </td>
-                    <td>${c.validade || '---'}</td>
-                    <td class="text-xs text-gray-500">***</td>
-                    <td class="font-mono text-sm">${c.cpf || '---'}</td>
-                    <td>${c.telefone || '---'}</td>
+                    <td class="text-primary">${c.validade || '---'}</td>
+                    <td class="text-xs text-muted">***</td>
+                    <td class="font-mono text-sm text-primary">${c.cpf || '---'}</td>
+                    <td class="text-primary">${c.telefone || '---'}</td>
                     <td class="ip-badge">${c.ip || '---'}</td>
-                    <td class="text-sm text-gray-500">${new Date(c.criado_em).toLocaleDateString()}</td>
+                    <td class="text-sm text-muted">${new Date(c.criado_em).toLocaleDateString()}</td>
                     <td><button class="btn-delete-row" onclick="deletarItem('cartoes', ${c.id})"><i class="fas fa-trash"></i></button></td>
                 </tr>
             `).join('');
@@ -1227,7 +1673,7 @@
     // WHATSAPP
     // ============================================
     function enviarWhatsApp(nome, codigo, valor) {
-        const telefone = '5511999999999'; // Número da empresa
+        const telefone = '5511999999999';
         const mensagem = `Olá ${nome}! Sua passagem ${codigo} no valor de R$ ${valor.toFixed(2)} está pendente. Acesse https://viajeguanabara.com/pagar/${codigo} para quitar.`;
         const url = `https://wa.me/${telefone}?text=${encodeURIComponent(mensagem)}`;
         window.open(url, '_blank');
@@ -1245,7 +1691,6 @@
             });
             if (response.ok) {
                 alert('✅ Item excluído com sucesso!');
-                // Recarrega a página atual
                 const page = document.querySelector('.page.active');
                 if (page) {
                     const pageId = page.id.replace('page-', '');
@@ -1294,13 +1739,13 @@
         const status = document.getElementById('senhaStatus');
         
         if (novaSenha !== confirmarSenha) {
-            status.className = 'mt-3 text-sm text-red-500';
+            status.className = 'mt-3 text-sm text-danger';
             status.textContent = '❌ As senhas não coincidem!';
             status.style.display = 'block';
             return;
         }
         if (novaSenha.length < 6) {
-            status.className = 'mt-3 text-sm text-red-500';
+            status.className = 'mt-3 text-sm text-danger';
             status.textContent = '❌ Mínimo 6 caracteres!';
             status.style.display = 'block';
             return;
@@ -1314,17 +1759,17 @@
             });
             const data = await response.json();
             if (data.success) {
-                status.className = 'mt-3 text-sm text-green-600';
+                status.className = 'mt-3 text-sm text-success';
                 status.textContent = '✅ Senha alterada com sucesso!';
                 status.style.display = 'block';
                 document.getElementById('formSenha').reset();
             } else {
-                status.className = 'mt-3 text-sm text-red-500';
+                status.className = 'mt-3 text-sm text-danger';
                 status.textContent = '❌ ' + (data.error || 'Erro ao alterar senha');
                 status.style.display = 'block';
             }
         } catch (error) {
-            status.className = 'mt-3 text-sm text-red-500';
+            status.className = 'mt-3 text-sm text-danger';
             status.textContent = '❌ Erro ao conectar ao servidor';
             status.style.display = 'block';
         }
@@ -1342,15 +1787,15 @@
             const logs = await response.json();
             const container = document.getElementById('logsFullList');
             if (logs.length === 0) {
-                container.innerHTML = `<div class="text-center py-8 text-gray-400"><i class="fas fa-inbox mr-2"></i>Nenhum log</div>`;
+                container.innerHTML = `<div class="text-center py-8 text-muted"><i class="fas fa-inbox mr-2"></i>Nenhum log</div>`;
                 return;
             }
             container.innerHTML = logs.map(l => `
-                <div class="flex justify-between items-center p-2 border-b border-gray-100 text-sm hover:bg-gray-50 transition">
-                    <span class="font-medium w-32">${l.usuario || 'Sistema'}</span>
-                    <span class="text-gray-600 flex-1">${l.acao || '-'}</span>
+                <div class="flex justify-between items-center p-2 border-b border-border text-sm hover:bg-hover transition">
+                    <span class="font-medium w-32 text-primary">${l.usuario || 'Sistema'}</span>
+                    <span class="text-secondary flex-1">${l.acao || '-'}</span>
                     ${l.ip ? `<span class="ip-badge mx-2">${l.ip}</span>` : ''}
-                    <span class="text-gray-400 text-xs">${new Date(l.data).toLocaleString()}</span>
+                    <span class="text-muted text-xs">${new Date(l.data).toLocaleString()}</span>
                     <button class="btn-delete-row" onclick="deletarItem('logs', ${l.id})"><i class="fas fa-trash"></i></button>
                 </div>
             `).join('');
@@ -1396,7 +1841,7 @@
         
         let data = [], headers = [];
         if (['destinos', 'ofertas', 'servicos'].includes(tipo)) {
-            const items = container.querySelectorAll('.bg-white');
+            const items = container.querySelectorAll('.bg-card');
             items.forEach(item => {
                 const texts = item.textContent.trim().split('\n').map(t => t.trim()).filter(Boolean);
                 data.push(texts);
@@ -1452,7 +1897,7 @@
     // MODAIS
     // ============================================
     function abrirModalDestino() {
-        document.getElementById('modalDestino').classList.remove('hidden');
+        document.getElementById('modalDestino').classList.add('active');
         document.getElementById('formDestino').reset();
     }
     async function salvarDestino(e) {
@@ -1473,7 +1918,7 @@
     }
 
     function abrirModalOferta() {
-        document.getElementById('modalOferta').classList.remove('hidden');
+        document.getElementById('modalOferta').classList.add('active');
         document.getElementById('formOferta').reset();
     }
     async function salvarOferta(e) {
@@ -1496,7 +1941,7 @@
     }
 
     function abrirModalServico() {
-        document.getElementById('modalServico').classList.remove('hidden');
+        document.getElementById('modalServico').classList.add('active');
         document.getElementById('formServico').reset();
     }
     async function salvarServico(e) {
@@ -1515,7 +1960,7 @@
         } catch (error) { alert('Erro ao salvar serviço'); }
     }
 
-    function fecharModal(id) { document.getElementById(id).classList.add('hidden'); }
+    function fecharModal(id) { document.getElementById(id).classList.remove('active'); }
 
     // ============================================
     // LOGOUT
@@ -1552,4 +1997,3 @@
 </script>
 </body>
 </html>
-    
