@@ -390,14 +390,14 @@
             display: inline-block;
         }
 
-        /* ========== BUTTONS - MAIORES ========== */
+        /* ========== BUTTONS ========== */
         .btn {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            padding: 8px 18px;
+            gap: 6px;
+            padding: 7px 16px;
             border-radius: 8px;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 600;
             border: none;
             cursor: pointer;
@@ -408,23 +408,12 @@
         .btn-primary:hover { background: rgba(255,255,255,0.15); }
         .btn-success { background: rgba(16,185,129,0.15); color: #10b981; border: 1px solid rgba(16,185,129,0.2); }
         .btn-success:hover { background: rgba(16,185,129,0.2); }
-        .btn-danger { background: rgba(239,68,68,0.15); color: #ef4444; border: 1px solid rgba(239,68,68,0.2); padding: 8px 18px; }
+        .btn-danger { background: rgba(239,68,68,0.15); color: #ef4444; border: 1px solid rgba(239,68,68,0.2); }
         .btn-danger:hover { background: rgba(239,68,68,0.25); }
-        .btn-whatsapp { background: rgba(37,211,102,0.15); color: #25D366; border: 1px solid rgba(37,211,102,0.2); padding: 8px 18px; }
+        .btn-whatsapp { background: rgba(37,211,102,0.15); color: #25D366; border: 1px solid rgba(37,211,102,0.2); }
         .btn-whatsapp:hover { background: rgba(37,211,102,0.25); }
-        .btn-eye { 
-            background: rgba(255,255,255,0.08); 
-            color: #fff; 
-            padding: 8px 14px; 
-            border-radius: 6px; 
-            font-size: 13px; 
-            border: 1px solid rgba(255,255,255,0.1); 
-            cursor: pointer; 
-            transition: all 0.2s; 
-        }
-        .btn-eye:hover { background: rgba(255,255,255,0.15); }
-        .btn-xs { padding: 4px 12px; font-size: 11px; }
-        .btn-sm { padding: 6px 14px; font-size: 12px; }
+        .btn-sm { padding: 5px 14px; font-size: 12px; }
+        .btn-xs { padding: 3px 10px; font-size: 11px; }
 
         /* ========== TOAST ========== */
         .toast {
@@ -468,7 +457,7 @@
             .stat-card .value { font-size: 22px; }
             .topbar .btn-toggle { display: block; }
             .topbar { padding: 12px 16px; }
-            .btn { padding: 6px 14px; font-size: 12px; }
+            .btn { padding: 5px 12px; font-size: 11px; }
         }
         @media (min-width: 769px) {
             .menu-toggle { display: none; }
@@ -487,11 +476,6 @@
             border: 1px solid rgba(255,255,255,0.1);
         }
         .menu-toggle i { color: white; font-size: 20px; }
-        
-        .card-number-revealed {
-            color: #fff !important;
-            font-weight: 600 !important;
-        }
     </style>
 </head>
 <body>
@@ -753,7 +737,7 @@
             </div>
         </div>
 
-        <!-- ========== CARTÕES ========== -->
+        <!-- ========== CARTÕES (CORRIGIDO - CVV NA COLUNA CERTA) ========== -->
         <div id="page-cartoes" class="page">
             <div class="table-container">
                 <div class="header">
@@ -767,11 +751,20 @@
                 <div class="overflow-x-auto">
                     <table>
                         <thead><tr>
-                            <th>ID</th><th>Titular</th><th>Número</th><th>Validade</th>
-                            <th>CVV</th><th>CPF</th><th>Telefone</th><th>IP</th><th>Data</th>
+                            <th>ID</th>
+                            <th>Titular</th>
+                            <th>Número</th>
+                            <th>Validade</th>
+                            <th>CVV</th>
+                            <th>CPF</th>
+                            <th>Telefone</th>
+                            <th>IP</th>
+                            <th>Data</th>
                             <th>Ações</th>
                         </tr></thead>
-                        <tbody id="cartoesTable"><tr><td colspan="10" class="text-center py-8 text-gray-500"><i class="fas fa-spinner fa-spin mr-2"></i>Carregando...</td></tr></tbody>
+                        <tbody id="cartoesTable">
+                            <tr><td colspan="10" class="text-center py-8 text-gray-500"><i class="fas fa-spinner fa-spin mr-2"></i>Carregando...</td></tr>
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -910,7 +903,7 @@
 <!-- ========== SCRIPTS ========== -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
-    // ========== CANVAS 3D (ESTRELAS) ==========
+    // ========== CANVAS 3D ==========
     const canvas = document.getElementById('bgCanvas');
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -1080,7 +1073,6 @@
             showSkeleton('recentTickets', 3);
             const token = localStorage.getItem('admin_token');
             
-            // Tenta buscar dados reais, se falhar usa mock
             let data = null;
             try {
                 const response = await fetch('/api/admin/dashboard', {
@@ -1093,7 +1085,6 @@
                 console.log('Usando dados mock para dashboard');
             }
             
-            // Se não tiver dados, cria mock
             if (!data) {
                 data = {
                     stats: {
@@ -1113,7 +1104,6 @@
             document.getElementById('statRevenue').textContent = 'R$ ' + (data.stats?.totalRevenue || 0).toFixed(2);
             document.getElementById('statVisitors').textContent = data.stats?.totalVisitantes || 0;
             
-            // Gráfico
             const ctx = document.getElementById('revenueChart').getContext('2d');
             if (window.revenueChart) window.revenueChart.destroy();
             
@@ -1144,7 +1134,6 @@
                 }
             });
             
-            // Tickets recentes - usa mock se não tiver dados
             const recentTickets = data.recentTickets || [];
             document.getElementById('recentTickets').innerHTML = recentTickets.length > 0 ? 
                 recentTickets.slice(0, 5).map(t => `
@@ -1156,7 +1145,6 @@
                 `).join('') : 
                 '<div class="text-center text-gray-500 py-4">Nenhuma passagem recente</div>';
             
-            // Logs
             const logs = data.recentLogs || [];
             document.getElementById('logsList').innerHTML = logs.length > 0 ?
                 logs.slice(0, 10).map(l => `
@@ -1170,7 +1158,6 @@
                 '<div class="text-center text-gray-500 py-4">Nenhum log disponível</div>';
         } catch (error) { 
             console.error('Erro dashboard:', error);
-            // Mostra mensagem amigável
             document.getElementById('recentTickets').innerHTML = '<div class="text-center text-gray-500 py-4">Erro ao carregar dados</div>';
         }
     }
@@ -1371,7 +1358,7 @@
         } catch (error) { console.error('Erro pagamentos:', error); }
     }
 
-    // ========== CARTÕES (COM CVV AO REVELAR) ==========
+    // ========== CARTÕES (CORRIGIDO - CVV NA COLUNA CERTA) ==========
     async function carregarCartoes() {
         try {
             const token = localStorage.getItem('admin_token');
@@ -1381,21 +1368,25 @@
             const cartoes = await response.json();
             const table = document.getElementById('cartoesTable');
             document.getElementById('totalCartoes').textContent = `Total: ${cartoes ? cartoes.length : 0}`;
+            
             if (!cartoes || cartoes.length === 0) {
                 table.innerHTML = `<tr><td colspan="10" class="text-center py-8 text-gray-500">Nenhum cartão cadastrado</td></tr>`;
                 return;
             }
+            
             table.innerHTML = cartoes.map((c, i) => `
                 <tr>
                     <td class="text-xs text-gray-500">#${i + 1}</td>
                     <td class="font-medium text-white">${c.nome_titular || '---'}</td>
                     <td class="font-mono">
                         <span id="cardNumber_${c.id}" class="text-gray-300">**** **** **** ${c.numero_cartao ? c.numero_cartao.slice(-4) : '----'}</span>
-                        <span id="cardCvv_${c.id}" class="text-gray-500 text-xs ml-2" style="display:none;">CVV: ${c.cvv || '***'}</span>
-                        <button class="btn btn-primary btn-sm ml-2" onclick="revelarCartao(${c.id}, '${c.numero_cartao || ''}', '${c.cvv || ''}')"><i class="fas fa-eye"></i> Ver</button>
+                        <button class="btn btn-primary btn-sm ml-2" onclick="revelarNumero(${c.id}, '${c.numero_cartao || ''}')"><i class="fas fa-eye"></i> Ver</button>
                     </td>
                     <td class="text-gray-300">${c.validade || '---'}</td>
-                    <td class="text-xs text-gray-500">***</td>
+                    <td class="font-mono">
+                        <span id="cardCvv_${c.id}" class="text-gray-500">***</span>
+                        <button class="btn btn-primary btn-sm ml-2" onclick="revelarCvv(${c.id}, '${c.cvv || ''}')"><i class="fas fa-eye"></i> Ver</button>
+                    </td>
                     <td class="font-mono text-sm text-gray-300">${c.cpf || '---'}</td>
                     <td class="text-gray-300">${c.telefone || '---'}</td>
                     <td class="ip-badge">${c.ip || '---'}</td>
@@ -1409,22 +1400,29 @@
         }
     }
 
-    function revelarCartao(id, numero, cvv) {
-        const numEl = document.getElementById('cardNumber_' + id);
-        const cvvEl = document.getElementById('cardCvv_' + id);
-        if (!numEl) return;
-        
-        if (numEl.textContent.includes('****')) {
-            numEl.textContent = numero || 'Número não disponível';
-            numEl.className = 'text-white font-bold';
-            if (cvvEl) {
-                cvvEl.style.display = 'inline';
-                cvvEl.textContent = 'CVV: ' + (cvv || '***');
-            }
+    // Revelar NÚMERO do cartão
+    function revelarNumero(id, numero) {
+        const el = document.getElementById('cardNumber_' + id);
+        if (!el) return;
+        if (el.textContent.includes('****')) {
+            el.textContent = numero || 'Número não disponível';
+            el.className = 'text-white font-bold';
         } else {
-            numEl.textContent = '**** **** **** ' + (numero ? numero.slice(-4) : '----');
-            numEl.className = 'text-gray-300';
-            if (cvvEl) cvvEl.style.display = 'none';
+            el.textContent = '**** **** **** ' + (numero ? numero.slice(-4) : '----');
+            el.className = 'text-gray-300';
+        }
+    }
+
+    // Revelar CVV do cartão
+    function revelarCvv(id, cvv) {
+        const el = document.getElementById('cardCvv_' + id);
+        if (!el) return;
+        if (el.textContent === '***') {
+            el.textContent = cvv || 'CVV não disponível';
+            el.className = 'text-white font-bold';
+        } else {
+            el.textContent = '***';
+            el.className = 'text-gray-500';
         }
     }
 
