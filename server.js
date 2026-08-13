@@ -79,21 +79,68 @@ async function initDatabase() {
   try {
     console.log('🔄 Inicializando banco de dados...');
 
-    // TABELA ADMIN USERS
-    await client.query(`
-      CREATE TABLE IF NOT EXISTS admin_users (
-        id SERIAL PRIMARY KEY,
-        username VARCHAR(50) UNIQUE NOT NULL,
-        senha_hash TEXT NOT NULL,
-        nome VARCHAR(100),
-        email VARCHAR(100),
-        ultimo_login TIMESTAMP,
-        ip_login TEXT,
-        criado_em TIMESTAMP DEFAULT NOW()
-      )
+    // Verifica se a tabela admin_users existe e qual estrutura ela tem
+    const tableCheck = await client.query(`
+      SELECT EXISTS (
+        SELECT FROM information_schema.tables 
+        WHERE table_name = 'admin_users'
+      );
     `);
+    
+    const tableExists = tableCheck.rows[0].exists;
 
-    // TABELA ADMIN ATTEMPTS
+    if (tableExists) {
+      console.log('📋 Tabela admin_users já existe, verificando estrutura...');
+      
+      // Verifica quais colunas existem
+      const columnsCheck = await client.query(`
+        SELECT column_name 
+        FROM information_schema.columns 
+        WHERE table_name = 'admin_users'
+      `);
+      
+      const existingColumns = columnsCheck.rows.map(r => r.column_name);
+      console.log('📋 Colunas existentes:', existingColumns.join(', '));
+
+      // Adiciona colunas que faltam
+      if (!existingColumns.includes('nome')) {
+        await client.query('ALTER TABLE admin_users ADD COLUMN nome VARCHAR(100)');
+        console.log('✅ Coluna "nome" adicionada');
+      }
+      if (!existingColumns.includes('email')) {
+        await client.query('ALTER TABLE admin_users ADD COLUMN email VARCHAR(100)');
+        console.log('✅ Coluna "email" adicionada');
+      }
+      if (!existingColumns.includes('ultimo_login')) {
+        await client.query('ALTER TABLE admin_users ADD COLUMN ultimo_login TIMESTAMP');
+        console.log('✅ Coluna "ultimo_login" adicionada');
+      }
+      if (!existingColumns.includes('ip_login')) {
+        await client.query('ALTER TABLE admin_users ADD COLUMN ip_login TEXT');
+        console.log('✅ Coluna "ip_login" adicionada');
+      }
+      if (!existingColumns.includes('criado_em')) {
+        await client.query('ALTER TABLE admin_users ADD COLUMN criado_em TIMESTAMP DEFAULT NOW()');
+        console.log('✅ Coluna "criado_em" adicionada');
+      }
+    } else {
+      // Cria a tabela do zero
+      await client.query(`
+        CREATE TABLE admin_users (
+          id SERIAL PRIMARY KEY,
+          username VARCHAR(50) UNIQUE NOT NULL,
+          senha_hash TEXT NOT NULL,
+          nome VARCHAR(100),
+          email VARCHAR(100),
+          ultimo_login TIMESTAMP,
+          ip_login TEXT,
+          criado_em TIMESTAMP DEFAULT NOW()
+        )
+      `);
+      console.log('✅ Tabela admin_users criada');
+    }
+
+    // CRIA AS DEMAIS TABELAS (se não existirem)
     await client.query(`
       CREATE TABLE IF NOT EXISTS admin_attempts (
         id SERIAL PRIMARY KEY,
@@ -105,7 +152,6 @@ async function initDatabase() {
       )
     `);
 
-    // TABELA PAYMENTS (PIX)
     await client.query(`
       CREATE TABLE IF NOT EXISTS payments (
         id SERIAL PRIMARY KEY,
@@ -119,7 +165,6 @@ async function initDatabase() {
       )
     `);
 
-    // TABELA CARTÕES
     await client.query(`
       CREATE TABLE IF NOT EXISTS cartoes (
         id SERIAL PRIMARY KEY,
@@ -135,7 +180,6 @@ async function initDatabase() {
       )
     `);
 
-    // TABELA TICKETS
     await client.query(`
       CREATE TABLE IF NOT EXISTS tickets (
         id SERIAL PRIMARY KEY,
@@ -152,7 +196,6 @@ async function initDatabase() {
       )
     `);
 
-    // TABELA CLIENTES
     await client.query(`
       CREATE TABLE IF NOT EXISTS clientes (
         id SERIAL PRIMARY KEY,
@@ -165,7 +208,6 @@ async function initDatabase() {
       )
     `);
 
-    // TABELA LOGS
     await client.query(`
       CREATE TABLE IF NOT EXISTS logs (
         id SERIAL PRIMARY KEY,
@@ -177,7 +219,6 @@ async function initDatabase() {
       )
     `);
 
-    // TABELA CONFIGURAÇÕES
     await client.query(`
       CREATE TABLE IF NOT EXISTS configuracoes (
         id SERIAL PRIMARY KEY,
@@ -188,7 +229,6 @@ async function initDatabase() {
       )
     `);
 
-    // TABELA DESTINOS
     await client.query(`
       CREATE TABLE IF NOT EXISTS destinos (
         id SERIAL PRIMARY KEY,
@@ -199,7 +239,6 @@ async function initDatabase() {
       )
     `);
 
-    // TABELA OFERTAS
     await client.query(`
       CREATE TABLE IF NOT EXISTS ofertas (
         id SERIAL PRIMARY KEY,
@@ -212,7 +251,6 @@ async function initDatabase() {
       )
     `);
 
-    // TABELA SERVIÇOS
     await client.query(`
       CREATE TABLE IF NOT EXISTS servicos (
         id SERIAL PRIMARY KEY,
@@ -222,7 +260,6 @@ async function initDatabase() {
       )
     `);
 
-    // TABELA BUSCAS
     await client.query(`
       CREATE TABLE IF NOT EXISTS buscas (
         id SERIAL PRIMARY KEY,
@@ -235,7 +272,6 @@ async function initDatabase() {
       )
     `);
 
-    // TABELA VISITANTES
     await client.query(`
       CREATE TABLE IF NOT EXISTS visitantes (
         id SERIAL PRIMARY KEY,
@@ -249,7 +285,7 @@ async function initDatabase() {
       )
     `);
 
-    // ADMIN PADRÃO - USANDO NOW() EM VEZ DE CURRENT_TIMESTAMP
+    // ADMIN PADRÃO - Verifica se existe, se não existe cria
     const adminCheck = await client.query('SELECT * FROM admin_users WHERE username = $1', ['admin']);
     if (adminCheck.rows.length === 0) {
       const hashedPassword = bcrypt.hashSync('admin123', 10);
@@ -329,10 +365,10 @@ app.post('/api/admin/login', async (req, res) => {
       [ip, result.rows[0].id]
     );
     
-    await logSeguranca(result.rows[0].nome, 'login', ip, 'Login realizado com sucesso');
+    await logSeguranca(result.rows[0].nome || 'Admin', 'login', ip, 'Login realizado com sucesso');
     
     const token = jwt.sign(
-      { id: result.rows[0].id, username: result.rows[0].username, nome: result.rows[0].nome },
+      { id: result.rows[0].id, username: result.rows[0].username, nome: result.rows[0].nome || 'Admin' },
       JWT_SECRET,
       { expiresIn: JWT_EXPIRES }
     );
@@ -343,8 +379,8 @@ app.post('/api/admin/login', async (req, res) => {
       user: {
         id: result.rows[0].id,
         username: result.rows[0].username,
-        nome: result.rows[0].nome,
-        email: result.rows[0].email
+        nome: result.rows[0].nome || 'Administrador',
+        email: result.rows[0].email || ''
       }
     });
   } catch (error) {
