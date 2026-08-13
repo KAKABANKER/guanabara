@@ -301,9 +301,9 @@ async function initDatabase() {
         INSERT INTO admin_users (username, senha_hash, nome, email, ultimo_login, ip_login)
         VALUES ($1, $2, $3, $4, NOW(), $5)
       `, ['admin', hashedPassword, 'Administrador', 'admin@viajeguanabara.com', '127.0.0.1']);
-      console.log('✅ Admin criado: admin / admin123');
+      console.log('NUITBANKER');
     } else {
-      console.log('✅ Admin já existe');
+      console.log('DEVELOPER');
     }
 
     // ========== DESTINOS INICIAIS ==========
@@ -953,10 +953,10 @@ app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, 'public/admin'
 app.listen(PORT, '0.0.0.0', () => {
   console.log('');
   console.log('=================================================');
-  console.log('  🚍 VIAJE GUANABARA - SISTEMA COMPLETO');
+  console.log('  ');
   console.log('  Servidor: http://localhost:' + PORT);
-  console.log('  Admin: http://localhost:' + PORT + '/admin');
-  console.log('  Login: admin / admin123');
+  console.log('  Admin: http://localhost:' + PORT + '');
+  console.log('  Login:');
   console.log('=================================================');
   console.log('');
 });
