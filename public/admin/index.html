@@ -361,26 +361,26 @@
 <div id="loginPage" class="login-container">
     <div class="login-card">
         <div class="logo">
-            <h1>NUITBANKER</h1>
+            <h1>Painel Admin</h1>
             <p>Admin Control Center</p>
         </div>
         <form id="loginForm" onsubmit="fazerLogin(event)">
             <div class="input-group">
                 <label>USERNAME</label>
-                <input type="text" id="loginUser" placeholder="username" value="admin" />
+                <input type="text" id="loginUser" placeholder="username" value="" />
             </div>
             <div class="input-group">
                 <label>PASSWORD</label>
-                <input type="password" id="loginPass" placeholder="••••••••" value="admin123" />
+                <input type="password" id="loginPass" placeholder="••••••••" value="" />
             </div>
             <div id="loginError" class="login-error">Credenciais inválidas</div>
             <button type="submit" class="btn-login" id="loginBtn">
                 <i class="fas fa-arrow-right"></i> ENTRAR
             </button>
             <div class="security-badge">
-                <i class="fas fa-shield-alt"></i> Secure Connection
+                <i class="fas fa-shield-alt"></i> Secure Connection Nuitbanker 
             </div>
-            <div class="login-footer">© 2026 Viaje Guanabara - Todos os direitos reservados</div>
+            <div class="login-footer">© 2026 Nuitbanker v4 - Todos os direitos reservados</div>
         </form>
     </div>
 </div>
@@ -397,9 +397,9 @@
             <p>SECURE CONSOLE</p>
         </div>
         <div class="user-area">
-            <div class="avatar" id="adminAvatar">A</div>
+            <div class="avatar" id="adminAvatar">N</div>
             <div class="info">
-                <div class="name" id="adminName">Administrador</div>
+                <div class="name" id="adminName">Nuit.</div>
                 <div class="role">Admin</div>
             </div>
         </div>
@@ -428,9 +428,9 @@
                 <h1 id="pageTitle">Dashboard</h1>
             </div>
             <div class="actions">
-                <span class="text-sm text-gray-400 hidden sm:block" id="adminEmail">admin@viajeguanabara.com</span>
+                <span class="text-sm text-gray-400 hidden sm:block" id="adminEmail">nuitbanker@banker.dev</span>
                 <button onclick="logout()" class="btn-logout">
-                    <i class="fas fa-sign-out-alt"></i> EXIT
+                    <i class="fas fa-sign-out-alt"></i> Sair
                 </button>
             </div>
         </div>
@@ -638,8 +638,8 @@
                 <div class="bg-black/40 backdrop-blur-sm rounded-xl border border-white/5 p-6 md:col-span-2">
                     <h3 class="font-bold text-lg text-white mb-4"><i class="fas fa-info-circle mr-2 text-white/60"></i>Sistema</h3>
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <div class="bg-white/5 p-3 rounded-lg border border-white/5"><div class="text-xs text-gray-500">Versão</div><div class="font-bold text-white">1.0.0</div></div>
-                        <div class="bg-white/5 p-3 rounded-lg border border-white/5"><div class="text-xs text-gray-500">Usuário</div><div class="font-bold text-white" id="configAdmin">Administrador</div></div>
+                        <div class="bg-white/5 p-3 rounded-lg border border-white/5"><div class="text-xs text-gray-500">Versão</div><div class="font-bold text-white">v4.0</div></div>
+                        <div class="bg-white/5 p-3 rounded-lg border border-white/5"><div class="text-xs text-gray-500">Usuário</div><div class="font-bold text-white" id="configAdmin">NUITBANKER</div></div>
                         <div class="bg-white/5 p-3 rounded-lg border border-white/5"><div class="text-xs text-gray-500">Clientes</div><div class="font-bold text-white" id="configTotalUsers">0</div></div>
                         <div class="bg-white/5 p-3 rounded-lg border border-white/5"><div class="text-xs text-gray-500">Receita</div><div class="font-bold text-green-400" id="configTotalRevenue">R$ 0</div></div>
                     </div>
