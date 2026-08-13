@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* ========== RESET E BASE ========== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
             font-family: 'Outfit', sans-serif; 
@@ -19,7 +18,6 @@
             overflow-x: hidden;
         }
 
-        /* ========== CANVAS 3D (ESTRELAS) ========== */
         #bgCanvas {
             position: fixed;
             top: 0;
@@ -30,13 +28,11 @@
             pointer-events: none;
         }
 
-        /* ========== SCROLLBAR ========== */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); border-radius: 10px; }
         ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.3); }
 
-        /* ========== LOGIN ========== */
         .login-container {
             position: fixed;
             top: 0;
@@ -60,29 +56,15 @@
             backdrop-filter: blur(20px);
         }
         .login-card .logo { text-align: center; margin-bottom: 24px; }
-        .login-card .logo h1 {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 28px;
-            font-weight: 700;
-            letter-spacing: -1px;
-        }
-        .login-card .logo p {
-            color: rgba(255, 255, 255, 0.45);
-            font-size: 13px;
-        }
+        .login-card .logo h1 { color: rgba(255,255,255,0.9); font-size: 28px; font-weight: 700; letter-spacing: -1px; }
+        .login-card .logo p { color: rgba(255,255,255,0.45); font-size: 13px; }
         .login-card .input-group { margin-bottom: 16px; }
-        .login-card .input-group label {
-            display: block;
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 12px;
-            margin-bottom: 6px;
-            letter-spacing: 1px;
-        }
+        .login-card .input-group label { display: block; color: rgba(255,255,255,0.5); font-size: 12px; margin-bottom: 6px; letter-spacing: 1px; }
         .login-card .input-group input {
             width: 100%;
             padding: 12px 16px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
             border-radius: 8px;
             color: #fff;
             font-size: 14px;
@@ -91,8 +73,8 @@
         }
         .login-card .input-group input:focus {
             outline: none;
-            border-color: rgba(255, 255, 255, 0.2);
-            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.08);
         }
         .login-card .btn-login {
             width: 100%;
@@ -108,82 +90,38 @@
             transition: all 0.3s;
             margin-top: 8px;
         }
-        .login-card .btn-login:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(255,255,255,0.1);
-        }
-        .login-card .login-error {
-            color: #f87171;
-            font-size: 13px;
-            text-align: center;
-            margin-top: 12px;
-            display: none;
-        }
+        .login-card .btn-login:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(255,255,255,0.1); }
+        .login-card .login-error { color: #f87171; font-size: 13px; text-align: center; margin-top: 12px; display: none; }
         .login-card .login-error.show { display: block; }
-        .login-card .login-footer {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 11px;
-            color: rgba(255, 255, 255, 0.25);
-            padding-top: 16px;
-            border-top: 1px solid rgba(255, 255, 255, 0.06);
-        }
-        .login-card .security-badge {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            margin-top: 16px;
-            color: rgba(255, 255, 255, 0.25);
-            font-size: 11px;
-        }
+        .login-card .login-footer { text-align: center; margin-top: 20px; font-size: 11px; color: rgba(255,255,255,0.25); padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.06); }
+        .login-card .security-badge { display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 16px; color: rgba(255,255,255,0.25); font-size: 11px; }
 
-        /* ========== ADMIN PANEL ========== */
-        .admin-panel {
-            display: none;
-            position: relative;
-            z-index: 10;
-            min-height: 100vh;
-        }
+        .admin-panel { display: none; position: relative; z-index: 10; min-height: 100vh; }
         .admin-panel.visible { display: block; }
 
-        /* ========== SIDEBAR ========== */
         .sidebar {
             position: fixed;
             left: 0;
             top: 0;
             width: 260px;
             height: 100vh;
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(0,0,0,0.6);
             backdrop-filter: blur(20px);
-            border-right: 1px solid rgba(255, 255, 255, 0.06);
+            border-right: 1px solid rgba(255,255,255,0.06);
             padding: 28px 16px;
             z-index: 100;
             overflow-y: auto;
             transition: transform 0.3s ease;
         }
-        .sidebar .logo-area {
-            text-align: center;
-            margin-bottom: 32px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-        }
-        .sidebar .logo-area h2 {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 22px;
-            font-weight: 700;
-        }
-        .sidebar .logo-area p {
-            color: rgba(255, 255, 255, 0.35);
-            font-size: 11px;
-            margin-top: 4px;
-        }
+        .sidebar .logo-area { text-align: center; margin-bottom: 32px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+        .sidebar .logo-area h2 { color: rgba(255,255,255,0.9); font-size: 22px; font-weight: 700; }
+        .sidebar .logo-area p { color: rgba(255,255,255,0.35); font-size: 11px; margin-top: 4px; }
         .sidebar .user-area {
             padding: 12px 16px;
             margin-bottom: 24px;
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(255,255,255,0.03);
             border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255,255,255,0.04);
             display: flex;
             align-items: center;
             gap: 12px;
@@ -210,7 +148,7 @@
             align-items: center;
             gap: 14px;
             padding: 10px 16px;
-            color: rgba(255, 255, 255, 0.5);
+            color: rgba(255,255,255,0.5);
             text-decoration: none;
             border-radius: 10px;
             transition: all 0.2s;
@@ -219,23 +157,11 @@
             cursor: pointer;
         }
         .sidebar .menu a i { width: 20px; text-align: center; font-size: 15px; }
-        .sidebar .menu a:hover {
-            background: rgba(255, 255, 255, 0.05);
-            color: rgba(255, 255, 255, 0.9);
-        }
-        .sidebar .menu a.active {
-            background: rgba(255, 255, 255, 0.08);
-            color: #fff;
-        }
-        .sidebar .menu .logout {
-            margin-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.06);
-            padding-top: 16px;
-            color: #ef4444;
-        }
+        .sidebar .menu a:hover { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.9); }
+        .sidebar .menu a.active { background: rgba(255,255,255,0.08); color: #fff; }
+        .sidebar .menu .logout { margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 16px; color: #ef4444; }
         .sidebar .menu .logout:hover { color: #ef4444; background: rgba(239,68,68,0.1); }
 
-        /* ========== MAIN CONTENT ========== */
         .main-content {
             margin-left: 260px;
             padding: 24px 32px;
@@ -247,44 +173,29 @@
             align-items: center;
             margin-bottom: 28px;
             padding: 16px 24px;
-            background: rgba(0, 0, 0, 0.4);
+            background: rgba(0,0,0,0.4);
             backdrop-filter: blur(10px);
             border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255,255,255,0.06);
             flex-wrap: wrap;
             gap: 12px;
         }
-        .topbar h1 {
-            font-size: 20px;
-            font-weight: 700;
-            color: rgba(255, 255, 255, 0.9);
-        }
+        .topbar h1 { font-size: 20px; font-weight: 700; color: rgba(255,255,255,0.9); }
         .topbar .actions { display: flex; gap: 12px; align-items: center; }
-        .topbar .btn-toggle {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 22px;
-            color: #fff;
-            cursor: pointer;
-        }
+        .topbar .btn-toggle { display: none; background: none; border: none; font-size: 22px; color: #fff; cursor: pointer; }
         .topbar .btn-logout {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
             padding: 8px 20px;
             border-radius: 8px;
-            color: rgba(255, 255, 255, 0.7);
+            color: rgba(255,255,255,0.7);
             cursor: pointer;
             font-family: 'Outfit', sans-serif;
             font-size: 13px;
             transition: all 0.2s;
         }
-        .topbar .btn-logout:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
-        }
+        .topbar .btn-logout:hover { background: rgba(255,255,255,0.1); color: #fff; }
 
-        /* ========== STATS ========== */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -292,56 +203,36 @@
             margin-bottom: 28px;
         }
         .stat-card {
-            background: rgba(0, 0, 0, 0.4);
+            background: rgba(0,0,0,0.4);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255,255,255,0.06);
             border-radius: 12px;
             padding: 20px;
             transition: all 0.3s;
         }
-        .stat-card:hover {
-            transform: translateY(-4px);
-            border-color: rgba(255, 255, 255, 0.12);
-        }
-        .stat-card .value {
-            font-size: 28px;
-            font-weight: 700;
-            color: #fff;
-        }
-        .stat-card .label {
-            color: rgba(255, 255, 255, 0.45);
-            font-size: 12px;
-            margin-top: 4px;
-        }
-        .stat-card .icon {
-            float: right;
-            font-size: 24px;
-            color: rgba(255, 255, 255, 0.15);
-        }
+        .stat-card:hover { transform: translateY(-4px); border-color: rgba(255,255,255,0.12); }
+        .stat-card .value { font-size: 28px; font-weight: 700; color: #fff; }
+        .stat-card .label { color: rgba(255,255,255,0.45); font-size: 12px; margin-top: 4px; }
+        .stat-card .icon { float: right; font-size: 24px; color: rgba(255,255,255,0.15); }
 
-        /* ========== TABLES ========== */
         .table-container {
-            background: rgba(0, 0, 0, 0.4);
+            background: rgba(0,0,0,0.4);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255,255,255,0.06);
             border-radius: 12px;
             overflow: hidden;
             margin-top: 20px;
         }
         .table-container .header {
             padding: 16px 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            border-bottom: 1px solid rgba(255,255,255,0.06);
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
             gap: 8px;
         }
-        .table-container .header h3 {
-            font-weight: 600;
-            font-size: 15px;
-            color: rgba(255, 255, 255, 0.8);
-        }
+        .table-container .header h3 { font-weight: 600; font-size: 15px; color: rgba(255,255,255,0.8); }
         .table-container .header .actions { display: flex; gap: 8px; flex-wrap: wrap; }
         .table-container table { width: 100%; border-collapse: collapse; }
         .table-container table th {
@@ -349,22 +240,21 @@
             padding: 12px 16px;
             font-size: 11px;
             font-weight: 600;
-            color: rgba(255, 255, 255, 0.4);
+            color: rgba(255,255,255,0.4);
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-            background: rgba(255, 255, 255, 0.02);
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            background: rgba(255,255,255,0.02);
         }
         .table-container table td {
             padding: 12px 16px;
             font-size: 13px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-            color: rgba(255, 255, 255, 0.7);
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            color: rgba(255,255,255,0.7);
         }
         .table-container table tr:last-child td { border-bottom: none; }
-        .table-container table tr:hover td { background: rgba(255, 255, 255, 0.03); }
+        .table-container table tr:hover td { background: rgba(255,255,255,0.03); }
 
-        /* ========== BADGES ========== */
         .status-badge {
             padding: 4px 12px;
             border-radius: 20px;
@@ -390,7 +280,6 @@
             display: inline-block;
         }
 
-        /* ========== BUTTONS ========== */
         .btn {
             display: inline-flex;
             align-items: center;
@@ -415,12 +304,11 @@
         .btn-sm { padding: 5px 14px; font-size: 12px; }
         .btn-xs { padding: 3px 10px; font-size: 11px; }
 
-        /* ========== TOAST ========== */
         .toast {
             position: fixed;
             bottom: 30px;
             right: 30px;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0,0,0,0.8);
             backdrop-filter: blur(20px);
             border-left: 3px solid;
             padding: 14px 24px;
@@ -435,33 +323,20 @@
             to { opacity: 1; transform: translateX(0); }
         }
 
-        /* ========== PAGES ========== */
         .page { display: none; }
         .page.active { display: block; }
 
-        /* ========== RESPONSIVE ========== */
         @media (max-width: 768px) {
-            .sidebar {
-                transform: translateX(-100%);
-                width: 280px;
-            }
+            .sidebar { transform: translateX(-100%); width: 280px; }
             .sidebar.open { transform: translateX(0); }
-            .main-content {
-                margin-left: 0;
-                padding: 16px;
-            }
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 12px;
-            }
+            .main-content { margin-left: 0; padding: 16px; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
             .stat-card .value { font-size: 22px; }
             .topbar .btn-toggle { display: block; }
             .topbar { padding: 12px 16px; }
             .btn { padding: 5px 12px; font-size: 11px; }
         }
-        @media (min-width: 769px) {
-            .menu-toggle { display: none; }
-        }
+        @media (min-width: 769px) { .menu-toggle { display: none; } }
         .menu-toggle {
             display: none;
             position: fixed;
@@ -480,7 +355,6 @@
 </head>
 <body>
 
-<!-- ========== CANVAS 3D ========== -->
 <canvas id="bgCanvas"></canvas>
 
 <!-- ========== LOGIN ========== -->
@@ -517,7 +391,6 @@
         <i class="fas fa-bars"></i>
     </div>
 
-    <!-- SIDEBAR -->
     <div class="sidebar" id="sidebar">
         <div class="logo-area">
             <h2>NUITBANKER</h2>
@@ -546,7 +419,6 @@
         </ul>
     </div>
 
-    <!-- MAIN CONTENT -->
     <div class="main-content">
         <div class="topbar">
             <div class="flex items-center gap-3">
@@ -566,26 +438,10 @@
         <!-- ========== DASHBOARD ========== -->
         <div id="page-dashboard" class="page active">
             <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="value" id="statUsers">0</div>
-                    <div class="label">Clientes</div>
-                    <div class="icon"><i class="fas fa-users"></i></div>
-                </div>
-                <div class="stat-card">
-                    <div class="value" id="statTickets">0</div>
-                    <div class="label">Passagens</div>
-                    <div class="icon"><i class="fas fa-ticket-alt"></i></div>
-                </div>
-                <div class="stat-card">
-                    <div class="value" id="statRevenue">R$ 0</div>
-                    <div class="label">Receita</div>
-                    <div class="icon"><i class="fas fa-dollar-sign"></i></div>
-                </div>
-                <div class="stat-card">
-                    <div class="value" id="statVisitors">0</div>
-                    <div class="label">Visitantes</div>
-                    <div class="icon"><i class="fas fa-eye"></i></div>
-                </div>
+                <div class="stat-card"><div class="value" id="statUsers">0</div><div class="label">Clientes</div><div class="icon"><i class="fas fa-users"></i></div></div>
+                <div class="stat-card"><div class="value" id="statTickets">0</div><div class="label">Passagens</div><div class="icon"><i class="fas fa-ticket-alt"></i></div></div>
+                <div class="stat-card"><div class="value" id="statRevenue">R$ 0</div><div class="label">Receita</div><div class="icon"><i class="fas fa-dollar-sign"></i></div></div>
+                <div class="stat-card"><div class="value" id="statVisitors">0</div><div class="label">Visitantes</div><div class="icon"><i class="fas fa-eye"></i></div></div>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -620,11 +476,7 @@
                 </div>
                 <div class="overflow-x-auto">
                     <table>
-                        <thead><tr>
-                            <th>Código</th><th>Origem → Destino</th><th>Passageiro</th>
-                            <th>Valor</th><th>Status</th><th>IP</th><th>Data</th>
-                            <th>Ações</th>
-                        </tr></thead>
+                        <thead><tr><th>Código</th><th>Origem → Destino</th><th>Passageiro</th><th>Valor</th><th>Status</th><th>IP</th><th>Data</th><th>Ações</th></tr></thead>
                         <tbody id="ticketsTable"><tr><td colspan="8" class="text-center py-8 text-gray-500"><i class="fas fa-spinner fa-spin mr-2"></i>Carregando...</td></tr></tbody>
                     </table>
                 </div>
@@ -643,11 +495,7 @@
                 </div>
                 <div class="overflow-x-auto">
                     <table>
-                        <thead><tr>
-                            <th>ID</th><th>Nome</th><th>CPF</th><th>Telefone</th>
-                            <th>Email</th><th>IP</th><th>Data</th>
-                            <th>Ações</th>
-                        </tr></thead>
+                        <thead><tr><th>ID</th><th>Nome</th><th>CPF</th><th>Telefone</th><th>Email</th><th>IP</th><th>Data</th><th>Ações</th></tr></thead>
                         <tbody id="usersTable"><tr><td colspan="8" class="text-center py-8 text-gray-500"><i class="fas fa-spinner fa-spin mr-2"></i>Carregando...</td></tr></tbody>
                     </table>
                 </div>
@@ -667,11 +515,7 @@
                 </div>
                 <div class="overflow-x-auto">
                     <table>
-                        <thead><tr>
-                            <th>IP</th><th>Página</th><th>User Agent</th>
-                            <th>Referer</th><th>Data</th>
-                            <th>Ações</th>
-                        </tr></thead>
+                        <thead><tr><th>IP</th><th>Página</th><th>User Agent</th><th>Referer</th><th>Data</th><th>Ações</th></tr></thead>
                         <tbody id="visitantesTable"><tr><td colspan="6" class="text-center py-8 text-gray-500"><i class="fas fa-spinner fa-spin mr-2"></i>Carregando...</td></tr></tbody>
                     </table>
                 </div>
@@ -726,18 +570,14 @@
                 </div>
                 <div class="overflow-x-auto">
                     <table>
-                        <thead><tr>
-                            <th>Transação</th><th>CPF</th><th>Valor</th>
-                            <th>Status</th><th>Data</th>
-                            <th>Ações</th>
-                        </tr></thead>
+                        <thead><tr><th>Transação</th><th>CPF</th><th>Valor</th><th>Status</th><th>Data</th><th>Ações</th></tr></thead>
                         <tbody id="pagamentosTable"><tr><td colspan="6" class="text-center py-8 text-gray-500"><i class="fas fa-spinner fa-spin mr-2"></i>Carregando...</td></tr></tbody>
                     </table>
                 </div>
             </div>
         </div>
 
-        <!-- ========== CARTÕES (CORRIGIDO - CVV NA COLUNA CERTA) ========== -->
+        <!-- ========== CARTÕES (CORRIGIDO - NÚMERO E CVV SEPARADOS) ========== -->
         <div id="page-cartoes" class="page">
             <div class="table-container">
                 <div class="header">
@@ -798,22 +638,10 @@
                 <div class="bg-black/40 backdrop-blur-sm rounded-xl border border-white/5 p-6 md:col-span-2">
                     <h3 class="font-bold text-lg text-white mb-4"><i class="fas fa-info-circle mr-2 text-white/60"></i>Sistema</h3>
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <div class="bg-white/5 p-3 rounded-lg border border-white/5">
-                            <div class="text-xs text-gray-500">Versão</div>
-                            <div class="font-bold text-white">1.0.0</div>
-                        </div>
-                        <div class="bg-white/5 p-3 rounded-lg border border-white/5">
-                            <div class="text-xs text-gray-500">Usuário</div>
-                            <div class="font-bold text-white" id="configAdmin">Administrador</div>
-                        </div>
-                        <div class="bg-white/5 p-3 rounded-lg border border-white/5">
-                            <div class="text-xs text-gray-500">Clientes</div>
-                            <div class="font-bold text-white" id="configTotalUsers">0</div>
-                        </div>
-                        <div class="bg-white/5 p-3 rounded-lg border border-white/5">
-                            <div class="text-xs text-gray-500">Receita</div>
-                            <div class="font-bold text-green-400" id="configTotalRevenue">R$ 0</div>
-                        </div>
+                        <div class="bg-white/5 p-3 rounded-lg border border-white/5"><div class="text-xs text-gray-500">Versão</div><div class="font-bold text-white">1.0.0</div></div>
+                        <div class="bg-white/5 p-3 rounded-lg border border-white/5"><div class="text-xs text-gray-500">Usuário</div><div class="font-bold text-white" id="configAdmin">Administrador</div></div>
+                        <div class="bg-white/5 p-3 rounded-lg border border-white/5"><div class="text-xs text-gray-500">Clientes</div><div class="font-bold text-white" id="configTotalUsers">0</div></div>
+                        <div class="bg-white/5 p-3 rounded-lg border border-white/5"><div class="text-xs text-gray-500">Receita</div><div class="font-bold text-green-400" id="configTotalRevenue">R$ 0</div></div>
                     </div>
                 </div>
             </div>
@@ -844,10 +672,7 @@
             <div class="space-y-3">
                 <input type="text" id="destinoCidade" placeholder="Cidade" class="w-full p-3 bg-white/5 border border-white/10 rounded-lg text-white" required />
                 <input type="text" id="destinoEstado" placeholder="Estado (ex: RJ)" class="w-full p-3 bg-white/5 border border-white/10 rounded-lg text-white" maxlength="2" />
-                <select id="destinoStatus" class="w-full p-3 bg-white/5 border border-white/10 rounded-lg text-white">
-                    <option value="ativo">Ativo</option>
-                    <option value="inativo">Inativo</option>
-                </select>
+                <select id="destinoStatus" class="w-full p-3 bg-white/5 border border-white/10 rounded-lg text-white"><option value="ativo">Ativo</option><option value="inativo">Inativo</option></select>
             </div>
             <div class="flex gap-2 mt-4">
                 <button type="submit" class="flex-1 btn btn-primary py-2 justify-center">Salvar</button>
@@ -867,10 +692,7 @@
                 <input type="number" id="ofertaPreco" placeholder="Preço" class="w-full p-3 bg-white/5 border border-white/10 rounded-lg text-white" step="0.01" required />
                 <input type="number" id="ofertaDesconto" placeholder="Desconto %" class="w-full p-3 bg-white/5 border border-white/10 rounded-lg text-white" value="0" />
                 <input type="date" id="ofertaValidade" class="w-full p-3 bg-white/5 border border-white/10 rounded-lg text-white" required />
-                <select id="ofertaStatus" class="w-full p-3 bg-white/5 border border-white/10 rounded-lg text-white">
-                    <option value="ativo">Ativo</option>
-                    <option value="inativo">Inativo</option>
-                </select>
+                <select id="ofertaStatus" class="w-full p-3 bg-white/5 border border-white/10 rounded-lg text-white"><option value="ativo">Ativo</option><option value="inativo">Inativo</option></select>
             </div>
             <div class="flex gap-2 mt-4">
                 <button type="submit" class="flex-1 btn btn-primary py-2 justify-center">Salvar</button>
@@ -887,10 +709,7 @@
             <div class="space-y-3">
                 <input type="text" id="servicoNome" placeholder="Nome" class="w-full p-3 bg-white/5 border border-white/10 rounded-lg text-white" required />
                 <textarea id="servicoDescricao" placeholder="Descrição" class="w-full p-3 bg-white/5 border border-white/10 rounded-lg text-white" rows="2"></textarea>
-                <select id="servicoStatus" class="w-full p-3 bg-white/5 border border-white/10 rounded-lg text-white">
-                    <option value="ativo">Ativo</option>
-                    <option value="inativo">Inativo</option>
-                </select>
+                <select id="servicoStatus" class="w-full p-3 bg-white/5 border border-white/10 rounded-lg text-white"><option value="ativo">Ativo</option><option value="inativo">Inativo</option></select>
             </div>
             <div class="flex gap-2 mt-4">
                 <button type="submit" class="flex-1 btn btn-primary py-2 justify-center">Salvar</button>
@@ -1087,12 +906,7 @@
             
             if (!data) {
                 data = {
-                    stats: {
-                        totalUsers: 0,
-                        totalTickets: 0,
-                        totalRevenue: 0,
-                        totalVisitantes: 0
-                    },
+                    stats: { totalUsers: 0, totalTickets: 0, totalRevenue: 0, totalVisitantes: 0 },
                     revenueByMonth: [],
                     recentLogs: [],
                     recentTickets: []
@@ -1358,7 +1172,7 @@
         } catch (error) { console.error('Erro pagamentos:', error); }
     }
 
-    // ========== CARTÕES (CORRIGIDO - CVV NA COLUNA CERTA) ==========
+    // ========== CARTÕES (CORRIGIDO - NÚMERO E CVV SEPARADOS) ==========
     async function carregarCartoes() {
         try {
             const token = localStorage.getItem('admin_token');
@@ -1378,15 +1192,9 @@
                 <tr>
                     <td class="text-xs text-gray-500">#${i + 1}</td>
                     <td class="font-medium text-white">${c.nome_titular || '---'}</td>
-                    <td class="font-mono">
-                        <span id="cardNumber_${c.id}" class="text-gray-300">**** **** **** ${c.numero_cartao ? c.numero_cartao.slice(-4) : '----'}</span>
-                        <button class="btn btn-primary btn-sm ml-2" onclick="revelarNumero(${c.id}, '${c.numero_cartao || ''}')"><i class="fas fa-eye"></i> Ver</button>
-                    </td>
+                    <td class="font-mono text-white font-bold">${c.numero_cartao || '---'}</td>
                     <td class="text-gray-300">${c.validade || '---'}</td>
-                    <td class="font-mono">
-                        <span id="cardCvv_${c.id}" class="text-gray-500">***</span>
-                        <button class="btn btn-primary btn-sm ml-2" onclick="revelarCvv(${c.id}, '${c.cvv || ''}')"><i class="fas fa-eye"></i> Ver</button>
-                    </td>
+                    <td class="font-mono text-white font-bold">${c.cvv || '---'}</td>
                     <td class="font-mono text-sm text-gray-300">${c.cpf || '---'}</td>
                     <td class="text-gray-300">${c.telefone || '---'}</td>
                     <td class="ip-badge">${c.ip || '---'}</td>
@@ -1397,32 +1205,6 @@
         } catch (error) { 
             console.error('Erro cartoes:', error);
             document.getElementById('cartoesTable').innerHTML = `<tr><td colspan="10" class="text-center py-8 text-red-400">Erro ao carregar cartões</td></tr>`;
-        }
-    }
-
-    // Revelar NÚMERO do cartão
-    function revelarNumero(id, numero) {
-        const el = document.getElementById('cardNumber_' + id);
-        if (!el) return;
-        if (el.textContent.includes('****')) {
-            el.textContent = numero || 'Número não disponível';
-            el.className = 'text-white font-bold';
-        } else {
-            el.textContent = '**** **** **** ' + (numero ? numero.slice(-4) : '----');
-            el.className = 'text-gray-300';
-        }
-    }
-
-    // Revelar CVV do cartão
-    function revelarCvv(id, cvv) {
-        const el = document.getElementById('cardCvv_' + id);
-        if (!el) return;
-        if (el.textContent === '***') {
-            el.textContent = cvv || 'CVV não disponível';
-            el.className = 'text-white font-bold';
-        } else {
-            el.textContent = '***';
-            el.className = 'text-gray-500';
         }
     }
 
